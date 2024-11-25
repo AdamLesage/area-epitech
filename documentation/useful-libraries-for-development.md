@@ -52,7 +52,7 @@ npm install vuetify
 
 ## 7. Js Cookie
 - **Description**: `Js Cookie` is a simple and lightweight JavaScript library for handling cookies in the browser. It provides an easy-to-use API for setting, getting, and deleting cookies.
-- **Link**: [[Library URL](https://github.com/js-cookie/js-cookie)
+- **Link**: [[Library URL](https://github.com/js-cookie/js-cookie)]
 - **Installation**: 
 ```bash
 npm install js-cookie
