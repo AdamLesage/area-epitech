@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the rationale for selecting **Vue.js** as the frontend framework and **FastAPI** as the backend framework for our application. We also compare these choices with alternative technologies and provide insights into their advantages and disadvantages, supported by empirical data and code examples where applicable.
+This document outlines the rationale for selecting **Vue.js** as the frontend framework and **FastAPI** as the backend framework for our application. We also compare these choices with alternative technologies and provide insights into their advantages and disadvantages, supported by data and code examples where applicable.
 
 ---
 
@@ -14,19 +14,22 @@ This document outlines the rationale for selecting **Vue.js** as the frontend fr
    ```javascript
    <!-- Example: Two-way data binding in Vue -->
    <template>
-     <input v-model="message" />
-     <p>{{ message }}</p>
+      <input v-model="message" />
+      <p>{{ message }}</p>
    </template>
 
-   <script>
-   export default {
-     data() {
-       return {
-         message: 'Hello Vue!'
-       };
-     }
-   };
+   <script lang="ts">
+      import { ref } from 'vue';
+
+      export default {
+         setup() {
+            const message = ref('Hello Vue!');
+            
+            return { message };
+         }
+      };
    </script>
+
    ```
    Compared to React:
    ```javascript
@@ -43,6 +46,30 @@ This document outlines the rationale for selecting **Vue.js** as the frontend fr
      );
    }
    ```
+   Compared to HTML5:
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>HTML Input and Output</title>
+   </head>
+      <body>
+      <h1>Input and Display</h1>
+      <form>
+         <input type="text" placeholder="Type something..." oninput="updateOutput(this.value)" />
+         <div id="output">Your input will appear here</div>
+      </form>
+
+      <script>
+         function updateOutput(value) {
+            document.getElementById('output').textContent = value || 'Your input will appear here';
+         }
+      </script>
+   </body>
+   </html>
+   ```
 
 2. **Performance**  
    Vue.js has optimized rendering and reactivity systems, often performing better in real-world scenarios compared to Angular.
@@ -52,6 +79,9 @@ This document outlines the rationale for selecting **Vue.js** as the frontend fr
 
 4. **Community and Ecosystem**  
    Vue offers a growing ecosystem, including **Vue Router** and **Vuex**, which simplify application development.
+
+5. **Component integration**
+   Vue.js simplifies component integration with built-in support for parent-child relationships, ensuring minimal re-renders and optimized performance.
 
 ### **Disadvantages of Vue.js**
 1. **Smaller Community Compared to React**  
@@ -148,18 +178,35 @@ This document outlines the rationale for selecting **Vue.js** as the frontend fr
 
 ---
 
-### Empirical Comparison: Speed Test
+### Comparison: Speed Test
+
+Based on current benchmarks and real-world data, here's an comparison of FastAPI, Express.js, and Django in terms of speed and efficiency:
 
 | Framework     | Requests per Second (RPS) | Avg. Latency (ms) |
 |---------------|---------------------------|-------------------|
-| FastAPI       | 3,000+                    | ~5-10            |
-| Express.js    | 5,000+                    | ~3-5             |
-| Django        | 1,500+                    | ~20-30           |
+| **FastAPI**   | ~228 (1 worker, async)    | ~15              |
+| **Express.js**| ~509 (1 worker, async)    | ~8               |
+| **Django**    | ~150-200 (default config) | ~25-30           |
 
-_Code for testing speed using **wrk**:_
-```bash
-wrk -t4 -c100 -d30s http://127.0.0.1:8000
-```
+### Key Insights:
+
+1. **FastAPI**:
+   - Built with asynchronous support, FastAPI is efficient for I/O-bound tasks, especially when scaled using multiple workers (e.g., Uvicorn with 4 workers can significantly increase throughput).
+   - Well-suited for building APIs requiring data validation, JSON handling, and integration with modern Python-based ecosystems.
+
+2. **Express.js**:
+   - Express.js performs exceptionally well in single-core scenarios, handling over 500 requests per second. But, here we will probably do not need to handle more than 500 requests per second so FastAPI is way better for handling shorter number of requests.
+   - Node.js' native non-blocking I/O significantly contributes to its lower latency and higher throughput for large number of requests.
+
+3. **Django**:
+   - While Django offers extensive features like an ORM and built-in authentication, it may not be as performant as FastAPI for handling high-throughput APIs due to its monolithic structure and synchronous I/O model. FastAPI, by contrast, is designed for asynchronous operations, which allows it to efficiently handle concurrent requests, making it better suited for high-performance, I/O-bound services. Its modern architecture leverages asynchronous capabilities with minimal boilerplate, leading to faster response times and better scalability when handling multiple requests simultaneously.
+   - Ideal for traditional web applications with server-side rendering but less suitable for high-throughput API services.
+
+### Contextual Considerations:
+- **Scaling**: Both FastAPI and Express.js show performance improvements when scaled horizontally with multiple workers. Django can also scale but may require additional tuning for optimal results.
+- **Development Speed**: Django offers rapid development features like an admin interface and ORM. FastAPI excels in API-focused use cases, especially for teams familiar with Python.
+
+This comparison highlights how the choice of framework depends on the project's specific needs, such as throughput requirements, developer expertise, and feature requirements. For raw performance, Express.js is superior, while FastAPI balances speed with Python's ecosystem benefits. Django is better for complex, feature-rich web applications but less optimal for high-performance APIs.
 
 ---
 
@@ -286,17 +333,21 @@ function takePicture() {
 
 ### Conclusion
 
-- **Use Capacitor** if your team already uses modern web frameworks (e.g., Vue.js) or you want seamless web and mobile integration.
-- **Use React Native** if performance is a critical requirement, such as for animation-heavy apps, or if you’re building a mobile-first application.
+- **Use Capacitor**: ideal for building apps with a single codebase that seamlessly runs on iOS, Android, and the web, leveraging modern web frameworks like Vue.js for easy integration and native feature access​.
+
+- **Use React Native**: best for mobile-first applications that require high performance, especially for animation-heavy or complex mobile experiences.
 
 For this project, where the focus is on leveraging web-based technologies for quick and efficient cross-platform deployment, **Capacitor** is the ideal choice.
+
 ---
 
 ## Conclusion
 
 ### **Why Vue.js and FastAPI?**
-- Vue.js strikes a balance between simplicity and performance, with an efficient reactivity system that suits our requirements.
-- FastAPI offers unmatched speed and type safety for a Python backend framework, making it ideal for building modern APIs.
+- `Vue.js` offers a straightforward and highly efficient reactivity system, making it an excellent choice for building responsive web interfaces.
+- `FastAPI` provides exceptional performance for Python backends, with asynchronous support and type safety, making it an ideal framework for fast and scalable APIs​
+Alitech. Even if it is not the fastest backend technology, it is easy to use for small projects like this one, every members of the team enjoy using `FastAPI`
+​
 
 ### Summary Table
 
