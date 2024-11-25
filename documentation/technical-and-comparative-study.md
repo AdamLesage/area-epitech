@@ -202,6 +202,18 @@ Based on current benchmarks and real-world data, here's an comparison of FastAPI
    - While Django offers extensive features like an ORM and built-in authentication, it may not be as performant as FastAPI for handling high-throughput APIs due to its monolithic structure and synchronous I/O model. FastAPI, by contrast, is designed for asynchronous operations, which allows it to efficiently handle concurrent requests, making it better suited for high-performance, I/O-bound services. Its modern architecture leverages asynchronous capabilities with minimal boilerplate, leading to faster response times and better scalability when handling multiple requests simultaneously.
    - Ideal for traditional web applications with server-side rendering but less suitable for high-throughput API services.
 
+### Discover Our Comparisons
+
+To help you understand how different server-side technologies perform, we’ve created a repository that compares various frameworks. This repository includes performance tests and shows how frameworks like **FastAPI**, **Express.js**, **Flask**, **Koa** and **Sinatra** measure up in terms of speed and efficiency.
+
+You can explore the full comparison and try the tests yourself here:
+
+```
+https://github.com/Tugduoff/ServerSideSpeedStudy
+```
+
+In this repository, you'll find data on things like **how many requests each framework can handle per second** and **how long they take to respond**. We also provide sample code so you can run these tests on your own system. This will help you see which framework works best for your project, based on real performance results.
+
 ### Contextual Considerations:
 - **Scaling**: Both FastAPI and Express.js show performance improvements when scaled horizontally with multiple workers. Django can also scale but may require additional tuning for optimal results.
 - **Development Speed**: Django offers rapid development features like an admin interface and ORM. FastAPI excels in API-focused use cases, especially for teams familiar with Python.
