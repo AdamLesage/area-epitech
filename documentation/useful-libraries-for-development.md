@@ -73,4 +73,10 @@ npm install vee-validate
 ```bash
 npm install jsonwebtoken
 ```
-
+## 10. Prisma
+- **Description**: `Prisma` is a modern database toolkit that simplifies database access in Node.js applications. It provides a type-safe and auto-generated query builder that makes working with databases easier.
+- **Link**: [[Library URL](https://www.prisma.io/)]
+- **Installation**: 
+```bash
+npm install @prisma/client
+```
