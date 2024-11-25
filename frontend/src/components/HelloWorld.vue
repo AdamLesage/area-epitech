@@ -16,4 +16,8 @@ export default {
   margin-top: 50px;
   color: black;
 }
+body {
+  background-color: rebeccapurple;
+  margin: 0%;
+}
 </style>
