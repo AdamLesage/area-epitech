@@ -18,14 +18,9 @@ This document outlines the rationale for selecting **Vue.js** as the frontend fr
      <p>{{ message }}</p>
    </template>
 
-   <script>
-   export default {
-     data() {
-       return {
-         message: 'Hello Vue!'
-       };
-     }
-   };
+   <script setup>
+      import { ref } from 'vue';
+      const message = ref('Hello Vue!');
    </script>
    ```
    Compared to React:
