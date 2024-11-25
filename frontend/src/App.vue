@@ -1,6 +1,13 @@
 <template>
   <div id="app">
-    <nav>
+    <nav v-if="$route.path === '/'">
+      <router-link to="/">Home</router-link>
+      <router-link to="/create_option">Create Option</router-link>
+      <router-link to="/user_details">
+        <img src="assets/pfp.jpg" alt="Profile" class="profile-image">
+      </router-link>
+    </nav>
+    <nav v-else>
       <router-link to="/">Home</router-link>
       <router-link to="/login">Login</router-link>
       <router-link to="/register">Register</router-link>
@@ -39,5 +46,11 @@ nav a:hover {
 
 nav a:active {
   color: #ff4500;
+}
+
+.profile-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
 </style>

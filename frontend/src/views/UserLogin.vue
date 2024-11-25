@@ -34,21 +34,14 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'UserLogin',
-  data() {
-    return {
-      email: '',
-      password: '',
-      rememberMe: false,
-    };
-  },
-  methods: {
-    handleLogin() {
-      console.log(`Email: ${this.email}, Password: ${this.password}`);
-    },
-  },
+<script setup lang="ts">
+import { ref } from 'vue';
+const email = ref('');
+const password = ref('');
+const rememberMe = ref(false);
+
+const handleLogin = () => {
+  console.log(`Email: ${email.value}, Password: ${password.value}`);
 };
 </script>
 
@@ -210,6 +203,7 @@ input:focus {
     opacity: 0;
     transform: translateX(20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
