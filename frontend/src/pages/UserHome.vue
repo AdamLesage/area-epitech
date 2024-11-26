@@ -5,10 +5,7 @@
     </div>
   </template>
   
-  <script>
-  export default {
-    name: 'UserHomes',
-  };
+  <script scoped>
   </script>
   
   <style scoped>

@@ -1,12 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '../views/UserLogin.vue';
-import Register from '../views/UserRegister.vue';
-import UserHomes from '../views/UserHome.vue';
+import Login from '../pages/UserLogin.vue';
+import Register from '../pages/UserRegister.vue';
+import UserHomes from '../pages/UserHome.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'UserHomes',
     component: UserHomes,
   },
   {
@@ -15,7 +14,6 @@ const routes = [
   },
   {
     path: '/register',
-    name: 'UserRegister',
     component: Register,
   },
 ];

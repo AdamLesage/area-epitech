@@ -1,56 +1,70 @@
 <template>
-  <div id="app">
-    <nav v-if="$route.path === '/'">
-      <router-link to="/">Home</router-link>
-      <router-link to="/create_option">Create Option</router-link>
-      <router-link to="/user_details">
-        <img src="assets/pfp.jpg" alt="Profile" class="profile-image">
-      </router-link>
+  <div class="min-h-screen flex flex-col bg-gray-50">
+    <nav v-if="$route.path === '/'" class="bg-gradient-to-br from-indigo-900 to-indigo-800 p-4 shadow-lg h-[5rem] items-center flex flex-row justify-between">
+      <div class="flex justify-between items-center w-full">
+        <router-link to="/" class="flex items-center space-x-3">
+          <img src="./assets/logo.png" alt="Area Logo" class="w-12 h-12 object-cover rounded-full" />
+          <span class="text-white font-bold text-xl">Area</span>
+        </router-link>
+
+        <div class="flex items-center space-x-10">
+          <router-link
+            to="/"
+            class="text-white text-xl font-medium hover:text-gray-300 transition-colors duration-300"
+          >
+            Home
+          </router-link>
+          <router-link
+            to="/create_option"
+            class="text-white text-xl font-medium hover:text-gray-300 transition-colors duration-300"
+          >
+            Create Option
+          </router-link>
+          <router-link to="/user_details" class="flex items-center">
+            <Icon icon="fluent:person-16-filled" class="text-white text-3xl hover:text-gray-300 transition-all duration-300" />
+          </router-link>
+        </div>
+      </div>
     </nav>
-    <nav v-else>
-      <router-link to="/">Home</router-link>
-      <router-link to="/login">Login</router-link>
-      <router-link to="/register">Register</router-link>
+
+    <nav v-else class="bg-gradient-to-br from-indigo-900 to-indigo-800 p-4 shadow-lg h-[5rem] items-center flex flex-row justify-between">
+      <div class="flex flex-row justify-between items-center w-full">
+        <router-link
+          to="/"
+          class="text-white text-xl font-medium hover:text-gray-300 transition-colors duration-300"
+        >
+          Home
+        </router-link>
+        <div class="flex space-x-8">
+          <router-link
+            to="/login"
+            class="text-white text-xl font-medium hover:text-gray-300 transition-colors duration-300"
+          >
+            Login
+          </router-link>
+          <router-link
+            to="/register"
+            class="text-white text-xl font-medium hover:text-gray-300 transition-colors duration-300"
+          >
+            Register
+          </router-link>
+        </div>
+      </div>
     </nav>
-    <router-view />
+
+    <!-- Main Content -->
+    <div class="slot">
+      <router-view class="h-full"/>
+    </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-};
+<script setup>
+import { Icon } from '@iconify/vue'
 </script>
 
-<style>
-nav {
-  display: flex;
-  justify-content: center;
-  background-color: #333;
-  padding: 10px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-nav a {
-  margin: 0 15px;
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-nav a:hover {
-  color: #ff6347;
-  transform: scale(1.1);
-}
-
-nav a:active {
-  color: #ff4500;
-}
-
-.profile-image {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+<style scoped>
+.slot {
+  height: calc(100vh - 5rem);
 }
 </style>
