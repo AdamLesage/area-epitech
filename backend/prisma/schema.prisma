@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id          Int             @id @default(autoincrement())
-  uuid        String          @unique
-  name        String
-  surname     String
-  bio         String?
-  birthDate   DateTime?
-  email       String          @unique
-  phoneNumber String?
+  id             Int             @id @default(autoincrement())
+  uuid           String          @unique
+  name           String
+  surname        String
+  bio            String?
+  birthDate      DateTime?
+  email          String          @unique
+  phoneNumber    String?
+  hashedPassword String
   profilePicture ProfilePicture?
   linkedAccounts LinkedAccount[]
 }
@@ -39,27 +40,27 @@ model LinkedAccount {
 }
 
 model Service {
-  id       Int    @id @default(autoincrement())
-  name     String
-  logo     String
-  actions  Action[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  logo      String
+  actions   Action[]
   reactions Reaction[]
 }
 
 model Action {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   description String?
   endpoint    String
   serviceId   Int
-  service     Service   @relation(fields: [serviceId], references: [id])
+  service     Service @relation(fields: [serviceId], references: [id])
 }
 
 model Reaction {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   description String?
   endpoint    String
   serviceId   Int
-  service     Service   @relation(fields: [serviceId], references: [id])
+  service     Service @relation(fields: [serviceId], references: [id])
 }

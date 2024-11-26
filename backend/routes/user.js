@@ -7,6 +7,9 @@
 
 const Prisma = require('@prisma/client');
 const prisma = new Prisma.PrismaClient;
+const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
+
 /**
  * setup the action route
  */
@@ -22,8 +25,10 @@ module.exports.setup = (app) => {
      * @author Adam Lesage
      */
     app.get('/users', async (req, res) => {
+        console.log("Retrieving users");
         const { uuids, emails } = req.query;
         const query = {};
+        console.log(uuids, emails);
 
         if (uuids) {
             query.id = { in: uuids.split(',') };
@@ -34,7 +39,10 @@ module.exports.setup = (app) => {
         }
 
         try {
-            const users = await prisma.user.findMany({ where: Object.keys(query).length ? query : undefined });
+            console.log(prisma.user);
+            const users = await prisma.user.findMany({
+                where: query,
+            });
             res.json(users);
         } catch (error) {
             res.status(500).json({ error: 'Internal Server Error' });
@@ -71,15 +79,21 @@ module.exports.setup = (app) => {
      * @author Adam Lesage
      */
     app.post('/user', async (req, res) => {
-        const { email, password, username } = req.body;
+        const { name, surname, bio, birthDate, email, phoneNumber, password } = req.body;
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        const uuid = uuidv4();
         try {
             const user = await prisma.user.create({
                 data: {
+                    uuid: uuid,
+                    name: name,
+                    surname: surname,
+                    bio: bio,
+                    birthDate: birthDate,
                     email: email,
-                    hashed_password: hashedPassword,
-                    username: username,
+                    phoneNumber: phoneNumber,
+                    hashedPassword: hashedPassword
                 },
             });
             res.json(user);
@@ -98,6 +112,7 @@ module.exports.setup = (app) => {
      */
     app.delete('/user/:id', async (req, res) => {
         const id = parseInt(req.params.id);
+        const { authorization } = req.headers;
 
         try {
             await prisma.user.delete({ where: { id } });
