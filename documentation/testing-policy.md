@@ -17,7 +17,7 @@ The workflow integrates **GitHub Actions** to automate test execution after ever
 
 ## **Backend Testing**
 ### Tools:
-- **Jest**: The primary testing framework used for unit and integration testing.
+- **Jest**: The primary testing framework used for unit and integration testing. [Jest Documentation](https://jestjs.io/)
 
 ### Testing Methods:
 1. **Unit Tests**: Test individual backend functions or classes in isolation.
@@ -45,7 +45,7 @@ npx jest
 
 ## **Frontend Testing**
 ### Tools:
-- **Cypress**: A framework for end-to-end testing, focusing on user interactions in the browser.
+- **Cypress**: A framework for end-to-end testing, focusing on user interactions in the browser. [Cypress Documentation](https://docs.cypress.io/)
 
 ### Testing Methods:
 1. **Regression Testing**: Verify UI consistency after code changes.
