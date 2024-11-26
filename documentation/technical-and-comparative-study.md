@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the rationale for selecting **Vue.js** as the frontend framework and **FastAPI** as the backend framework for our application. We also compare these choices with alternative technologies and provide insights into their advantages and disadvantages, supported by empirical data and code examples where applicable.
+This document outlines the rationale for selecting **Vue.js** as the frontend framework and **Express.js** as the backend framework for our application. We also compare these choices with alternative technologies and provide insights into their advantages and disadvantages, supported by data and code examples where applicable.
 
 ---
 
@@ -73,66 +73,60 @@ This document outlines the rationale for selecting **Vue.js** as the frontend fr
 
 ---
 
-## Backend: FastAPI
+## Backend: Express.js
 
-### **Advantages of FastAPI**
-1. **Speed and Performance**  
-   Built on **Starlette** and **Pydantic**, FastAPI is one of the fastest Python frameworks for web APIs. It uses **ASGI** for asynchronous request handling.
-   ```python
-   from fastapi import FastAPI
+### **Advantages of Express.js**
+1. **High Performance**  
+   Built on **Node.js**, Express.js is lightweight and highly efficient, capable of handling a large number of requests with minimal overhead.
+   ```javascript
+   const express = require('express');
+   const app = express();
 
-   app = FastAPI()
+   app.get('/', (req, res) => {
+     res.send('Hello, World!');
+   });
 
-   @app.get("/")
-   async def read_root():
-       return {"Hello": "World"}
+   app.listen(3000, () => {
+     console.log('Server is running on port 3000');
+   });
    ```
 
-2. **Type Safety and Validation**  
-   Automatic type checking reduces bugs and simplifies validation.
-   ```python
-   from pydantic import BaseModel
+2. **Flexibility**  
+   Express.js provides a simple core and allows developers to integrate any libraries or middleware to suit specific needs, making it highly customizable.
 
-   class Item(BaseModel):
-       name: str
-       price: float
+3. **Rich Ecosystem**  
+   With a vast number of plugins and a large community, Express.js simplifies the process of adding features such as authentication, request validation, and logging.
 
-   @app.post("/items/")
-   async def create_item(item: Item):
-       return item
-   ```
-
-3. **Auto-Generated Documentation**  
-   FastAPI provides Swagger UI and ReDoc out of the box for API documentation.
-
-4. **Asynchronous Support**  
-   FastAPI leverages Python’s async/await syntax, making it highly efficient for I/O-bound tasks.
+4. **Middleware Support**  
+   Middleware in Express.js enables easy processing of requests and responses, such as parsing JSON or implementing error handling.
 
 5. **Ease of Use**  
-   Intuitive syntax enables quick development.
+   Its minimalistic design and straightforward API allow for rapid development, making it beginner-friendly while also powerful enough for advanced use cases.
 
-### **Disadvantages of FastAPI**
-1. **Smaller Community**  
-   Compared to Django or Express.js, FastAPI has fewer plugins and libraries.
+6. **Cross-Platform Compatibility**  
+   As a JavaScript-based framework, Express.js can run on any platform that supports Node.js, ensuring broad compatibility.
 
-2. **Learning Curve for Async Concepts**  
-   Developers not familiar with asynchronous programming might face a learning curve.
+### **Disadvantages of Express.js**
+1. **Less Structured**  
+   Express.js does not enforce a specific project structure, which can lead to inconsistent codebases in larger applications.
+
+2. **Callback Hell**  
+   While Express.js supports asynchronous operations, heavy reliance on callbacks for managing async tasks can lead to complex and hard to read code, unless mitigated with Promises or async/await.
 
 ---
 
 ### **Alternatives**
 
-#### **Express.js (Node.js)**
+#### **FastAPI (Python)**
 - **Advantages:**  
-   - Wide adoption and large community.  
-   - Highly performant due to Node.js's event-driven architecture.  
-   - Rich plugin ecosystem (e.g., middleware like `body-parser`).
+   - Asynchronous support with `async/await` for highly efficient handling of I/O-bound tasks.  
+   - Automatic generation of interactive API documentation via Swagger UI and ReDoc.  
 
 - **Disadvantages:**  
-   - Requires manual validation setup using libraries like Joi or Yup.  
-   - Callback hell in asynchronous code, though mitigated by `async/await`.
+   - Smaller community and ecosystem compared to more established frameworks like Django.  
+   - Requires familiarity with asynchronous programming, which can have a learning curve for new developers.  
 
-#### **Django**
+#### **Django (Python)**
 - **Advantages:**  
    - Full-stack framework with built-in ORM and admin panel.  
    - Great for rapid development of database-driven apps.
@@ -143,18 +137,13 @@ This document outlines the rationale for selecting **Vue.js** as the frontend fr
 
 ---
 
-### Empirical Comparison: Speed Test
+### Comparison: Speed Test
 
-| Framework     | Requests per Second (RPS) | Avg. Latency (ms) |
-|---------------|---------------------------|-------------------|
-| FastAPI       | 3,000+                    | ~5-10            |
-| Express.js    | 5,000+                    | ~3-5             |
-| Django        | 1,500+                    | ~20-30           |
-
-_Code for testing speed using **wrk**:_
-```bash
-wrk -t4 -c100 -d30s http://127.0.0.1:8000
-```
+| Framework     | Seconds per 1000 requests  | Avg. Latency (ms) |
+|---------------|----------------------------|-------------------|
+| Express.js    | 0.8 sec                    | ~3-5              |
+| FastAPI       | 45 sec                     | ~5-10             |
+| Flask         | 3.5 sec                    | ~10-15            |
 
 ---
 
@@ -289,9 +278,9 @@ For this project, where the focus is on leveraging web-based technologies for qu
 
 ## Conclusion
 
-### **Why Vue.js and FastAPI?**
+### **Why Vue.js and Express.js?**
 - Vue.js strikes a balance between simplicity and performance, with an efficient reactivity system that suits our requirements.
-- FastAPI offers unmatched speed and type safety for a Python backend framework, making it ideal for building modern APIs.
+- Express.js provides high performance, flexibility, and a rich ecosystem for building scalable backend services.
 
 ### Summary Table
 
@@ -303,4 +292,4 @@ For this project, where the focus is on leveraging web-based technologies for qu
 | Ecosystem                | Expanding    | Mature        | Mature        | Growing       | Mature         | Mature         |
 | Scalability              | High         | High          | Very High     | High          | Very High      | Very High      |
 
-This combination of Vue.js for the frontend and FastAPI for the backend ensures high performance, simplicity, and maintainability while meeting our application’s requirements.
+This combination of Vue.js for the frontend and Express.js for the backend ensures high performance, simplicity, and maintainability while meeting our application’s requirements.
