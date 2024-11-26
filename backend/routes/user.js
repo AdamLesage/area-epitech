@@ -5,149 +5,151 @@
 ** User
 */
 
-const Prisma = require('@prisma/client');
-const prisma = new Prisma.PrismaClient;
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const router = express.Router();
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 
 /**
- * setup the action route
+ * @brief return a list of all actions of the user
+ * 
+ * @param [string] uuids
+ * @param [string] emails
+ * @return {object} users
+ * 
+ * @example GET /users?uuids=1,2,3&emails=adam@area.fr,romain@area.fr
+ * @autor Adam Lesage
  */
-module.exports.setup = (app) => {
-    /**
-     * @brief return a list of all actions of the user
-     * 
-     * @param [string] uuids
-     * @param [string] emails
-     * @return {object} users
-     * 
-     * @example GET /users?uuids=1,2,3&emails=adam@area.fr,romain@area.fr
-     * @author Adam Lesage
-     */
-    app.get('/users', async (req, res) => {
-        console.log("Retrieving users");
-        const { uuids, emails } = req.query;
-        const query = {};
-        console.log(uuids, emails);
+router.get('/users', async (req, res) => {
+    console.log("Retrieving users");
+    const { uuids, emails } = req.query;
+    const query = {};
+    console.log(uuids, emails);
 
-        if (uuids) {
-            query.id = { in: uuids.split(',') };
-        }
+    if (uuids) {
+        query.id = { in: uuids.split(',') };
+    }
 
-        if (emails) {
-            query.email = { in: emails.split(',') };
-        }
+    if (emails) {
+        query.email = { in: emails.split(',') };
+    }
 
-        try {
-            console.log(prisma.user);
-            const users = await prisma.user.findMany({
-                where: query,
-            });
-            res.json(users);
-        } catch (error) {
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    });
+    try {   
+        const users = await prisma.user.findMany({
+            where: query,
+        });
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
-    /**
-     * @brief get a user by id
-     * 
-     * @param {string} id
-     * @return {object} user
-     * @exemple GET /user/1
-     * @author Adam Lesage
-     */
-    app.get('/user/:id', async (req, res) => {
-        const id = parseInt(req.params.id);
+/**
+ * @brief get a user by uuid
+ * 
+ * @param {string} uuid
+ * @return {object} user
+ * @example GET /user/uuid
+ * @autor Adam Lesage
+ */
+router.get('/user/:uuid', async (req, res) => {
+    const uuid = req.params.uuid;
 
-        try {
-            const user = await prisma.user.findUnique({ where: { id } });
+    try {
+        const user = await prisma.user.findUnique({ where: { uuid } });
+        if (user) {
             res.json(user);
-        } catch (error) {
-            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            res.status(404).json({ error: 'User not found' });
         }
-    });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
-    /**
-     * @brief create a new user and return the user, password will be hashed
-     * 
-     * @param {string} email
-     * @param {string} password
-     * @param {string} username
-     * @return {object} user
-     * @exemple POST /user { email: "adam@area.fr", hashed_password: "password", username: "adam" }
-     * @author Adam Lesage
-     */
-    app.post('/user', async (req, res) => {
-        const { name, surname, bio, birthDate, email, phoneNumber, password } = req.body;
+/**
+ * @brief create a new user and return the user, password will be hashed
+ * 
+ * @param {string} email
+ * @param {string} password
+ * @param {string} username
+ * @return {object} user
+ * @exemple POST /user { email: "adam@area.fr", hashed_password: "password", username: "adam" }
+ * @autor Adam Lesage
+ */
+router.post('/user', async (req, res) => {
+    const { name, surname, bio, birthDate, email, phoneNumber, password } = req.body;
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const uuid = uuidv4();
-        try {
-            const user = await prisma.user.create({
-                data: {
-                    uuid: uuid,
-                    name: name,
-                    surname: surname,
-                    bio: bio,
-                    birthDate: birthDate,
-                    email: email,
-                    phoneNumber: phoneNumber,
-                    hashedPassword: hashedPassword
-                },
-            });
-            res.json(user);
-        } catch (error) {
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    });
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const uuid = uuidv4();
+    try {
+        const user = await prisma.user.create({
+            data: {
+                uuid: uuid,
+                name: name,
+                surname: surname,
+                bio: bio,
+                birthDate: birthDate,
+                email: email,
+                phoneNumber: phoneNumber,
+                hashedPassword: hashedPassword
+            },
+        });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
-    /**
-     * @brief delete the user
-     * 
-     * @param {string} id
-     * @return {object} message
-     * @exemple DELETE /user/1
-     * @autor Adam Lesage
-     */
-    app.delete('/user/:id', async (req, res) => {
-        const id = parseInt(req.params.id);
-        const { authorization } = req.headers;
+/**
+ * @brief delete the user
+ * 
+ * @param {string} id
+ * @return {object} message
+ * @exemple DELETE /user/uuid
+ * @autor Adam Lesage
+ */
+router.delete('/user/:uuid', async (req, res) => {
+    const uuid = parseInt(req.params.uuid);
 
-        try {
-            await prisma.user.delete({ where: { id } });
-            res.json({ message: 'User deleted' });
-        } catch (error) {
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    });
-    /**
-     * @brief update the user
-     * 
-     * @param {string} id
-     * @param {string} email
-     * @param {string} password
-     * @param {string} username
-     * @return {object} user
-     * @exemple PUT /user/1 { email: "adam@area.com", username: "adam" }
-     * @autor Adam Lesage
-     */
-    app.put('/user/:id', async (req, res) => {
-        const id = parseInt(req.params.id);
-        const { email, username } = req.body;
+    try {
+        await prisma.user.delete({ where: { uuid } });
+        res.json({ message: 'User deleted' });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
-        const data = {};
-        if (email) data.email = email;
-        if (username) data.username = username;
+/**
+ * @brief update the user
+ * 
+ * @param {string} uuid
+ * @param {string} email
+ * @param {string} password
+ * @param {string} username
+ * @return {object} user
+ * @exemple PUT /user/uuid { email: "adam@area.com", username: "adam" }
+ * @autor Adam Lesage
+ */
+router.put('/user/:uuid', async (req, res) => {
+    const uuid = parseInt(req.params.uuid);
+    const { email, username } = req.body;
 
-        try {
-            const user = await prisma.user.update({
-                where: { id },
-                data: data,
-            });
-            res.json(user);
-        } catch (error) {
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    });
-};
+    const data = {};
+    if (email) data.email = email;
+    if (username) data.username = username;
+
+    try {
+        const user = await prisma.user.update({
+            where: { uuid },
+            data: data,
+        });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+module.exports = router;

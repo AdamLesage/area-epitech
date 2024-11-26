@@ -13,6 +13,8 @@
     "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
     "express": "^4.21.1",
+    "mongodb-memory-server": "^10.1.2",
+    "mongoose": "^8.8.3",
     "supertest": "^7.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
