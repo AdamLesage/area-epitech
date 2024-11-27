@@ -112,7 +112,7 @@ router.post('/user', async (req, res) => {
  * @autor Adam Lesage
  */
 router.delete('/user/:uuid', async (req, res) => {
-    const uuid = parseInt(req.params.uuid);
+    const uuid = req.params.uuid;
 
     try {
         await prisma.user.delete({ where: { uuid } });
@@ -126,20 +126,21 @@ router.delete('/user/:uuid', async (req, res) => {
  * @brief update the user
  * 
  * @param {string} uuid
- * @param {string} email
- * @param {string} password
- * @param {string} username
  * @return {object} user
  * @exemple PUT /user/uuid { email: "adam@area.com", username: "adam" }
  * @autor Adam Lesage
  */
 router.put('/user/:uuid', async (req, res) => {
-    const uuid = parseInt(req.params.uuid);
-    const { email, username } = req.body;
+    const uuid = req.params.uuid;
 
     const data = {};
-    if (email) data.email = email;
-    if (username) data.username = username;
+    if (req.body.email) data.email = req.body.email;
+    if (req.body.password) data.hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    if (req.body.name) data.name = req.body.name;
+    if (req.body.surname) data.surname = req.body.surname;
+    if (req.body.bio) data.bio = req.body.bio;
+    if (req.body.birthDate) data.birthDate = req.body.birthDate;
+    if (req.body.phoneNumber) data.phoneNumber = req.body.phoneNumber;
 
     try {
         const user = await prisma.user.update({
