@@ -1,4 +1,0 @@
-fastapi
-psycopg2
-psycopg2_binary
-SQLAlchemy
