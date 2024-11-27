@@ -2,13 +2,9 @@
   <div class="create-option">
     <h1>Create Option</h1>
     <div class="button-group">
-      <MDBBtn
-        v-for="platform in platforms"
-        :key="platform.name"
+      <MDBBtn v-for="platform in platforms" :key="platform.name"
         :style="{ backgroundColor: platform.color, fontSize: '1.5rem', padding: '1rem 2rem' }"
-        @click="selectPlatform(platform.name)"
-        class="platform-btn"
-      >
+        @click="selectPlatform(platform.name)" class="platform-btn">
         <MDBIcon :iconStyle="platform.iconStyle" :icon="platform.icon" />
       </MDBBtn>
     </div>
@@ -18,34 +14,18 @@
       <form @submit.prevent="submitForm">
         <div v-if="selectedPlatform === 'Reddit'" class="form-group">
           <label for="subreddit">Subreddit Name</label>
-          <input
-            type="text"
-            id="subreddit"
-            v-model="formData.subreddit"
-            placeholder="Enter subreddit name"
-            required
-          />
+          <input type="text" id="subreddit" v-model="formData.subreddit" placeholder="Enter subreddit name" required />
         </div>
         <div v-if="selectedPlatform === 'Twitter'" class="form-group">
           <label for="tweet">Tweet Content</label>
-          <input
-            type="text"
-            id="tweet"
-            v-model="formData.tweet"
-            placeholder="Enter your tweet content"
-            required
-          />
+          <input type="text" id="tweet" v-model="formData.tweet" placeholder="Enter your tweet content" required />
         </div>
         <div class="form-group">
           <label>Action Type</label>
           <div class="action-type-selector">
-            <MDBBtn
-              v-for="action in getActionsForPlatform(selectedPlatform)"
-              :key="action"
-              @click="selectActionType(action)"
-              :class="{'selected': formData.actionType === action}"
-              class="action-btn"
-            >
+            <MDBBtn v-for="action in getActionsForPlatform(selectedPlatform)" :key="action"
+              @click="selectActionType(action)" :class="{ 'selected': formData.actionType === action }"
+              class="action-btn">
               {{ action }}
             </MDBBtn>
           </div>
@@ -57,28 +37,18 @@
         <div class="form-group">
           <label>Reaction Platform</label>
           <div class="reaction-platform-selector">
-            <MDBBtn
-              v-for="platform in platforms"
-              :key="platform.name"
-              @click="selectReactionPlatform(platform.name)"
-              :class="{'selected': formData.reactionPlatform === platform.name}"
-              class="reaction-btn"
-            >
+            <MDBBtn v-for="platform in platforms" :key="platform.name" @click="selectReactionPlatform(platform.name)"
+              :class="{ 'selected': formData.reactionPlatform === platform.name }" class="reaction-btn">
               <MDBIcon :iconStyle="platform.iconStyle" :icon="platform.icon" />
             </MDBBtn>
           </div>
         </div>
-
         <div class="form-group">
           <label>Reaction Type</label>
           <div class="reaction-type-selector">
-            <MDBBtn
-              v-for="reaction in getReactionsForPlatform(formData.reactionPlatform)"
-              :key="reaction"
-              @click="selectReactionType(reaction)"
-              :class="{'selected': formData.reactionType === reaction}"
-              class="reaction-btn"
-            >
+            <MDBBtn v-for="reaction in getReactionsForPlatform(formData.reactionPlatform)" :key="reaction"
+              @click="selectReactionType(reaction)" :class="{ 'selected': formData.reactionType === reaction }"
+              class="reaction-btn">
               {{ reaction }}
             </MDBBtn>
           </div>
@@ -90,139 +60,139 @@
   </div>
 </template>
 
-  
-  <script setup lang="ts">
-  import { ref } from 'vue';
-  import { MDBBtn, MDBIcon } from 'mdb-vue-ui-kit';
-  
-  const platforms = ref([
-    { name: 'Facebook', icon: 'facebook-f', iconStyle: 'fab', color: 'rgb(59, 89, 152)' },
-    { name: 'Twitter', icon: 'twitter', iconStyle: 'fab', color: 'rgb(85, 172, 238)' },
-    { name: 'Reddit', icon: 'reddit-alien', iconStyle: 'fab', color: 'rgb(255, 69, 0)' },
-    { name: 'Instagram', icon: 'instagram', iconStyle: 'fab', color: 'rgb(172, 43, 172)' },
-    { name: 'LinkedIn', icon: 'linkedin-in', iconStyle: 'fab', color: 'rgb(0, 130, 202)' },
-    { name: 'YouTube', icon: 'youtube', iconStyle: 'fab', color: 'rgb(237, 48, 47)' },
-    { name: 'WhatsApp', icon: 'whatsapp', iconStyle: 'fab', color: 'rgb(37, 211, 102)' },
-    { name: 'Google', icon: 'google', iconStyle: 'fab', color: 'rgb(221, 75, 57)' },
-    { name: 'Pinterest', icon: 'pinterest', iconStyle: 'fab', color: 'rgb(198, 17, 24)' },
-    { name: 'VK', icon: 'vk', iconStyle: 'fab', color: 'rgb(76, 117, 163)' },
-    { name: 'Stack Overflow', icon: 'stack-overflow', iconStyle: 'fab', color: 'rgb(255, 172, 68)' },
-    { name: 'Slack', icon: 'slack-hash', iconStyle: 'fab', color: 'rgb(72, 20, 73)' },
-    { name: 'GitHub', icon: 'github', iconStyle: 'fab', color: 'rgb(51, 51, 51)' },
-    { name: 'Dribbble', icon: 'dribbble', iconStyle: 'fab', color: 'rgb(236, 74, 137)' },
-  ]);
-  
-  const selectedPlatform = ref<string | null>(null);
-  const formData = ref({
-    subreddit: '',
-    tweet: '',
-    actionType: '',
-    reactionPlatform: '',
-    reactionType: '',
-    value: '',
-  });
-  
-  function selectPlatform(platformName: string) {
-    selectedPlatform.value = platformName;
-    formData.value = { subreddit: '', tweet: '', actionType: '', reactionPlatform: '', reactionType: '', value: '' };
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { MDBBtn, MDBIcon } from 'mdb-vue-ui-kit';
+
+const platforms = ref([
+  { name: 'Facebook', icon: 'facebook-f', iconStyle: 'fab', color: 'rgb(59, 89, 152)' },
+  { name: 'Twitter', icon: 'twitter', iconStyle: 'fab', color: 'rgb(85, 172, 238)' },
+  { name: 'Reddit', icon: 'reddit-alien', iconStyle: 'fab', color: 'rgb(255, 69, 0)' },
+  { name: 'Instagram', icon: 'instagram', iconStyle: 'fab', color: 'rgb(172, 43, 172)' },
+  { name: 'LinkedIn', icon: 'linkedin-in', iconStyle: 'fab', color: 'rgb(0, 130, 202)' },
+  { name: 'YouTube', icon: 'youtube', iconStyle: 'fab', color: 'rgb(237, 48, 47)' },
+  { name: 'WhatsApp', icon: 'whatsapp', iconStyle: 'fab', color: 'rgb(37, 211, 102)' },
+  { name: 'Google', icon: 'google', iconStyle: 'fab', color: 'rgb(221, 75, 57)' },
+  { name: 'Pinterest', icon: 'pinterest', iconStyle: 'fab', color: 'rgb(198, 17, 24)' },
+  { name: 'VK', icon: 'vk', iconStyle: 'fab', color: 'rgb(76, 117, 163)' },
+  { name: 'Stack Overflow', icon: 'stack-overflow', iconStyle: 'fab', color: 'rgb(255, 172, 68)' },
+  { name: 'Slack', icon: 'slack-hash', iconStyle: 'fab', color: 'rgb(72, 20, 73)' },
+  { name: 'GitHub', icon: 'github', iconStyle: 'fab', color: 'rgb(51, 51, 51)' },
+  { name: 'Dribbble', icon: 'dribbble', iconStyle: 'fab', color: 'rgb(236, 74, 137)' },
+]);
+
+const selectedPlatform = ref<string | null>(null);
+const formData = ref({
+  subreddit: '',
+  tweet: '',
+  actionType: '',
+  reactionPlatform: '',
+  reactionType: '',
+  value: '',
+});
+
+function selectPlatform(platformName: string) {
+  selectedPlatform.value = platformName;
+  formData.value = { subreddit: '', tweet: '', actionType: '', reactionPlatform: '', reactionType: '', value: '' };
+}
+
+function selectActionType(action: string) {
+  formData.value.actionType = action;
+}
+
+function selectReactionPlatform(platformName: string) {
+  formData.value.reactionPlatform = platformName;
+  formData.value.reactionType = '';
+}
+
+function selectReactionType(reaction: string) {
+  formData.value.reactionType = reaction;
+}
+
+function submitForm() {
+  console.log(`Creating action for ${selectedPlatform.value}:`, formData.value);
+  alert(`Action created for ${selectedPlatform.value}!`);
+  selectedPlatform.value = null;
+}
+
+function submitReactionForm() {
+  console.log(`Creating reaction for ${formData.value.reactionPlatform}:`, formData.value);
+  alert(`ActionReaction created for ${formData.value.reactionPlatform}!`);
+  selectedPlatform.value = null;
+}
+
+function getActionsForPlatform(platform: string) {
+  switch (platform) {
+    case 'Facebook':
+      return ['Like', 'Comment', 'Share'];
+    case 'Twitter':
+      return ['Tweet', 'Retweet', 'Like'];
+    case 'Reddit':
+      return ['Post', 'Comment', 'Upvote'];
+    case 'Instagram':
+      return ['Post', 'Comment', 'Like'];
+    case 'LinkedIn':
+      return ['Post', 'Comment', 'Like'];
+    case 'YouTube':
+      return ['Subscribe', 'Comment', 'Like'];
+    case 'WhatsApp':
+      return ['Message', 'Call', 'Video Call'];
+    case 'Google':
+      return ['Search', 'Review', 'Comment'];
+    case 'Pinterest':
+      return ['Pin', 'Comment', 'Like'];
+    case 'VK':
+      return ['Post', 'Comment', 'Like'];
+    case 'Stack Overflow':
+      return ['Ask Question', 'Answer Question', 'Comment'];
+    case 'Slack':
+      return ['Message', 'Call', 'Video Call'];
+    case 'GitHub':
+      return ['Create Repository', 'Issue', 'Pull Request'];
+    case 'Dribbble':
+      return ['Post', 'Comment', 'Like'];
+    default:
+      return [];
   }
-  
-  function selectActionType(action: string) {
-    formData.value.actionType = action;
+}
+
+function getReactionsForPlatform(platform: string) {
+  switch (platform) {
+    case 'Facebook':
+      return ['Like', 'Love', 'Haha', 'Wow', 'Sad', 'Angry'];
+    case 'Twitter':
+      return ['Like', 'Retweet', 'Reply'];
+    case 'Reddit':
+      return ['Upvote', 'Downvote', 'Comment'];
+    case 'Instagram':
+      return ['Like', 'Comment'];
+    case 'LinkedIn':
+      return ['Like', 'Celebrate', 'Support', 'Love', 'Insightful', 'Curious'];
+    case 'YouTube':
+      return ['Like', 'Dislike', 'Comment'];
+    case 'WhatsApp':
+      return ['Like', 'Love', 'Laugh', 'Surprised', 'Sad', 'Angry'];
+    case 'Google':
+      return ['Like', 'Dislike', 'Comment'];
+    case 'Pinterest':
+      return ['Like', 'Comment'];
+    case 'VK':
+      return ['Like', 'Comment'];
+    case 'Stack Overflow':
+      return ['Upvote', 'Downvote', 'Comment'];
+    case 'Slack':
+      return ['Like', 'Laugh', 'Surprised', 'Sad', 'Angry'];
+    case 'GitHub':
+      return ['Star', 'Fork', 'Watch'];
+    case 'Dribbble':
+      return ['Like', 'Comment'];
+    default:
+      return [];
   }
-  
-  function selectReactionPlatform(platformName: string) {
-    formData.value.reactionPlatform = platformName;
-    formData.value.reactionType = '';
-  }
-  
-  function selectReactionType(reaction: string) {
-    formData.value.reactionType = reaction;
-  }
-  
-  function submitForm() {
-    console.log(`Creating action for ${selectedPlatform.value}:`, formData.value);
-    alert(`Action created for ${selectedPlatform.value}!`);
-    selectedPlatform.value = null;
-  }
-  
-  function submitReactionForm() {
-    console.log(`Creating reaction for ${formData.value.reactionPlatform}:`, formData.value);
-    alert(`ActionReaction created for ${formData.value.reactionPlatform}!`);
-    selectedPlatform.value = null;
-  }
-  
-  function getActionsForPlatform(platform: string) {
-    switch (platform) {
-      case 'Facebook':
-        return ['Like', 'Comment', 'Share'];
-      case 'Twitter':
-        return ['Tweet', 'Retweet', 'Like'];
-      case 'Reddit':
-        return ['Post', 'Comment', 'Upvote'];
-      case 'Instagram':
-        return ['Post', 'Comment', 'Like'];
-      case 'LinkedIn':
-        return ['Post', 'Comment', 'Like'];
-      case 'YouTube':
-        return ['Subscribe', 'Comment', 'Like'];
-      case 'WhatsApp':
-        return ['Message', 'Call', 'Video Call'];
-      case 'Google':
-        return ['Search', 'Review', 'Comment'];
-      case 'Pinterest':
-        return ['Pin', 'Comment', 'Like'];
-      case 'VK':
-        return ['Post', 'Comment', 'Like'];
-      case 'Stack Overflow':
-        return ['Ask Question', 'Answer Question', 'Comment'];
-      case 'Slack':
-        return ['Message', 'Call', 'Video Call'];
-      case 'GitHub':
-        return ['Create Repository', 'Issue', 'Pull Request'];
-      case 'Dribbble':
-        return ['Post', 'Comment', 'Like'];
-      default:
-        return [];
-    }
-  }
-  
-  function getReactionsForPlatform(platform: string) {
-    switch (platform) {
-      case 'Facebook':
-        return ['Like', 'Love', 'Haha', 'Wow', 'Sad', 'Angry'];
-      case 'Twitter':
-        return ['Like', 'Retweet', 'Reply'];
-      case 'Reddit':
-        return ['Upvote', 'Downvote', 'Comment'];
-      case 'Instagram':
-        return ['Like', 'Comment'];
-      case 'LinkedIn':
-        return ['Like', 'Celebrate', 'Support', 'Love', 'Insightful', 'Curious'];
-      case 'YouTube':
-        return ['Like', 'Dislike', 'Comment'];
-      case 'WhatsApp':
-        return ['Like', 'Love', 'Laugh', 'Surprised', 'Sad', 'Angry'];
-      case 'Google':
-        return ['Like', 'Dislike', 'Comment'];
-      case 'Pinterest':
-        return ['Like', 'Comment'];
-      case 'VK':
-        return ['Like', 'Comment'];
-      case 'Stack Overflow':
-        return ['Upvote', 'Downvote', 'Comment'];
-      case 'Slack':
-        return ['Like', 'Laugh', 'Surprised', 'Sad', 'Angry'];
-      case 'GitHub':
-        return ['Star', 'Fork', 'Watch'];
-      case 'Dribbble':
-        return ['Like', 'Comment'];
-      default:
-        return [];
-    }
-  }
-  </script>
-  <style scoped>
+}
+</script>
+<style scoped>
 .create-option {
   text-align: center;
   font-family: Arial, sans-serif;
@@ -293,8 +263,8 @@ h1 {
   color: #333;
 }
 
-.action-type-selector, 
-.reaction-platform-selector, 
+.action-type-selector,
+.reaction-platform-selector,
 .reaction-type-selector {
   display: flex;
   flex-wrap: wrap;
@@ -302,7 +272,7 @@ h1 {
   gap: 10px;
 }
 
-.action-btn, 
+.action-btn,
 .reaction-btn {
   background-color: #0056b3;
   border-radius: 10px;
@@ -312,7 +282,7 @@ h1 {
   padding: 0.8rem 1.5rem;
 }
 
-.action-btn:hover, 
+.action-btn:hover,
 .reaction-btn:hover {
   background-color: #ff851b;
   transform: scale(1.1);
@@ -334,5 +304,13 @@ button.submit-btn {
 button.submit-btn:hover {
   background-color: #e67e22;
   transform: translateY(-3px);
+}
+
+.action-btn.selected,
+.reaction-btn.selected {
+  background-color: #ff851b;
+  color: white;
+  font-weight: bold;
+  transform: scale(1.1);
 }
 </style>
