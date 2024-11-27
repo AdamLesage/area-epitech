@@ -23,15 +23,13 @@ const { v4: uuidv4 } = require('uuid');
  * @autor Adam Lesage
  */
 router.get('/users', async (req, res) => {
-    console.log("Retrieving users");
     const { uuids, emails } = req.query;
     const query = {};
-    console.log(uuids, emails);
 
     if (uuids) {
-        query.id = { in: uuids.split(',') };
+        query.uuid = { in: uuids.split(',') };
     }
-
+    
     if (emails) {
         query.email = { in: emails.split(',') };
     }

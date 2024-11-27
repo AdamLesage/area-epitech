@@ -9,6 +9,7 @@ require('dotenv').config();
 const prisma = new PrismaClient();
 let app;
 let userUuid;
+let userEmail;
 
 beforeAll(async () => {
     // Setup the express app and routes
@@ -43,6 +44,7 @@ describe('User Routes', () => {
         expect(response.body).toHaveProperty('email');
         expect(response.body).toHaveProperty('name');
         userUuid = response.body.uuid;
+        userEmail = response.body.email;
     }, 10000);
 
     it('should retrieve all users (GET /api/users)', async () => {
@@ -50,6 +52,36 @@ describe('User Routes', () => {
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBeGreaterThan(0);
+    }, 10000);
+
+    it('should retrieve all users with specified uuids (GET /api/users?uuids=uuid1,uuid2)', async () => {
+        const response = await request(app).get(`/api/users?uuids=${userUuid}`);
+        expect(response.statusCode).toBe(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(1);
+        expect(response.body[0]).toHaveProperty('uuid', userUuid);
+    }, 10000);
+
+    it('should retrieve no users with specified uuids (GET /api/users?uuids=uuid1,uuid2)', async () => {
+        const response = await request(app).get('/api/users?uuids=invalid-uuid');
+        expect(response.statusCode).toBe(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(0);
+    }, 10000);
+
+    it('should retrieve all users with specified emails (GET /api/users?emails=email1,email2)', async () => {
+        const response = await request(app).get(`/api/users?emails=${userEmail}`);
+        expect(response.statusCode).toBe(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(1);
+        expect(response.body[0]).toHaveProperty('email', userEmail);
+    }, 10000);
+
+    it('should retrieve no users with specified emails (GET /api/users?emails=email1,email2)', async () => {
+        const response = await request(app).get('/api/users?emails=invalid-email');
+        expect(response.statusCode).toBe(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(0);
     }, 10000);
 
     it('should retrieve a user by uuid (GET /api/user/:uuid)', async () => {
