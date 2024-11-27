@@ -1,0 +1,29 @@
+name: Tests
+description: Add, update or delete tests
+labels: ["tests"]
+projects: ["AdamLesage/Projects/R-Type-epitech"]
+
+body:
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe why you need this Issue
+      placeholder: I need it because my project reacts strangely to instructions and I need to run some tests to find out the cause of my problem....
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: What kind of tests do you need?
+      options:
+        - "E2E"
+        - "Unit"
+        - "Integration"
+        - "Stress"
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Put here any additionnal content like screenshots or videos (optional)
