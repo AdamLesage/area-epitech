@@ -15,12 +15,12 @@
             Home
           </router-link>
           <router-link
-            to="/create_option"
+            to="/create-option"
             class="text-white text-xl font-medium hover:text-gray-300 transition-colors duration-300"
           >
             Create Option
           </router-link>
-          <router-link to="/user_details" class="flex items-center">
+          <router-link to="/user-details" class="flex items-center">
             <Icon icon="fluent:person-16-filled" class="text-white text-3xl hover:text-gray-300 transition-all duration-300" />
           </router-link>
         </div>

@@ -19,11 +19,11 @@ const routes = [
     component: Register,
   },
   {
-    path: '/user_details',
+    path: '/user-details',
     component: UserDetails,
   },
   {
-    path : '/create_option',
+    path : '/create-option',
     component : CreateOptions,
   }
 ];
