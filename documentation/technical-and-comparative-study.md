@@ -139,6 +139,12 @@ This document outlines the rationale for selecting **Vue.js** as the frontend fr
 
 ### Comparison: Speed Test
 
+In order to test correctly each backend languages/framework, **we created a repository which tests thee speed difference between them**.
+
+Link here: `https://github.com/Tugduoff/ServerSideSpeedStudy`
+
+---
+
 | Framework     | Seconds per 1000 requests  | Avg. Latency (ms) |
 |---------------|----------------------------|-------------------|
 | Express.js    | 0.8 sec                    | ~3-5              |
