@@ -1,15 +1,10 @@
-Here's the updated README in English, without mentions of testing and deployment:
-
----
-
 # AREA - Automated Reactive Event Application
 
-AREA (Automated Reactive Event Application) is a web application that triggers automatic actions based on user-defined events. It is built using **FastAPI** for the backend and **React** for the frontend.
+AREA (Automated Reactive Event Application) is a web application that triggers automatic actions based on user-defined events. It is built using **Express.js** for the backend and **Vue.js** for the frontend.
 
 ## Prerequisites
 
 Before you start, make sure you have installed:
-- **Python 3.8+**
 - **Node.js** and **npm**
 - **PostgreSQL** for database management
 
@@ -22,13 +17,15 @@ Before you start, make sure you have installed:
    cd area
    ```
 
-2. Install Python dependencies for the backend using `pip`:
+2. Install backend dependencies for Express.js using `npm`:
 
    ```bash
-   pip install -r requirements.txt
+   cd backend
+   npm install
+   cd ..
    ```
 
-3. Install JavaScript dependencies for the frontend:
+3. Install dependencies for the Vue.js frontend:
 
    ```bash
    cd frontend
@@ -49,72 +46,71 @@ Before you start, make sure you have installed:
 
 ### 1. Start the Backend
 
-In one terminal, start the FastAPI server by running:
+In one terminal, start the Express.js server by running:
 
 ```bash
-uvicorn backend.main:app --reload
-```
-
-FastAPI will start on [http://localhost:8000](http://localhost:8000).
-
-### 2. Start the Frontend
-
-In another terminal, navigate to the `frontend` folder and start the React application:
-
-```bash
-cd frontend
+cd backend
 npm start
 ```
 
-The React frontend will start on [http://localhost:3000](http://localhost:3000).
+The backend will start on [http://localhost:8000](http://localhost:8000).
+
+### 2. Start the Frontend
+
+In another terminal, navigate to the `frontend` folder and start the Vue.js application:
+
+```bash
+cd frontend
+npm run serve
+```
+
+The Vue.js frontend will start on [http://localhost:8080](http://localhost:8080).
 
 ## Documentation
 
-You can find our documentation inside `documentation` folder:
+You can find our documentation inside the `documentation` folder:
 
-1. [Technical Comparative Study](documentation/TECHNICAL_COMPARATIVE_STUDY.md) (see doc: `./documentation/technical-and-comparative-study.md`)
+1. [Technical Comparative Study](documentation/technical-and-comparative-study.md) (see doc: `./documentation/technical-and-comparative-study.md`)
+2. [Database Comparative Study](documentation/database-comparative.md) (see doc: `./documentation/database-comparative.md`)
+3. [Testing Policy](documentation/testing-policy.md) (see doc: `./documentation/testing-policy.md`)
+4. [Libraries and Frameworks](documentation/useful-libraries-for-development.md) (see doc: `./documentation/useful-libraries-for-development.md`)
 
 ### API Documentation
 
-Once the application is running, you can explore the interactive API documentation provided by FastAPI at the following URL:
-
-```
-http://localhost:8000/docs
-```
-
-This documentation allows you to test the various API endpoints and view request and response schemas.
+The API documentation for the backend can be accessed at [http://localhost:8000/api-docs](http://localhost:8000/api-docs), provided you have integrated a tool like Swagger or Postman collections for exploring the endpoints.
 
 ## Project Structure
 
 ```plaintext
 area/
-├── backend/                    # FastAPI backend
-│   ├── main.py                 # Main entry point for FastAPI
-│   ├── database.py             # Database configuration
-│   ├── models/                 # SQLAlchemy data models
-│   ├── routers/                # API routes
+├── backend/                    # Express.js backend
+│   ├── index.js                # Main entry point for Express.js
+│   ├── database.js             # Database configuration
+│   ├── models/                 # Sequelize or custom data models
+│   ├── routes/                 # API routes
 │   └── .env                    # Environment variables file (add this)
-├── frontend/                   # React frontend
+├── frontend/                   # Vue.js frontend
 │   ├── public/                 # Public static files
-│   ├── src/                    # React source code
+│   ├── src/                    # Vue source code
 │   ├── package.json            # npm configuration file
+│   ├── vue.config.js           # Vue.js configuration file
 │   └── .env                    # Environment variables file for frontend (add this)
 └── README.md                   # Project documentation
 ```
 
 ## Database Management
 
-The database is automatically created when the application starts for the first time. If you'd like to manually create the database, you can run the `create_database()` function in `database.py` before starting the FastAPI server.
+The database is automatically created when the application starts for the first time if Sequelize or a similar ORM is used. If you'd like to manually create the database, ensure your database setup script in `database.js` is executed before running the backend server.
 
 ## Development
 
-For live updates, both the FastAPI backend and React frontend reload automatically when they detect changes in their respective source code.
+For live updates, both the Express.js backend and Vue.js frontend reload automatically when they detect changes in their respective source code.
 
-- **Backend**: FastAPI restarts automatically using the `--reload` option in Uvicorn.
-- **Frontend**: React uses Webpack to refresh the browser when files are updated.
+- **Backend**: Use tools like **nodemon** for automatic restart when code changes.
+  - Install nodemon globally if not already installed: `npm install -g nodemon`.
+  - Start the backend using: `nodemon index.js`.
+- **Frontend**: Vue's development server automatically refreshes the browser when files are updated. Start it with `npm run serve`.
 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
