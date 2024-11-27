@@ -1,0 +1,45 @@
+name: Github Actions Professional Work
+on:
+  pull_request:
+    branches-ignore:
+      - "ga-ignore-*"
+
+jobs:
+  check_compilation:
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+      options: --privileged
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - run: |
+        echo "Need to implement compilation check"
+      timeout-minutes: 1
+  run_tests_and_coverage:
+    needs:
+      - check_compilation
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+      options: --privileged
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - run: |
+        echo "Need to implement tests"
+      timeout-minutes: 1
+  push_to_mirror:
+    needs:
+      - run_tests_and_coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: pixta-dev/repository-mirroring-action@v1
+      with:
+        target_repo_url: ${{ secrets.REPOSITORY_SSH }}
+        ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
