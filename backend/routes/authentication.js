@@ -126,5 +126,3 @@ router.get('/google/redirect',
 );
 
 module.exports = router;
-
-'\nInvalid `prisma.user.create()` invocation in\n/home/alesage/Epitech/tek3/area/area-epitech/backend/routes/authentication.js:106:29\n\n  103     },\n  104 }).then((user) => {\n  105     if (!user) {\n→ 106         prisma.user.create({\n                data: {\n                  email: "area.romainlemalin@gmail.com",\n                  name: "Area google account",\n                  surname: "",\n                  profilePicture: "https://lh3.googleusercontent.com/a/ACg8ocLLl2qUAgTmvvCgFnEEkdNMs6MSMa_5bJTmqiC2CkMaGARRYA=s96-c",\n                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n                  uuid: "e2068a38-8647-474c-8d48-cc96addcd2dc",\n                  googleAccessToken: undefined,\n                  hashedPassword: ""\n                }\n              })\n\nArgument `profilePicture`: Invalid value provided. Expected ProfilePictureCreateNestedOneWithoutUserInput or ProfilePictureUncheckedCreateNestedOneWithoutUserInput, provided String.'
