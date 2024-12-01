@@ -51,6 +51,7 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const uuid = uuidv4();
+    const authToken = uuidv4();
 
     prisma.user.create({
         data: {
@@ -63,6 +64,7 @@ router.post('/register', async (req, res) => {
             birthDate: birthDate ? new Date(birthDate) : null,
             phoneNumber,
             profilePicture: profilePicture ? { create: profilePicture } : undefined,
+            authToken: authToken,
         },
     }).then((user) => {
         return res.status(201).json(user);

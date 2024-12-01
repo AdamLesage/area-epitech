@@ -42,11 +42,9 @@ passport.use(
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
             callbackURL: 'http://localhost:3000/auth/github/redirect',
-            scope: ['user:email'], // Demander l'accès à l'email
+            scope: ['user:email'],
         },
         async (accessToken, refreshToken, profile, done) => {
-            // console.log('GitHub Profile:', profile);
-            // GitHub n'inclut pas toujours l'email par défaut, il faut le chercher dans profile.emails
             const email = profile.emails?.[0]?.value || null;
             done(null, { ...profile, accessToken, email });
         }

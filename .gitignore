@@ -188,3 +188,4 @@ yarn-error.log*
 
 # Package
 package-lock.json
+coverage*
