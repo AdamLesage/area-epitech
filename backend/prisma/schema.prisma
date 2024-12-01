@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id             Int             @id @default(autoincrement())
-  uuid           String          @unique
-  name           String
-  surname        String
-  bio            String?
-  birthDate      DateTime?
-  email          String          @unique
-  phoneNumber    String?
-  hashedPassword String
-  profilePicture ProfilePicture?
-  linkedAccounts LinkedAccount[]
+  id                Int             @id @default(autoincrement())
+  uuid              String          @unique
+  name              String
+  surname           String
+  bio               String?
+  birthDate         DateTime?
+  email             String          @unique
+  phoneNumber       String?
+  hashedPassword    String
+  authToken         String?
+  googleAccessToken String?
+  profilePicture    ProfilePicture?
+  linkedAccounts    LinkedAccount[]
 }
 
 model ProfilePicture {
