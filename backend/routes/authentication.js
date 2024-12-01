@@ -125,4 +125,54 @@ router.get('/google/redirect',
     }
 );
 
+// Github auth routes
+
+router.get('/github',
+    passport.authenticate('github')
+);
+
+router.get('/github/redirect',
+    passport.authenticate('github', {
+        failureRedirect: '/login'
+    }),
+    (req, res) => {
+        console.log('User:', req.user);
+        const userParams = {
+            email: req.user.emails[0].value,
+            name: req.user.displayName,
+            surname: '',
+            // profilePicture: {
+            //     create: {
+            //         url: req.user.photos[0].value,
+            //     },
+            // },
+            uuid: uuidv4(),
+            githubAccessToken: req.user.accessToken,
+            hashedPassword: '',
+        };
+
+        prisma.user.findUnique({
+            where: {
+                email: userParams.email,
+            },
+        }).then((user) => {
+            if (!user) {
+                prisma.user.create({
+                    data: userParams,
+                }).then((newUser) => {
+                    return res.status(201).json(newUser);
+                }).catch((error) => {
+                    console.error(error);
+                    return res.status(500).json({ error: error.message });
+                });
+            } else {
+                return res.status(200).json(user);
+            }
+        }).catch((error) => {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        });
+    }
+);
+
 module.exports = router;

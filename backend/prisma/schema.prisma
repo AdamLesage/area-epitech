@@ -19,6 +19,7 @@ model User {
   hashedPassword    String
   authToken         String?
   googleAccessToken String?
+  githubAccessToken String?
   profilePicture    ProfilePicture?
   linkedAccounts    LinkedAccount[]
 }

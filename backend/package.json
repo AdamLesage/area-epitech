@@ -19,6 +19,7 @@
     "mongodb-memory-server": "^10.1.2",
     "mongoose": "^8.8.3",
     "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
     "passport-google-oauth": "^2.0.0",
     "passport-google-oauth20": "^2.0.0",
     "supertest": "^7.0.0",
