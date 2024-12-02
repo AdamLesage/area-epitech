@@ -23,22 +23,10 @@ The workflow integrates **GitHub Actions** to automate test execution after ever
 1. **Unit Tests**: Test individual backend functions or classes in isolation.
 2. **Integration Tests**: Validate interactions between backend modules, such as routes and database operations.
 
-### Setup Instructions:
-Install Jest with the following command:
-```bash
-npm install --save-dev jest
-```
-Add the following `jest.config.js` for setup:
-```javascript
-module.exports = {
-  testEnvironment: 'node',
-};
-```
-
 ### Run Tests:
 Execute backend tests with:
 ```bash
-npx jest
+sudo docker-compose exec server sh -c "npm run test"
 ```
 
 ---
