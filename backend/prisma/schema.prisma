@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int             @id @default(autoincrement())
+  uuid              String          @unique
+  name              String
+  surname           String
+  bio               String?
+  birthDate         DateTime?
+  email             String          @unique
+  phoneNumber       String?
+  hashedPassword    String
+  authToken         String          @unique
+  googleAccessToken String?
+  githubAccessToken String?
+  profilePicture    ProfilePicture?
+  linkedAccounts    LinkedAccount[]
+}
+
+model ProfilePicture {
+  id      Int    @id @default(autoincrement())
+  uuid    String @unique
+  picture String
+  userId  Int    @unique
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model LinkedAccount {
+  id       Int    @id @default(autoincrement())
+  uuid     String @unique
+  name     String
+  logo     String
+  endpoint String
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+}
+
+model Service {
+  id        Int        @id @default(autoincrement())
+  name      String
+  logo      String
+  actions   Action[]
+  reactions Reaction[]
+}
+
+model Action {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  endpoint    String
+  serviceId   Int
+  service     Service @relation(fields: [serviceId], references: [id])
+}
+
+model Reaction {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  endpoint    String
+  serviceId   Int
+  service     Service @relation(fields: [serviceId], references: [id])
+}
