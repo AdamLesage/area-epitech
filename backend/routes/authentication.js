@@ -178,4 +178,51 @@ router.get('/github/redirect',
     }
 );
 
+// Twitter auth routes
+
+router.get('/twitter',
+    passport.authenticate('twitter')
+);
+
+router.get('/twitter/redirect',
+    passport.authenticate('twitter', {
+        failureRedirect: '/login'
+    }),
+    (req, res) => {
+        // console.log('User:', req.user);
+        console.log(req.user.token);
+        const userParams = {
+            email: "unexisting email for twitter OAuth",
+            name: req.user.displayName,
+            surname: '',
+            uuid: uuidv4(),
+            twitterAccessToken: req.user.token,
+            hashedPassword: '',
+        };
+
+        prisma.user.findUnique({
+            where: {
+                email: userParams.email,
+            },
+        }).then((user) => {
+            if (!user) {
+                userParams.authToken = uuidv4();
+                prisma.user.create({
+                    data: userParams,
+                }).then((newUser) => {
+                    return res.status(201).json(newUser);
+                }).catch((error) => {
+                    console.error(error);
+                    return res.status(500).json({ error: error.message });
+                });
+            } else {
+                return res.status(200).json(user);
+            }
+        }).catch((error) => {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        });
+    }
+);
+
 module.exports = router;

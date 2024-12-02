@@ -23,15 +23,6 @@ passport.use(
     )
 );
 
-passport.serializeUser((user, done) => {
-    done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-    done(null, user);
-});
-
-
 // Github strategy
 
 const GitHubStrategy = require('passport-github2').Strategy;
@@ -50,3 +41,35 @@ passport.use(
         }
     )
 );
+
+// Twitter strategy
+
+const TwitterStrategy = require('passport-twitter').Strategy;
+
+passport.use(
+    new TwitterStrategy(
+        {
+            consumerKey: process.env.TWITTER_CONSUMER_KEY,
+            consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+            callbackURL: `http://localhost:3000/auth/twitter/redirect`,
+            scope: ['profile', 'email'],
+        },
+        function (token, tokenSecret, profile, done) {
+            console.log('Profile:', profile);
+            console.log('Token:', token);
+            console.log('Token secret:', tokenSecret);
+            // User find or create to db
+            return done(null, { ...profile, token });
+        }
+    )
+);
+
+// Serialize user
+
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+    done(null, user);
+});
