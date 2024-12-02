@@ -1,21 +1,21 @@
 FROM node:lts-alpine
 
-# installe un simple serveur http pour servir un contenu statique
+# installs a simple http server to serve static content
 RUN npm install -g http-server
 
-# définit le dossier 'app' comme dossier de travail
+# sets the 'app' folder as working folder
 WORKDIR /app
 
-# copie 'package.json' et 'package-lock.json' (si disponible)
+# copy 'package.json' and 'package-lock.json' (if available)
 COPY package*.json ./
 
-# installe les dépendances du projet
+# Installs project dependencies
 RUN npm install
 
-# copie les fichiers et dossiers du projet dans le dossier de travail (par exemple : le dossier 'app')
+# copies the files and folders of the project to the working folder (for example: 'app' folder)
 COPY . .
 
-# construit l'app pour la production en la minifiant
+# builds the app for production by minimising
 RUN npm run build
 
 EXPOSE 8081
