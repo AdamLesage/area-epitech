@@ -37,7 +37,7 @@ Before you start, make sure you have installed:
 3. Lunch the server, the web app and the database:
 
    ```bash
-   sudo sudo docker-compose up --build -d
+   sudo docker-compose up --build -d
    ```
 
 The Vue.js frontend will start on [http://localhost:8081](http://localhost:8081).
