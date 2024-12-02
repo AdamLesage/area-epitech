@@ -17,54 +17,34 @@ Before you start, make sure you have installed:
    cd area
    ```
 
-2. Install backend dependencies for Express.js using `npm`:
 
-   ```bash
-   cd backend
-   npm install
-   cd ..
-   ```
-
-3. Install dependencies for the Vue.js frontend:
-
-   ```bash
-   cd frontend
-   npm install
-   cd ..
-   ```
-
-4. Set up your PostgreSQL database. Create a `.env` file in the `backend` folder with the necessary environment variables:
+2. Set up your project. Create a `.env` file in the `root` folder with the necessary environment variables:
 
    ```plaintext
    DB_USER=your_database_user
    DB_PASSWORD=your_database_password
    DB_NAME=area
    DB_HOST=localhost
+
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_Google_client_secret
+   GITHUB_CLIENT_ID=your_github_client_id
+   GITHUB_CLIENT_SECRET= your_github_client_secret
+   TWITTER_CONSUMER_KEY=your_twitter_consumer_key
+   TWITTER_CONSUMER_SECRET=your_twitter_consumer_secret
    ```
 
-## Starting the Application
+3. Lunch the server, the web app and the database:
 
-### 1. Start the Backend
+   ```bash
+   sudo sudo docker-compose up --build -d
+   ```
 
-In one terminal, start the Express.js server by running:
+The Vue.js frontend will start on [http://localhost:8081](http://localhost:8081).
 
-```bash
-cd backend
-npm start
-```
+The Express.js backend will start on [http://localhost:8080](http://localhost:8080).
 
-The backend will start on [http://localhost:8000](http://localhost:8000).
-
-### 2. Start the Frontend
-
-In another terminal, navigate to the `frontend` folder and start the Vue.js application:
-
-```bash
-cd frontend
-npm run serve
-```
-
-The Vue.js frontend will start on [http://localhost:8080](http://localhost:8080).
+The PostgreSQL database will start on [http://localhost:5432](http://localhost:5432).
 
 ## Documentation
 
