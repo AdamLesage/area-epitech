@@ -17,7 +17,7 @@ model User {
   email             String          @unique
   phoneNumber       String?
   hashedPassword    String
-  authToken         String?
+  authToken         String          @unique
   googleAccessToken String?
   githubAccessToken String?
   profilePicture    ProfilePicture?

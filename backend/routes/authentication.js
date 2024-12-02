@@ -88,16 +88,10 @@ router.get('/google/redirect',
         failureRedirect: '/login'
     }),
     (req, res) => {
-        console.log('User:', req.user);
         const userParams = {
             email: req.user.emails[0].value,
             name: req.user.name.givenName,
             surname: req.user.name.familyName || '',
-            // profilePicture: {
-            //     create: {
-            //         url: req.user.photos[0].value,
-            //     },
-            // },
             uuid: uuidv4(),
             googleAccessToken: req.user.accessToken,
             hashedPassword: '',
@@ -109,6 +103,7 @@ router.get('/google/redirect',
             },
         }).then((user) => {
             if (!user) {
+                userParams.authToken = uuidv4();
                 prisma.user.create({
                     data: userParams,
                 }).then((newUser) => {
@@ -143,11 +138,6 @@ router.get('/github/redirect',
             email: req.user.emails[0].value,
             name: req.user.displayName,
             surname: '',
-            // profilePicture: {
-            //     create: {
-            //         url: req.user.photos[0].value,
-            //     },
-            // },
             uuid: uuidv4(),
             githubAccessToken: req.user.accessToken,
             hashedPassword: '',
@@ -159,6 +149,7 @@ router.get('/github/redirect',
             },
         }).then((user) => {
             if (!user) {
+                userParams.authToken = uuidv4();
                 prisma.user.create({
                     data: userParams,
                 }).then((newUser) => {

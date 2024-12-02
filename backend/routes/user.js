@@ -14,39 +14,56 @@ const { v4: uuidv4 } = require('uuid');
 
 /**
  * @brief return a list of all actions of the user
- * 
+ *
  * @param [string] uuids
  * @param [string] emails
  * @return {object} users
- * 
+ *
  * @example GET /users?uuids=1,2,3&emails=adam@area.fr,romain@area.fr
  * @autor Adam Lesage
  */
 router.get('/users', async (req, res) => {
     const { uuids, emails } = req.query;
+    const headers = req.headers;
     const query = {};
 
     if (uuids) {
         query.uuid = { in: uuids.split(',') };
     }
-    
+
     if (emails) {
         query.email = { in: emails.split(',') };
     }
 
-    try {   
+    // Check if headers given are correct
+    if (headers.authorization) {
+        const user = await prisma.user.findUnique({
+            where: {
+                authToken: headers.authorization,
+            },
+        });
+
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    } else {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
         const users = await prisma.user.findMany({
             where: query,
         });
         res.json(users);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
 /**
  * @brief get a user by uuid
- * 
+ *
  * @param {string} uuid
  * @return {object} user
  * @example GET /user/uuid
@@ -54,6 +71,22 @@ router.get('/users', async (req, res) => {
  */
 router.get('/user/:uuid', async (req, res) => {
     const uuid = req.params.uuid;
+    const headers = req.headers;
+
+    // Check if headers given are correct
+    if (headers.authorization) {
+        const user = await prisma.user.findUnique({
+            where: {
+                authToken: headers.authorization,
+            },
+        });
+
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    } else {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
 
     try {
         const user = await prisma.user.findUnique({ where: { uuid } });
@@ -69,7 +102,7 @@ router.get('/user/:uuid', async (req, res) => {
 
 /**
  * @brief create a new user and return the user, password will be hashed
- * 
+ *
  * @param {string} email
  * @param {string} password
  * @param {string} username
@@ -79,6 +112,10 @@ router.get('/user/:uuid', async (req, res) => {
  */
 router.post('/user', async (req, res) => {
     const { name, surname, bio, birthDate, email, phoneNumber, password } = req.body;
+
+    if (!name || !surname || !bio || !birthDate || !email || !phoneNumber || !password) {
+        return res.status(400).json({ error: 'Missing parameters' });
+    }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
     const uuid = uuidv4();
@@ -92,7 +129,8 @@ router.post('/user', async (req, res) => {
                 birthDate: birthDate,
                 email: email,
                 phoneNumber: phoneNumber,
-                hashedPassword: hashedPassword
+                hashedPassword: hashedPassword,
+                authToken: `Bearer ${uuidv4()}`,
             },
         });
         res.json(user);
@@ -103,14 +141,30 @@ router.post('/user', async (req, res) => {
 
 /**
  * @brief delete the user
- * 
- * @param {string} id
+ *
+ * @param {string} uuid
  * @return {object} message
  * @exemple DELETE /user/uuid
  * @autor Adam Lesage
  */
 router.delete('/user/:uuid', async (req, res) => {
     const uuid = req.params.uuid;
+    const headers = req.headers;
+
+    // Check if headers given are correct
+    if (headers.authorization) {
+        const user = await prisma.user.findUnique({
+            where: {
+                authToken: headers.authorization,
+            },
+        });
+
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    } else {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
 
     try {
         await prisma.user.delete({ where: { uuid } });
@@ -130,6 +184,22 @@ router.delete('/user/:uuid', async (req, res) => {
  */
 router.put('/user/:uuid', async (req, res) => {
     const uuid = req.params.uuid;
+    const headers = req.headers;
+
+    // Check if headers given are correct
+    if (headers.authorization) {
+        const user = await prisma.user.findUnique({
+            where: {
+                authToken: headers.authorization,
+            },
+        });
+
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    } else {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
 
     const data = {};
     if (req.body.email) data.email = req.body.email;
