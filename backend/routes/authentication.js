@@ -189,11 +189,10 @@ router.get('/twitter/redirect',
         failureRedirect: '/login'
     }),
     (req, res) => {
-        // console.log('User:', req.user);
-        console.log(req.user.token);
         const userParams = {
             email: "unexisting email for twitter OAuth",
             name: req.user.displayName,
+            email: req.user.emails ? req.user.emails[0].value : "unexisting email for twitter OAuth",
             surname: '',
             uuid: uuidv4(),
             twitterAccessToken: req.user.token,
