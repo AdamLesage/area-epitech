@@ -116,6 +116,45 @@ router.get('/logout', (req, res) => {
     });
 });
 
+router.put('/reset-password', async (req, res) => {
+    const { email, newPassword, formerPassword } = req.body;
+
+    if (!email || !newPassword || !formerPassword) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    prisma.user.findUnique({
+        where: {
+            email: email,
+            hashedPassword: await bcrypt.hash(formerPassword, 10),
+        },
+    }).then((user) => {
+        if (!user) {
+            return res.status(404).json({ error: 'Email or password is incorrect' });
+        }
+
+        bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: err.message });
+            }
+
+            prisma.user.update({
+                where: {
+                    id: user.id,
+                },
+                data: {
+                    hashedPassword,
+                },
+            }).then(() => {
+                return res.status(20).json({ message: 'Password updated' });
+            }).catch((error) => {
+                console.error(error);
+                return res.status(500).json({ error: error.message });
+            });
+        });
+    });
+});
 
 // Google auth routes
 

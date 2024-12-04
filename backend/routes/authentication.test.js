@@ -113,4 +113,31 @@ describe('Authentication Routes', () => {
         expect(responseUserAfterLogout.statusCode).toBe(401);
         expect(responseUserAfterLogout.body).toHaveProperty('error', 'Unauthorized');
     });
+
+    it('should not reset the password if the former password is incorrect (POST /api/auth/reset-password)', async () => {
+        const responseUser = await request(app).post('/api/user').send({
+            name: "Jhona",
+            surname: "Doea",
+            bio: 'I am a usera',
+            birthDate: new Date().toISOString(),
+            email: "johna.doea@mail.com",
+            phoneNumber: '123456789a',
+            password: 'password123',
+        });
+
+        expect(responseUser.statusCode).toBe(200);
+        console.log(responseUser.body);
+        expect(responseUser.body).toHaveProperty('uuid');
+        expect(responseUser.body).toHaveProperty('email');
+        expect(responseUser.body).toHaveProperty('name');
+
+        const responseResetPassword = await request(app).put('/api/auth/reset-password').send({
+            email: "johna.doea@mail.com",
+            newPassword: 'wrongpassword',
+            formerPassword: 'newpassword123',
+        });
+
+        expect(responseResetPassword.statusCode).toBe(404);
+        expect(responseResetPassword.body).toHaveProperty('error', 'Email or password is incorrect');
+    });
 });
