@@ -112,32 +112,69 @@ describe('Authentication Routes', () => {
 
         expect(responseUserAfterLogout.statusCode).toBe(401);
         expect(responseUserAfterLogout.body).toHaveProperty('error', 'Unauthorized');
+
+        // delete all users
+        await prisma.user.deleteMany();
     });
 
-    it('should not reset the password if the former password is incorrect (POST /api/auth/reset-password)', async () => {
+    it('should not send an email if email is invalid (POST /api/auth/reset-password)', async () => {
         const responseUser = await request(app).post('/api/user').send({
-            name: "Jhona",
-            surname: "Doea",
-            bio: 'I am a usera',
+            name: "Jhon",
+            surname: "Doe",
+            bio: 'I am a user',
             birthDate: new Date().toISOString(),
-            email: "johna.doea@mail.com",
-            phoneNumber: '123456789a',
+            email: "john.doe@mail.com",
+            phoneNumber: '123456789',
             password: 'password123',
         });
-
         expect(responseUser.statusCode).toBe(200);
-        console.log(responseUser.body);
-        expect(responseUser.body).toHaveProperty('uuid');
-        expect(responseUser.body).toHaveProperty('email');
-        expect(responseUser.body).toHaveProperty('name');
+        let userAuthToken = responseUser.body.authToken;
+        console.log(userAuthToken);
 
-        const responseResetPassword = await request(app).put('/api/auth/reset-password').send({
-            email: "johna.doea@mail.com",
-            newPassword: 'wrongpassword',
-            formerPassword: 'newpassword123',
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `${userAuthToken}`
+        };
+
+        const response = await request(app)
+            .post('/api/auth/reset-password')
+            .set(headers)
+            .send({ email: 'invalidemail' });
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toHaveProperty('error', 'User not found');
+
+        // delete all users
+        await prisma.user.deleteMany();
+    });
+
+    it('should send an email to reset password (POST /api/auth/reset-password)', async () => {
+        const responseUser = await request(app).post('/api/user').send({
+            name: "Jhon",
+            surname: "Doe",
+            bio: 'I am a user',
+            birthDate: new Date().toISOString(),
+            email: "john.doe@mail.com",
+            phoneNumber: '123456789',
+            password: 'password123',
         });
+        expect(responseUser.statusCode).toBe(200);
+        let userAuthToken = responseUser.body.authToken;
 
-        expect(responseResetPassword.statusCode).toBe(404);
-        expect(responseResetPassword.body).toHaveProperty('error', 'Email or password is incorrect');
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `${userAuthToken}`
+        };
+
+        const response = await request(app)
+            .post('/api/auth/reset-password')
+            .set(headers)
+            .send({ email: 'john.doe@mail.com' });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('message', 'Email sent');
+
+        // delete all users
+        await prisma.user.deleteMany();
     });
 });

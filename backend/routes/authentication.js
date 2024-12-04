@@ -14,6 +14,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
+const nodemailer = require('nodemailer');
 
 // Intern auth routes
 
@@ -116,23 +117,87 @@ router.get('/logout', (req, res) => {
     });
 });
 
-router.put('/reset-password', async (req, res) => {
-    const { email, newPassword, formerPassword } = req.body;
 
-    if (!email || !newPassword || !formerPassword) {
+router.post('/reset-password', async (req, res) => {
+    const { email } = req.body;
+    const headers = req.headers;
+
+    if (!email) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    // Check if headers given are correct
+    if (headers.authorization) {
+        const user = await prisma.user.findUnique({
+            where: { authToken: headers.authorization },
+        });
+
+        if (user === null) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    } else {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Check if user exists
+    prisma.user.findUnique({
+        where: {
+            email: email,
+        },
+    }).then((user) => {
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        console.log(process.env.EMAIL_USER);
+        console.log(process.env.EMAIL_PASSWORD);
+        console.log(process.env.FRONTEND_URL);
+
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD,
+            },
+        });
+
+        const mailData = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Reset password',
+            text: `Click on the link to reset your password: ${process.env.FRONTEND_URL}/reset-password/${user.uuid}`,
+        };
+
+        // Send email with reset password link
+        transporter.sendMail(mailData, (err, info) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: err.message });
+            }
+
+        });
+        return res.status(200).json({ message: 'Email sent' });
+    });
+});
+
+// Method /GET because user will click on the link
+router.get('/reset-password/:uuid', async (req, res) => {
+    const { newPassword } = req.body;
+    const uuid = req.params.uuid;
+
+    if (!newPassword) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
     prisma.user.findUnique({
         where: {
-            email: email,
-            hashedPassword: await bcrypt.hash(formerPassword, 10),
+            uuid: uuid,
         },
     }).then((user) => {
         if (!user) {
-            return res.status(404).json({ error: 'Email or password is incorrect' });
+            return res.status(404).json({ error: 'User not found' });
         }
-
         bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
             if (err) {
                 console.error(err);
@@ -141,7 +206,7 @@ router.put('/reset-password', async (req, res) => {
 
             prisma.user.update({
                 where: {
-                    id: user.id,
+                    uuid: uuid,
                 },
                 data: {
                     hashedPassword,
