@@ -1,6 +1,7 @@
 const request = require('supertest');
 const express = require('express');
-const authRouter = require('./authentication'); // Remplacez avec le chemin correct
+const authRouter = require('./authentication');
+const userRouter = require('./user');
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 
@@ -14,6 +15,7 @@ beforeAll(async () => {
     app = express();
     app.use(express.json());
     app.use('/api/auth', authRouter);
+    app.use('/api/', userRouter);
 
     // Clean up the database before the tests
     await prisma.user.deleteMany();
@@ -72,5 +74,43 @@ describe('Authentication Routes', () => {
 
         expect(response.statusCode).toBe(404);
         expect(response.body).toHaveProperty('error', 'User not found');
+    });
+
+    it('should logout a user and change its auth token (GET /api/auth/logout)', async () => {
+        const responseUser = await request(app).post('/api/user').send({
+            name: "Jhon",
+            surname: "Doe",
+            bio: 'I am a user',
+            birthDate: new Date().toISOString(),
+            email: "john.doe@mail.com",
+            phoneNumber: '123456789',
+            password: 'password123',
+        });
+
+        expect(responseUser.statusCode).toBe(200);
+        expect(responseUser.body).toHaveProperty('uuid');
+        expect(responseUser.body).toHaveProperty('email');
+        expect(responseUser.body).toHaveProperty('name');
+        let userAuthToken = responseUser.body.authToken;
+        let userUuid = responseUser.body.uuid;
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `${userAuthToken}`
+        };
+        const responseLogout = await request(app)
+            .get('/api/auth/logout')
+            .set(headers);
+
+        expect(responseLogout.statusCode).toBe(200);
+        expect(responseLogout.body).toHaveProperty('message', 'User logged out');
+
+        // User with uuid should not have the same auth token
+        const responseUserAfterLogout = await request(app)
+            .get(`/api/user/${userUuid}`)
+            .set(headers);
+
+        expect(responseUserAfterLogout.statusCode).toBe(401);
+        expect(responseUserAfterLogout.body).toHaveProperty('error', 'Unauthorized');
     });
 });

@@ -17,9 +17,9 @@ model User {
   email             String          @unique
   phoneNumber       String?
   hashedPassword    String
-  authToken         String          @unique
-  googleAccessToken String?
-  githubAccessToken String?
+  authToken         String?         @unique
+  googleAccessToken String?         @unique
+  githubAccessToken String?         @unique
   profilePicture    ProfilePicture?
   linkedAccounts    LinkedAccount[]
 }

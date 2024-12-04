@@ -84,6 +84,38 @@ router.post('/register', async (req, res) => {
     });
 });
 
+router.get('/logout', (req, res) => {
+    const headers = req.headers;
+
+    if (!headers.authorization) {
+        return res.status(400).json({ error: 'Missing authorization header' });
+    }
+
+    prisma.user.findUnique({
+        where: {
+            authToken: headers.authorization,
+        },
+    }).then((user) => {
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        prisma.user.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                authToken: uuidv4(), // Invalidate the auth token
+            },
+        }).then(() => {
+            return res.status(200).json({ message: 'User logged out' });
+        }).catch((error) => {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        });
+    });
+});
+
 
 // Google auth routes
 
