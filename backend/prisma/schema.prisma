@@ -22,6 +22,7 @@ model User {
   githubAccessToken String?
   profilePicture    ProfilePicture?
   linkedAccounts    LinkedAccount[]
+  actionReaction    ActionReaction[]
 }
 
 model ProfilePicture {
@@ -66,4 +67,18 @@ model Reaction {
   endpoint    String
   serviceId   Int
   service     Service @relation(fields: [serviceId], references: [id])
+}
+
+model ActionReaction {
+  id            Int       @id @default(autoincrement())
+  uuid          String    @unique
+  title         String
+  typeAction    String
+  typeReaction  String
+  reactionData  Json
+  actionData    Json
+  userId        Int?
+  user          User?     @relation(fields: [userId], references: [id])
+  creationDate  DateTime  @default(now())
+  isActive      Boolean   @default(true)
 }
