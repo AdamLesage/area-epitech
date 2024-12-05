@@ -62,3 +62,19 @@ npm run test:e2e -- --debug
 ```sh
 npm run lint
 ```
+
+## Mobile app
+
+For the mobile app to be created and synced, you first have to build the whole project (not too long)
+
+```sh
+npm run build
+```
+
+then you can sync the webapp with the mobile ios and android apps:
+
+```sh
+npx cap sync
+```
+
+your app is ready to be checked on both ios and android.
