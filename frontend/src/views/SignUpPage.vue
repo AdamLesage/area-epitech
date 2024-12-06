@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import SignUpFormComponent from '@/components/SignUpFormComponent.vue';
 import LogoComponent from '@/components/LogoComponent.vue';
-import SignUpButton from '@/components/SignUpButton.vue';
-import { LoginForm } from '@/types/auth';
+import { SignUpForm } from '@/types/auth';
 
 import { ref } from 'vue';
 
-const signUpHover = ref(false);
+const signupHover = ref(false);
 
 // Form submission handler
-const handleSubmit = (values: LoginForm) => {
+const handleSubmit = (values: SignUpForm) => {
     console.log('Form Received:', values);
 };
 </script>
@@ -16,12 +16,12 @@ const handleSubmit = (values: LoginForm) => {
 <template>
     <div class="bg-auth-primary flex justify-center items-center">
         <LogoComponent color="#80C4E9" class="absolute top-0 left-5" />
-        <!-- <LoginFormComponent @submit="handleSubmit" /> -->
-        <SignUpButton
+        <SignUpFormComponent @submit="handleSubmit" />
+        <!-- <LoginButton
             class="hover:cursor-pointer absolute top-5 right-5"
-            :color="signUpHover ? '#eee' : 'white'"
-            @mouseover="signUpHover = true"
-            @mouseleave="signUpHover = false" />
+            :color="signupHover ? '#eee' : 'white'"
+            @mouseover="signupHover = true"
+            @mouseleave="signupHover = false" /> -->
     </div>
 </template>
 
