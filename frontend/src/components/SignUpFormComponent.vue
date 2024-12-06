@@ -99,9 +99,9 @@
                         v-model="terms"/>
                     <label for="terms">
                         I agree to the 
-                        <span class="underline hover:cursor-pointer" @click.prevent>Terms</span>
+                        <router-link to="" class="underline hover:cursor-pointer" @click.prevent>Terms</router-link>
                         and 
-                        <span class="underline hover:cursor-pointer" @click.prevent>Conditions</span>
+                        <router-link to="" class="underline hover:cursor-pointer" @click.prevent>Conditions</router-link>
                     </label>
                 </div>
                 <ErrorMessage name="terms" class="text-red-500 text-sm mt-1" />
@@ -121,7 +121,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Field, Form, ErrorMessage, ValidationResult, SubmissionHandler, useForm, GenericObject, InvalidSubmissionContext, InvalidSubmissionHandler } from 'vee-validate';
+import { Field, Form, ErrorMessage, SubmissionHandler, GenericObject } from 'vee-validate';
 
 import { Icon } from '@iconify/vue';
 import AuthButton from '@/components/AuthButton.vue';
