@@ -9,7 +9,7 @@ const signupHover = ref(false);
 
 // Form submission handler
 const handleSubmit = (values: SignUpFormValues) => {
-    console.log('Form Received:', values);
+    console.log('Sign Up Form Received:', values);
 };
 </script>
 
