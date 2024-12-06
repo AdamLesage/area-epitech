@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white w-[32rem] py-6 px-4 rounded-lg gap-8 flex flex-col">
+    <div class="bg-white w-[32rem] py-6 px-4 rounded-[1.5rem] gap-8 flex flex-col">
         <header>
             <h1 class="text-center text-3xl font-bold text-auth-primary">Welcome back</h1>
             <h2 class="text-center text-auth-primary">Please enter your details to sign in.</h2>

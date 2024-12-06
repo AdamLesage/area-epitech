@@ -6,7 +6,7 @@ import { LoginFormValues } from '@/types/auth';
 
 import { ref } from 'vue';
 
-const signUpHover = ref(false);
+const hover = ref(false);
 
 // Form submission handler
 const handleSubmit = (values: LoginFormValues) => {
@@ -20,9 +20,9 @@ const handleSubmit = (values: LoginFormValues) => {
         <LoginFormComponent @submit="handleSubmit" />
         <SignUpButton
             class="hover:cursor-pointer absolute top-5 right-5"
-            :color="signUpHover ? '#eee' : 'white'"
-            @mouseover="signUpHover = true"
-            @mouseleave="signUpHover = false" />
+            :color="hover ? '#eee' : 'white'"
+            @mouseover="hover = true"
+            @mouseleave="hover = false" />
     </div>
 </template>
 
