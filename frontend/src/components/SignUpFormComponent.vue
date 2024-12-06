@@ -1,35 +1,176 @@
 <template>
-    <div class="container">
+    <div class="bg-white w-[32rem] py-6 px-4 rounded-lg gap-8 flex flex-col">
         <header>
-            <h1>Sign Up</h1>
-            <h2>Please enter your details to sign up.</h2>
+            <h1 class="text-center text-3xl font-bold text-auth-primary">Sign Up</h1>
+            <h2 class="text-center text-auth-primary">Please enter your details to sign up.</h2>
         </header>
-        <div class="flex-wrap">
-            <!-- Auth API Buttons -->
-            <button class="auth-button" @click="authWithGoogle">
-                <Icon icon="flat-color-icons:google" class="w-8 h-8" />
-            </button>
+        <div class="flex-wrap flex gap-x-8 gap-y-4 justify-center">
+            <AuthButton icon="mdi:github" color="black" @click="authWithGithub" />
+            <AuthButton icon="prime:twitter" color="black" @click="authWithTwitter" />
+            <AuthButton icon="ic:baseline-apple" color="black" @click="authWithApple" />
+            <AuthButton icon="flat-color-icons:google" color="" @click="authWithGoogle" />
+            <AuthButton icon="logos:microsoft-icon" color="blue" @click="authWithMicrosoft" />
         </div>
+        <div class="flex justify-between items-center px-4">
+            <span class="w-2/5 bg-auth-neutral h-0.5 rounded-md"></span>
+            <span class="w-1/5 text-auth-neutral text-center font-semibold">OR</span>
+            <span class="w-2/5 bg-auth-neutral h-0.5 rounded-md"></span>
+        </div>
+        <Form
+            class="flex flex-col gap-4 px-4"
+            :validation-schema="schema"
+            @submit="onSubmit"
+            @invalid-submit="onInvalidSubmit"
+            :initial-values="initialValues">
+            <!-- Email Field -->
+            <div>
+                <Field
+                    name="email"
+                    type="email"
+                    v-model="email"
+                    placeholder="Enter your email..."
+                    class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-lg w-full" />
+                <ErrorMessage name="email" class="text-red-500 text-sm mt-1" />
+            </div>
+            <!-- Password Field -->
+            <div>
+                <div class="flex gap-0.5 relative">
+                    <div class="bg-red-500 w-2 h-11 rounded-l-lg"></div>
+                    <Field
+                        name="password"
+                        :type="showPassword[0] ? 'text' : 'password'"
+                        v-model="password"
+                        placeholder="•••••••••••••"
+                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-r-lg w-full pr-8"
+                        :class="showPassword[0] ? 'tracking-[0px]' : 'tracking-[5px]'" />
+                    <Icon
+                        icon="solar:eye-outline"
+                        class="w-6 h-6 my-2.5 text-auth-neutral hover:cursor-pointer absolute right-2"
+                        @click.prevent="togglePasswordVisibility(0)" />
+                </div>
+                <ErrorMessage name="password" class="text-red-500 text-sm mt-1" />
+            </div>
+            <!-- Confirm Password Field -->
+            <div>
+                <div class="flex gap-0.5 relative">
+                    <div class="bg-red-500 w-2 h-11 rounded-l-lg"></div>
+                    <Field
+                        name="confirmPassword"
+                        :type="showPassword[1] ? 'text' : 'password'"
+                        v-model="confirmPassword"
+                        placeholder="•••••••••••••"
+                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-r-lg w-full pr-8"
+                        :class="showPassword[1] ? 'tracking-[0px]' : 'tracking-[5px]'" />
+                    <Icon
+                        icon="solar:eye-outline"
+                        class="w-6 h-6 my-2.5 text-auth-neutral hover:cursor-pointer absolute right-2"
+                        @click.prevent="togglePasswordVisibility(1)" />
+                </div>
+                <ErrorMessage name="confirmPassword" class="text-red-500 text-sm mt-1" />
+            </div>
+            <!-- Terms and Conditions -->
+            <div>
+                <div class="flex items-center gap-2">
+                    <Field
+                        name="terms"
+                        id="terms"
+                        type="checkbox"
+                        :value="true"
+                        :unchecked-value="false"
+                        :initial-value="false"
+                        v-model="terms"/>
+                    <label for="terms">
+                        I agree to the 
+                        <span class="underline hover:cursor-pointer" @click.prevent>Terms</span>
+                        and 
+                        <span class="underline hover:cursor-pointer" @click.prevent>Conditions</span>
+                    </label>
+                </div>
+                <ErrorMessage name="terms" class="text-red-500 text-sm mt-1" />
+            </div>
+            <!-- Sign Up Button -->
+            <div class="flex flex-col gap-3">
+                <button
+                    type="submit"
+                    class="bg-auth-primary text-white p-2 rounded-lg hover:cursor-pointer">
+                    Sign Up
+                </button>
+                <h2 class="text-center">Already have an account? <router-link to="/login" class="text-auth-primary hover:underline hover:cursor-pointer">Login</router-link></h2>
+            </div>
+        </Form>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
+import { ref } from 'vue';
+import { Field, Form, ErrorMessage } from 'vee-validate';
 
-const authWithGoogle = () => {
-    console.log('Authenticating with Google...');
+import { Icon } from '@iconify/vue';
+import AuthButton from '@/components/AuthButton.vue';
+import * as yup from 'yup';
+import { defineEmits } from 'vue';
+import { SignUpForm } from '@/types/auth';
+
+// Form state
+const email = ref<string>('');
+const password = ref<string>('');
+const confirmPassword = ref<string>('');
+const terms = ref<boolean>(false);
+const showPassword = ref<[boolean, boolean]>([false, false]);
+
+// Password visibility toggle
+const togglePasswordVisibility = (index: number) => {
+    showPassword.value[index] = !showPassword.value[index];
 };
+
+// Form validation schema
+const schema = yup.object({
+  email: yup.string().required('Email is required').email('Enter a valid email'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters'),
+  confirmPassword: yup
+    .string()
+    .required('Password confirmation is required')
+    .min(8, 'Password must be at least 8 characters')
+    .oneOf([yup.ref('password')], 'Passwords must match'),
+  terms: yup
+    .boolean()
+    .oneOf([true], 'You must accept the Terms and Conditions') // Custom message for terms
+    .required('You must accept the Terms and Conditions'), // Custom message when the field is required
+});
+
+// Form initial values
+const initialValues: SignUpForm = {
+    email: '',
+    password: '',
+    confirmPassword: '',
+    terms: false,
+};
+
+// Form submission
+const emit = defineEmits(['submit']);
+
+const onSubmit = (values: SignUpForm) => {
+    console.log('Form Submitted:', values);
+    emit('submit', values);
+};
+
+// Form invalid submission
+function onInvalidSubmit({ values, errors, results }) {
+  console.log('Values:', values); // current form values
+  console.log('Errors:', errors); // a map of field names and their first error message
+  console.log('Results:', results); // a detailed map of field names and their validation results
+}
+
+// Social authentication functions
+const authWithGoogle = () => console.log('Authenticating with Google...');
+const authWithGithub = () => console.log('Authenticating with GitHub...');
+const authWithTwitter = () => console.log('Authenticating with Twitter...');
+const authWithApple = () => console.log('Authenticating with Apple...');
+const authWithMicrosoft = () => console.log('Authenticating with Microsoft...');
 </script>
 
 <style scoped>
-.auth-button {
-    background-color: white;
-    border: 2px solid #BCB9BF;
-    width: 6.75rem;
-    height: 3.25rem;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 </style>
