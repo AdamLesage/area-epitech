@@ -81,4 +81,5 @@ model ActionReaction {
   user          User?     @relation(fields: [userId], references: [id])
   creationDate  DateTime  @default(now())
   isActive      Boolean   @default(true)
+  containerUuid String
 }

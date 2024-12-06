@@ -57,7 +57,7 @@ router.post('/action', async (req, res) => {
         },
     });
     const uuid = uuidv4();
-    await actions.get(typeAction)(actionData, uuid);
+    const containerUuid = await actions.get(typeAction)(actionData, uuid);
     try {
         const newAction = await prisma.actionReaction.create({
             data: {
@@ -70,6 +70,7 @@ router.post('/action', async (req, res) => {
                 user: {
                     connect: { id: user.id },
                 },
+                containerUuid: containerUuid,
             },
         });
         res.json(newAction)
