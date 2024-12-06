@@ -35,7 +35,10 @@ export default {
       'auth': {
         primary: '#4335A7',
         secondary: '#80C4E9',
-        neutral: '#79777B'
+        neutral: {
+          DEFAULT: '#79777B',
+          100: '#D9D9D9',
+        }
       }
     },
   },
