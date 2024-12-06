@@ -122,13 +122,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Field, Form, ErrorMessage } from 'vee-validate';
+import { Field, Form, ErrorMessage, ValidationResult } from 'vee-validate';
 
 import { Icon } from '@iconify/vue';
 import AuthButton from '@/components/AuthButton.vue';
 import * as yup from 'yup';
 import { defineEmits } from 'vue';
-import { SignUpForm } from '@/types/auth';
+import { SignUpFormValues } from '@/types/auth';
 
 // Form state
 const email = ref<string>('');
@@ -186,7 +186,7 @@ const schema = yup.object({
 });
 
 // Form initial values
-const initialValues: SignUpForm = {
+const initialValues: SignUpFormValues = {
     email: '',
     password: '',
     confirmPassword: '',
@@ -196,16 +196,24 @@ const initialValues: SignUpForm = {
 // Form submission
 const emit = defineEmits(['submit']);
 
-const onSubmit = (values: SignUpForm) => {
+const onSubmit = (values: SignUpFormValues) => {
     console.log('Form Submitted:', values);
     emit('submit', values);
 };
 
 // Form invalid submission
-function onInvalidSubmit({ values, errors, results }) {
-  console.log('Values:', values); // current form values
-  console.log('Errors:', errors); // a map of field names and their first error message
-  console.log('Results:', results); // a detailed map of field names and their validation results
+function onInvalidSubmit({
+  values,
+  errors,
+  results,
+}: {
+  values: SignUpFormValues;
+  errors: Record<string, string>;
+  results: Record<string, ValidationResult>;
+}) {
+  console.log('Values:', values);
+  console.log('Errors:', errors);
+  console.log('Results:', results);
 }
 
 // Social authentication functions
