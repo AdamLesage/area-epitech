@@ -1,13 +1,13 @@
 async function send() {
     console.log("send");
     try {
-        const response = await fetch(`http://127.0.0.1:8080/api/reaction`, {
+        const response = await fetch(process.env.CALL_BACK, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ "id": 78912 })
+            body: process.env.DATA
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

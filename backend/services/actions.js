@@ -67,8 +67,8 @@ async function create_dropbox_on_new_file_workers(data, uuid) {
             Tty: true,
             Env: [   
                 `UUID=${uuid}`,
-                `DATA=${typeof data.Json === 'object' && data.Json !== null ? JSON.stringify(data.Json) : '{}'}`,
-                `CALL_BACK=http://127.0.0.1:8080/api/reaction/`
+                `DATA=${typeof data === 'object' && data !== null ? JSON.stringify(data) : '{}'}`,
+                `CALL_BACK=http://127.0.0.1:8080/api/reaction/${uuid}`
             ],
             HostConfig: {
                 NetworkMode: "host"
