@@ -35,7 +35,17 @@
             <!-- Password Field -->
             <div>
                 <div class="flex gap-0.5 relative">
-                    <div class="bg-red-500 w-2 h-11 rounded-l-lg"></div>
+                    <div
+                        class="w-2 h-11 rounded-l-lg"
+                        :class="passwordState == 0 ? 'bg-red-500' : passwordState == 1 ? 'bg-orange-500' : 'bg-green-500'"
+                        @mouseover="showTooltip = true"
+                        @mouseleave="showTooltip = false">
+                    </div>
+                    <div
+                        v-if="showTooltip"
+                        class="absolute bottom-12 left-0 bg-gray-700 text-white text-sm p-2 rounded-md">
+                        For a stronger password, include at least one lowercase letter, one uppercase letter, one number, and one symbol.
+                    </div>
                     <Field
                         name="password"
                         :type="showPassword[0] ? 'text' : 'password'"
@@ -53,7 +63,16 @@
             <!-- Confirm Password Field -->
             <div>
                 <div class="flex gap-0.5 relative">
-                    <div class="bg-red-500 w-2 h-11 rounded-l-lg"></div>
+                    <div class="w-2 h-11 rounded-l-lg"
+                        :class="confirmPasswordState == 0 ? 'bg-red-500' : 'bg-green-500'"
+                        @mouseover="showTooltipConf = true"
+                        @mouseleave="showTooltipConf = false">
+                    </div>
+                    <div
+                        v-if="showTooltipConf"
+                        class="absolute bottom-12 left-0 bg-gray-700 text-white text-sm p-2 rounded-md">
+                        Passwords must match.
+                    </div>
                     <Field
                         name="confirmPassword"
                         :type="showPassword[1] ? 'text' : 'password'"
@@ -102,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { Field, Form, ErrorMessage } from 'vee-validate';
 
 import { Icon } from '@iconify/vue';
@@ -117,6 +136,31 @@ const password = ref<string>('');
 const confirmPassword = ref<string>('');
 const terms = ref<boolean>(false);
 const showPassword = ref<[boolean, boolean]>([false, false]);
+
+// Tooltip state
+const showTooltip = ref<boolean>(false);
+const showTooltipConf = ref<boolean>(false);
+
+// Computed state for password variable
+const passwordState = computed(() => {
+    if (password.value.length < 8) return 0;
+    // Count number of uppercase, lowercase, and special characters and numbers
+    let upper = 0, lower = 0, special = 0, number = 0;
+    for (let i = 0; i < password.value.length; i++) {
+        if (password.value[i].match(/[A-Z]/)) upper++;
+        else if (password.value[i].match(/[a-z]/)) lower++;
+        else if (password.value[i].match(/[!@#$%^&*(),.?":{}|<>]/)) special++;
+        else if (password.value[i].match(/[0-9]/)) number++;
+    }
+    if (upper === 0 || lower === 0 || special === 0 || number === 0) return 1;
+    return 2;
+});
+
+// Computed state for password confirmation
+const confirmPasswordState = computed(() => {
+    if (confirmPassword.value.length === 0) return 0;
+    return confirmPassword.value === password.value ? 1 : 0;
+});
 
 // Password visibility toggle
 const togglePasswordVisibility = (index: number) => {
