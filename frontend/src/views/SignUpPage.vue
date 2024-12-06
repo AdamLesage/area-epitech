@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import SignUpFormComponent from '@/components/SignUpFormComponent.vue';
 import LogoComponent from '@/components/LogoComponent.vue';
-import { SignUpForm } from '@/types/auth';
+import { SignUpFormValues } from '@/types/auth';
 
 import { ref } from 'vue';
 
 const signupHover = ref(false);
 
 // Form submission handler
-const handleSubmit = (values: SignUpForm) => {
+const handleSubmit = (values: SignUpFormValues) => {
     console.log('Form Received:', values);
 };
 </script>
