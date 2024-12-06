@@ -11,7 +11,9 @@ const Prisma = require('@prisma/client');
 const { v4: uuidv4 } = require('uuid');
 const prisma = new Prisma.PrismaClient;
 const actions = require("../services/actions");
-const reactions = require("../services/reactions")
+const reactions = require("../services/reactions");
+var Docker = require('dockerode');
+var docker = new Docker();
 
 /**
  * @brief return a list of all actions of the user
@@ -86,10 +88,14 @@ router.post('/action', async (req, res) => {
 router.delete('/action/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
+        const action = await prisma.actionReaction.findUnique({where: {id: id}});
+        if (action !== null) {
+            docker.getContainer(action.containerUuid).remove({force: true});
+        }
         await prisma.actionReaction.delete({
             where: { id: id },
             })
-            res.json({ message: "action deleted" })
+        res.json({ message: "action deleted" })
     } catch (e) {
         console.error(e);
         res.status(500).send("error on delete action");
