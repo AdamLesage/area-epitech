@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import SignUpButton from '../SignUpButton.vue';
+import LoginButton from '../LoginButton.vue';
 
-describe('SignUpButton', () => {
+describe('LoginButton', () => {
     it('accepts color prop and applies it to SVG path', () => {
         const color = 'red';
-        const wrapper = shallowMount(SignUpButton, {
+        const wrapper = shallowMount(LoginButton, {
             props: {
                 color,
             },
