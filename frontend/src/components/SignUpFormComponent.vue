@@ -127,7 +127,6 @@ import { Field, Form, ErrorMessage, ValidationResult } from 'vee-validate';
 import { Icon } from '@iconify/vue';
 import AuthButton from '@/components/AuthButton.vue';
 import * as yup from 'yup';
-import { defineEmits } from 'vue';
 import { SignUpFormValues } from '@/types/auth';
 
 // Form state
