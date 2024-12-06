@@ -20,7 +20,6 @@
             class="flex flex-col gap-4 px-4"
             :validation-schema="schema"
             @submit="onSubmit"
-            @invalid-submit="onInvalidSubmit"
             :initial-values="initialValues">
             <!-- Email Field -->
             <div>
@@ -122,7 +121,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Field, Form, ErrorMessage, ValidationResult } from 'vee-validate';
+import { Field, Form, ErrorMessage, ValidationResult, SubmissionHandler, useForm, GenericObject, InvalidSubmissionContext, InvalidSubmissionHandler } from 'vee-validate';
 
 import { Icon } from '@iconify/vue';
 import AuthButton from '@/components/AuthButton.vue';
@@ -195,32 +194,17 @@ const initialValues: SignUpFormValues = {
 // Form submission
 const emit = defineEmits(['submit']);
 
-const onSubmit = (values: SignUpFormValues) => {
+const onSubmit: SubmissionHandler<SignUpFormValues, GenericObject, unknown> = (values) => {
     console.log('Form Submitted:', values);
     emit('submit', values);
 };
 
-// Form invalid submission
-function onInvalidSubmit({
-  values,
-  errors,
-  results,
-}: {
-  values: SignUpFormValues;
-  errors: Record<string, string>;
-  results: Record<string, ValidationResult>;
-}) {
-  console.log('Values:', values);
-  console.log('Errors:', errors);
-  console.log('Results:', results);
-}
-
 // Social authentication functions
-const authWithGoogle = () => console.log('Authenticating with Google...');
-const authWithGithub = () => console.log('Authenticating with GitHub...');
-const authWithTwitter = () => console.log('Authenticating with Twitter...');
-const authWithApple = () => console.log('Authenticating with Apple...');
-const authWithMicrosoft = () => console.log('Authenticating with Microsoft...');
+const authWithGoogle: () => void = () => console.log('Authenticating with Google...');
+const authWithGithub: () => void = () => console.log('Authenticating with GitHub...');
+const authWithTwitter: () => void = () => console.log('Authenticating with Twitter...');
+const authWithApple: () => void = () => console.log('Authenticating with Apple...');
+const authWithMicrosoft: () => void = () => console.log('Authenticating with Microsoft...');
 </script>
 
 <style scoped>
