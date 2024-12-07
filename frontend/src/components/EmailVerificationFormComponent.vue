@@ -36,7 +36,7 @@
                 <Field
                     name="email"
                     type="email"
-                    v-model="email"
+                    :value="props.email"
                     placeholder="No email provided..."
                     class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full cursor-not-allowed"
                     disabled />
@@ -67,9 +67,10 @@ import { Field, Form, ErrorMessage, SubmissionHandler, GenericObject } from 'vee
 import * as yup from 'yup';
 import { EmailVerificationFormValues } from '@/types/auth';
 
+const props = defineProps<{ email: string }>();
+
 // Form state
 const code = ref<[string, string, string, string, string, string]>(['', '', '', '', '', '']);
-const email = ref<string>('test@gmail.com');
 
 // Form validation schema
 const schema = yup.object({
@@ -80,7 +81,7 @@ const schema = yup.object({
 // Form initial values
 const initialValues: EmailVerificationFormValues = {
     code: ['','','','','',''],
-    email: 'test@gmail.com',
+    email: props.email,
 };
 
 // Input focus

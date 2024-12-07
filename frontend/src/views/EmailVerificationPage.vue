@@ -23,6 +23,7 @@ const handleSendAgain = () => {
     <div class="bg-auth-primary flex justify-center items-center">
         <LogoComponent color="#80C4E9" class="absolute top-0 left-5" />
         <EmailVerificationFormComponent
+            email="test@gmail.com"
             @submit="handleSubmit"
             @abort="handleAbort"
             @send-again="handleSendAgain" />
