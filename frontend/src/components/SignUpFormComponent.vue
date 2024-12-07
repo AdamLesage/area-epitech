@@ -142,7 +142,7 @@ const showTooltipConf = ref<boolean>(false);
 // Computed state for password variable
 const passwordState = computed(() => {
     if (password.value.length < 8) return 0;
-    // Count number of uppercase, lowercase, and special characters and numbers
+
     let upper = 0, lower = 0, special = 0, number = 0;
     for (let i = 0; i < password.value.length; i++) {
         if (password.value[i].match(/[A-Z]/)) upper++;
@@ -179,8 +179,8 @@ const schema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
   terms: yup
     .boolean()
-    .oneOf([true], 'You must accept the Terms and Conditions') // Custom message for terms
-    .required('You must accept the Terms and Conditions'), // Custom message when the field is required
+    .oneOf([true], 'You must accept the Terms and Conditions')
+    .required('You must accept the Terms and Conditions'),
 });
 
 // Form initial values
