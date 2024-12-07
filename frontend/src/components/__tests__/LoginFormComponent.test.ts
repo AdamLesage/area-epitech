@@ -20,4 +20,12 @@ describe('LoginFormComponent', () => {
         expect(passwordInput.exists()).toBe(true);
         expect(submitButton.exists()).toBe(true);
     });
+
+    it('displays the correct title', () => {
+        const wrapper = mount(LoginFormComponent);
+
+        const title = wrapper.find('h1');
+
+        expect(title.text()).toBe('Welcome back');
+    });
 });

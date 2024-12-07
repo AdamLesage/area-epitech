@@ -22,4 +22,12 @@ describe('SignUpFormComponent', () => {
         expect(confirmPasswordInput.exists()).toBe(true);
         expect(submitButton.exists()).toBe(true);
     });
+
+    it('displays the correct title', () => {
+        const wrapper = mount(SignUpFormComponent);
+
+        const title = wrapper.find('h1');
+
+        expect(title.text()).toBe('Sign Up');
+    });
 });
