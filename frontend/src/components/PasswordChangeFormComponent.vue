@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white w-[32rem] pt-6 pb-2 px-4 rounded-[1.5rem] gap-2 flex flex-col">
         <header class="mb-6">
-            <h1 class="text-center text-3xl font-bold text-auth-primary">Password Retrieval</h1>
+            <h1 class="text-center text-3xl font-bold text-auth-primary">Change Password</h1>
             <h2 class="text-center text-auth-primary">Change your password.</h2>
         </header>
         <Form
