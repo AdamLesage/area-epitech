@@ -20,3 +20,8 @@ export interface EmailVerificationFormValues {
     code: [string, string, string, string, string, string];
     email: string;
 }
+
+export interface PasswordRetrievalFormValues {
+    code: [string, string, string, string, string, string];
+    email: string;
+}
