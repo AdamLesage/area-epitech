@@ -25,3 +25,8 @@ export interface PasswordRetrievalFormValues {
     code: [string, string, string, string, string, string];
     email: string;
 }
+
+export interface PasswordChangeFormValues {
+    password: string;
+    confirmPassword: string;
+}
