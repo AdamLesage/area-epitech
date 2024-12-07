@@ -10,3 +10,13 @@ export interface LoginFormValues {
     password: string;
     rememberMe: boolean;
 }
+
+export interface DetailsFormValues {
+    username: string;
+    bio: string;
+}
+
+export interface EmailVerificationFormValues {
+    code: [string, string, string, string, string, string];
+    email: string;
+}
