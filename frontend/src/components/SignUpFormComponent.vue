@@ -2,7 +2,7 @@
     <div class="web:bg-white web:w-[32rem] mobile:w-[22rem] web:py-6 mobile:pb-6 mobile:h-full px-4 rounded-[1.5rem] web:gap-8 mobile:gap-4 flex flex-col justify-start web:min-h-[44rem]">
         <div class="flex flex-col justify-between h-full">
             <header class="flex flex-col gap-4">
-                <h1 class="text-center text-3xl font-bold web:text-auth-primary mobile:text-white">Sign up</h1>
+                <h1 class="text-center text-3xl font-bold web:text-auth-primary mobile:text-white">Sign Up</h1>
                 <h2 class="text-center web:text-auth-primary mobile:text-white">Please enter your details to sign up.</h2>
             </header>
             <div class="flex-wrap flex web:gap-x-8 mobile:gap-x-4 gap-y-4 justify-center">
