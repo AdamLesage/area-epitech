@@ -62,7 +62,7 @@
                             Remember me
                         </label>
                     </div>
-                    <router-link to="" class="text-auth-neutral underline hover:cursor-pointer">Forgot Password?</router-link>
+                    <router-link to="/forgot-password" class="text-auth-neutral underline hover:cursor-pointer">Forgot Password?</router-link>
                 </div>
             </div>
             <!-- Sign In Button -->
