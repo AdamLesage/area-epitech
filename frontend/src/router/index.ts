@@ -43,6 +43,11 @@ const router = createRouter({
       name: 'userinfo',
       component: () => import('@/views/UserInfoPage.vue'),
     },
+    {
+      path: '/add-connections',
+      name: 'add-connections',
+      component: () => import('@/views/AddConnections.vue'),
+    }
   ],
 })
 
