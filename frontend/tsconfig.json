@@ -9,7 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "noEmit": true,
   },
   "files": [],
   "references": [
