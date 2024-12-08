@@ -1,5 +1,5 @@
 <template>
-    <div class="web:bg-white web:w-[32rem] mobile:w-[22rem] web:py-6 mobile:pb-6 mobile:h-full px-4 rounded-[1.5rem] web:gap-8 mobile:gap-4 flex flex-col justify-start web:min-h-[40rem]">
+    <div class="web:bg-white web:w-[32rem] mobile:w-[22rem] web:py-6 mobile:pb-6 mobile:h-full px-4 rounded-[1.5rem] web:gap-8 mobile:gap-4 flex flex-col justify-start web:min-h-[38rem]">
         <div class="flex flex-col justify-between h-full">
             <header class="flex flex-col gap-2">
                 <h1 class="text-center text-3xl font-bold web:text-auth-primary mobile:text-white">Welcome back</h1>
@@ -18,7 +18,7 @@
                 <span class="w-2/5 web:bg-auth-neutral mobile:bg-auth-secondary h-0.5 rounded-md"></span>
             </div>
             <Form
-                class="flex flex-col gap-4 px-4 h-1/2 justify-between"
+                class="flex flex-col px-4 h-1/2 justify-between"
                 :validation-schema="schema"
                 @submit="onSubmit"
                 :initial-values="initialValues">

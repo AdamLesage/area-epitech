@@ -23,7 +23,7 @@ const handleSubmit = (values: LoginFormValues) => {
             @mouseover="hover = true"
             @mouseleave="hover = false" />
         <div class="flex flex-col items-center z-10 mobile:justify-between web:justify-center h-full">
-            <h1 class="text-[4rem] font-black text-auth-secondary web:hidden">AREA</h1>
+            <h1 class="text-[4rem] leading-[3rem] font-black text-auth-secondary web:hidden my-2">AREA</h1>
             <LoginFormComponent @submit="handleSubmit" />
         </div>
     </div>
