@@ -24,18 +24,21 @@ onMounted(() => {
 <template>
     <div class="bg-auth-primary flex justify-center items-center"
         v-if="!isMobile">
-        <LogoComponent color="#80C4E9" class="absolute top-0 left-5" />
-        <LoginFormComponent @submit="handleSubmit" />
+        <LogoComponent color="#80C4E9" class="absolute top-0 left-5 half:hidden" />
         <SignUpButton
-            class="hover:cursor-pointer absolute top-5 right-5"
+            class="hover:cursor-pointer absolute top-5 right-5 mobile:hidden"
             :color="hover ? '#eee' : 'white'"
             @mouseover="hover = true"
             @mouseleave="hover = false" />
+        <div class="flex flex-col items-center z-10 justify-between">
+            <h1 class="text-[4rem] font-black text-auth-secondary web:hidden">AREA</h1>
+            <LoginFormComponent @submit="handleSubmit" />
+        </div>
     </div>
-    <div class="bg-auth-primary flex justify-center items-center"
+    <div class="bg-auth-primary flex flex-col justify-between items-center"
         v-else>
-        <h1 class="text-3xl text-white">Login</h1>
-        <h2 class="text-xl text-white">Mobile Login Coming Soon</h2>
+        <h1 class="text-[4rem] font-black text-auth-secondary">AREA</h1>
+        <LoginFormComponent @submit="handleSubmit" />
     </div>
 </template>
 
