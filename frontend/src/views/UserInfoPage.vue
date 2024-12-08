@@ -7,7 +7,6 @@
       <img :src="`/images/${user.avatar.split('/').pop()}`" alt="Profile Picture"
         class="w-48 h-48 rounded-full mb-6 border-4 border-gray-700 mx-auto shadow-lg" />
 
-
       <!-- Usernam and creation date -->
       <h2 class="text-4xl font-semibold tracking-wide mb-2">{{ user.name }}</h2>
       <p class="text-sm text-gray-400 font-light">{{ user.created_at }}</p>
@@ -28,11 +27,18 @@
         </div>
       </div>
 
-      <!-- Connected Plats -->
+      <!-- Connected Platforms -->
       <div class="mt-12">
         <h3 class="text-2xl font-semibold mb-6 tracking-wide">Connected Platforms</h3>
         <ConnectedApiIcons :platforms="detailedPlatforms" @socialClick="handleSocialClick" />
       </div>
+
+      <!-- Add Connections Button -->
+      <button
+        @click="goToAddConnections"
+        class="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+        Add Connections
+      </button>
     </div>
   </div>
 </template>
@@ -40,6 +46,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import ConnectedApiIcons from "../components/ConnectedApiIcons.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const user = ref({
   name: "Romain Chavalier",
@@ -70,13 +79,19 @@ const platformsDetails: { [key: string]: { icon: string; color: string } } = {
   YouTube: { icon: "mdi:youtube", color: "#FF0000" },
   Slack: { icon: "mdi:slack", color: "#611F69" },
 };
+
 const detailedPlatforms = computed(() =>
   user.value.connected_api.map((api) => ({
     name: api.name,
     ...platformsDetails[api.name as keyof typeof platformsDetails],
   }))
 );
+
 function handleSocialClick(platformName: string) {
   console.log(`Connect with ${platformName}`);
+}
+
+function goToAddConnections() {
+  router.push("/add-connections");
 }
 </script>
