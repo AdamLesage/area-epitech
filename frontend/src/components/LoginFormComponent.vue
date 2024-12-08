@@ -80,17 +80,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { Field, Form, ErrorMessage, SubmissionHandler, GenericObject } from 'vee-validate';
 
 import { Icon } from '@iconify/vue';
 import AuthButton from '@/components/AuthButton.vue';
 import * as yup from 'yup';
 import { LoginFormValues } from '@/types/auth';
-import { Capacitor } from '@capacitor/core';
-
-// Mobile check
-const isMobile = ref<boolean>(true);
 
 // Form state
 const email = ref<string>('');
@@ -134,12 +130,6 @@ const authWithGithub: () => void = () => console.log('Authenticating with GitHub
 const authWithTwitter: () => void = () => console.log('Authenticating with Twitter...');
 const authWithApple: () => void = () => console.log('Authenticating with Apple...');
 const authWithMicrosoft: () => void = () => console.log('Authenticating with Microsoft...');
-
-// Check if mobile
-onMounted(() => {
-    if (Capacitor.getPlatform() == 'web')
-        isMobile.value = false;
-});
 </script>
 
 <style scoped>
