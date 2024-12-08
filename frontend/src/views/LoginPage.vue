@@ -4,7 +4,7 @@ import LoginFormComponent from '@/components/LoginFormComponent.vue';
 import SignUpButton from '@/components/SignUpButton.vue';
 import { LoginFormValues } from '@/types/auth';
 
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 const hover = ref(false);
 
