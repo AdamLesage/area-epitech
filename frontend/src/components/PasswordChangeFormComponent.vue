@@ -1,85 +1,89 @@
 <template>
-    <div class="bg-white w-[32rem] pt-6 pb-2 px-4 rounded-[1.5rem] gap-2 flex flex-col">
-        <header class="mb-6">
-            <h1 class="text-center text-3xl font-bold text-auth-primary">Change Password</h1>
-            <h2 class="text-center text-auth-primary">Change your password.</h2>
-        </header>
-        <Form
-            class="flex flex-col gap-4 px-4"
-            :validation-schema="schema"
-            @submit="onSubmit"
-            :initial-values="initialValues">
-            <!-- Password Field -->
-            <div>
-                <div class="flex gap-0.5 relative">
-                    <div
-                        class="w-2 h-11 rounded-l-lg"
-                        :class="passwordState == 0 ? 'bg-red-500' : passwordState == 1 ? 'bg-orange-500' : 'bg-green-500'"
-                        @mouseover="showTooltip = true"
-                        @mouseleave="showTooltip = false">
+    <div class="web:bg-white web:w-[32rem] mobile:w-[22rem] web:py-6 mobile:pb-6 mobile:h-full px-4 rounded-[1.5rem] web:gap-8 mobile:gap-4 flex flex-col justify-start web:min-h-[20rem]">
+        <div class="flex flex-col justify-between h-full">
+            <header class="flex flex-col gap-4 mb-4">
+                <h1 class="text-center text-3xl font-bold web:text-auth-primary mobile:text-white">Change Password</h1>
+                <h2 class="text-center web:text-auth-primary mobile:text-white">Change your password.</h2>
+            </header>
+            <Form
+                class="flex flex-col px-4 h-5/6 justify-between gap-4"
+                :validation-schema="schema"
+                @submit="onSubmit"
+                :initial-values="initialValues">
+                <div class="flex flex-col gap-4">
+                    <!-- Password Field -->
+                    <div>
+                        <div class="flex gap-0.5 relative">
+                            <div
+                                class="w-2 h-11 rounded-l-lg"
+                                :class="passwordState == 0 ? 'bg-red-500' : passwordState == 1 ? 'bg-orange-500' : 'bg-green-500'"
+                                @mouseover="showTooltip = true"
+                                @mouseleave="showTooltip = false">
+                            </div>
+                            <div
+                                v-if="showTooltip"
+                                class="absolute bottom-12 left-0 bg-gray-700 text-white text-sm p-2 rounded-md">
+                                For a stronger password, include at least one lowercase letter, one uppercase letter, one number, and one symbol.
+                            </div>
+                            <Field
+                                name="password"
+                                :type="showPassword[0] ? 'text' : 'password'"
+                                v-model="password"
+                                placeholder="•••••••••••••"
+                                class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-r-lg w-full pr-8"
+                                :class="showPassword[0] ? 'tracking-[0px]' : 'tracking-[5px]'" />
+                            <Icon
+                                icon="solar:eye-outline"
+                                class="w-6 h-6 my-2.5 text-auth-neutral hover:cursor-pointer absolute right-2"
+                                @click.prevent="togglePasswordVisibility(0)" />
+                        </div>
+                        <ErrorMessage name="password" class="text-red-500 text-sm mt-1" />
                     </div>
-                    <div
-                        v-if="showTooltip"
-                        class="absolute bottom-12 left-0 bg-gray-700 text-white text-sm p-2 rounded-md">
-                        For a stronger password, include at least one lowercase letter, one uppercase letter, one number, and one symbol.
+                    <!-- Confirm Password Field -->
+                    <div>
+                        <div class="flex gap-0.5 relative">
+                            <div class="w-2 h-11 rounded-l-lg"
+                                :class="confirmPasswordState == 0 ? 'bg-red-500' : 'bg-green-500'"
+                                @mouseover="showTooltipConf = true"
+                                @mouseleave="showTooltipConf = false">
+                            </div>
+                            <div
+                                v-if="showTooltipConf"
+                                class="absolute bottom-12 left-0 bg-gray-700 text-white text-sm p-2 rounded-md">
+                                Passwords must match.
+                            </div>
+                            <Field
+                                name="confirmPassword"
+                                :type="showPassword[1] ? 'text' : 'password'"
+                                v-model="confirmPassword"
+                                placeholder="•••••••••••••"
+                                class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-r-lg w-full pr-8"
+                                :class="showPassword[1] ? 'tracking-[0px]' : 'tracking-[5px]'" />
+                            <Icon
+                                icon="solar:eye-outline"
+                                class="w-6 h-6 my-2.5 text-auth-neutral hover:cursor-pointer absolute right-2"
+                                @click.prevent="togglePasswordVisibility(1)" />
+                        </div>
+                        <ErrorMessage name="confirmPassword" class="text-red-500 text-sm mt-1" />
                     </div>
-                    <Field
-                        name="password"
-                        :type="showPassword[0] ? 'text' : 'password'"
-                        v-model="password"
-                        placeholder="•••••••••••••"
-                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-r-lg w-full pr-8"
-                        :class="showPassword[0] ? 'tracking-[0px]' : 'tracking-[5px]'" />
-                    <Icon
-                        icon="solar:eye-outline"
-                        class="w-6 h-6 my-2.5 text-auth-neutral hover:cursor-pointer absolute right-2"
-                        @click.prevent="togglePasswordVisibility(0)" />
                 </div>
-                <ErrorMessage name="password" class="text-red-500 text-sm mt-1" />
-            </div>
-            <!-- Confirm Password Field -->
-            <div>
-                <div class="flex gap-0.5 relative">
-                    <div class="w-2 h-11 rounded-l-lg"
-                        :class="confirmPasswordState == 0 ? 'bg-red-500' : 'bg-green-500'"
-                        @mouseover="showTooltipConf = true"
-                        @mouseleave="showTooltipConf = false">
-                    </div>
-                    <div
-                        v-if="showTooltipConf"
-                        class="absolute bottom-12 left-0 bg-gray-700 text-white text-sm p-2 rounded-md">
-                        Passwords must match.
-                    </div>
-                    <Field
-                        name="confirmPassword"
-                        :type="showPassword[1] ? 'text' : 'password'"
-                        v-model="confirmPassword"
-                        placeholder="•••••••••••••"
-                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-r-lg w-full pr-8"
-                        :class="showPassword[1] ? 'tracking-[0px]' : 'tracking-[5px]'" />
-                    <Icon
-                        icon="solar:eye-outline"
-                        class="w-6 h-6 my-2.5 text-auth-neutral hover:cursor-pointer absolute right-2"
-                        @click.prevent="togglePasswordVisibility(1)" />
+                <div class="flex flex-col gap-2">
+                    <!-- Validate Button -->
+                    <button
+                        type="submit"
+                        class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
+                        Submit
+                    </button>
+                    <!-- Abort Button -->
+                    <button
+                        type="button"
+                        class="web:text-auth-primary mobile:text-white p-2 rounded-lg hover:cursor-pointer mx-4"
+                        @click="abort">
+                        Abort
+                    </button>
                 </div>
-                <ErrorMessage name="confirmPassword" class="text-red-500 text-sm mt-1" />
-            </div>
-            <!-- Submit Button -->
-            <div class="flex flex-col gap-3">
-                <button
-                    type="submit"
-                    class="bg-auth-primary text-white p-2 rounded-lg hover:cursor-pointer">
-                    Submit
-                </button>
-            </div>
-        </Form>
-        <!-- Abort Button -->
-        <button
-            type="button"
-            class="text-auth-primary p-2 rounded-lg hover:cursor-pointer mx-4"
-            @click="abort">
-            Abort
-        </button>
+            </Form>
+        </div>
     </div>
 </template>
 
