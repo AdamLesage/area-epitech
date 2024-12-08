@@ -39,7 +39,7 @@
                             name="password"
                             :type="showPassword ? 'text' : 'password'"
                             v-model="password"
-                            placeholder="•••••••••••••"
+                            :placeholder="showPassword ? 'Enter your password...' : '•••••••••••••'"
                             class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-lg w-full pr-8"
                             :class="showPassword ? 'tracking-[0px]' : 'tracking-[5px]'" />
                         <Icon

@@ -50,7 +50,7 @@
                             name="password"
                             :type="showPassword[0] ? 'text' : 'password'"
                             v-model="password"
-                            placeholder="•••••••••••••"
+                            :placeholder="showPassword[0] ? 'Enter your password...' : '•••••••••••••'"
                             class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-r-lg w-full pr-8"
                             :class="showPassword[0] ? 'tracking-[0px]' : 'tracking-[5px]'" />
                         <Icon
@@ -77,7 +77,7 @@
                             name="confirmPassword"
                             :type="showPassword[1] ? 'text' : 'password'"
                             v-model="confirmPassword"
-                            placeholder="•••••••••••••"
+                            :placeholder="showPassword[1] ? 'Enter your password...' : '•••••••••••••'"
                             class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-r-lg w-full pr-8"
                             :class="showPassword[1] ? 'tracking-[0px]' : 'tracking-[5px]'" />
                         <Icon
