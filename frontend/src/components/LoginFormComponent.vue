@@ -22,7 +22,7 @@
                 :validation-schema="schema"
                 @submit="onSubmit"
                 :initial-values="initialValues">
-                <div class="flex flex-col gap-4">
+                <div class="flex flex-col justify-between h-2/3">
                     <!-- Email Field -->
                     <div>
                         <Field
