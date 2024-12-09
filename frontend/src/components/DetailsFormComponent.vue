@@ -1,50 +1,56 @@
 <template>
-    <div class="bg-white w-[32rem] pt-6 pb-2 px-4 rounded-[1.5rem] gap-2 flex flex-col">
-        <header class="mb-6">
-            <h1 class="text-center text-3xl font-bold text-auth-primary">Sign Up</h1>
-            <h2 class="text-center text-auth-primary">Those details help us create a better experience for you.</h2>
-        </header>
-        <Form
-            class="flex flex-col gap-4 px-4"
-            :validation-schema="schema"
-            @submit="onSubmit"
-            :initial-values="initialValues">
-            <!-- Username Field -->
-            <div>
-                <Field
-                    name="username"
-                    type="text"
-                    v-model="username"
-                    placeholder="Enter your username..."
-                    class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-lg w-full" />
-            </div>
-            <!-- Bio Field -->
-            <div class="relative">
-                <Field
-                    name="bio"
-                    type="textarea"
-                    v-model="bio"
-                    placeholder="Enter a description for your profile..."
-                    class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-lg w-full pr-8" >
-                    <textarea
-                        v-model="bio"
-                        placeholder="Enter a description for your profile..."
-                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-lg w-full pr-8 max-h-64 min-h-24" />
-                </Field>
-            </div>
-            <!-- Sign In Button -->
-            <button
-                type="submit"
-                class="bg-auth-primary text-white p-2 rounded-lg hover:cursor-pointer">
-                Sign In
-            </button>
-        </Form>
-        <!-- Skip Button -->
-        <button
-            class="text-auth-primary p-2 rounded-lg hover:cursor-pointer mx-4"
-            @click="skip">
-            Skip
-        </button>
+    <div class="web:bg-white web:w-[32rem] mobile:w-[22rem] web:py-6 mobile:pb-6 mobile:h-full px-4 rounded-[1.5rem] web:gap-8 mobile:gap-4 flex flex-col justify-start web:min-h-[20rem]">
+        <div class="flex flex-col justify-between h-full">
+            <header class="flex flex-col gap-4 mb-4">
+                <h1 class="text-center text-3xl font-bold web:text-auth-primary mobile:text-white">Sign Up</h1>
+                <h2 class="text-center web:text-auth-primary mobile:text-white">Those details help us create a better experience for you.</h2>
+            </header>
+            <Form
+                class="flex flex-col px-4 h-5/6 justify-between gap-4"
+                :validation-schema="schema"
+                @submit="onSubmit"
+                :initial-values="initialValues">
+                <div class="flex flex-col mobile:gap-8 web:gap-4">
+                    <!-- Username Field -->
+                    <div>
+                        <Field
+                            name="username"
+                            type="text"
+                            v-model="username"
+                            placeholder="Enter your username..."
+                            class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-lg w-full" />
+                    </div>
+                    <!-- Bio Field -->
+                    <div class="relative">
+                        <Field
+                            name="bio"
+                            type="textarea"
+                            v-model="bio"
+                            placeholder="Enter a description for your profile..."
+                            class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-lg w-full pr-8" >
+                            <textarea
+                                v-model="bio"
+                                placeholder="Enter a description for your profile..."
+                                class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral rounded-lg w-full pr-8 max-h-64 min-h-24" />
+                        </Field>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <!-- Validate Button -->
+                    <button
+                        type="submit"
+                        class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
+                        Validate
+                    </button>
+                    <!-- Skip Button -->
+                    <button
+                        class="web:text-auth-primary mobile:text-white p-2 rounded-lg hover:cursor-pointer mx-4"
+                        @click="skip">
+                        Skip
+                    </button>
+                </div>
+            </Form>
+        </div>
     </div>
 </template>
 

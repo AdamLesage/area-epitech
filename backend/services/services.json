@@ -1,0 +1,48 @@
+[
+  {
+    "name":"facebook",
+    "actions": [
+      {
+        "name":"new_message_in_group",
+        "description":"A new message is posted in the group"
+      },
+      {
+        "name":"new_message_inbox",
+        "description":"A new private message is received by the user"
+      },
+      {
+        "name":"new_like",
+        "description":"The user gains a like from one of their messages"
+      }
+    ],
+    "reactions": [
+      {
+        "name":"like_message",
+        "description":"The user likes a message"
+      }
+    ]
+  },
+  {
+    "name":"dropbox",
+    "actions": [
+      {
+        "name":"on_new_file",
+        "description":"A new file is added"
+      },
+      {
+        "name":"on_new_shares_file",
+        "description":"A new file is shared with the user"
+      }
+    ],
+    "reactions": [
+      {
+        "name": "add_file",
+        "description":"The user user add a new file"
+      },
+      {
+        "name": "shares_file",
+        "description":"The user shares a file"
+      }
+    ]
+  }
+]

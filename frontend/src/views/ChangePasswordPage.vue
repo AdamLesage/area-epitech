@@ -16,10 +16,13 @@ const handleAbort = () => {
 
 <template>
     <div class="bg-auth-primary flex justify-center items-center">
-        <LogoComponent color="#80C4E9" class="absolute top-0 left-5" />
-        <PasswordChangeFormComponent
-            @submit="handleSubmit"
-            @abort="handleAbort" />
+        <LogoComponent color="#80C4E9" class="absolute top-0 left-5 half:hidden" />
+        <div class="flex flex-col items-center z-10 mobile:justify-between web:justify-center h-full">
+            <h1 class="text-[4rem] leading-[3rem] font-black text-auth-secondary web:hidden my-4">AREA</h1>
+            <PasswordChangeFormComponent
+                @submit="handleSubmit"
+                @abort="handleAbort" />
+        </div>
     </div>
 </template>
 

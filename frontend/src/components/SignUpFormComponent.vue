@@ -1,5 +1,5 @@
 <template>
-    <div class="web:bg-white web:w-[32rem] mobile:w-[22rem] web:py-6 mobile:pb-6 mobile:h-full px-4 rounded-[1.5rem] web:gap-8 mobile:gap-4 flex flex-col justify-start web:min-h-[44rem]">
+    <div class="web:bg-white web:w-[32rem] mobile:w-[22rem] web:py-6 mobile:pb-6 mobile:h-full px-4 rounded-[1.5rem] web:gap-8 mobile:gap-4 flex flex-col justify-start web:min-h-[46rem]">
         <div class="flex flex-col justify-between h-full">
             <header class="flex flex-col gap-4">
                 <h1 class="text-center text-3xl font-bold web:text-auth-primary mobile:text-white">Sign Up</h1>
@@ -109,7 +109,7 @@
                     <ErrorMessage name="terms" class="text-red-500 text-sm mt-1" />
                 </div>
                 <!-- Sign Up Button -->
-                <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-3 web:mt-4">
                     <button
                         type="submit"
                         class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
