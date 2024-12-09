@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center items-center">
     <div class="grid grid-cols-4 gap-2 justify-center">
-      <button
+      <button 
         v-for="platform in platforms"
         :key="platform.name"
         :style="{ backgroundColor: platform.color, width: '50px', height: '50px' }"
@@ -24,12 +24,14 @@ interface Platform {
   icon: string;
 }
 
+// List of social platforms to connect to with their respective icons and colors
 defineProps<{
   platforms: Platform[];
 }>();
 
 const emit = defineEmits(["socialClick"]);
 
+// Function to handle social platform click
 function handleClick(platformName: string) {
   emit("socialClick", platformName);
 }

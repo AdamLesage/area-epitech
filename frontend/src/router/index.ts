@@ -47,7 +47,13 @@ const router = createRouter({
       path: '/add-connections',
       name: 'add-connections',
       component: () => import('@/views/AddConnections.vue'),
+    },
+    {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import('@/views/DashboardPage.vue'),
     }
+
   ],
 })
 
