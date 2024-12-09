@@ -1,12 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const Prisma = require('@prisma/client');
-const { v4: uuidv4 } = require('uuid');
 const prisma = new Prisma.PrismaClient;
 const reactions = require("../services/reactions")
 
 /**
  * @brief create a new reaction and return the reaction
+ * @param uuid the uuid of the action reaction
+ * @param req.body the data send by the action
+ * @example POST /reaction/:uuid
+ *   {
+ *       "userId": "user-123",
+ *       "reaction": "like"
+ *   }
  */
 router.post('/reaction/:uuid', async (req, res) => {
     try {
@@ -26,4 +32,4 @@ router.post('/reaction/:uuid', async (req, res) => {
     }
 });
 
-module.exports = router;  // for use in other files
+module.exports = router;
