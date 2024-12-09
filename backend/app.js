@@ -6,9 +6,10 @@ require('./authentication/passport');
 
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
+const aboutRouter = require('./routes/about')
 
 const app = express();
-const port = 3000;
+const port = 8080;
 
 app.use(express.json());
 app.use(
@@ -24,6 +25,7 @@ app.use(passport.session());
 
 app.use('/api', userRouter);
 app.use('/auth', authRouter);
+app.use('', aboutRouter);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
