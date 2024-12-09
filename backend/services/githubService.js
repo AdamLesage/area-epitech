@@ -10,6 +10,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const router = express.Router();
 
+// ACTION
+
 router.post('/webhook', async (req, res) => {
     try {
         const event = req.headers['x-github-event'];
@@ -34,10 +36,10 @@ router.post('/webhook', async (req, res) => {
             });
         }
 
-        // // Create new reaction
-        const reaction = await prisma.reaction.create({
+        // // Create new action
+        const newAction = await prisma.action.create({
             data: {
-                name: `Reaction for ${event} ${action}`,
+                name: `Action for ${event} ${action}`,
                 description: `Triggered by ${event} event and ${action} action`,
                 endpoint: `/api/github/webhook`,
                 service: {
@@ -52,5 +54,10 @@ router.post('/webhook', async (req, res) => {
         res.status(500).send(`Error: ${error}`);
     }
 });
+
+// ACTION
+
+// router.post('/webhook', async (req, res) => {
+
 
 module.exports = router;
