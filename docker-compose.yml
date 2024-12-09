@@ -51,7 +51,7 @@ services:
   client_web:
     image: area-client:latest
     build:
-      context: ./prototype
+      context: ./frontend
     ports:
       - "8081:8081"
     volumes:
