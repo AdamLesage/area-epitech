@@ -10,7 +10,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const router = express.Router();
 const axios = require('axios');
-const { assign } = require('nodemailer/lib/shared');
+// const Octokit = require('@octokit/re st');
 
 // ACTION
 
@@ -98,6 +98,57 @@ router.post('/create-issue', async (req, res) => {
             message: 'Issue created successfully',
             issue_url: response.data.html_url,
         });
+    } catch (error) {
+        console.error(error);
+
+        // Error handling
+        if (error.response) {
+            // GitHub API response error
+            return res.status(error.response.status).send({
+                message: 'Error from GitHub API',
+                details: error.response.data,
+            });
+        }
+
+        res.status(500).send({
+            message: 'Internal server error',
+            details: error.message,
+        });
+    }
+});
+
+router.get('/repo-details', async (req, res) => {
+    try {
+        const { user, reponame } = req.body;
+
+        // Validate parameters
+        if (!user || !reponame) {
+            return res.status(400).send('User and repository name are required');
+        }
+
+        // Configure request options
+        const githubToken = process.env.GITHUB_TOKEN;
+
+        if (!githubToken) {
+            return res.status(500).send('GitHub access token is not defined');
+        }
+
+        const response = await axios.get(
+            `https://api.github.com/repos/${user}/${reponame}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${githubToken}`,
+                    'Content-Type': 'application/json',
+                },
+                auth: {
+                    username: user,
+                    password: githubToken,
+                },
+            }
+        );
+
+        // Successful response
+        res.status(200).send(response.data);
     } catch (error) {
         console.error(error);
 
