@@ -148,9 +148,6 @@ router.post('/reset-password', async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        console.log(process.env.EMAIL_USER);
-        console.log(process.env.EMAIL_PASSWORD);
-        console.log(process.env.FRONTEND_URL);
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.ethereal.email',

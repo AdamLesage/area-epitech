@@ -44,8 +44,8 @@ model LinkedAccount {
 
 model Service {
   id        Int        @id @default(autoincrement())
-  name      String
-  logo      String
+  name      String     @unique
+  logo      String     @unique
   actions   Action[]
   reactions Reaction[]
 }
