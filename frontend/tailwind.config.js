@@ -3,8 +3,8 @@ import colors from 'tailwindcss/colors';
 
 export default {
   content: [
-    "src/**/*.vue",
-    "src/App.vue",
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+    './index.html',
   ],
   theme: {
     colors: {
@@ -32,6 +32,26 @@ export default {
       violet: colors.violet,
       sky: colors.sky,
       lightGreen: colors.lightGreen,
+      'auth': {
+        primary: '#4335A7',
+        secondary: {
+          DEFAULT: '#80C4E9',
+        },
+        tertiary: {
+          DEFAULT: '#FF7F3E',
+        },
+        neutral: {
+          DEFAULT: '#79777B',
+          100: '#D9D9D9',
+        }
+      }
+    },
+    extend: {
+      screens: {
+          mobile: { max: '768px' },
+          web: { min: '769px' },
+          half: { max: '1024px' },
+      },
     },
   },
   plugins: [],
