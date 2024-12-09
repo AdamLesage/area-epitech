@@ -4,13 +4,13 @@ require('dotenv').config();
 // Google strategy
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
+const port = 8080;
 passport.use(
     new GoogleStrategy(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: `http://localhost:3000/auth/google/redirect`,
+            callbackURL: `http://localhost:${port.toString()}/auth/google/redirect`,
         },
 
         function (accessToken, refreshToken, profile, done) {
@@ -41,7 +41,7 @@ passport.use(
         {
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            callbackURL: 'http://localhost:3000/auth/github/redirect',
+            callbackURL: `http://localhost:${port.toString()}/auth/github/redirect`,
             scope: ['user:email'],
         },
         async (accessToken, refreshToken, profile, done) => {
