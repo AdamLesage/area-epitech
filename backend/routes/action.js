@@ -102,7 +102,7 @@ router.post('/action', async (req, res) => {
         res.json(newAction);
     } catch (e) {
         console.error(e);
-        res.status(500).send("error on create action");
+        return res.status(500).send("error on create action");
     }
 });
 
@@ -128,12 +128,12 @@ router.delete('/action/:id', async (req, res) => {
         res.json({ message: "action deleted" });
     } catch (e) {
         console.error(e);
-        res.status(500).send("error on delete action");
+        return res.status(500).send("error on delete action");
     }
 });
 
 /**
- * @brief delete the action
+ * @brief update the state action
  * 
  * @param {string} uuid the id of the action
  * @param {boolean} isActive
@@ -142,23 +142,24 @@ router.delete('/action/:id', async (req, res) => {
 router.put('/action/set_active/:uuid', async (req, res) => {
     try {
         const uuid = req.params.uuid;
+        console.log(uuid);
         const { isActive } = req.body;
         const action = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
         if (action == null) {
-            res.status(404).send("action not find");
+            return res.status(404).send("action not find"); 
         }
         if (isActive === false && action.isActive === true) {
             docker.getContainer(action.containerUuid).stop();
         } else if (isActive === true && action.isActive === false) {
             docker.getContainer(action.containerUuid).start();
         }
-        await prisma.actionReaction.update({
+        const updatedActionReaction = await prisma.actionReaction.update({
             where: { uuid: uuid },
             data: {
                 isActive: isActive,
             }
         });
-        res.json({ message: "action update" });
+        return res.json({ updatedActionReaction });
     } catch (e) {
         console.error(e);
         res.status(500).send("error on update action");

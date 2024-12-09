@@ -17,12 +17,13 @@ const reactions = require("../services/reactions")
 router.post('/reaction/:uuid', async (req, res) => {
     try {
         const uuid = req.params.uuid;
+        console.log(uuid);
         const action = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
         if (action == null) {
-            throw Error("unknow action-Reaction");
+            return res.status(404).send("unknow action-Reaction");
         }
         if (reactions.get(action.typeReaction) == undefined) {
-            throw Error("unknow unknow Reaction");
+            return res.status(404).send("unknow Reaction");
         }
         reactions.get(action.typeReaction)(action.reactionData, req.body);
         res.json({ message: "receive reaction", action: action });
