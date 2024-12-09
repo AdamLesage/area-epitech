@@ -1,8 +1,19 @@
 <template>
   <div
     class="flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black font-sans text-white">
+    <header
+      class="fixed top-0 left-0 w-full flex flex-wrap items-center justify-between bg-indigo-900 py-4 px-8 shadow-lg z-50">
+      <h1 class="text-3xl font-bold tracking-wide cursor-pointer" @click="navigateTo('/')">AREA</h1>
+      <nav class="flex gap-6 mt-4 md:mt-0">
+        <button v-for="link in headerLinks" :key="link.name" @click="navigateTo(link.route)"
+          class="flex items-center gap-2 text-lg font-medium bg-indigo-700 px-4 py-2 rounded-full shadow-md hover:bg-indigo-600 transition-transform transform hover:scale-105">
+          <Icon :icon="link.icon" class="text-2xl" />
+          {{ link.name }}
+        </button>
+      </nav>
+    </header>
     <div
-      class="bg-gray-900 rounded-3xl p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform hover:scale-105">
+      class="bg-gray-900 rounded-3xl p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform hover:scale-105 mt-20">
       <!-- PFP -->
       <img :src="`/images/${user.avatar.split('/').pop()}`" alt="Profile Picture"
         class="w-48 h-48 rounded-full mb-6 border-4 border-gray-700 mx-auto shadow-lg" />
@@ -34,8 +45,7 @@
       </div>
 
       <!-- Add Connections Button -->
-      <button
-        @click="goToAddConnections"
+      <button @click="goToAddConnections"
         class="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
         Add Connections
       </button>
@@ -43,10 +53,12 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import ConnectedApiIcons from "../components/ConnectedApiIcons.vue";
 import { useRouter } from "vue-router";
+import { Icon } from "@iconify/vue";
 
 const router = useRouter();
 
@@ -94,4 +106,19 @@ function handleSocialClick(platformName: string) {
 function goToAddConnections() {
   router.push("/add-connections");
 }
+
+const headerLinks = [
+  { name: "Explore", icon: "mdi:compass-outline", route: "/explore" },
+  { name: "My Areas", icon: "mdi:folder-outline", route: "/areas" },
+  { name: "Updates", icon: "mdi:bell-outline", route: "/updates" },
+  { name: "Profile", icon: "mdi:account-outline", route: "/userinfo" },
+];
+
+function navigateTo(route: string) {
+  router.push(route);
+}
+
 </script>
+
+<style scoped>
+</style>
