@@ -19,6 +19,9 @@ onMounted(() => {
             <router-link to="/signup" class="hover:cursor-pointer" >Sign Up</router-link>
             <router-link to="/forgot-password" class="hover:cursor-pointer" >Forgot Password</router-link>
             <router-link to="/email-verification" class="hover:cursor-pointer" >Email Verification</router-link>
+            <router-link to="/dashboard" class="hover:cursor-pointer" >dashboard</router-link>
+
+            
         </nav>
     </div>
     <div class="bg-auth-primary"
@@ -31,6 +34,7 @@ onMounted(() => {
             <router-link to="/forgot-password" class="hover:cursor-pointer" >Forgot Password</router-link>
             <router-link to="/change-password" class="hover:cursor-pointer" >Change Password</router-link>
             <router-link to="/email-verification" class="hover:cursor-pointer" >Email Verification</router-link>
+            <router-link to="/dashboard" class="hover:cursor-pointer" >dashboard</router-link>
         </nav>
     </div>
 </template>
