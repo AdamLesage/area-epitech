@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { AreaValues } from '@/types/services';
 import { Icon } from '@iconify/vue';
 
 const props = defineProps<{
-    values: AreaValues,
+    values: {
+        name: string,
+        description: string,
+    },
     icon: string,
     color: string,
 }>()
@@ -35,11 +37,8 @@ function handleConfigureClick() {
                 </div>
                 <div class="flex flex-col justify-start">
                     <h1 class="font-semibold">
-                        {{ props.values.title }}
+                        {{ props.values.name }}
                     </h1>
-                    <h2>
-                        {{ props.values.subtitle }}
-                    </h2>
                 </div>
                 <div class="flex items-center justify-center">
                     <div class="w-8 h-8 rounded-full flex items-center justify-center bg-white hover:bg-gray-100 hover:cursor-pointer"
@@ -57,11 +56,11 @@ function handleConfigureClick() {
                 </div>
             </div>
         </div>
-        <div class="h-[40%]">
+        <div class="h-[40%] w-full flex flex-col justify-between pb-4">
             <!-- Body (Description + Actions) -->
             <div class="p-4">
                 <h2 class="font-semibold">
-                    {{ props.values.title }}
+                    {{ props.values.name }}
                 </h2>
                 <p class=text-sm>
                     {{ props.values.description }}
