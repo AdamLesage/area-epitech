@@ -5,12 +5,27 @@ import SignUpButton from '@/components/SignUpButton.vue';
 import { LoginFormValues } from '@/types/auth';
 
 import { ref } from 'vue';
+import axios from 'axios';
 
 const hover = ref(false);
 
 // Form submission handler
-const handleSubmit = (values: LoginFormValues) => {
+const handleSubmit = async (values: LoginFormValues) => {
     console.log('Login Form Received:', values);
+    try {
+        const res = await axios.post('http://localhost:8080/auth/login', {
+            email: values.email,
+            password: values.password,
+        });
+        console.log(res);
+        if (res.status == 200) {
+            console.log('User registered successfully');
+        } else {
+            console.log('User registration failed');
+        }
+    } catch (error) {
+        console.error('User registration failed:', error);
+    }
 };
 </script>
 

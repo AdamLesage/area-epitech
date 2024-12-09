@@ -17,7 +17,7 @@ const { v4: uuidv4 } = require('uuid');
 
 // Intern auth routes
 
-router.get('/login', (req, res) => {
+router.post('/login', (req, res) => {
     const { password, email } = req.body;
     const headers = req.headers;
 
@@ -34,16 +34,7 @@ router.get('/login', (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Check if headers are correct for the user
-        if (headers.authorization) {
-            if (headers.authorization !== user.authToken) {
-                return res.status(401).json({ error: 'Unauthorized' });
-            } else {
-                return res.status(200).json({ message: 'User logged in', user: user });
-            }
-        }
-
-        bcrypt.compare(password, user.password, (err, result) => {
+        bcrypt.compare(password, user.hashedPassword, (err, result) => {
             if (result) {
                 return res.status(200).json({ message: 'User logged in', user: user });
             }
