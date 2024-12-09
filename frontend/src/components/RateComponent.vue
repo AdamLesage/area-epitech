@@ -43,7 +43,9 @@ const reviewsWithSuffix = formatNumberWithSuffix(props.reviews);
                 :key="'empty-' + index"
             />
         </div>
-        <h1 class="font-medium"
+        <h1 class="font-medium mobile:hidden"
             :style="{ color: props.textcolor }">{{ rate }} by {{ reviewsWithSuffix }}+ reviews</h1>
+        <h1 class="font-medium web:hidden"
+            :style="{ color: props.textcolor }">{{ rate }}</h1>
     </div>
 </template>

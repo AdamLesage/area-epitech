@@ -26,7 +26,7 @@ function handleConfigureClick() {
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-between w-[360px] h-[410px] border-2 border-auth-neutral rounded-xl">
+    <div class="flex flex-col items-center justify-between w-[340px] web:h-[410px] mobile:h-[140px] border-2 border-auth-neutral rounded-xl mobile:bg-white">
         <div class="flex flex-col w-full h-[60%]">
             <header class="flex justify-between items-center w-full p-4">
                 <div class="flex items-center justify-center">
@@ -48,7 +48,7 @@ function handleConfigureClick() {
                     </div>
                 </div>
             </header>
-            <div class="w-full h-full">
+            <div class="w-full h-full mobile:hidden">
                 <!-- Hero (Screen or Video) -->
                 <div class="w-full h-full"
                     :style="{ backgroundColor: color }">
@@ -58,7 +58,7 @@ function handleConfigureClick() {
         </div>
         <div class="h-[40%] w-full flex flex-col justify-between pb-4">
             <!-- Body (Description + Actions) -->
-            <div class="p-4">
+            <div class="p-4 mobile:hidden">
                 <h2 class="font-semibold">
                     {{ props.values.name }}
                 </h2>
