@@ -56,7 +56,7 @@ router.get('/login', (req, res) => {
 router.post('/register', async (req, res) => {
     const { password, email, name, surname, bio, birthDate, phoneNumber, profilePicture } = req.body;
 
-    if (!password || !email || !name || !surname) {
+    if (!password || !email) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
@@ -68,8 +68,8 @@ router.post('/register', async (req, res) => {
         data: {
             email,
             hashedPassword,
-            name,
-            surname,
+            name: name ? name : 'Invalid name',
+            surname: surname ? surname : 'Invalid surname',
             bio,
             uuid: uuid,
             birthDate: birthDate ? new Date(birthDate) : null,
@@ -226,42 +226,60 @@ router.get('/google',
         prompt: 'select_account',
     })
 );
-router.get('/google/redirect',
-    passport.authenticate('google', {
-        failureRedirect: '/login'
-    }),
-    (req, res) => {
-        const userParams = {
-            email: req.user.emails[0].value,
-            name: req.user.name.givenName,
-            surname: req.user.name.familyName || '',
-            uuid: uuidv4(),
-            googleAccessToken: req.user.accessToken,
-            hashedPassword: '',
-        };
 
-        prisma.user.findUnique({
-            where: {
-                email: userParams.email,
-            },
-        }).then((user) => {
+router.get('/google/redirect',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            const userParams = {
+                email: req.user.emails[0].value,
+                name: req.user.name.givenName,
+                surname: req.user.name.familyName || '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.id,
+            };
+
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'google',
+                authToken: req.user.id,
+            };
+
+            // Vérifiez si l'utilisateur existe déjà
+            let user = await prisma.user.findUnique({
+                where: { email: userParams.email },
+            });
+
             if (!user) {
-                userParams.authToken = uuidv4();
-                prisma.user.create({
-                    data: userParams,
-                }).then((newUser) => {
-                    return res.status(201).json(newUser);
-                }).catch((error) => {
-                    console.error(error);
-                    return res.status(500).json({ error: error.message });
-                });
-            } else {
-                return res.status(200).json(user);
+                userParams.authToken = uuidv4(); // Ajout du token d'authentification
+                user = await prisma.user.create({ data: userParams });
+
+                // Créer un compte lié pour le nouvel utilisateur
+                linkedAccountParams.userId = user.id;
+                await prisma.linkedAccount.create({ data: linkedAccountParams });
+
+                return res.status(201).json(user);
             }
-        }).catch((error) => {
+
+            // Vérifiez si le compte est déjà lié
+            const linkedAccount = await prisma.linkedAccount.findFirst({
+                where: {
+                    userId: user.id,
+                    serviceName: 'google',
+                },
+            });
+
+            if (!linkedAccount) {
+                linkedAccountParams.userId = user.id;
+                await prisma.linkedAccount.create({ data: linkedAccountParams });
+            }
+
+            // Retournez l'utilisateur existant
+            return res.status(200).json(user);
+        } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
-        });
+        }
     }
 );
 
@@ -272,42 +290,59 @@ router.get('/github',
 );
 
 router.get('/github/redirect',
-    passport.authenticate('github', {
-        failureRedirect: '/login'
-    }),
-    (req, res) => {
-        console.log('User:', req.user);
-        const userParams = {
-            email: req.user.emails[0].value,
-            name: req.user.displayName,
-            surname: '',
-            uuid: uuidv4(),
-            githubAccessToken: req.user.accessToken,
-            hashedPassword: '',
-        };
+    passport.authenticate('github', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            const userParams = {
+                email: req.user.emails[0].value,
+                name: req.user.displayName || '',
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.accessToken,
+            };
 
-        prisma.user.findUnique({
-            where: {
-                email: userParams.email,
-            },
-        }).then((user) => {
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'github',
+                authToken: req.user.accessToken,
+            };
+
+            // Check if the user already exists
+            let user = await prisma.user.findUnique({
+                where: { email: userParams.email },
+            });
+
             if (!user) {
-                userParams.authToken = uuidv4();
-                prisma.user.create({
-                    data: userParams,
-                }).then((newUser) => {
-                    return res.status(201).json(newUser);
-                }).catch((error) => {
-                    console.error(error);
-                    return res.status(500).json({ error: error.message });
-                });
-            } else {
-                return res.status(200).json(user);
+                // Create a new user
+                userParams.authToken = uuidv4(); // Add authentication token
+                user = await prisma.user.create({ data: userParams });
+
+                // Create a linked account for the new user
+                linkedAccountParams.userId = user.id;
+                await prisma.linkedAccount.create({ data: linkedAccountParams });
+
+                return res.status(201).json(user);
             }
-        }).catch((error) => {
+
+            // Check if the account is already linked
+            const linkedAccount = await prisma.linkedAccount.findFirst({
+                where: {
+                    userId: user.id,
+                    serviceName: 'github',
+                },
+            });
+
+            if (!linkedAccount) {
+                linkedAccountParams.userId = user.id;
+                await prisma.linkedAccount.create({ data: linkedAccountParams });
+            }
+
+            // Return the existing user
+            return res.status(200).json(user);
+        } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
-        });
+        }
     }
 );
 

@@ -18,8 +18,6 @@ model User {
   phoneNumber       String?
   hashedPassword    String
   authToken         String?         @unique
-  googleAccessToken String?         @unique
-  githubAccessToken String?         @unique
   profilePicture    ProfilePicture?
   linkedAccounts    LinkedAccount[]
 }
@@ -33,13 +31,12 @@ model ProfilePicture {
 }
 
 model LinkedAccount {
-  id       Int    @id @default(autoincrement())
-  uuid     String @unique
-  name     String
-  logo     String
-  endpoint String
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  id          Int    @id @default(autoincrement())
+  uuid        String @unique
+  serviceName String
+  authToken   String @unique
+  userId      Int
+  user        User   @relation(fields: [userId], references: [id])
 }
 
 model Service {
