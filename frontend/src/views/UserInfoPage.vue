@@ -1,58 +1,57 @@
 <template>
   <div
-    class="flex justify-center items-center h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black font-sans text-white">
+    class="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black font-sans text-white">
     <header
-      class="fixed top-0 left-0 w-full flex flex-wrap items-center justify-between bg-indigo-900 py-4 px-8 shadow-lg z-50">
-      <h1 class="text-3xl font-bold tracking-wide cursor-pointer" @click="navigateTo('/')">AREA</h1>
-      <nav class="flex gap-6 mt-4 md:mt-0">
+      class="fixed top-0 left-0 w-full flex flex-wrap items-center justify-between bg-indigo-900 py-4 px-4 md:px-8 shadow-lg z-50">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-wide cursor-pointer" @click="navigateTo('/')">AREA</h1>
+      <nav class="flex gap-4 md:gap-6 mt-4 md:mt-0">
         <button v-for="link in headerLinks" :key="link.name" @click="navigateTo(link.route)"
-          class="flex items-center gap-2 text-lg font-medium bg-indigo-700 px-4 py-2 rounded-full shadow-md hover:bg-indigo-600 transition-transform transform hover:scale-105">
-          <Icon :icon="link.icon" class="text-2xl" />
+          class="flex items-center gap-2 text-sm md:text-lg font-medium bg-indigo-700 px-3 md:px-4 py-2 rounded-full shadow-md hover:bg-indigo-600 transition-transform transform hover:scale-105">
+          <Icon :icon="link.icon" class="text-xl md:text-2xl" />
           {{ link.name }}
         </button>
       </nav>
     </header>
     <div
-      class="bg-gray-900 rounded-3xl p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform hover:scale-105 mt-20">
+      class="bg-gray-900 rounded-3xl p-6 md:p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform hover:scale-105 mt-20">
       <!-- PFP -->
       <img :src="`/images/${user.avatar.split('/').pop()}`" alt="Profile Picture"
-        class="w-48 h-48 rounded-full mb-6 border-4 border-gray-700 mx-auto shadow-lg" />
+        class="w-32 h-32 md:w-48 md:h-48 rounded-full mb-6 border-4 border-gray-700 mx-auto shadow-lg" />
 
-      <!-- Usernam and creation date -->
-      <h2 class="text-4xl font-semibold tracking-wide mb-2">{{ user.name }}</h2>
-      <p class="text-sm text-gray-400 font-light">{{ user.created_at }}</p>
+      <!-- Username and creation date -->
+      <h2 class="text-2xl md:text-4xl font-semibold tracking-wide mb-2">{{ user.name }}</h2>
+      <p class="text-xs md:text-sm text-gray-400 font-light">{{ user.created_at }}</p>
 
       <!-- Actions -->
-      <div class="flex justify-around mt-8 text-center text-gray-300">
-        <div class="hover:text-white transition-all duration-300">
-          <h3 class="text-5xl font-extrabold">{{ user.action_created }}</h3>
-          <p class="text-base font-light">Actions Created</p>
+      <div class="flex flex-col md:flex-row justify-around mt-8 text-center text-gray-300">
+        <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0">
+          <h3 class="text-3xl md:text-5xl font-extrabold">{{ user.action_created }}</h3>
+          <p class="text-sm md:text-base font-light">Actions Created</p>
+        </div>
+        <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0">
+          <h3 class="text-3xl md:text-5xl font-extrabold">{{ user.action_on }}</h3>
+          <p class="text-sm md:text-base font-light">Actions On</p>
         </div>
         <div class="hover:text-white transition-all duration-300">
-          <h3 class="text-5xl font-extrabold">{{ user.action_on }}</h3>
-          <p class="text-base font-light">Actions On</p>
-        </div>
-        <div class="hover:text-white transition-all duration-300">
-          <h3 class="text-5xl font-extrabold">{{ user.action_off }}</h3>
-          <p class="text-base font-light">Actions Off</p>
+          <h3 class="text-3xl md:text-5xl font-extrabold">{{ user.action_off }}</h3>
+          <p class="text-sm md:text-base font-light">Actions Off</p>
         </div>
       </div>
 
       <!-- Connected Platforms -->
       <div class="mt-12">
-        <h3 class="text-2xl font-semibold mb-6 tracking-wide">Connected Platforms</h3>
+        <h3 class="text-xl md:text-2xl font-semibold mb-6 tracking-wide">Connected Platforms</h3>
         <ConnectedApiIcons :platforms="detailedPlatforms" @socialClick="handleSocialClick" />
       </div>
 
       <!-- Add Connections Button -->
       <button @click="goToAddConnections"
-        class="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+        class="mt-8 px-4 md:px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
         Add Connections
       </button>
     </div>
   </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
@@ -82,7 +81,6 @@ const user = ref({
   ],
 });
 
-
 // Platforms
 const platformsDetails: { [key: string]: { icon: string; color: string } } = {
   Spotify: { icon: "mdi:spotify", color: "#1DB954" },
@@ -95,7 +93,6 @@ const platformsDetails: { [key: string]: { icon: string; color: string } } = {
   Slack: { icon: "mdi:slack", color: "#611F69" },
 };
 
-
 // Computed Properties for ConnectedApiIcons
 const detailedPlatforms = computed(() =>
   user.value.connected_api.map((api) => ({
@@ -104,18 +101,15 @@ const detailedPlatforms = computed(() =>
   }))
 );
 
-
 // Functions for ConnectedApiIcons
 function handleSocialClick(platformName: string) {
   console.log(`Connect with ${platformName}`);
 }
 
-
 // Navigation to Add Connections
 function goToAddConnections() {
   router.push("/add-connections");
 }
-
 
 // Header Links
 const headerLinks = [
@@ -125,12 +119,10 @@ const headerLinks = [
   { name: "Profile", icon: "mdi:account-outline", route: "/userinfo" },
 ];
 
-
 // Navigation Function for Header Links
 function navigateTo(route: string) {
   router.push(route);
 }
-
 </script>
 
 <style scoped>
