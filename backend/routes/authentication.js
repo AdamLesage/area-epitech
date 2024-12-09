@@ -165,7 +165,7 @@ router.post('/reset-password', async (req, res) => {
         const mailData = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: 'Reset password',
+            subject: 'Reset password for Area Romain le malin',
             text: `Click on the link to reset your password: ${process.env.FRONTEND_URL}/reset-password/${user.uuid}`,
         };
 
