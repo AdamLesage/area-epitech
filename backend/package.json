@@ -13,6 +13,7 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
+    "dockerode": "^4.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
@@ -23,9 +24,11 @@
     "passport-github2": "^0.1.12",
     "passport-google-oauth": "^2.0.0",
     "passport-google-oauth20": "^2.0.0",
+    "path": "^0.12.7",
     "supertest": "^7.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "tar-fs": "^3.0.6",
     "uuid": "^11.0.3"
   },
   "devDependencies": {
