@@ -117,4 +117,59 @@ router.post('/create-issue', async (req, res) => {
     }
 });
 
+router.post('/create-repo', async (req, res) => {
+    try {
+        const { name, description } = req.body;
+
+        // Validate parameters
+        if (!name || !description) {
+            return res.status(400).send('Name and description are required');
+        }
+
+        // Configure request options
+        const githubToken = process.env.GITHUB_TOKEN;
+
+        if (!githubToken) {
+            return res.status(500).send('GitHub access token is not defined');
+        }
+
+        const response = await axios.post(
+            `https://api.github.com/user/repos`,
+            {
+                name: name,
+                description: description,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${githubToken}`,
+                    'X-GitHub-Api-Version': '2022-11-28',
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        // Successful response
+        res.status(200).send({
+            message: 'Repository created successfully',
+            repo_url: response.data.html_url,
+        });
+    } catch (error) {
+        console.error(error);
+
+        // Error handling
+        if (error.response) {
+            // GitHub API response error
+            return res.status(error.response.status).send({
+                message: 'Error from GitHub API',
+                details: error.response.data,
+            });
+        }
+
+        res.status(500).send({
+            message: 'Internal server error',
+            details: error.message,
+        });
+    }
+});
+
 module.exports = router;
