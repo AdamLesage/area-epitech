@@ -62,6 +62,7 @@ import { Icon } from "@iconify/vue";
 
 const router = useRouter();
 
+// User Info
 const user = ref({
   name: "Romain Chavalier",
   avatar: "/temppfp.jpeg",
@@ -81,6 +82,8 @@ const user = ref({
   ],
 });
 
+
+// Platforms
 const platformsDetails: { [key: string]: { icon: string; color: string } } = {
   Spotify: { icon: "mdi:spotify", color: "#1DB954" },
   Google: { icon: "mdi:google", color: "#FF0000" },
@@ -92,6 +95,8 @@ const platformsDetails: { [key: string]: { icon: string; color: string } } = {
   Slack: { icon: "mdi:slack", color: "#611F69" },
 };
 
+
+// Computed Properties for ConnectedApiIcons
 const detailedPlatforms = computed(() =>
   user.value.connected_api.map((api) => ({
     name: api.name,
@@ -99,14 +104,20 @@ const detailedPlatforms = computed(() =>
   }))
 );
 
+
+// Functions for ConnectedApiIcons
 function handleSocialClick(platformName: string) {
   console.log(`Connect with ${platformName}`);
 }
 
+
+// Navigation to Add Connections
 function goToAddConnections() {
   router.push("/add-connections");
 }
 
+
+// Header Links
 const headerLinks = [
   { name: "Explore", icon: "mdi:compass-outline", route: "/explore" },
   { name: "My Areas", icon: "mdi:folder-outline", route: "/areas" },
@@ -114,6 +125,8 @@ const headerLinks = [
   { name: "Profile", icon: "mdi:account-outline", route: "/userinfo" },
 ];
 
+
+// Navigation Function for Header Links
 function navigateTo(route: string) {
   router.push(route);
 }

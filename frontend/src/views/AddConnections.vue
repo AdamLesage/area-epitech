@@ -25,6 +25,8 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+
+// List of platforms to connect to with their respective icons and colors
 const platforms = ref([
     { name: "Spotify", icon: "mdi:spotify", color: "#1DB954" },
     { name: "Google", icon: "mdi:google", color: "#FF0000" },
@@ -50,10 +52,14 @@ const platforms = ref([
     { name: "Hulu", icon: "mdi:hulu", color: "#1CE783" },
 ]);
 
+
+// Function to select a platform
 function selectPlatform(platformName: string) {
     console.log(`Selected platform: ${platformName}`);
 }
 
+
+// Function to navigate back to the user info page
 function goBack() {
     router.push('/userinfo');
 }

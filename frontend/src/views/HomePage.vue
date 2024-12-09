@@ -78,6 +78,8 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
+
+// Header Links for navigation
 const headerLinks = [
     { name: "Explore", icon: "mdi:compass-outline", route: "/explore" },
     { name: "My Areas", icon: "mdi:folder-outline", route: "/areas" },
@@ -85,10 +87,14 @@ const headerLinks = [
     { name: "Profile", icon: "mdi:account-outline", route: "/userinfo" },
 ];
 
+
+// Function to navigate to a route
 function navigateTo(route: string) {
     router.push(route);
 }
 
+
+// List of connected platforms with their respective icons and colors
 const connectedPlatforms = ref([
     { name: "Spotify", icon: "mdi:spotify", color: "bg-green-500" },
     { name: "Google", icon: "mdi:google", color: "bg-red-500" },
@@ -100,6 +106,8 @@ const connectedPlatforms = ref([
     { name: "Slack", icon: "mdi:slack", color: "bg-purple-500" },
 ]);
 
+
+// Updates list
 const updates = ref([
     { id: 1, content: "✅ Created Login Page" },
     { id: 2, content: "✅ Created Register Page" },
