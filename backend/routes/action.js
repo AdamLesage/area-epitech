@@ -27,9 +27,30 @@ router.get('/action', async (req, res) => {
 
 /**
  * @brief create a new action and return the action
+ * 
+ * @param {string} title the title of the action reaction
+ * @param {string} typeAction the type of the action
+ * @param {string} typeReaction the type of the reaction
+ * @param {object} reactionData the data usefull for the reaction
+ * @param {object} actionData the data usefull for the action
+ * @exemple POST /api/action/ {
+ *       "title": "Sample Action Title",
+ *       "typeAction": "dropbox_on_new_file",
+ *       "typeReaction": "dropbox_shares_file",
+ *       "reactionData": {
+ *           "notification": "Action was successful",
+ *           "timestamp": "2023-10-01T12:00:00Z"
+ *       },
+ *       "actionData": {
+ *           "details": "User  clicked the button"
+ *       }
+ *   }
+ * @author Romain Chevallier
  */
+
 router.post('/action', async (req, res) => {
     const { title, typeAction, typeReaction, reactionData, actionData } = req.body;
+    // check user autentification
     const headers = req.headers;
     if (headers.authorization) {
         const user = await prisma.user.findUnique({
@@ -44,6 +65,7 @@ router.post('/action', async (req, res) => {
     } else {
         return res.status(401).json({ error: 'Unauthorized' });
     }
+    // check valide action and reaction type
     if (actions.get(typeAction) === undefined) {
         res.status(404).send("action not found");
     }
@@ -59,8 +81,10 @@ router.post('/action', async (req, res) => {
         },
     });
     const uuid = uuidv4();
+    // create and lunch the worker
     const containerUuid = await actions.get(typeAction)(actionData, uuid);
     try {
+        // create the action reaction object
         const newAction = await prisma.actionReaction.create({
             data: {
                 title: title,
@@ -84,10 +108,14 @@ router.post('/action', async (req, res) => {
 
 /**
  * @brief delete the action
+ * 
+ * @param {int} id the id of the action on param
+ * @exemple DELETE /api/action/:id
  */
+
 router.delete('/action/:id', async (req, res) => {
-    const id = parseInt(req.params.id);
     try {
+        const id = parseInt(req.params.id);
         const action = await prisma.actionReaction.findUnique({where: {id: id}});
         if (action == null) {
             res.status(404).send("action not find");
@@ -104,6 +132,13 @@ router.delete('/action/:id', async (req, res) => {
     }
 });
 
+/**
+ * @brief delete the action
+ * 
+ * @param {string} uuid the id of the action
+ * @param {boolean} isActive
+ * @example PUT /api/action/:uuid {isActive: false}
+ */
 router.put('/action/set_active/:uuid', async (req, res) => {
     try {
         const uuid = req.params.uuid;
