@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 
+// Update interface
 interface Update {
     id: number;
     content: string;
