@@ -75,7 +75,7 @@ router.post('/action', async (req, res) => {
                 containerUuid: containerUuid,
             },
         });
-        res.json(newAction)
+        res.json(newAction);
     } catch (e) {
         console.error(e);
         res.status(500).send("error on create action");
@@ -89,16 +89,44 @@ router.delete('/action/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const action = await prisma.actionReaction.findUnique({where: {id: id}});
-        if (action !== null) {
-            docker.getContainer(action.containerUuid).remove({force: true});
+        if (action == null) {
+            res.status(404).send("action not find");
+            return;
         }
+        docker.getContainer(action.containerUuid).remove({force: true});
         await prisma.actionReaction.delete({
             where: { id: id },
-            })
-        res.json({ message: "action deleted" })
+        });
+        res.json({ message: "action deleted" });
     } catch (e) {
         console.error(e);
         res.status(500).send("error on delete action");
+    }
+});
+
+router.put('/action/set_active/:uuid', async (req, res) => {
+    try {
+        const uuid = req.params.uuid;
+        const { isActive } = req.body;
+        const action = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
+        if (action == null) {
+            res.status(404).send("action not find");
+        }
+        if (isActive === false && action.isActive === true) {
+            docker.getContainer(action.containerUuid).stop();
+        } else if (isActive === true && action.isActive === false) {
+            docker.getContainer(action.containerUuid).start();
+        }
+        await prisma.actionReaction.update({
+            where: { uuid: uuid },
+            data: {
+                isActive: isActive,
+            }
+        });
+        res.json({ message: "action update" });
+    } catch (e) {
+        console.error(e);
+        res.status(500).send("error on update action");
     }
 });
 
