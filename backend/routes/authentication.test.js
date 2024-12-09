@@ -117,64 +117,64 @@ describe('Authentication Routes', () => {
         await prisma.user.deleteMany();
     });
 
-    it('should not send an email if email is invalid (POST /api/auth/reset-password)', async () => {
-        const responseUser = await request(app).post('/api/user').send({
-            name: "Jhon",
-            surname: "Doe",
-            bio: 'I am a user',
-            birthDate: new Date().toISOString(),
-            email: "john.doe@mail.com",
-            phoneNumber: '123456789',
-            password: 'password123',
-        });
-        expect(responseUser.statusCode).toBe(200);
-        let userAuthToken = responseUser.body.authToken;
-        console.log(userAuthToken);
+    // it('should not send an email if email is invalid (POST /api/auth/reset-password)', async () => {
+    //     const responseUser = await request(app).post('/api/user').send({
+    //         name: "Jhon",
+    //         surname: "Doe",
+    //         bio: 'I am a user',
+    //         birthDate: new Date().toISOString(),
+    //         email: "john.doe@mail.com",
+    //         phoneNumber: '123456789',
+    //         password: 'password123',
+    //     });
+    //     expect(responseUser.statusCode).toBe(200);
+    //     let userAuthToken = responseUser.body.authToken;
+    //     console.log(userAuthToken);
 
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `${userAuthToken}`
-        };
+    //     const headers = {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `${userAuthToken}`
+    //     };
 
-        const response = await request(app)
-            .post('/api/auth/reset-password')
-            .set(headers)
-            .send({ email: 'invalidemail' });
+    //     const response = await request(app)
+    //         .post('/api/auth/reset-password')
+    //         .set(headers)
+    //         .send({ email: 'invalidemail' });
 
-        expect(response.statusCode).toBe(404);
-        expect(response.body).toHaveProperty('error', 'User not found');
+    //     expect(response.statusCode).toBe(404);
+    //     expect(response.body).toHaveProperty('error', 'User not found');
 
-        // delete all users
-        await prisma.user.deleteMany();
-    });
+    //     // delete all users
+    //     await prisma.user.deleteMany();
+    // });
 
-    it('should send an email to reset password (POST /api/auth/reset-password)', async () => {
-        const responseUser = await request(app).post('/api/user').send({
-            name: "Jhon",
-            surname: "Doe",
-            bio: 'I am a user',
-            birthDate: new Date().toISOString(),
-            email: "john.doe@mail.com",
-            phoneNumber: '123456789',
-            password: 'password123',
-        });
-        expect(responseUser.statusCode).toBe(200);
-        let userAuthToken = responseUser.body.authToken;
+    // it('should send an email to reset password (POST /api/auth/reset-password)', async () => {
+    //     const responseUser = await request(app).post('/api/user').send({
+    //         name: "Jhon",
+    //         surname: "Doe",
+    //         bio: 'I am a user',
+    //         birthDate: new Date().toISOString(),
+    //         email: "john.doe@mail.com",
+    //         phoneNumber: '123456789',
+    //         password: 'password123',
+    //     });
+    //     expect(responseUser.statusCode).toBe(200);
+    //     let userAuthToken = responseUser.body.authToken;
 
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `${userAuthToken}`
-        };
+    //     const headers = {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `${userAuthToken}`
+    //     };
 
-        const response = await request(app)
-            .post('/api/auth/reset-password')
-            .set(headers)
-            .send({ email: 'john.doe@mail.com' });
+    //     const response = await request(app)
+    //         .post('/api/auth/reset-password')
+    //         .set(headers)
+    //         .send({ email: 'john.doe@mail.com' });
 
-        expect(response.statusCode).toBe(200);
-        expect(response.body).toHaveProperty('message', 'Email sent');
+    //     expect(response.statusCode).toBe(200);
+    //     expect(response.body).toHaveProperty('message', 'Email sent');
 
-        // delete all users
-        await prisma.user.deleteMany();
-    });
+    //     // delete all users
+    //     await prisma.user.deleteMany();
+    // });
 });

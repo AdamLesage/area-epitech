@@ -9,6 +9,8 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const router = express.Router();
+const axios = require('axios');
+const { assign } = require('nodemailer/lib/shared');
 
 // ACTION
 
@@ -36,7 +38,7 @@ router.post('/webhook', async (req, res) => {
             });
         }
 
-        // // Create new action
+        // Create new action
         const newAction = await prisma.action.create({
             data: {
                 name: `Action for ${event} ${action}`,
@@ -57,7 +59,62 @@ router.post('/webhook', async (req, res) => {
 
 // ACTION
 
-// router.post('/webhook', async (req, res) => {
+router.post('/create-issue', async (req, res) => {
+    try {
+        const { title, body } = req.body;
 
+        // Validate parameters
+        if (!title || !body) {
+            return res.status(400).send('Title and body are required');
+        }
+
+        // Configure request options
+        const githubRepo = 'AdamLesage/area-epitech';
+        const githubAssignees = ['AdamLesage'];
+        const githubToken = process.env.GITHUB_TOKEN;
+
+        if (!githubToken) {
+            return res.status(500).send('GitHub access token is not defined');
+        }
+
+        const response = await axios.post(
+            `https://api.github.com/repos/${githubRepo}/issues`,
+            {
+                title: title,
+                body: body,
+                assignees: githubAssignees,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${githubToken}`,
+                    'X-GitHub-Api-Version': '2022-11-28',
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        // Successful response
+        res.status(200).send({
+            message: 'Issue created successfully',
+            issue_url: response.data.html_url,
+        });
+    } catch (error) {
+        console.error(error);
+
+        // Error handling
+        if (error.response) {
+            // GitHub API response error
+            return res.status(error.response.status).send({
+                message: 'Error from GitHub API',
+                details: error.response.data,
+            });
+        }
+
+        res.status(500).send({
+            message: 'Internal server error',
+            details: error.message,
+        });
+    }
+});
 
 module.exports = router;
