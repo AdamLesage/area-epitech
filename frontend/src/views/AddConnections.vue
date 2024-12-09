@@ -50,6 +50,7 @@ const platforms = ref([
     { name: "Amazon", icon: "mdi:amazon", color: "#FF9900" },
     { name: "Netflix", icon: "mdi:netflix", color: "#E50914" },
     { name: "Hulu", icon: "mdi:hulu", color: "#1CE783" },
+    { name: "GitHub", icon: "mdi:github", color: "#181717" }
 ]);
 
 

@@ -1,4 +1,3 @@
-
 <template>
     <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white font-sans">
         <!-- Navbar -->
@@ -6,23 +5,21 @@
 
         <div class="flex flex-col md:flex-row h-full">
             <!-- Sidebar: Updates -->
-            <UpdatesSidebar :updates="updates" />
+            <UpdatesSidebar :updates="updates" class="md:w-1/4 w-full" />
 
-            <!-- Main Content -->
-            <main class="flex-1 bg-gray-900 p-5 grid grid-rows-4 gap-4">
+            <div class="flex-1 bg-gray-800 p-4">
                 <!-- Search Bar -->
-                <SearchBarComponent />
+                <SearchBarComponent class="mb-4 md:mb-0 py-4" />
 
                 <!-- Suggestions and Explore -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <SuggestionsComponent />
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
+                    <SuggestionsComponent class="mb-4 md:mb-0" />
                     <ExplorePlatformsComponent :platforms="connectedPlatforms" />
                 </div>
-            </main>
+            </div>
         </div>
     </div>
 </template>
-
 
 <script setup lang="ts">
 import NavbarComponent from '../components/NavbarComponent.vue'; // Import the NavbarComponent
@@ -42,7 +39,6 @@ const updates = ref([
     { id: 5, content: '🚧 Backend API Integration' },
 ]);
 
-
 //Avaible plateforms
 const connectedPlatforms = ref([
     { name: 'Spotify', icon: 'mdi:spotify', color: 'bg-green-500' },
@@ -53,9 +49,10 @@ const connectedPlatforms = ref([
     { name: 'LinkedIn', icon: 'mdi:linkedin', color: 'bg-blue-800' },
     { name: 'YouTube', icon: 'mdi:youtube', color: 'bg-red-600' },
     { name: 'Slack', icon: 'mdi:slack', color: 'bg-purple-500' },
+    { name: "Github", icon: "mdi:github", color: "bg-gray-800" }
 ]);
 </script>
 
-
 <style scoped>
+/* Add any additional styles here */
 </style>
