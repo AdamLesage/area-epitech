@@ -91,6 +91,14 @@ import { Icon } from '@iconify/vue';
 import AuthButton from '@/components/AuthButton.vue';
 import * as yup from 'yup';
 import { LoginFormValues } from '@/types/auth';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useUserStore } from '@/stores/users';
+import { User } from '@/types/auth';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const store = useUserStore();
 
 // Form state
 const email = ref<string>('');
@@ -130,7 +138,20 @@ const onSubmit: SubmissionHandler<LoginFormValues, GenericObject, unknown> = (va
 
 // Social authentication functions
 const authWithGoogle: () => void = () => console.log('Authenticating with Google...');
-const authWithGithub: () => void = () => console.log('Authenticating with GitHub...');
+const authWithGithub: () => void = async () => {
+    console.log('Authenticating with Github...');
+    const res: { status: number, data: User } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/github`);
+    if (res.status === 200 || res.status === 201) {
+        console.log('Github authentication successful');
+        Cookies.set('token', res.data.authToken);
+        Cookies.set('email', res.data.email);
+        store.setUser(res.data);
+        router.push('/dashboard');
+    } else {
+        console.error('Github authentication failed');
+    }
+    console.log(res);
+}
 const authWithTwitter: () => void = () => console.log('Authenticating with Twitter...');
 const authWithApple: () => void = () => console.log('Authenticating with Apple...');
 const authWithMicrosoft: () => void = () => console.log('Authenticating with Microsoft...');
