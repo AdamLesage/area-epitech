@@ -4,7 +4,8 @@
         @wheel="handleScrollAttempt" v-if="isHeroVisible">
         <ServiceNavComponent @back-button="handleBackButtonFirstPage" @redirect-user-profile="handleRedirectUserPage"
             class="mobile:hidden" />
-        <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4" />
+        <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4 mobile:hidden" />
+        <div />
         <div class="flex flex-col justify-center items-center">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
@@ -13,15 +14,15 @@
                         class="text-white web:text-[6rem] mobile:text-[3rem] web:leading-[5rem] mobile:leading-[2.5rem] font-bold">
                         {{ nameCapitalized }}</h1>
                     <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbActions }}
-                        Actions</h2>
+                        {{ nbActions <= 1 ? 'Area' : 'Areas'}}</h2>
                 </div>
             </div>
 
         </div>
         <div class="flex flex-col web:hidden gap-2">
-            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbActions }} Actions</h2>
-            <div class="flex flex-row gap-2 items-center justify-center">
-                <button class="rounded-full py-2 px-6 bg-white w-32">
+            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbActions }} Areas</h2>
+            <div class="flex flex-row gap-2 items-center justify-center mobile:hidden">
+                <button class="rounded-full py-2 px-6 bg-white w-32 mobile:hidden">
                     <h1 class="font-semibold">Activate</h1>
                 </button>
                 <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer" />
@@ -61,10 +62,10 @@
                             Actions</h2>
                     </div>
                 </div>
-                <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer mr-4" />
+                <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer mr-4 mobile:hidden" />
             </div>
             <div class="flex w-full justify-center web:hidden m-4">
-                <button class="rounded-full py-2 px-6 bg-white w-32">
+                <button class="rounded-full py-2 px-6 bg-white w-32 mobile:hidden">
                     <h1 class="font-semibold">Activate</h1>
                 </button>
             </div>
@@ -233,6 +234,7 @@ onMounted(async () => {
             color: '#1C1C53',
         });
     }
+    nbActions.value = actions.value.length;
     console.log(res);
 })
 </script>
