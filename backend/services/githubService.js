@@ -10,7 +10,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const router = express.Router();
 const axios = require('axios');
-// const Octokit = require('@octokit/re st');
+require('dotenv').config();
 
 // ACTION
 
@@ -54,7 +54,7 @@ router.post('/webhook', async (req, res) => {
 
         // Call repo details action
         const responseRepoDetails = await axios.get(
-            `http://localhost:8080/github/repo-details`,
+            `${env("BACKEND_URL")}/github/repo-details`,
             {
                 data: {
                     user: username,
