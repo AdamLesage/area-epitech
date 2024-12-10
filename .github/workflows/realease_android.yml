@@ -17,6 +17,12 @@ jobs:
     - name: Install dependencies
       working-directory: ./frontend/
       run: npm install
+    - name: build app
+      working-directory: ./frontend/
+      run: npm run build
+    - name: add android
+      working-directory: ./frontend/
+      run: npx cap add android
     - name: Sync Capacitor
       working-directory: ./frontend/
       run: npx cap sync android
