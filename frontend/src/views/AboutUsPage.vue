@@ -23,12 +23,12 @@ const goToHomePage = () => {
                 @mouseleave="hover = false" />
         </div>
 
-        <div class="bg-[#0A0A33] flex flex-col items-center px-8 min-h-screen">
+        <div class="bg-[#0A0A33] flex flex-col items-center px-8 min-h-screen justify-center">
             <!-- Logo -->
             <LogoComponent color="#80C4E9" class="w-80 h-80 mb-10" />
             <!-- Go back home button -->
             <button @click="goToHomePage"
-                class="mt-8 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 self-start">
+                class="mt-8 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300">
                 Go to Home Page
             </button>
 

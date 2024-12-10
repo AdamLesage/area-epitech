@@ -23,9 +23,9 @@ const router = useRouter();
 
 // Header links
 const headerLinks = [
-    { name: 'Explore', icon: 'mdi:compass-outline', route: '/explore' },
+    { name: 'Explore', icon: 'mdi:compass-outline', route: '' },
     { name: 'My Areas', icon: 'mdi:folder-outline', route: '/areas' },
-    { name: 'Updates', icon: 'mdi:bell-outline', route: '/updates' },
+    { name: 'Updates', icon: 'mdi:bell-outline', route: '' },
     { name: 'Profile', icon: 'mdi:account-outline', route: '/userinfo' },
 ];
 

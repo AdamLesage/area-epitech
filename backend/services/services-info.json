@@ -28,5 +28,35 @@
       "count": 250000
     },
     "saves": 2250000
+  },
+  {
+    "name":"spotify",
+    "color":"#35d96f",
+    "icon":"mdi:spotify",
+    "reviews": {
+      "rate": 4.5,
+      "count": 50000
+    },
+    "saves": 500000
+  },
+  {
+    "name":"gmail",
+    "color":"#ff8282",
+    "icon":"simple-icons:gmail",
+    "reviews": {
+      "rate": 4.7,
+      "count": 500000
+    },
+    "saves": 5000000
+  },
+  {
+    "name":"discord",
+    "color":"#7289da",
+    "icon":"ic:baseline-discord",
+    "reviews": {
+      "rate": 4.3,
+      "count": 10000
+    },
+    "saves": 100000
   }
 ]
