@@ -1,8 +1,14 @@
 <template>
-    <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 p-6 bg-gradient-to-r from-indigo-900 to-blue-500 rounded-lg shadow-lg text-white w-160 max-w-full">
+    <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 p-6 bg-blue-500 rounded-lg shadow-lg text-white w-160 max-w-full">
       <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold">Create AREA</h2>
         <button class="text-2xl hover:text-red-400" @click="$emit('close')">&times;</button>
+      </div>
+
+      <!-- Title Input -->
+      <div class="flex flex-col gap-2">
+        <h3 class="text-lg font-semibold">Title</h3>
+        <input v-model="title" type="text" class="p-2 rounded-lg text-black" placeholder="Enter title" />
       </div>
   
       <!-- Action Service  -->
@@ -98,7 +104,14 @@
 <script setup lang="ts">
 import { ref, onMounted, defineEmits } from 'vue';
 import { useServiceStore } from '@/stores/service';
+import { useUserStore } from '@/stores/users';
 import { Icon } from '@iconify/vue';
+import { User } from '@/types/auth';
+
+
+const store = useUserStore();
+
+const user = store.user;
 
 const serviceStore = useServiceStore();
 const services = ref<{ name: string; color: string; icon: string; reviews: { rate: number; count: number; }; saves: number; actions: { name: string; description: string; }[]; reactions: { name: string; description: string; }[]; }[]>([]);
@@ -108,6 +121,7 @@ const actions = ref<{ name: string; description: string; }[]>([]);
 const selectedReaction = ref('');
 const selectedAction = ref('');
 const reactions = ref<{ name: string; description: string; }[]>([]);
+const title = ref('');
 
 const emit = defineEmits(['close']);
 
@@ -136,16 +150,23 @@ const fetchReactions = () => {
 };
 
 const createArea = () => {
-    if (!selectedActionPlatform.value || !selectedReactionPlatform.value || !selectedAction.value || !selectedReaction.value) {
+    if (!title.value || !selectedActionPlatform.value || !selectedReactionPlatform.value || !selectedAction.value || !selectedReaction.value) {
         alert('Please fill in all fields.');
         return;
     }
 
+    if (!user) {
+        alert('User is not logged in.');
+        return;
+    }
+
     console.log('Area created with:', {
+        title: title.value,
         actionPlatform: selectedActionPlatform.value,
         reactionPlatform: selectedReactionPlatform.value,
         selectedAction: selectedAction.value,
         selectedReaction: selectedReaction.value,
+        uuid: user.uuid,
     });
     emit('close');
     alert('Area created');
