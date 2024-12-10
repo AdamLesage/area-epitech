@@ -58,6 +58,11 @@ const router = createRouter({
     name: 'dashboard',
     component: () => import('@/views/DashboardPage.vue'),
     },
+    {
+      path: '/areas',
+      name: 'areas',
+      component: () => import('@/views/MyAreaPage.vue'),
+    },
   ],
 })
 
