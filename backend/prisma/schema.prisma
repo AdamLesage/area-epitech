@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id                Int             @id @default(autoincrement())
-  uuid              String          @unique
-  name              String
-  surname           String
-  bio               String?
-  birthDate         DateTime?
-  email             String          @unique
-  phoneNumber       String?
-  hashedPassword    String
-  authToken         String?         @unique
-  profilePicture    ProfilePicture?
-  linkedAccounts    LinkedAccount[]
+  id             Int             @id @default(autoincrement())
+  uuid           String          @unique
+  name           String
+  surname        String
+  bio            String?
+  birthDate      DateTime?
+  email          String          @unique
+  phoneNumber    String?
+  hashedPassword String
+  authToken      String?         @unique
+  profilePicture ProfilePicture?
+  linkedAccounts LinkedAccount[]
   actionReaction    ActionReaction[]
 }
 
@@ -35,6 +35,7 @@ model LinkedAccount {
   id          Int    @id @default(autoincrement())
   uuid        String @unique
   serviceName String
+  username    String @unique
   authToken   String @unique
   userId      Int
   user        User   @relation(fields: [userId], references: [id])

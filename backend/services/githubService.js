@@ -19,6 +19,8 @@ router.post('/webhook', async (req, res) => {
         const event = req.headers['x-github-event'];
         const action = req.body['action'];
         const eventSender = req.body.sender?.login;
+        const username = req.body.sender?.login;
+        const repoName = req.body.repository?.name;
 
         console.log(`New event: ${event} ${action} received from ${eventSender}`);
 
@@ -26,7 +28,7 @@ router.post('/webhook', async (req, res) => {
         let service = await prisma.service.findUnique({
             where: {
                 name: 'Github',
-            },
+            }
         });
 
         if (!service) {
@@ -50,7 +52,18 @@ router.post('/webhook', async (req, res) => {
             },
         });
 
-        res.status(200).send('Webhook received and processed successfully');
+        // Call repo details action
+        const responseRepoDetails = await axios.get(
+            `http://localhost:8080/github/repo-details`,
+            {
+                data: {
+                    user: username,
+                    reponame: repoName,
+                }
+            }
+        );
+
+        res.status(200).send(responseRepoDetails.data);
     } catch (error) {
         console.error(error);
         res.status(500).send(`Error: ${error}`);
@@ -62,20 +75,18 @@ router.post('/webhook', async (req, res) => {
 
 router.get('/repo-details', async (req, res) => {
     try {
-        const { user, reponame, email } = req.body;
+        const { user, reponame } = req.body;
 
         // Validate parameters
-        if (!user || !reponame || !email) {
-            return res.status(400).send('User, reponame and email are required');
+        if (!user || !reponame) {
+            return res.status(400).send('User and reponame are required');
         }
 
         // Configure request options
         const linkedAccount = await prisma.linkedAccount.findFirst({
             where: {
                 serviceName: 'github',
-                user: {
-                    email: email,
-                },
+                username: user,
             },
         });
 
@@ -85,7 +96,6 @@ router.get('/repo-details', async (req, res) => {
 
         // const githubToken = "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";
         const githubToken = linkedAccount?.authToken;
-        console.log(githubToken);
 
         if (!githubToken) {
             return res.status(500).send('GitHub access token is not defined');
@@ -105,8 +115,26 @@ router.get('/repo-details', async (req, res) => {
             }
         );
 
+        // Retrieve only the necessary data
+        const { name, full_name, description, html_url, language, created_at, updated_at, pushed_at, size, stargazers_count, watchers_count, forks_count, open_issues_count, subscribers_count } = response.data;
+
         // Successful response
-        res.status(200).send(response.data);
+        res.status(200).send({
+            name,
+            full_name,
+            description,
+            url: html_url,
+            language,
+            created_at,
+            updated_at,
+            pushed_at,
+            size,
+            stargazers_count,
+            watchers_count,
+            forks_count,
+            open_issues_count,
+            subscribers_count,
+        });
     } catch (error) {
         // console.error(error);
 

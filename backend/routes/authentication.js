@@ -310,6 +310,7 @@ router.get('/github/redirect',
 
                 // Create a linked account for the new user
                 linkedAccountParams.userId = user.id;
+                linkedAccountParams.username = req.user.username;
                 await prisma.linkedAccount.create({ data: linkedAccountParams });
 
                 return res.status(201).json(user);
