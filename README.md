@@ -48,7 +48,8 @@ You can find our documentation inside the `documentation` folder:
 3. [Testing Policy](documentation/testing-policy.md) (see doc: `./documentation/testing-policy.md`)
 4. [Libraries and Frameworks](documentation/useful-libraries-for-development.md) (see doc: `./documentation/useful-libraries-for-development.md`)
 5. [Models of the Database](documentation/MODELS.md) (see doc: `./documentation/MODELS.md`)
-6. [Route of the Database](documentation/ROUTES.md) (see doc: `(./documentation/ROUTES.md`)
+6. [Route of the Database](documentation/ROUTES.md) (see doc: `./documentation/ROUTES.md`)
+7. [Route of the Front](documentation/ROUTES_FRONT.md) (see doc: `./documentation/ROUTES_FRONT.md`)
 
 ### API Documentation
 
