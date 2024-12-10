@@ -2,7 +2,7 @@
 import SignUpFormComponent from '@/components/SignUpFormComponent.vue';
 import LogoComponent from '@/components/LogoComponent.vue';
 import LoginButton from '@/components/LoginButton.vue';
-import { SignUpFormValues } from '@/types/auth';
+import { SignUpFormValues, User } from '@/types/auth';
 import axios from 'axios';
 
 import { ref } from 'vue';
@@ -14,7 +14,7 @@ const hover = ref(false);
 const handleSubmit = async (values: SignUpFormValues) => {
     console.log('Sign Up Form Received:', values);
     try {
-        const res = await axios.post('http://localhost:8080/auth/register', {
+        const res: { status: number, data: { authToken: string } } = await axios.post<User>('http://localhost:8080/auth/register', {
             email: values.email,
             password: values.password,
             name: 'blabla',
