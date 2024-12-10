@@ -110,6 +110,9 @@ import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useUserStore } from '@/stores/users';
 
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
@@ -213,5 +216,33 @@ onMounted(async () => {
         console.error('User not logged in');
         router.push('/dashboard');
     }
+    const token = Cookies.get('token');
+    if (!token) {
+        console.error('Token not found');
+        router.push('/');
+    }
+    const res: { status: number, data: [{
+        title: string, actionId: number, reactionId: number
+    }] } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/areas`,
+        {
+            params: {
+                email: user!.email,
+            },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    for (const area of res.data) {
+        console.log('Area:', area.title);
+        actions.value.push({
+            name: area.title,
+            description: 'Action: ' + area.actionId + ' Reaction: ' + area.reactionId,
+            icon: 'mdi:home-modern',
+            color: '#1C1C53',
+        });
+    }
+    console.log(res);
 })
 </script>
