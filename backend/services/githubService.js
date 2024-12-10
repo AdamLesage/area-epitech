@@ -29,7 +29,7 @@ router.post('/webhook', async (req, res) => {
         // Check if service exists
         let service = await prisma.service.findUnique({
             where: {
-                name: 'Github',
+                name: 'github',
             }
         });
 
@@ -37,13 +37,57 @@ router.post('/webhook', async (req, res) => {
             return res.status(404).send('Service not found');
         }
 
-        const actionDB = await prisma.action.findUnique({
+        const actionDB = await prisma.action.findFirst({
             where: {
                 name: actionName,
                 serviceId: service.id,
             }
         });
+        console.log(actionDB);
 
+        // Todo: create a webhook for each action, actions will have an endpoint
+        // Retrieve all Area where actionId == actionDB.id
+        const areas = await prisma.actionReaction.findMany({
+            where: {
+                actionId: actionDB.id,
+            }
+        });
+
+        areas.forEach(async (area) => {
+            const reaction = await prisma.reaction.findUnique({
+                where: {
+                    id: area.reactionId,
+                }
+            });
+
+            if (!reaction) {
+                return;
+            }
+
+            // console.log(`Calling reaction ${reaction.endpoint}`);
+            // Call the reaction endpoint
+            // const response = await axios.post(reaction.endpoint, {
+            //     // TODO: Add the necessary data
+            //     email: "adamles44@gmail.com",
+            // });
+            const response = await axios.post(`https://api.github.com/repos/AdamLesage/area-epitech/issues`, {
+                headers: {
+                    Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+                    'Accept': 'application/vnd.github.+json',
+                    "X-GitHub-Api-Version": "2022-11-28"
+                },
+                data: {
+                    title: "Test issue",
+                    body: "This is a test issue",
+                }
+            });
+
+            if (response.status !== 200) {
+                console.error(`Error calling reaction ${reaction.name}`);
+            }
+
+            console.log(`response: ${response.data}`);
+        });
 
         // Create new action
         // const newAction = await prisma.action.create({
@@ -68,9 +112,10 @@ router.post('/webhook', async (req, res) => {
         //     }
         // );
 
-        res.status(200).send(responseRepoDetails.data);
+        // res.status(200).send(responseRepoDetails.data);
+        res.status(200).send('Webhook received');
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         res.status(500).send(`Error: ${error}`);
     }
 });
@@ -153,7 +198,7 @@ router.get('/repo-details', async (req, res) => {
         }
 
         res.status(500).send({
-            message: 'Internal server error',
+            message: 'Internal server error for repo details',
             details: error.message,
         });
     }
@@ -216,7 +261,7 @@ router.get('/list-repos', async (req, res) => {
 
 router.get('/user-info', async (req, res) => {
     try {
-        const { email } = req.body;
+        const email = req.query.email;
 
         // Validate parameters
         if (!email) {
@@ -275,5 +320,65 @@ router.get('/user-info', async (req, res) => {
         });
     }
 });
+
+// router.post('/create-issue', async (req, res) => {
+//     try {
+//         const { user, reponame, title, body } = req.body;
+
+//         // Validate parameters
+//         if (!user || !reponame || !title || !body) {
+//             return res.status(400).send('User, reponame, title and body are required');
+//         }
+
+//         // Configure request options
+//         const linkedAccount = await prisma.linkedAccount.findFirst({
+//             where: {
+//                 serviceName: 'github',
+//                 username: user,
+//             },
+//         });
+
+//         if (!linkedAccount) {
+//             return res.status(404).send('GitHub account not linked');
+//         }
+
+//         const githubToken = linkedAccount?.authToken;
+
+//         if (!githubToken) {
+//             return res.status(500).send('GitHub access token is not defined');
+//         }
+
+//         const response = await axios.post(
+//             `https://api.github.com/repos/${user}/${reponame}/issues`,
+//             {
+//                 title: title,
+//                 body: body,
+//             },
+//             {
+//                 headers: {
+//                     Authorization: `Bearer ${githubToken}`,
+//                     'Content-Type': 'application/json',
+//                 },
+//             }
+//         );
+
+//         // Successful response
+//         res.status(200).send(response.data);
+//     } catch (error) {
+//         // Error handling
+//         if (error.response) {
+//             // GitHub API response error
+//             return res.status(error.response.status).send({
+//                 message: 'Error from GitHub API',
+//                 details: error.response.data,
+//             });
+//         }
+
+//         res.status(500).send({
+//             message: 'Internal server error',
+//             details: error.message,
+//         });
+//     }
+// });
 
 module.exports = router;

@@ -85,8 +85,6 @@ function initServices() {
                     name: reaction.name,
                 },
             });
-            console.log(reaction.name);
-            console.log(attributeEndpointToReactionGithub(reaction.name));
 
             if (existingReaction === null) {
                 await prisma.reaction.create({
