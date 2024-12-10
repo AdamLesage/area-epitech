@@ -36,8 +36,12 @@ import axios from 'axios';
 import { Service, Action, Reaction, ServiceDetails } from '@/types/services'; // Import the Service type
 import { useRouter } from 'vue-router';
 import { useServiceStore } from '@/stores/service'; // Import the useServiceStore function
+import { useUserStore } from '@/stores/users';
+import Cookies from 'js-cookie';
+import { User } from '@/types/auth';
 
-const store = useServiceStore(); // Use the useServiceStore function
+const serviceStore = useServiceStore(); // Use the useServiceStore function
+const userStore = useUserStore();
 const router = useRouter();
 
 // updates infos
@@ -86,8 +90,8 @@ onMounted(async () => {
     }
     availableServices.value = response.data.services;
     for (const service of availableServices.value) {
-        store.setNewService(service);
-        console.log('Service:', service, 'added to store:', store.services);
+        serviceStore.setNewService(service);
+        console.log('Service:', service, 'added to serviceStore:', serviceStore.services);
     }
     console.log(availableServices.value);
     // Getting all the services areas
@@ -104,7 +108,44 @@ onMounted(async () => {
             console.error('No service details found for service:', service.name);
             continue;
         }
-        store.setServiceAreas(service.name, serviceDetails.actions, serviceDetails.reactions);
+        serviceStore.setServiceAreas(service.name, serviceDetails.actions, serviceDetails.reactions);
+    }
+})
+
+onMounted(async() => {
+    const email = Cookies.get('email');
+    const token = Cookies.get('token');
+
+    if (!email && !token) {
+        console.error('Not logged in.');
+        router.push('/');
+        return;
+    } else {
+        const user = userStore.user;
+        console.log(user);
+        if (!user) {
+            const res: { status: number, data: User } = await axios.get<User>(
+                `http://localhost:8080/api/user`,
+                {
+                    params: {
+                        email: email,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log(res);
+            if (res.status === 200) {
+                console.log('User fetched successfully');
+                userStore.setUser(res.data);
+            } else {
+                console.log('User fetching failed');
+                router.push('/');
+                Cookies.remove('email');
+                Cookies.remove('token');
+            }
+        }
     }
 })
 </script>

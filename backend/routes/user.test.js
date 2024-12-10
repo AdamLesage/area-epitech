@@ -19,11 +19,13 @@ beforeAll(async () => {
     app.use('/api/', userRouter);
 
     // Clean up the database before the tests
+    await prisma.linkedAccount.deleteMany();
     await prisma.user.deleteMany();
 });
 
 afterAll(async () => {
     // Clean up the database after the tests
+    await prisma.linkedAccount.deleteMany();
     await prisma.user.deleteMany();
     await prisma.$disconnect();
 });

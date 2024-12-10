@@ -2,12 +2,15 @@
 import LogoComponent from '@/components/LogoComponent.vue';
 import LoginFormComponent from '@/components/LoginFormComponent.vue';
 import SignUpButton from '@/components/SignUpButton.vue';
-import { LoginFormValues } from '@/types/auth';
+import { LoginFormValues, User } from '@/types/auth';
 
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import axios from 'axios';
+import Cookies from 'js-cookie'
+import { useUserStore } from '@/stores/users'
 
+const store = useUserStore();
 const hover = ref(false);
 const router = useRouter();
 
@@ -15,13 +18,17 @@ const router = useRouter();
 const handleSubmit = async (values: LoginFormValues) => {
     console.log('Login Form Received:', values);
     try {
-        const res = await axios.post('http://localhost:8080/auth/login', {
+        const res: { status: number, data: { user: User } } = await axios.post('http://localhost:8080/auth/login', {
             email: values.email,
             password: values.password,
         });
         console.log(res);
         if (res.status == 200) {
             console.log('User registered successfully');
+            Cookies.set('token', res.data.user.authToken);
+            Cookies.set('email', values.email);
+            store.setUser(res.data.user);
+            router.push('/dashboard');
         } else {
             console.log('User registration failed');
         }
@@ -29,6 +36,13 @@ const handleSubmit = async (values: LoginFormValues) => {
         console.error('User registration failed:', error);
     }
 };
+
+onMounted(() => {
+    const token = Cookies.get('token');
+    if (token) {
+        router.push('/dashboard');
+    }
+});
 
 const goToHomePage = () => {
     router.push('/');

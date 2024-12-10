@@ -4,6 +4,7 @@ const session = require('express-session');
 const passport = require('passport');
 require('./authentication/passport');
 
+const googleServiceRouter = require('./services/githubService')
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
 const aboutRouter = require('./routes/about');
@@ -28,6 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', userRouter);
+app.use('/github', googleServiceRouter);
 app.use('/api', actionsRouter);
 app.use('/api', reactionRouter);
 app.use('/auth', authRouter);
