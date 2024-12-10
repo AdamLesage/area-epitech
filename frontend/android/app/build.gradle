@@ -20,7 +20,7 @@ android {
         release {
             storeFile file("../my-release-key.keystore")
             storePassword "@Rea.romain.le.malin2027"
-            keyAlias "my-release-key"
+            keyAlias "my-key-alias"
             keyPassword "@Rea.romain.le.malin2027"
         }
     }
