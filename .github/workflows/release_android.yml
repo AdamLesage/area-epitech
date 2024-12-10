@@ -1,11 +1,11 @@
 name: Area create android Release
 on:
-  push:
+  pull_request:
     branches-ignore:
       - "ga-ignore-*"
 
 jobs:
-  Gradle:
+  android-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
