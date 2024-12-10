@@ -14,6 +14,12 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 17
+    - name: Install dependencies
+      working-directory: ./frontend/
+      run: npm install
+    - name: Sync Capacitor
+      working-directory: ./frontend/
+      run: npx cap sync android
     - name: Make Gradle executable
       run: chmod +x ./frontend/android/gradlew
     - name: Build Release APK
