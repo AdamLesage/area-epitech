@@ -20,9 +20,6 @@ jobs:
     - name: build app
       working-directory: ./frontend/
       run: npm run build-only
-    - name: add android
-      working-directory: ./frontend/
-      run: npx cap add android
     - name: Sync Capacitor
       working-directory: ./frontend/
       run: npx cap sync android
