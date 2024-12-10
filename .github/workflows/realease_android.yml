@@ -8,30 +8,53 @@ jobs:
   Gradle:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: setup jdk
-      uses: actions/setup-java@v1
-      with:
-        java-version: 17
-    - name: Install dependencies
-      working-directory: ./frontend/
-      run: npm install
-    - name: build app
-      working-directory: ./frontend/
-      run: npm run build-only
-    - name: Sync Capacitor
-      working-directory: ./frontend/
-      run: npx cap sync android
-    - name: Make Gradle executable
-      run: chmod +x ./frontend/android/gradlew
-    - name: Build Release APK
-      working-directory: ./frontend/android
-      run: ./gradlew assembleRelease
-    - name: Releasing using Hub
-      uses: sangatdesai/release-apk@main
-      env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        APP_FOLDER: frontend/android/app
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Delete existing tag
+        run: |
+          git tag -d area-android-release || true
+          git push origin --delete area-android-release || true
+      - name: setup jdk
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Install dependencies
+        working-directory: ./frontend/
+        run: npm install
+      - name: build app
+        working-directory: ./frontend/
+        run: npm run build-only
+      - name: Sync Capacitor
+        working-directory: ./frontend/
+        run: npx cap sync android
+      - name: Make Gradle executable
+        run: chmod +x ./frontend/android/gradlew
+      - name: Build Release APK
+        working-directory: ./frontend/android
+        run: ./gradlew assembleRelease
+      - name: Create APK Archive
+        run: |
+          mkdir -p release_archive/area
+          cp ./frontend/android/app/build/outputs/apk/release/app-release.apk release_archive/area/app-release.apk
+          tar -czvf area_android_release.tar.gz -C release_archive .
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          tag_name: area-android-release
+          release_name: area-Android-Release
+          draft: false
+          prerelease: false
+      - name: Upload APK Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: area_android_release.tar.gz
+          asset_name: area_android_release.tar.gz
+          asset_content_type: application/gzip
