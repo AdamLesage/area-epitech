@@ -14,7 +14,7 @@ RUN npm install
 
 RUN npm install -g nodemon
 
-USER node
+USER root
 
 COPY --chown=node:node . .
 

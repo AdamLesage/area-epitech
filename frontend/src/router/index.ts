@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // Here you put the different routes of the application
     {
       path: '/login',
       name: 'login',
@@ -38,7 +37,27 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('@/views/HomePage.vue'),
-    }
+    },
+    {
+      path: '/service/:id',
+      name: 'service',
+      component: () => import('@/views/ServicePage.vue'),
+    },
+    {
+      path: '/userinfo',
+      name: 'userinfo',
+      component: () => import('@/views/UserInfoPage.vue'),
+    },
+    {
+      path: '/add-connections',
+      name: 'add-connections',
+      component: () => import('@/views/AddConnections.vue'),
+    },
+    {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import('@/views/DashboardPage.vue'),
+    },
   ],
 })
 

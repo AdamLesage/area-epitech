@@ -1,0 +1,32 @@
+[
+  {
+    "name":"facebook",
+    "color":"#3b5998",
+    "icon":"ic:baseline-facebook",
+    "reviews": {
+      "rate": 4.2,
+      "count": 10000
+    },
+    "saves": 100000
+  },
+  {
+    "name":"dropbox",
+    "color":"#007ee5",
+    "icon":"ri:dropbox-fill",
+    "reviews": {
+      "rate": 2.5,
+      "count": 100
+    },
+    "saves": 8800
+  },
+  {
+    "name":"github",
+    "color":"#24292e",
+    "icon":"mdi:github",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000
+  }
+]
