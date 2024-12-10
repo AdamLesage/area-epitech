@@ -59,6 +59,11 @@ const router = createRouter({
     component: () => import('@/views/DashboardPage.vue'),
     },
     {
+      path: '/areas',
+      name: 'areas',
+      component: () => import('@/views/MyAreaPage.vue'),
+    },
+    {
       path: '/aboutus',
       name: 'aboutus',
       component: () => import('@/views/AboutUsPage.vue'),
