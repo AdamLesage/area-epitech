@@ -29,7 +29,7 @@ jobs:
       with:
         fetch-depth: 0
     - run: |
-        echo "Need to implement tests"
+        echo "Need to implement tests and coverage"
       timeout-minutes: 1
   push_to_mirror:
     needs:

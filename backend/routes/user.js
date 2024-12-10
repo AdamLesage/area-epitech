@@ -130,7 +130,7 @@ router.post('/user', async (req, res) => {
                 email: email,
                 phoneNumber: phoneNumber,
                 hashedPassword: hashedPassword,
-                authToken: `Bearer ${uuidv4()}`,
+                authToken: uuidv4(),
             },
         });
         res.json(user);
