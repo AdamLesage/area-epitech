@@ -71,14 +71,13 @@ router.post('/webhook', async (req, res) => {
             //     email: "adamles44@gmail.com",
             // });
             const response = await axios.post(`https://api.github.com/repos/AdamLesage/area-epitech/issues`, {
+                title: "Test issue",
+                body: "This is a test issue",
+            }, {
                 headers: {
                     Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
-                    'Accept': 'application/vnd.github.+json',
+                    'Accept': 'application/vnd.github+json',
                     "X-GitHub-Api-Version": "2022-11-28"
-                },
-                data: {
-                    title: "Test issue",
-                    body: "This is a test issue",
                 }
             });
 
@@ -86,7 +85,7 @@ router.post('/webhook', async (req, res) => {
                 console.error(`Error calling reaction ${reaction.name}`);
             }
 
-            console.log(`response: ${response.data}`);
+            // console.log(`response: ${response.data}`);
         });
 
         // Create new action
@@ -116,7 +115,7 @@ router.post('/webhook', async (req, res) => {
         res.status(200).send('Webhook received');
     } catch (error) {
         // console.error(error);
-        res.status(500).send(`Error: ${error}`);
+        res.status(500).send(`Error receiving webhook: ${error.message}`);
     }
 });
 
