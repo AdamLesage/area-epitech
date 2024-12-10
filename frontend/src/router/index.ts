@@ -39,6 +39,11 @@ const router = createRouter({
       component: () => import('@/views/HomePage.vue'),
     },
     {
+      path: '/service/:id',
+      name: 'service',
+      component: () => import('@/views/ServicePage.vue'),
+    },
+    {
       path: '/userinfo',
       name: 'userinfo',
       component: () => import('@/views/UserInfoPage.vue'),
@@ -52,8 +57,7 @@ const router = createRouter({
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/views/DashboardPage.vue'),
-    }
-
+    },
   ],
 })
 

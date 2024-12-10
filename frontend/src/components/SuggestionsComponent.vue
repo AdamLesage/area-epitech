@@ -13,8 +13,7 @@
     </section>
 </template>
 
-<script setup>
-
+<script setup lang="ts">
 // suggestions list
 const suggestions = [
     { id: 1, content: '📩 Receive merge info by mail (GitHub)' },
