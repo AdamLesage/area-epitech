@@ -197,17 +197,46 @@ const handleCreateButtonClick = () => {
     showCreationComponent.value = true;
 }
 
-const handleCloseCreationComponent = () => {
+const handleCloseCreationComponent = async () => {
+    const user = userStore.user;
+    const token = Cookies.get('token');
+
     showCreationComponent.value = false;
+
+    // Force update
+    const res: { status: number, data: [{
+        title: string, actionId: number, reactionId: number
+    }] } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/areas`,
+        {
+            params: {
+                email: user!.email,
+            },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    for (const area of res.data) {
+        console.log('Area:', area.title);
+        actions.value.push({
+            name: area.title,
+            description: 'Action: ' + area.actionId + ' Reaction: ' + area.reactionId,
+            icon: 'mdi:home-modern',
+            color: '#1C1C53',
+        });
+    }
+    nbActions.value = actions.value.length;
 }
 
 onMounted(async () => {
+    const token = Cookies.get('token');
     const user = userStore.user;
+
     if (!user) {
         console.error('User not logged in');
         router.push('/dashboard');
     }
-    const token = Cookies.get('token');
     if (!token) {
         console.error('Token not found');
         router.push('/');
