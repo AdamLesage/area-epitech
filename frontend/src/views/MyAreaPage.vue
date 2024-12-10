@@ -184,7 +184,7 @@ function handleScrollAttempt(event: WheelEvent) {
 }
 
 function handleScrollAttemptSecondPage(event: WheelEvent) {
-    if (event.deltaY < 0 && scrollY.value === 0) {
+    if (event.deltaY < 0 && scrollY.value === 0 && !showCreationComponent.value) {
         isHeroVisible.value = true;
     }
 }
@@ -217,6 +217,7 @@ const handleCloseCreationComponent = async () => {
             },
         }
     );
+    actions.value = [];
     for (const area of res.data) {
         console.log('Area:', area.title);
         actions.value.push({
