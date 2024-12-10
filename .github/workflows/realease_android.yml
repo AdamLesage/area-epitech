@@ -31,7 +31,29 @@ jobs:
       working-directory: ./frontend/android
       run: ./gradlew assembleRelease
     - name: Releasing using Hub
-      uses: kyze8439690/action-release-releaseapk@master
+      uses: AdamLesage/area-epitech@master
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         APP_FOLDER: frontend/android/app
+
+    - name: Create Release
+      id: create_release
+      uses: comnoco/create-release@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: "Release ${{ github.ref_name }}"
+        body: |
+          Changes in this Release:
+        draft: false
+        prerelease: false
+    - name: Upload APK to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./frontend/android/app/build/outputs/apk/release/app-release.apk
+        asset_name: app-release.apk
+        asset_content_type: application/vnd.android.package-archive
