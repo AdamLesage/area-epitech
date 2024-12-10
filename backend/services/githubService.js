@@ -6,6 +6,7 @@
 */
 
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -21,6 +22,7 @@ router.post('/webhook', async (req, res) => {
         const eventSender = req.body.sender?.login;
         const username = req.body.sender?.login;
         const repoName = req.body.repository?.name;
+        const actionName = `${event}.${action}`;
 
         console.log(`New event: ${event} ${action} received from ${eventSender}`);
 
@@ -32,36 +34,39 @@ router.post('/webhook', async (req, res) => {
         });
 
         if (!service) {
-            service = await prisma.service.create({
-                data: {
-                    name: 'Github',
-                    logo: './frontend/src/assets/github_logo.png', // Need to put correct path for the asset
-                },
-            });
+            return res.status(404).send('Service not found');
         }
 
-        // Create new action
-        const newAction = await prisma.action.create({
-            data: {
-                name: `Action for ${event} ${action}`,
-                description: `Triggered by ${event} event and ${action} action`,
-                endpoint: `/api/github/webhook`,
-                service: {
-                    connect: { id: service.id },
-                },
-            },
+        const actionDB = await prisma.action.findUnique({
+            where: {
+                name: actionName,
+                serviceId: service.id,
+            }
         });
 
+
+        // Create new action
+        // const newAction = await prisma.action.create({
+        //     data: {
+        //         name: `Action for ${event} ${action}`,
+        //         description: `Triggered by ${event} event and ${action} action`,
+        //         endpoint: `/api/github/webhook`,
+        //         service: {
+        //             connect: { id: service.id },
+        //         },
+        //     },
+        // });
+
         // Call repo details action
-        const responseRepoDetails = await axios.get(
-            `${env("BACKEND_URL")}/github/repo-details`,
-            {
-                data: {
-                    user: username,
-                    reponame: repoName,
-                }
-            }
-        );
+        // const responseRepoDetails = await axios.get(
+        //     `${env("BACKEND_URL")}/github/repo-details`,
+        //     {
+        //         data: {
+        //             user: username,
+        //             reponame: repoName,
+        //         }
+        //     }
+        // );
 
         res.status(200).send(responseRepoDetails.data);
     } catch (error) {

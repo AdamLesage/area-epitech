@@ -20,7 +20,6 @@ model User {
   authToken      String?         @unique
   profilePicture ProfilePicture?
   linkedAccounts LinkedAccount[]
-  actionReaction    ActionReaction[]
 }
 
 model ProfilePicture {
@@ -44,40 +43,42 @@ model LinkedAccount {
 model Service {
   id        Int        @id @default(autoincrement())
   name      String     @unique
-  logo      String     @unique
-  actions   Action[]
   reactions Reaction[]
+  actions   Action[]
 }
 
 model Action {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  endpoint    String
-  serviceId   Int
-  service     Service @relation(fields: [serviceId], references: [id])
+  id              Int              @id @default(autoincrement())
+  name            String
+  description     String?
+  serviceId       Int
+  service         Service          @relation(fields: [serviceId], references: [id])
+  actionReactions ActionReaction[]
 }
 
 model Reaction {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  endpoint    String
-  serviceId   Int
-  service     Service @relation(fields: [serviceId], references: [id])
+  id              Int              @id @default(autoincrement())
+  name            String
+  description     String?
+  endpoint        String
+  serviceId       Int
+  service         Service          @relation(fields: [serviceId], references: [id])
+  actionReactions ActionReaction[]
 }
 
 model ActionReaction {
-  id            Int       @id @default(autoincrement())
-  uuid          String    @unique
+  id            Int      @id @default(autoincrement())
+  uuid          String   @unique
   title         String
-  typeAction    String
-  typeReaction  String
   reactionData  Json
   actionData    Json
-  userId        Int?
-  user          User?     @relation(fields: [userId], references: [id])
-  creationDate  DateTime  @default(now())
-  isActive      Boolean   @default(true)
+  userUuid      String
+  description   String?
+  creationDate  DateTime @default(now())
+  isActive      Boolean  @default(true)
   containerUuid String
+  actionId      Int
+  action        Action   @relation(fields: [actionId], references: [id])
+  reactionId    Int
+  reaction      Reaction @relation(fields: [reactionId], references: [id])
 }

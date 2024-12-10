@@ -1,47 +1,72 @@
 [
   {
-    "name":"facebook",
+    "name":"github",
     "actions": [
       {
-        "name":"new_message_in_group",
-        "description":"A new message is posted in the group"
+        "name":"pull_request_review.submitted",
+        "description":"A pull request review is submitted"
       },
       {
-        "name":"new_message_inbox",
-        "description":"A new private message is received by the user"
+        "name":"pull_request.labeled",
+        "description":"A pull request is labeled"
       },
       {
-        "name":"new_like",
-        "description":"The user gains a like from one of their messages"
+        "name":"pull_request.unlabeled",
+        "description":"A pull request is unlabeled"
+      },
+      {
+        "name":"issues.labeled",
+        "description":"An issue is labeled"
+      },
+      {
+        "name":"issues.unlabeled",
+        "description":"An issue is unlabeled"
+      },
+      {
+        "name":"issues.assigned",
+        "description":"An issue is assigned"
+      },
+      {
+        "name":"issues.unassigned",
+        "description":"An issue is unassigned"
+      },
+      {
+        "name":"pull_request.assigned",
+        "description":"A pull request is assigned"
+      },
+      {
+        "name":"pull_request.unassigned",
+        "description":"An pull request is unassigned"
+      },
+      {
+        "name":"issues.opened",
+        "description":"An issue is opened"
+      },
+      {
+        "name":"issues.closed",
+        "description":"An issue is closed"
+      },
+      {
+        "name":"pull_request.opened",
+        "description":"An pull request is opened"
+      },
+      {
+        "name":"pull_request.closed",
+        "description":"An pull request is closed"
       }
     ],
     "reactions": [
       {
-        "name":"like_message",
-        "description":"The user likes a message"
-      }
-    ]
-  },
-  {
-    "name":"dropbox",
-    "actions": [
-      {
-        "name":"on_new_file",
-        "description":"A new file is added"
+        "name":"repo_details",
+        "description":"Get information about a repository"
       },
       {
-        "name":"on_new_shares_file",
-        "description":"A new file is shared with the user"
-      }
-    ],
-    "reactions": [
-      {
-        "name": "add_file",
-        "description":"The user user add a new file"
+        "name":"list_repos",
+        "description":"List all repositories of the user"
       },
       {
-        "name": "shares_file",
-        "description":"The user shares a file"
+        "name":"user_info",
+        "description":"Get information about the user"
       }
     ]
   }
