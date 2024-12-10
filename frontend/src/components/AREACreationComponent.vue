@@ -106,7 +106,7 @@ import { ref, onMounted, defineEmits } from 'vue';
 import { useServiceStore } from '@/stores/service';
 import { useUserStore } from '@/stores/users';
 import { Icon } from '@iconify/vue';
-import { User } from '@/types/auth';
+import { Service } from '@/types/services';
 
 
 const store = useUserStore();
@@ -114,7 +114,8 @@ const store = useUserStore();
 const user = store.user;
 
 const serviceStore = useServiceStore();
-const services = ref<{ name: string; color: string; icon: string; reviews: { rate: number; count: number; }; saves: number; actions: { name: string; description: string; }[]; reactions: { name: string; description: string; }[]; }[]>([]);
+
+const services = ref<Service[]>([]);
 const selectedActionPlatform = ref('');
 const selectedReactionPlatform = ref('');
 const actions = ref<{ name: string; description: string; }[]>([]);
