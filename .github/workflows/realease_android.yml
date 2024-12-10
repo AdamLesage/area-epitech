@@ -30,12 +30,6 @@ jobs:
     - name: Build Release APK
       working-directory: ./frontend/android
       run: ./gradlew assembleRelease
-    - name: Releasing using Hub
-      uses: AdamLesage/area-epitech@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        APP_FOLDER: frontend/android/app
-
     - name: Create Release
       id: create_release
       uses: comnoco/create-release@v2
