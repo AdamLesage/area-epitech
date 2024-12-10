@@ -1,40 +1,43 @@
 <script setup lang="ts">
-import { Capacitor } from '@capacitor/core';
-import { onMounted, ref } from 'vue';
+import {ref } from 'vue';
+import LogoComponent from '@/components/LogoComponent.vue';
+import SignUpButton from '@/components/SignUpButton.vue';
+import LoginButton from '@/components/LoginButton.vue';
 
-const isMobile = ref(true);
+const hover = ref(false);
 
-onMounted(() => {
-    if (Capacitor.getPlatform() == 'web')
-        isMobile.value = false;
-});
 </script>
 
 <template>
-    <div class="bg-auth-primary"
-        v-if="!isMobile">
-        <h1 class="text-3xl text-white text-center">Web Home</h1>
-        <nav class="flex gap-5">
-            <router-link to="/login" class="hover:cursor-pointer" >Login</router-link>
-            <router-link to="/signup" class="hover:cursor-pointer" >Sign Up</router-link>
-            <router-link to="/forgot-password" class="hover:cursor-pointer" >Forgot Password</router-link>
-            <router-link to="/email-verification" class="hover:cursor-pointer" >Email Verification</router-link>
-            <router-link to="/dashboard" class="hover:cursor-pointer" >dashboard</router-link>
+    <div class="bg-[#4C4CDC] min-h-screen flex flex-col items-center justify-center relative text-white">
+        <!-- Signup and login button -->
+        <div class="w-full flex justify-end p-6 absolute top-0 right-0 space-x-6">
+            <SignUpButton
+                class="hover:cursor-pointer"
+                :color="hover ? '#eee' : 'white'"
+                @mouseover="hover = true"
+                @mouseleave="hover = false" />
+            <LoginButton
+                class="hover:cursor-pointer"
+                :color="hover ? '#eee' : 'white'"
+                @mouseover="hover = true"
+                @mouseleave="hover = false" />
+        </div>
 
-            
-        </nav>
-    </div>
-    <div class="bg-auth-primary"
-        v-else>
-        <h1 class="text-3xl text-white text-center">Mobile Home</h1>
-        <nav class="flex gap-5 flex-col">
-            <router-link to="/login" class="hover:cursor-pointer" >Login</router-link>
-            <router-link to="/signup" class="hover:cursor-pointer" >Sign Up</router-link>
-            <router-link to="/signup/user-details" class="hover:cursor-pointer" >User Details</router-link>
-            <router-link to="/forgot-password" class="hover:cursor-pointer" >Forgot Password</router-link>
-            <router-link to="/change-password" class="hover:cursor-pointer" >Change Password</router-link>
-            <router-link to="/email-verification" class="hover:cursor-pointer" >Email Verification</router-link>
-            <router-link to="/dashboard" class="hover:cursor-pointer" >dashboard</router-link>
-        </nav>
+        <!-- Area lgo -->
+        <div class="flex flex-col items-center justify-center mt-20">
+            <LogoComponent color="#80C4E9" class="w-80 h-80 mb-10" />
+        </div>
+
+        <!-- About Us button -->
+        <button 
+            @click="() => $router.push('/aboutus')" 
+            class="mt-10 px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-700 transition">
+            About Us
+        </button>
     </div>
 </template>
+
+<style scoped>
+
+</style>
