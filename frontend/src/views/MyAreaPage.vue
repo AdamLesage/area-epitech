@@ -27,10 +27,8 @@
                 <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer" />
             </div>
         </div>
-        <div class="flex justify-between items-center p-4 mobile:hidden">
-            <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" />
+        <div class="flex justify-center items-center p-4 mobile:hidden">
             <ArrowComponent color="white" class="mobile:hidden" />
-            <SaveComponent :saves="saves" color="white" textcolor="white" />
         </div>
         <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden" />
     </div>
@@ -85,17 +83,14 @@
             <div class="mobile:hidden" />
             <MobileServiceNavComponent @back-button="handleBackButtonSecondPage" class="web:hidden" />
         </div>
-        <div class="flex justify-between items-center p-8 mobile:hidden">
-            <RateComponent :rate="rate" :reviews="reviews" :color="color" textcolor="black" class="w-1/3" />
-            <SaveComponent :saves="saves" :color="color" textcolor="black" class="w-1/3 flex justify-end" />
-        </div>
-        <button @click="handleCreateButtonClick" class="rounded-full py-2 px-6 bg-blue-500 text-white w-32 ml-4">
+        <div class="flex justify-center items-center p-8 mobile:hidden">
+            <button @click="handleCreateButtonClick" class="rounded-full py-2 px-6 bg-blue-500 text-white w-32 ml-4">
                 <h1 class="font-semibold">Create Area</h1>
             </button>
+        </div>
+        
             <AREACreationComponent v-if="showCreationComponent" @close="handleCloseCreationComponent" />
         <div class="flex flex-wrap gap-8 p-8 justify-center mobile:hidden">
-
-
             <AREAInfoComponent v-for="action in actions" :key="action.name" :values="action" :icon="action.icon"
                 :color="action.color" @menu-click="handleMenuClick(action.name)"
                 @more-click="handleMoreClick(action.name)" @configure-click="handleConfigureClick(action.name)" />
@@ -193,12 +188,7 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
     }
 }
 
-const actions = ref([
-    { name: 'Github issue to mail', description: 'Send an email when a new issue is opened on a repository', icon: 'mdi:github', color: '#4B5563' },
-    { name: 'Spotify new track to mail', description: 'Send an email when a new track is added to a playlist', icon: 'mdi:spotify', color: '#22C55E' },
-    { name: 'Spotify track to github issue', description: 'Create a new issue on a repository when a new track is added to a playlist', icon: 'mdi:spotify', color: '#22C55E' },
-    { name: 'Google calendar event to slack', description: 'Send a message on slack when a new event is created on a calendar', icon: 'mdi:slack', color: '#8A2BE2' },
-]);
+const actions = ref<Array<{ name: string, description: string, icon: string, color: string }>>([]);
 
 const showCreationComponent = ref(false);
 
