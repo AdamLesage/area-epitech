@@ -79,4 +79,40 @@ router.post('/action-reaction', async (req, res) => {
     }
 });
 
+router.get('/action-reaction-from-email', async (req, res) => {
+    const { email } = req.query;
+
+    const authToken = req.headers?.authorization?.split(' ')[1];
+
+    if (!authToken) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                authToken: authToken,
+            },
+        });
+
+        if (!user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const areas = await prisma.actionReaction.findMany({
+            where: {
+                userUuid: user.uuid,
+            },
+        });
+
+        if (!areas) {
+            return res.status(404).json({ message: 'Not Found' });
+        }
+
+        return res.status(200).json(areas);
+    } catch (error) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 module.exports = router;
