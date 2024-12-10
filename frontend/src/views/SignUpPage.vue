@@ -7,8 +7,11 @@ import axios from 'axios';
 
 import { ref } from 'vue';
 import Cookies from 'js-cookie'
+import { useRouter } from 'vue-router';
 
 const hover = ref(false);
+const router = useRouter();
+
 
 // Form submission handler
 const handleSubmit = async (values: SignUpFormValues) => {
@@ -31,11 +34,20 @@ const handleSubmit = async (values: SignUpFormValues) => {
         console.error('User registration failed:', error);
     }
 };
+
+const goToHomePage = () => {
+    router.push('/');
+};
+
 </script>
 
 <template>
     <div class="bg-auth-primary flex web:justify-center items-center mobile:justify-between mobile:flex-col">
         <LogoComponent color="#80C4E9" class="absolute top-0 left-5 half:hidden" />
+        <button @click="goToHomePage"
+            class="absolute top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 z-20 mobile:static mobile:mt-4">
+            Go to Home Page
+        </button>
         <LoginButton
             class="hover:cursor-pointer absolute top-5 right-5 mobile:hidden"
             :color="hover ? '#eee' : 'white'"
