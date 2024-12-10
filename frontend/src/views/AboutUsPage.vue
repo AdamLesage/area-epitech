@@ -53,9 +53,9 @@ const goToHomePage = () => {
             </section>
 
             <!-- Who's -->
-            <section class="mt-16">
+            <section class="mt-16 w-full flex justify-center flex-col gap-8 items-center">
                 <h2 class="text-2xl font-bold text-white mb-8 text-center">WHO?</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+                <div class="flex flex-wrap w-3/4 gap-8 justify-center">
                     <!-- Team Cards -->
                     <div
                         class="bg-[#1A1A66] rounded-2xl p-6 text-center shadow-lg transform transition duration-500 hover:scale-105">
