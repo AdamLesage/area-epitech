@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 p-6 bg-blue-500 rounded-lg shadow-lg text-white w-160 max-w-full">
+    <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 p-6 bg-[#0A0A33] rounded-lg shadow-lg text-white w-160 max-w-full">
       <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold">Create AREA</h2>
         <button class="text-2xl hover:text-red-400" @click="$emit('close')">&times;</button>

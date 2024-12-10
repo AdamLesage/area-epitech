@@ -105,9 +105,10 @@
 
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
+import { useUserStore } from '@/stores/users';
 
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
@@ -118,6 +119,7 @@ import ArrowComponent from '@/components/ArrowComponent.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
 import AREACreationComponent from '@/components/AREACreationComponent.vue';
 
+const userStore = useUserStore();
 const router = useRouter();
 
 const color = ref<string>('#1C1C53');
@@ -204,4 +206,12 @@ const handleCreateButtonClick = () => {
 const handleCloseCreationComponent = () => {
     showCreationComponent.value = false;
 }
+
+onMounted(async () => {
+    const user = userStore.user;
+    if (!user) {
+        console.error('User not logged in');
+        router.push('/dashboard');
+    }
+})
 </script>
