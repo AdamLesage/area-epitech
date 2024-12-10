@@ -35,6 +35,14 @@ jobs:
         run: ./gradlew assembleRelease
       - name: Create APK Archive
         run: |
+          echo "Listing outputs directory contents:"
+          ls -l ./frontend/android/app/build/outputs/
+          
+          echo "Listing APK directory contents:"
+          ls -l ./frontend/android/app/build/outputs/apk/
+          
+          echo "Listing release directory contents:"
+          ls -l ./frontend/android/app/build/outputs/apk/release/
           mkdir -p release_archive/area
           cp ./frontend/android/app/build/outputs/apk/release/app-release.apk release_archive/area/app-release.apk
           tar -czvf area_android_release.tar.gz -C release_archive .
