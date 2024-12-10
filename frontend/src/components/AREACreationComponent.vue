@@ -108,6 +108,8 @@ import { useUserStore } from '@/stores/users';
 import { Icon } from '@iconify/vue';
 import { Service } from '@/types/services';
 
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const store = useUserStore();
 
@@ -150,7 +152,7 @@ const fetchReactions = () => {
     reactions.value = service ? service.reactions : [];
 };
 
-const createArea = () => {
+const createArea = async () => {
     if (!title.value || !selectedActionPlatform.value || !selectedReactionPlatform.value || !selectedAction.value || !selectedReaction.value) {
         alert('Please fill in all fields.');
         return;
@@ -169,6 +171,28 @@ const createArea = () => {
         selectedReaction: selectedReaction.value,
         uuid: user.uuid,
     });
+
+    const token = Cookies.get('token');
+
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/action-reaction`, {
+        title: title.value,
+        userUuid: user.uuid,
+        description: 'None',
+        actionName: selectedAction.value,
+        reactionName: selectedReaction.value,
+        reactionData: {},
+        actionData: {},
+    },{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if (response.status !== 201) {
+        alert('Error while creating area');
+        return;
+    }
+
     emit('close');
     alert('Area created');
 };

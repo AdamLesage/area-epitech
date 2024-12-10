@@ -82,7 +82,8 @@ const availableServices = ref<Service[]>([])
 
 onMounted(async () => {
     // Fetch the different services from the API
-    const response: { status: number, data: { services: Service[] }} = await axios.get('http://localhost:8080/services-info.json');
+    console.log(import.meta.env.VITE_BACKEND_URL);
+    const response: { status: number, data: { services: Service[] }} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/services-info.json`);
     console.log(response);
     if (response.status !== 200) {
         console.error('Error while fetching services');
@@ -96,7 +97,7 @@ onMounted(async () => {
     console.log(availableServices.value);
     // Getting all the services areas
     const response2: {
-        status: number, data: { services: ServiceDetails[] }} = await axios.get('http://localhost:8080/services-areas.json');
+        status: number, data: { services: ServiceDetails[] }} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/services-areas.json`);
     console.log(response2);
     if (response2.status !== 200) {
         console.error('Error while fetching services areas');
@@ -125,7 +126,7 @@ onMounted(async() => {
         console.log(user);
         if (!user) {
             const res: { status: number, data: User } = await axios.get<User>(
-                `http://localhost:8080/api/user`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/user`,
                 {
                     params: {
                         email: email,

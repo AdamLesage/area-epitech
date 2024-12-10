@@ -9,6 +9,9 @@ const express = require('express');
 const router = express.Router();
 const service = require('../services/services.json');
 const servicesInfo = require('../services/services-info.json');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const { v4: uuidv4 } = require('uuid');
 
 /**
  * @brief create a new Area
@@ -37,7 +40,7 @@ router.post('/action-reaction', async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const action = await prisma.action.findUnique({
+        const action = await prisma.action.findFirst({
             where: {
                 name: actionName,
             },
@@ -47,7 +50,7 @@ router.post('/action-reaction', async (req, res) => {
             return res.status(400).json({ message: 'Action not found' });
         }
 
-        const reaction = await prisma.reaction.findUnique({
+        const reaction = await prisma.reaction.findFirst({
             where: {
                 name: reactionName,
             },
@@ -62,19 +65,31 @@ router.post('/action-reaction', async (req, res) => {
                 title: title,
                 description: description,
                 userUuid: userUuid,
-                actionUuid: action.uuid,
-                reactionUuid: reaction.uuid,
                 reactionData: reactionData,
                 actionData: actionData,
+                uuid: uuidv4(),
+                containerUuid: uuidv4(),
+                isActive: true,
+                action: {
+                    connect: {
+                        id: action.id,
+                    },
+                },
+                reaction: {
+                    connect: {
+                        id: reaction.id,
+                    },
+                },
             },
         });
 
         if (!newArea) {
-            return res.status(500).json({ message: 'Internal Server Error' });
+            throw('Error while creating new Area');
         }
 
         return res.status(201).json(newArea);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
