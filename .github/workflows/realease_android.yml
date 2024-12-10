@@ -44,7 +44,7 @@ jobs:
           echo "Listing release directory contents:"
           ls -l ./frontend/android/app/build/outputs/apk/release/
           mkdir -p release_archive/area
-          cp ./frontend/android/app/build/outputs/apk/release/app-release.apk release_archive/area/app-release.apk
+          cp ./frontend/android/app/build/outputs/apk/release/app-release-unsigned.apk release_archive/area/app-release.apk
           tar -czvf area_android_release.tar.gz -C release_archive .
       - name: Create GitHub Release
         id: create_release
