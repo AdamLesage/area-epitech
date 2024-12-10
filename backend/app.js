@@ -11,6 +11,7 @@ const aboutRouter = require('./routes/about');
 const actionsRouter = require('./routes/action');
 const reactionRouter = require('./routes/reaction');
 const cors = require('cors');
+const { initServices } = require('./initServices/initServices');
 
 const app = express();
 const port = 8080;
@@ -36,5 +37,7 @@ app.use('/auth', authRouter);
 app.use('', aboutRouter);
 
 app.listen(port, () => {
+  // Init database to store every action/reaction in the db, if they do not exists
+  initServices();
   console.log(`Listening on port ${port}`);
 });

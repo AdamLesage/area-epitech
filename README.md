@@ -25,8 +25,6 @@ Before you start, make sure you have installed:
    GOOGLE_CLIENT_SECRET=your_Google_client_secret
    GITHUB_CLIENT_ID=your_github_client_id
    GITHUB_CLIENT_SECRET= your_github_client_secret
-   TWITTER_CONSUMER_KEY=your_twitter_consumer_key
-   TWITTER_CONSUMER_SECRET=your_twitter_consumer_secret
    ```
 
 3. Lunch the server, the web app and the database:

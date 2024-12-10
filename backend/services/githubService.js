@@ -6,6 +6,7 @@
 */
 
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -14,260 +15,92 @@ require('dotenv').config();
 
 // ACTION
 
+function attributeDataToReactionGithub(name) {
+    const nameDict = {
+        "https://api.github.com/repos/AdamLesage/area-epitech/issues": { "title": "New issue", "body": "New issue created" },
+        "https://api.github.com/repos/AdamLesage/area-epitech/milestones": { "title": "v1.0", "state": "open", "description": "Tracking milestone for version 1.0", "due_on": new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString() }, // 5 days from now
+        "https://api.github.com/repos/AdamLesage/area-epitech/pulls": { "title": "Amazing new feature", "body": "Please pull these awesome changes in!", "base": "master"}
+    };
+
+    return nameDict[name];
+}
+
 router.post('/webhook', async (req, res) => {
     try {
         const event = req.headers['x-github-event'];
         const action = req.body['action'];
-        const eventSender = req.body.sender?.login;
-        const username = req.body.sender?.login;
-        const repoName = req.body.repository?.name;
-
-        console.log(`New event: ${event} ${action} received from ${eventSender}`);
+        const actionName = `${event}.${action}`;
 
         // Check if service exists
         let service = await prisma.service.findUnique({
             where: {
-                name: 'Github',
+                name: 'github',
             }
         });
 
         if (!service) {
-            service = await prisma.service.create({
-                data: {
-                    name: 'Github',
-                    logo: './frontend/src/assets/github_logo.png', // Need to put correct path for the asset
-                },
-            });
+            return res.status(404).send('Service not found');
         }
 
-        // Create new action
-        const newAction = await prisma.action.create({
-            data: {
-                name: `Action for ${event} ${action}`,
-                description: `Triggered by ${event} event and ${action} action`,
-                endpoint: `/api/github/webhook`,
-                service: {
-                    connect: { id: service.id },
-                },
-            },
-        });
-
-        // Call repo details action
-        const responseRepoDetails = await axios.get(
-            `${env("BACKEND_URL")}/github/repo-details`,
-            {
-                data: {
-                    user: username,
-                    reponame: repoName,
-                }
-            }
-        );
-
-        res.status(200).send(responseRepoDetails.data);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send(`Error: ${error}`);
-    }
-});
-
-// ACTION
-
-
-router.get('/repo-details', async (req, res) => {
-    try {
-        const { user, reponame } = req.body;
-
-        // Validate parameters
-        if (!user || !reponame) {
-            return res.status(400).send('User and reponame are required');
-        }
-
-        // Configure request options
-        const linkedAccount = await prisma.linkedAccount.findFirst({
+        const actionDB = await prisma.action.findFirst({
             where: {
-                serviceName: 'github',
-                username: user,
-            },
+                name: actionName,
+                serviceId: service.id,
+            }
+        });
+        console.log(actionDB);
+
+        // Todo: create a webhook for each action, actions will have an endpoint
+        // Retrieve all Area where actionId == actionDB.id
+        const areas = await prisma.actionReaction.findMany({
+            where: {
+                actionId: actionDB.id,
+            }
         });
 
-        if (!linkedAccount) {
-            return res.status(404).send('GitHub account not linked');
-        }
+        areas.forEach(async (area) => {
+            const reaction = await prisma.reaction.findUnique({
+                where: {
+                    id: area.reactionId,
+                }
+            });
 
-        // const githubToken = "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";
-        const githubToken = linkedAccount?.authToken;
+            if (!reaction) {
+                return;
+            }
 
-        if (!githubToken) {
-            return res.status(500).send('GitHub access token is not defined');
-        }
+            const data = attributeDataToReactionGithub(reaction.endpoint);
+            const headers = {
+                Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+                'Accept': 'application/vnd.github+json',
+                "X-GitHub-Api-Version": "2022-11-28"
+            }
+            console.log(`Creating POST request at endpoint: ${reaction.endpoint}`);
+            console.log(`Data: ${JSON.stringify(data)}`);
 
-        const response = await axios.get(
-            `https://api.github.com/repos/${user}/${reponame}`,
+            // TODO: Add the necessary data to the data object
+            // TODO: Adapt HTTP method (GET, POST, PUT, DELETE) for now it's only POST
+            const response = await axios.post(reaction.endpoint, data,
             {
                 headers: {
-                    Authorization: `Bearer ${githubToken}`,
-                    'Content-Type': 'application/json',
-                },
-                auth: {
-                    username: user,
-                    password: githubToken,
-                },
+                    Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+                    'Accept': 'application/vnd.github+json',
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
+            });
+
+            if (response.status > 299) {
+                console.error(`Error calling reaction ${reaction.name}`);
             }
-        );
 
-        // Retrieve only the necessary data
-        const { name, full_name, description, html_url, language, created_at, updated_at, pushed_at, size, stargazers_count, watchers_count, forks_count, open_issues_count, subscribers_count } = response.data;
-
-        // Successful response
-        res.status(200).send({
-            name,
-            full_name,
-            description,
-            url: html_url,
-            language,
-            created_at,
-            updated_at,
-            pushed_at,
-            size,
-            stargazers_count,
-            watchers_count,
-            forks_count,
-            open_issues_count,
-            subscribers_count,
+            // console.log(`response: ${response.data}`);
         });
+
+        // res.status(200).send(responseRepoDetails.data);
+        res.status(200).send('Webhook received');
     } catch (error) {
         // console.error(error);
-
-        // Error handling
-        if (error.response) {
-            // GitHub API response error
-            return res.status(error.response.status).send({
-                message: 'Error from GitHub API',
-                details: error.response.data,
-            });
-        }
-
-        res.status(500).send({
-            message: 'Internal server error',
-            details: error.message,
-        });
-    }
-});
-
-router.get('/list-repos', async (req, res) => {
-    try {
-        const { email } = req.body;
-
-        // Validate parameters
-        if (!email) {
-            return res.status(400).send('Email is required');
-        }
-
-        // Configure request options
-        const linkedAccount = await prisma.linkedAccount.findFirst({
-            where: {
-                serviceName: 'github',
-                user: {
-                    email: email,
-                },
-            },
-        });
-
-        if (!linkedAccount) {
-            return res.status(404).send('GitHub account not linked');
-        }
-
-        const githubToken = linkedAccount?.authToken;
-
-        if (!githubToken) {
-            return res.status(500).send('GitHub access token is not defined');
-        }
-        const response = await axios.get(`https://api.github.com/user/repos`, {
-            headers: {
-            Authorization: `Bearer ${githubToken}`,
-            'Accept': 'application/vnd.github.+json',
-            }
-        });
-
-        const repoNames = response.data.map(repo => repo.name);
-        res.status(200).send(repoNames);
-    } catch (error) {
-
-        // Error handling
-        if (error.response) {
-            // GitHub API response error
-            return res.status(error.response.status).send({
-                message: 'Error from GitHub API',
-                details: error.response.data,
-            });
-        }
-
-        res.status(500).send({
-            message: 'Internal server error',
-            details: error.message,
-        });
-    }
-});
-
-router.get('/user-info', async (req, res) => {
-    try {
-        const { email } = req.body;
-
-        // Validate parameters
-        if (!email) {
-            return res.status(400).send('Email is required');
-        }
-
-        // Configure request options
-        const linkedAccount = await prisma.linkedAccount.findFirst({
-            where: {
-                serviceName: 'github',
-                user: {
-                    email: email,
-                },
-            },
-        });
-
-        if (!linkedAccount) {
-            return res.status(404).send('GitHub account not linked');
-        }
-
-        const githubToken = linkedAccount?.authToken;
-
-        if (!githubToken) {
-            return res.status(500).send('GitHub access token is not defined');
-        }
-
-        const response = await axios.get(`https://api.github.com/user`, {
-            headers: {
-                Authorization: `Bearer ${githubToken}`,
-                'Accept': 'application/vnd.github.+json',
-            },
-        });
-
-        // Get username, avatar_url, html_url, bio
-        const { login, avatar_url, html_url, bio } = response.data;
-
-        res.status(200).send({
-            username: login,
-            avatar: avatar_url,
-            profile: html_url,
-            bio: bio,
-        });
-    } catch (error) {
-        // Error handling
-        if (error.response) {
-            // GitHub API response error
-            return res.status(error.response.status).send({
-                message: 'Error from GitHub API',
-                details: error.response.data,
-            });
-        }
-
-        res.status(500).send({
-            message: 'Internal server error',
-            details: error.message,
-        });
+        // res.status(500).send(`Error receiving webhook: ${error.message}`);
     }
 });
 
