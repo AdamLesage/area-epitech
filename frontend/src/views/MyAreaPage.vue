@@ -4,7 +4,8 @@
         @wheel="handleScrollAttempt" v-if="isHeroVisible">
         <ServiceNavComponent @back-button="handleBackButtonFirstPage" @redirect-user-profile="handleRedirectUserPage"
             class="mobile:hidden" />
-        <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4" />
+        <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4 mobile:hidden" />
+        <div />
         <div class="flex flex-col justify-center items-center">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
@@ -13,24 +14,22 @@
                         class="text-white web:text-[6rem] mobile:text-[3rem] web:leading-[5rem] mobile:leading-[2.5rem] font-bold">
                         {{ nameCapitalized }}</h1>
                     <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbActions }}
-                        Actions</h2>
+                        {{ nbActions <= 1 ? 'Area' : 'Areas'}}</h2>
                 </div>
             </div>
 
         </div>
         <div class="flex flex-col web:hidden gap-2">
-            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbActions }} Actions</h2>
-            <div class="flex flex-row gap-2 items-center justify-center">
-                <button class="rounded-full py-2 px-6 bg-white w-32">
+            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbActions }} Areas</h2>
+            <div class="flex flex-row gap-2 items-center justify-center mobile:hidden">
+                <button class="rounded-full py-2 px-6 bg-white w-32 mobile:hidden">
                     <h1 class="font-semibold">Activate</h1>
                 </button>
                 <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer" />
             </div>
         </div>
-        <div class="flex justify-between items-center p-4 mobile:hidden">
-            <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" />
+        <div class="flex justify-center items-center p-4 mobile:hidden">
             <ArrowComponent color="white" class="mobile:hidden" />
-            <SaveComponent :saves="saves" color="white" textcolor="white" />
         </div>
         <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden" />
     </div>
@@ -63,10 +62,10 @@
                             Actions</h2>
                     </div>
                 </div>
-                <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer mr-4" />
+                <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer mr-4 mobile:hidden" />
             </div>
             <div class="flex w-full justify-center web:hidden m-4">
-                <button class="rounded-full py-2 px-6 bg-white w-32">
+                <button class="rounded-full py-2 px-6 bg-white w-32 mobile:hidden">
                     <h1 class="font-semibold">Activate</h1>
                 </button>
             </div>
@@ -85,17 +84,14 @@
             <div class="mobile:hidden" />
             <MobileServiceNavComponent @back-button="handleBackButtonSecondPage" class="web:hidden" />
         </div>
-        <div class="flex justify-between items-center p-8 mobile:hidden">
-            <RateComponent :rate="rate" :reviews="reviews" :color="color" textcolor="black" class="w-1/3" />
-            <SaveComponent :saves="saves" :color="color" textcolor="black" class="w-1/3 flex justify-end" />
-        </div>
-        <button @click="handleCreateButtonClick" class="rounded-full py-2 px-6 bg-blue-500 text-white w-32 ml-4">
+        <div class="flex justify-center items-center p-8 mobile:hidden">
+            <button @click="handleCreateButtonClick" class="rounded-full py-2 px-6 bg-blue-500 text-white w-32 ml-4">
                 <h1 class="font-semibold">Create Area</h1>
             </button>
+        </div>
+        
             <AREACreationComponent v-if="showCreationComponent" @close="handleCloseCreationComponent" />
         <div class="flex flex-wrap gap-8 p-8 justify-center mobile:hidden">
-
-
             <AREAInfoComponent v-for="action in actions" :key="action.name" :values="action" :icon="action.icon"
                 :color="action.color" @menu-click="handleMenuClick(action.name)"
                 @more-click="handleMoreClick(action.name)" @configure-click="handleConfigureClick(action.name)" />
@@ -109,6 +105,9 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useUserStore } from '@/stores/users';
+
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
@@ -190,12 +189,7 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
     }
 }
 
-const actions = ref([
-    { name: 'Github issue to mail', description: 'Send an email when a new issue is opened on a repository', icon: 'mdi:github', color: '#4B5563' },
-    { name: 'Spotify new track to mail', description: 'Send an email when a new track is added to a playlist', icon: 'mdi:spotify', color: '#22C55E' },
-    { name: 'Spotify track to github issue', description: 'Create a new issue on a repository when a new track is added to a playlist', icon: 'mdi:spotify', color: '#22C55E' },
-    { name: 'Google calendar event to slack', description: 'Send a message on slack when a new event is created on a calendar', icon: 'mdi:slack', color: '#8A2BE2' },
-]);
+const actions = ref<Array<{ name: string, description: string, icon: string, color: string }>>([]);
 
 const showCreationComponent = ref(false);
 
@@ -213,5 +207,34 @@ onMounted(async () => {
         console.error('User not logged in');
         router.push('/dashboard');
     }
+    const token = Cookies.get('token');
+    if (!token) {
+        console.error('Token not found');
+        router.push('/');
+    }
+    const res: { status: number, data: [{
+        title: string, actionId: number, reactionId: number
+    }] } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/areas`,
+        {
+            params: {
+                email: user!.email,
+            },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    for (const area of res.data) {
+        console.log('Area:', area.title);
+        actions.value.push({
+            name: area.title,
+            description: 'Action: ' + area.actionId + ' Reaction: ' + area.reactionId,
+            icon: 'mdi:home-modern',
+            color: '#1C1C53',
+        });
+    }
+    nbActions.value = actions.value.length;
+    console.log(res);
 })
 </script>
