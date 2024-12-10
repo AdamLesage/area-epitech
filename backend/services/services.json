@@ -57,16 +57,16 @@
     ],
     "reactions": [
       {
-        "name":"repo_details",
-        "description":"Get information about a repository"
+        "name":"create_issue",
+        "description":"Create an issue"
       },
       {
-        "name":"list_repos",
-        "description":"List all repositories of the user"
+        "name":"create_milestone",
+        "description":"Create a milestone"
       },
       {
-        "name":"user_info",
-        "description":"Get information about the user"
+        "name":"create_pull_request",
+        "description":"Create a pull request"
       }
     ]
   }

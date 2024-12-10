@@ -16,9 +16,9 @@ const service = require('../services/services.json');
 
 function attributeEndpointToReactionGithub(name) {
     const nameDict = {
-        "repo_details": `${process.env.BACKEND_URL}github/repo-details`,
-        "list_repos": `${process.env.BACKEND_URL}github/list-repos`,
-        "user_info": `${process.env.BACKEND_URL}github/user-info`,
+        "create_issue": `https://api.github.com/repos/AdamLesage/area-epitech/issues`,
+        "create_milestone": `https://api.github.com/repos/AdamLesage/area-epitech/milestones`,
+        "create_pull_request": `https://api.github.com/repos/AdamLesage/area-epitech/pulls`,
     };
 
     return nameDict[name];
