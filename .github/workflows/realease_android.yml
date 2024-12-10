@@ -19,7 +19,7 @@ jobs:
       run: npm install
     - name: build app
       working-directory: ./frontend/
-      run: npm run build
+      run: npm run build-only
     - name: add android
       working-directory: ./frontend/
       run: npx cap add android
