@@ -22,6 +22,8 @@ services:
 
   server:
     image: area-server:latest
+    privileged: true
+    restart: always
     build:
       context: ./backend
       args:
@@ -30,6 +32,7 @@ services:
       - "8080:8080"
     volumes:
       - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
@@ -41,7 +44,7 @@ services:
     depends_on:
       - db
     command: >
-      sh -c "npx prisma migrate dev --name init && npm start"
+      sh -c "npx prisma migrate deploy && npx prisma generate && npm run start"
     networks:
       - db
 

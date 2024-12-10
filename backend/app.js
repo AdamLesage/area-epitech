@@ -4,13 +4,18 @@ const session = require('express-session');
 const passport = require('passport');
 require('./authentication/passport');
 
+const googleServiceRouter = require('./services/githubService')
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
-const aboutRouter = require('./routes/about')
+const aboutRouter = require('./routes/about');
+const actionsRouter = require('./routes/action');
+const reactionRouter = require('./routes/reaction');
+const cors = require('cors');
 
 const app = express();
 const port = 8080;
 
+app.use(cors());
 app.use(express.json());
 app.use(
   session({
@@ -24,6 +29,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', userRouter);
+app.use('/github', googleServiceRouter);
+app.use('/api', actionsRouter);
+app.use('/api', reactionRouter);
 app.use('/auth', authRouter);
 app.use('', aboutRouter);
 
