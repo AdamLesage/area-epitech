@@ -21,11 +21,6 @@ Before you start, make sure you have installed:
 2. Set up your project. Create a `.env` file in the `root` folder with the necessary environment variables:
 
    ```plaintext
-   DB_USER=your_database_user
-   DB_PASSWORD=your_database_password
-   DB_NAME=area
-   DB_HOST=localhost
-
    GOOGLE_CLIENT_ID=your_google_client_id
    GOOGLE_CLIENT_SECRET=your_Google_client_secret
    GITHUB_CLIENT_ID=your_github_client_id
