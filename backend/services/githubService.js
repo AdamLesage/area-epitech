@@ -59,75 +59,33 @@ router.post('/webhook', async (req, res) => {
 
 // ACTION
 
-router.post('/create-issue', async (req, res) => {
-    try {
-        const { title, body } = req.body;
-
-        // Validate parameters
-        if (!title || !body) {
-            return res.status(400).send('Title and body are required');
-        }
-
-        // Configure request options
-        const githubRepo = 'AdamLesage/area-epitech';
-        const githubAssignees = ['AdamLesage'];
-        const githubToken = process.env.GITHUB_TOKEN;
-
-        if (!githubToken) {
-            return res.status(500).send('GitHub access token is not defined');
-        }
-
-        const response = await axios.post(
-            `https://api.github.com/repos/${githubRepo}/issues`,
-            {
-                title: title,
-                body: body,
-                assignees: githubAssignees,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${githubToken}`,
-                    'X-GitHub-Api-Version': '2022-11-28',
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
-
-        // Successful response
-        res.status(200).send({
-            message: 'Issue created successfully',
-            issue_url: response.data.html_url,
-        });
-    } catch (error) {
-        console.error(error);
-
-        // Error handling
-        if (error.response) {
-            // GitHub API response error
-            return res.status(error.response.status).send({
-                message: 'Error from GitHub API',
-                details: error.response.data,
-            });
-        }
-
-        res.status(500).send({
-            message: 'Internal server error',
-            details: error.message,
-        });
-    }
-});
 
 router.get('/repo-details', async (req, res) => {
     try {
-        const { user, reponame } = req.body;
+        const { user, reponame, email } = req.body;
 
         // Validate parameters
-        if (!user || !reponame) {
-            return res.status(400).send('User and repository name are required');
+        if (!user || !reponame || !email) {
+            return res.status(400).send('User, reponame and email are required');
         }
 
         // Configure request options
-        const githubToken = process.env.GITHUB_TOKEN;
+        const linkedAccount = await prisma.linkedAccount.findFirst({
+            where: {
+                serviceName: 'github',
+                user: {
+                    email: email,
+                },
+            },
+        });
+
+        if (!linkedAccount) {
+            return res.status(404).send('GitHub account not linked');
+        }
+
+        // const githubToken = "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";
+        const githubToken = linkedAccount?.authToken;
+        console.log(githubToken);
 
         if (!githubToken) {
             return res.status(500).send('GitHub access token is not defined');
@@ -150,7 +108,7 @@ router.get('/repo-details', async (req, res) => {
         // Successful response
         res.status(200).send(response.data);
     } catch (error) {
-        console.error(error);
+        // console.error(error);
 
         // Error handling
         if (error.response) {
@@ -168,45 +126,107 @@ router.get('/repo-details', async (req, res) => {
     }
 });
 
-router.post('/create-repo', async (req, res) => {
+router.get('/list-repos', async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { email } = req.body;
 
         // Validate parameters
-        if (!name || !description) {
-            return res.status(400).send('Name and description are required');
+        if (!email) {
+            return res.status(400).send('Email is required');
         }
 
         // Configure request options
-        const githubToken = process.env.GITHUB_TOKEN;
+        const linkedAccount = await prisma.linkedAccount.findFirst({
+            where: {
+                serviceName: 'github',
+                user: {
+                    email: email,
+                },
+            },
+        });
+
+        if (!linkedAccount) {
+            return res.status(404).send('GitHub account not linked');
+        }
+
+        const githubToken = linkedAccount?.authToken;
+
+        if (!githubToken) {
+            return res.status(500).send('GitHub access token is not defined');
+        }
+        const response = await axios.get(`https://api.github.com/user/repos`, {
+            headers: {
+            Authorization: `Bearer ${githubToken}`,
+            'Accept': 'application/vnd.github.+json',
+            }
+        });
+
+        const repoNames = response.data.map(repo => repo.name);
+        res.status(200).send(repoNames);
+    } catch (error) {
+
+        // Error handling
+        if (error.response) {
+            // GitHub API response error
+            return res.status(error.response.status).send({
+                message: 'Error from GitHub API',
+                details: error.response.data,
+            });
+        }
+
+        res.status(500).send({
+            message: 'Internal server error',
+            details: error.message,
+        });
+    }
+});
+
+router.get('/user-info', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Validate parameters
+        if (!email) {
+            return res.status(400).send('Email is required');
+        }
+
+        // Configure request options
+        const linkedAccount = await prisma.linkedAccount.findFirst({
+            where: {
+                serviceName: 'github',
+                user: {
+                    email: email,
+                },
+            },
+        });
+
+        if (!linkedAccount) {
+            return res.status(404).send('GitHub account not linked');
+        }
+
+        const githubToken = linkedAccount?.authToken;
 
         if (!githubToken) {
             return res.status(500).send('GitHub access token is not defined');
         }
 
-        const response = await axios.post(
-            `https://api.github.com/user/repos`,
-            {
-                name: name,
-                description: description,
+        const response = await axios.get(`https://api.github.com/user`, {
+            headers: {
+                Authorization: `Bearer ${githubToken}`,
+                'Accept': 'application/vnd.github.+json',
             },
-            {
-                headers: {
-                    Authorization: `Bearer ${githubToken}`,
-                    'X-GitHub-Api-Version': '2022-11-28',
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
+        });
 
-        // Successful response
+        // Get username, avatar_url, html_url, bio
+        const { login, avatar_url, html_url, bio } = response.data;
+
         res.status(200).send({
-            message: 'Repository created successfully',
-            repo_url: response.data.html_url,
+            username: login,
+            avatar: avatar_url,
+            profile: html_url,
+            bio: bio,
         });
     } catch (error) {
-        console.error(error);
-
         // Error handling
         if (error.response) {
             // GitHub API response error

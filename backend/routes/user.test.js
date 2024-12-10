@@ -27,7 +27,6 @@ afterAll(async () => {
     // Clean up the database after the tests
     await prisma.linkedAccount.deleteMany();
     await prisma.user.deleteMany();
-    await prisma.user.deleteMany();
     await prisma.$disconnect();
 });
 
