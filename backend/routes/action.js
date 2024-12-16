@@ -108,7 +108,7 @@ router.post('/action', async (req, res) => {
 
 /**
  * @brief delete the action
- * 
+ *
  * @param {int} id the id of the action on param
  * @exemple DELETE /api/action/:id
  */
@@ -146,7 +146,7 @@ router.put('/action/set_active/:uuid', async (req, res) => {
         const { isActive } = req.body;
         const action = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
         if (action == null) {
-            return res.status(404).send("action not find"); 
+            return res.status(404).send("action not find");
         }
         if (isActive === false && action.isActive === true) {
             docker.getContainer(action.containerUuid).stop();
