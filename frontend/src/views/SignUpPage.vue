@@ -20,7 +20,7 @@ const hover = ref(false);
 const handleSubmit = async (values: SignUpFormValues) => {
     console.log('Sign Up Form Received:', values);
     try {
-        const res: { status: number, data: User } = await axios.post<User>('http://localhost:8080/auth/register', {
+        const res: { status: number, data: User } = await axios.post<User>(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, {
             email: values.email,
             password: values.password,
             name: 'blabla',

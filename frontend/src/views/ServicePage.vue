@@ -93,6 +93,11 @@ function handleRedirectUserPage() {
     router.push('/userinfo');
 }
 
+function handleAreaRedirect() {
+    console.log('Redirecting to area page');
+    router.push('/areas');
+}
+
 function handleScrollAttempt(event: WheelEvent) {
     if (event.deltaY > 0) {
         openServicePage();
@@ -117,6 +122,7 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
         <ServiceNavComponent
             @back-button="handleBackButtonFirstPage"
             @redirect-user-profile="handleRedirectUserPage"
+            @redirect-my-areas="handleAreaRedirect"
             class="mobile:hidden" />
         <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4" />
         <div class="flex flex-col justify-center items-center">

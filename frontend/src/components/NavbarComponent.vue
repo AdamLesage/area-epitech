@@ -1,6 +1,6 @@
 <template>
     <header class="flex flex-col md:flex-row items-center justify-between bg-indigo-900 py-4 px-8 shadow-lg">
-        <h1 class="text-3xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer" @click="navigateTo('/dashboard')">AREA</h1>
+        <h1 class="text-3xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer" @click="navigateTo('/')">AREA</h1>
         <nav class="flex flex-col md:flex-row gap-4 md:gap-6" aria-label="Primary Navigation">
             <button
                 v-for="link in headerLinks"
@@ -23,9 +23,9 @@ const router = useRouter();
 
 // Header links
 const headerLinks = [
-    { name: 'Explore', icon: 'mdi:compass-outline', route: '/explore' },
+    { name: 'Explore', icon: 'mdi:compass-outline', route: '' },
     { name: 'My Areas', icon: 'mdi:folder-outline', route: '/areas' },
-    { name: 'Updates', icon: 'mdi:bell-outline', route: '/updates' },
+    { name: 'Updates', icon: 'mdi:bell-outline', route: '' },
     { name: 'Profile', icon: 'mdi:account-outline', route: '/userinfo' },
 ];
 

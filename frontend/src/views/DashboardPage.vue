@@ -49,8 +49,12 @@ const updates = ref([
     { id: 1, content: '✅ Created Login Page' },
     { id: 2, content: '✅ Created Register Page' },
     { id: 3, content: '✅ Added User Info Page' },
-    { id: 4, content: '🚧 Started Home Page' },
-    { id: 5, content: '🚧 Backend API Integration' },
+    { id: 4, content: '✅ Finished Home Page' },
+    { id: 5, content: '✅ Backend API Authentification' },
+    { id: 6, content: '✅ Finished Service Page'},
+    { id: 7, content: '✅ Finished My Area Page'},
+    { id: 8, content: '✅ Added create AREA possibility'},
+    { id: 9, content: '🚀 Ready For MVP'},
 ]);
 
 function handleServiceClick(name: string) {
@@ -67,51 +71,6 @@ function handleServiceClick(name: string) {
 // Available services
 const availableServices = ref<Service[]>([])
 
-// Avaible plateforms
-// const connectedPlatforms = ref([
-//     { name: 'Spotify', icon: 'mdi:spotify', color: 'bg-green-500', link: '' },
-//     { name: 'Google', icon: 'mdi:google', color: 'bg-red-500', link: '' },
-//     { name: 'Twitter', icon: 'mdi:twitter', color: 'bg-blue-500', link: '' },
-//     { name: 'Facebook', icon: 'mdi:facebook', color: 'bg-blue-700', link: '' },
-//     { name: 'Instagram', icon: 'mdi:instagram', color: 'bg-pink-500', link: '' },
-//     { name: 'LinkedIn', icon: 'mdi:linkedin', color: 'bg-blue-800', link: '' },
-//     { name: 'YouTube', icon: 'mdi:youtube', color: 'bg-red-600', link: '' },
-//     { name: 'Slack', icon: 'mdi:slack', color: 'bg-purple-500', link: '' },
-//     { name: "Github", icon: "mdi:github", color: "bg-gray-800", link: '' }
-// ]);
-
-onMounted(async () => {
-    // Fetch the different services from the API
-    const response: { status: number, data: { services: Service[] }} = await axios.get('http://localhost:8080/services-info.json');
-    console.log(response);
-    if (response.status !== 200) {
-        console.error('Error while fetching services');
-        return;
-    }
-    availableServices.value = response.data.services;
-    for (const service of availableServices.value) {
-        serviceStore.setNewService(service);
-        console.log('Service:', service, 'added to serviceStore:', serviceStore.services);
-    }
-    console.log(availableServices.value);
-    // Getting all the services areas
-    const response2: {
-        status: number, data: { services: ServiceDetails[] }} = await axios.get('http://localhost:8080/services-areas.json');
-    console.log(response2);
-    if (response2.status !== 200) {
-        console.error('Error while fetching services areas');
-        return;
-    }
-    for (const service of availableServices.value) {
-        const serviceDetails = response2.data.services.find(s => s.name === service.name);
-        if (!serviceDetails) {
-            console.error('No service details found for service:', service.name);
-            continue;
-        }
-        serviceStore.setServiceAreas(service.name, serviceDetails.actions, serviceDetails.reactions);
-    }
-})
-
 onMounted(async() => {
     const email = Cookies.get('email');
     const token = Cookies.get('token');
@@ -125,7 +84,7 @@ onMounted(async() => {
         console.log(user);
         if (!user) {
             const res: { status: number, data: User } = await axios.get<User>(
-                `http://localhost:8080/api/user`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/user`,
                 {
                     params: {
                         email: email,
@@ -146,6 +105,36 @@ onMounted(async() => {
                 Cookies.remove('token');
             }
         }
+    }
+    // Fetch the different services from the API
+    console.log(import.meta.env.VITE_BACKEND_URL);
+    const response: { status: number, data: { services: Service[] }} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/services-info.json`);
+    console.log(response);
+    if (response.status !== 200) {
+        console.error('Error while fetching services');
+        return;
+    }
+    availableServices.value = response.data.services;
+    for (const service of availableServices.value) {
+        serviceStore.setNewService(service);
+        console.log('Service:', service, 'added to serviceStore:', serviceStore.services);
+    }
+    console.log(availableServices.value);
+    // Getting all the services areas
+    const response2: {
+        status: number, data: { services: ServiceDetails[] }} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/services-areas.json`);
+    console.log(response2);
+    if (response2.status !== 200) {
+        console.error('Error while fetching services areas');
+        return;
+    }
+    for (const service of availableServices.value) {
+        const serviceDetails = response2.data.services.find(s => s.name === service.name);
+        if (!serviceDetails) {
+            console.error('No service details found for service:', service.name);
+            continue;
+        }
+        serviceStore.setServiceAreas(service.name, serviceDetails.actions, serviceDetails.reactions);
     }
 })
 </script>

@@ -4,9 +4,6 @@ import ExplorePlatformsComponent from '../ExplorePlatformsComponent.vue';
 
 describe('ExplorePlatformsComponent', () => {
     const platforms = [
-        { name: 'Platform 1', color: 'bg-red-500', icon: 'mdi:home' },
-        { name: 'Platform 2', color: 'bg-blue-500', icon: 'mdi:account' },
-        { name: 'Platform 3', color: 'bg-green-500', icon: 'mdi:settings' },
     ];
 
     it('renders correctly with given platforms', () => {

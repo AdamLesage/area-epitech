@@ -296,6 +296,7 @@ router.get('/github/redirect',
                 uuid: uuidv4(),
                 serviceName: 'github',
                 authToken: req.user.accessToken,
+                username: req.user.username || 'Username not found',
             };
 
             // Check if the user already exists
@@ -310,7 +311,7 @@ router.get('/github/redirect',
 
                 // Create a linked account for the new user
                 linkedAccountParams.userId = user.id;
-                linkedAccountParams.username = req.user.username;
+                linkedAccountParams.username = req.user.username || 'Username not found';
                 await prisma.linkedAccount.create({ data: linkedAccountParams });
 
                 return res.status(201).json(user);

@@ -18,7 +18,7 @@ const router = useRouter();
 const handleSubmit = async (values: LoginFormValues) => {
     console.log('Login Form Received:', values);
     try {
-        const res: { status: number, data: { user: User } } = await axios.post('http://localhost:8080/auth/login', {
+        const res: { status: number, data: { user: User } } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
             email: values.email,
             password: values.password,
         });

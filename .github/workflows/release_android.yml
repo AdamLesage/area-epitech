@@ -1,0 +1,58 @@
+name: Area create android Release
+on:
+  pull_request:
+    branches-ignore:
+      - "ga-ignore-*"
+
+jobs:
+  android-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Delete existing tag
+        run: |
+          git tag -d area-android-release || true
+          git push origin --delete area-android-release || true
+      - name: setup jdk
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Install dependencies
+        working-directory: ./frontend/
+        run: npm install
+      - name: build app
+        working-directory: ./frontend/
+        run: npm run build-only
+      - name: Sync Capacitor
+        working-directory: ./frontend/
+        run: npx cap sync android
+      - name: Make Gradle executable
+        run: chmod +x ./frontend/android/gradlew
+      - name: Build Release APK
+        working-directory: ./frontend/android
+        run: ./gradlew assembleRelease
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          tag_name: area-android-release
+          release_name: area-Android-Release
+          draft: false
+          prerelease: false
+      - name: Upload APK Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./frontend/android/app/build/outputs/apk/release/app-release.apk
+          asset_name: app-release.apk
+          asset_content_type: application/gzip

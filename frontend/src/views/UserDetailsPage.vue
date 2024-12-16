@@ -26,7 +26,7 @@ const handleSubmit = async (values: DetailsFormValues) => {
     }
     try {
         const authToken = Cookies.get('token');
-        const res: { status: number, data: User } = await axios.put<User>(`http://localhost:8080/api/user/${user.uuid}`, {
+        const res: { status: number, data: User } = await axios.put<User>(`${import.meta.env.VITE_BACKEND_URL}/api/user/${user.uuid}`, {
             name: values.username,
             bio: values.bio,
         },
