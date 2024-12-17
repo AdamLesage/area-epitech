@@ -208,4 +208,213 @@ async function create_github_on_issue_closed_workers(data, uuid) {
 }
 
 
+/**
+ * @brief Creates and starts a worker for issue labeled.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_issue_labeled_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onIssueLabeled',
+        'on-issue-labeled-file',
+        'githubWorkerOnIssueLabeled.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for issue opened.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_issue_opened_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onIssueOpened',
+        'on-issue-opened-file',
+        'githubWorkerOnIssueOpened.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for issue unassigned.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_issue_unassigned_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onIssueUnssigned',
+        'on-issue-unassigned-file',
+        'githubWorkerOnIssueUnssigned.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for issue unlabeled.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_issue_unlabeled_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onIssueUnlabeled',
+        'on-issue-unlabeled-file',
+        'githubWorkerOnIssueUnlabeled.js'
+    );
+}
+
+
+
+/**
+ * @brief Creates and starts a worker for pull request assigned.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_pull_request_assigned_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onPullRequestAssigned',
+        'on-pull-request-assigned-file',
+        'githubWorkerOnPullRequestAssigned.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for pull request closed.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_pull_request_closed_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onPullRequestClosed',
+        'on-pull-request-closed-file',
+        'githubWorkerOnPullRequestClosed.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for pull request labeled.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_pull_request_labeled_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onPullRequestLabeled',
+        'on-pull-request-labeled-file',
+        'githubWorkerOnPullRequestLabeled.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for pull request opened.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_pull_request_opened_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onPullRequestOpened',
+        'on-pull-request-opened-file',
+        'githubWorkerOnPullRequestOpened.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for pull request submitted.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_pull_request_submitted_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onPullRequestSubmitted',
+        'on-pull-request-submitted-file',
+        'githubWorkerOnPullRequestSubmitted.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for pull request unassigned.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_pull_request_unassigned_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onPullRequestUnassigned',
+        'on-pull-request-unassigned-file',
+        'githubWorkerOnPullRequestUnassigned.js'
+    );
+}
+
+
+/**
+ * @brief Creates and starts a worker for pull request unlabeled.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_pull_request_unlabeled_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onPullRequestUnlabeled',
+        'on-pull-request-unlabeled-file',
+        'githubWorkerOnPullRequestUnlabeled.js'
+    );
+}
+
 module.exports = actions;
