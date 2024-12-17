@@ -1,31 +1,5 @@
-async function send() {
-    console.log("send from dropBoxWorkerOnIssueAssigned");
-    try {
-        const response = await fetch(process.env.CALL_BACK, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: process.env.DATA
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.error('Fetch error:', error);
-    }
-}
+import Worker from '../../Worker.js';
 
-const sleepNow = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+const issueAssignedWorker = new Worker('issueAssignedWorker');
 
-async function repeatedGreetingsLoop() {
-  while (1) {
-    await sleepNow(1000)
-    await send();
-  }
-}
-
-repeatedGreetingsLoop()
+issueAssignedWorker.repeatedGreetingsLoop();

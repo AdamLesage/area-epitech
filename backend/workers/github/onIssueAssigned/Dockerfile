@@ -2,4 +2,4 @@ FROM node:lts-alpine
 
 COPY . .
 
-CMD [ "node", "githubWorkerOnIssueAssigned.js.js" ]
+CMD [ "node", "githubWorkerOnIssueAssigned.js" ]
