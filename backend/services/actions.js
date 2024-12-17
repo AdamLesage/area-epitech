@@ -11,6 +11,7 @@ const actions = new Map();
 actions.set('dropbox_on_new_file', create_dropbox_on_new_file_workers);
 actions.set('dropbox_on_new_shares_file', create_dropbox_on_new_shares_file_workers);
 actions.set('github_on_issue_assigned', create_github_on_issue_assigned_workers)
+actions.set('github_on_issue_closed', create_github_on_issue_closed_workers)
 
 /**
  * @brief Ensures that a Docker image exists.
@@ -28,7 +29,7 @@ async function ensureImageExists(imageName, dockerfilePath, workerFileName) {
         console.log(`Image '${imageName}' already exists.`);
 
         // Delete the image if it already exists
-        await docker.getImage(imageName).remove({force: true});
+        await docker.getImage(imageName).remove({ force: true });
         console.log(`Image '${imageName}' deleted successfully.`);
     } catch (err) {
         if (err.statusCode === 404) {
@@ -98,6 +99,34 @@ async function create_container(data, uuid, image_name, workerFileName) {
 }
 
 
+// Generic function for workers
+
+/**
+ * @brief Creates and starts a worker container based on given parameters.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @param workerPath Path to the worker's Dockerfile directory.
+ * @param imageName Name of the Docker image to create.
+ * @param workerFileName Name of the worker file to execute.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Romain Chevallier && Adam Lesage
+ */
+async function create_worker_container(data, uuid, workerPath, imageName, workerFileName) {
+    try {
+        const workerDockerfilePath = path.resolve(__dirname, workerPath); // Path to the Dockerfile
+        await ensureImageExists(imageName, workerDockerfilePath, workerFileName);
+        const container = await create_container(data, uuid, imageName, workerFileName);
+        console.log("run container");
+        await container.start(); // Start the container
+        return container.id; // Return the container ID
+    } catch (e) {
+        console.log(e);
+        return "";
+    }
+}
+
+
 // DropBox
 
 /**
@@ -109,19 +138,15 @@ async function create_container(data, uuid, image_name, workerFileName) {
  * @return The ID of the started container or an empty string on failure.
  */
 async function create_dropbox_on_new_file_workers(data, uuid) {
-    var onNewFileImage = path.resolve(__dirname, '../workers/dropbox/onNewFile'); // Path to the Dockerfile
-    var image_name = "on-new-file"; // Name of the Docker image
-    var workerFileName = "dropBoxWorkerOnNewFile.js" // Name of the worker file
-    try {
-        await ensureImageExists(image_name, onNewFileImage, workerFileName);
-        const container = await create_container(data, uuid, image_name, workerFileName);
-        await container.start(); // Start the container
-        return container.id; // Return the container ID
-    } catch (e) {
-        console.log(e);
-        return "";
-    }
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/dropbox/onNewFile',
+        'on-new-file',
+        'dropBoxWorkerOnNewFile.js'
+    );
 }
+
 
 /**
  * @brief Creates and starts a worker for new shared Dropbox files.
@@ -132,21 +157,14 @@ async function create_dropbox_on_new_file_workers(data, uuid) {
  * @return The ID of the started container or an empty string on failure.
  */
 async function create_dropbox_on_new_shares_file_workers(data, uuid) {
-    var onNewFileImage = path.resolve(__dirname, '../workers/dropbox/onNewSharesFile'); // Path to the Dockerfile
-    var image_name = "on-new-shares-file"; // Name of the Docker image
-    var workerFileName = "dropBoxWorkerOnNewSharesFile.js" // Name of the worker file
-    try {
-        await ensureImageExists(image_name, onNewFileImage, workerFileName);
-        const container = await create_container(data, uuid, image_name, workerFileName);
-        console.log("run container");
-        await container.start(); // Start the container
-        return container.id; // Return the container ID
-    } catch (e) {
-        console.log(e);
-        return "";
-    }
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/dropbox/onNewSharesFile',
+        'on-new-shares-file',
+        'dropBoxWorkerOnNewSharesFile.js'
+    );
 }
-
 
 
 // Github
@@ -158,21 +176,36 @@ async function create_dropbox_on_new_shares_file_workers(data, uuid) {
  * @param data The data to be processed by the worker.
  * @param uuid The unique identifier for the operation.
  * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
  */
-async function create_github_on_issue_assigned_workers(data, uuid) {
-    var onNewFileImage = path.resolve(__dirname, '../workers/github/onIssueAssigned'); // Path to the Dockerfile
-    var image_name = "on-issue-file"; // Name of the Docker image for all the issues related actions
-    var workerFileName = "githubWorkerOnIssueAssigned.js" // Name of the worker file
-    try {
-        await ensureImageExists(image_name, onNewFileImage, workerFileName);
-        const container = await create_container(data, uuid, image_name, workerFileName);
-        console.log("run container");
-        await container.start(); // Start the container
-        return container.id; // Return the container ID
-    } catch (e) {
-        console.log(e);
-        return "";
-    }
+async function create_github_on_issue_closed_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onIssueClosed',
+        'on-issue-closed-file',
+        'githubWorkerOnIssueClosed.js'
+    );
 }
+
+
+/**
+ * @brief Creates and starts a worker for issue closed.
+ *
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * @author Adam LESAGE
+ */
+async function create_github_on_issue_closed_workers(data, uuid) {
+    return await create_worker_container(
+        data,
+        uuid,
+        '../workers/github/onIssueClosed',
+        'on-issue-closed-file',
+        'githubWorkerOnIssueClosed.js'
+    );
+}
+
 
 module.exports = actions;
