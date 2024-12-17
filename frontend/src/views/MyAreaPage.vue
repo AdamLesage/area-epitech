@@ -114,7 +114,7 @@ import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vu
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import RateComponent from '@/components/RateComponent.vue';
 import SaveComponent from '@/components/SaveComponent.vue';
-import ArrowComponent from '@/components/ArrowComponent.vue';
+import ArrowComponent from '@/components/ArrowComponentBottom.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
 import AREACreationComponent from '@/components/AREACreationComponent.vue';
 

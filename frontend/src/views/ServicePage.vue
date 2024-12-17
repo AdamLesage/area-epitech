@@ -9,7 +9,7 @@ import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vu
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import RateComponent from '@/components/RateComponent.vue';
 import SaveComponent from '@/components/SaveComponent.vue';
-import ArrowComponent from '@/components/ArrowComponent.vue';
+import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
 
 const route = useRoute();
@@ -85,7 +85,7 @@ function handleConfigureClick(name: string) {
 
 function handleBackButtonFirstPage() {
     console.log('Back button clicked on first page');
-    router.push('/dashboard');
+    window.history.back();
 }
 
 function handleRedirectUserPage() {
@@ -165,7 +165,7 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
         </div>
         <div class="flex justify-between items-center p-4 mobile:hidden">
             <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" />
-            <ArrowComponent color="white" class="mobile:hidden" />
+            <ArrowComponentBottom color="white" class="mobile:hidden" :animate="true" />
             <SaveComponent :saves="saves" color="white" textcolor="white" />
         </div>
         <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden" />
