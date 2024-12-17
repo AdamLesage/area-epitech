@@ -12,6 +12,18 @@ actions.set('dropbox_on_new_file', create_dropbox_on_new_file_workers);
 actions.set('dropbox_on_new_shares_file', create_dropbox_on_new_shares_file_workers);
 actions.set('github_on_issue_assigned', create_github_on_issue_assigned_workers)
 actions.set('github_on_issue_closed', create_github_on_issue_closed_workers)
+actions.set('github_on_issue_labeled', create_github_on_issue_labeled_workers)
+actions.set('github_on_issue_opened', create_github_on_issue_opened_workers)
+actions.set('github_on_issue_unassigned', create_github_on_issue_unassigned_workers)
+actions.set('github_on_issue_unlabeled', create_github_on_issue_unlabeled_workers)
+actions.set('github_on_pull_request_assigned', create_github_on_pull_request_assigned_workers)
+actions.set('github_on_pull_request_closed', create_github_on_pull_request_closed_workers)
+actions.set('github_on_pull_request_labeled', create_github_on_pull_request_labeled_workers)
+actions.set('github_on_pull_request_opened', create_github_on_pull_request_opened_workers)
+actions.set('github_on_pull_request_submitted', create_github_on_pull_request_submitted_workers)
+actions.set('github_on_pull_request_unassigned', create_github_on_pull_request_unassigned_workers)
+actions.set('github_on_pull_request_unlabeled', create_github_on_pull_request_unlabeled_workers)
+
 
 /**
  * @brief Ensures that a Docker image exists.
@@ -178,13 +190,13 @@ async function create_dropbox_on_new_shares_file_workers(data, uuid) {
  * @return The ID of the started container or an empty string on failure.
  * @author Adam LESAGE
  */
-async function create_github_on_issue_closed_workers(data, uuid) {
+async function create_github_on_issue_assigned_workers(data, uuid) {
     return await create_worker_container(
         data,
         uuid,
-        '../workers/github/onIssueClosed',
-        'on-issue-closed-file',
-        'githubWorkerOnIssueClosed.js'
+        '../workers/github/onIssueAssigned',
+        'on-issue-assigned-file',
+        'githubWorkerOnIssueAssigned.js'
     );
 }
 
