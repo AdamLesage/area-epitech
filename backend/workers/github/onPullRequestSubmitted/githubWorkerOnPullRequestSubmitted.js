@@ -1,5 +1,5 @@
 import Worker from '../../Worker.js';
 
-const pullRequestOpenedWorker = new Worker('pullRequestOpenedWorker');
+const pullRequestSubmittedWorker = new Worker('pullRequestSubmittedWorker');
 
-pullRequestOpenedWorker.repeatedGreetingsLoop();
+pullRequestSubmittedWorker.repeatedGreetingsLoop();
