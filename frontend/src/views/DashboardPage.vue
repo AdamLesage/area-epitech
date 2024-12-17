@@ -3,9 +3,7 @@
         <!-- Navbar -->
         <NavbarComponent />
 
-        <div class="flex flex-col md:flex-row h-full">
-            <!-- Sidebar: Updates -->
-            <UpdatesSidebar :updates="updates" class="md:w-1/4 w-full" />
+        <div class="flex flex-col md:flex-row-reverse h-full">
 
             <div class="flex-1 bg-gray-800 p-4">
                 <!-- Search Bar -->
@@ -20,6 +18,9 @@
                         v-if="availableServices" />
                 </div>
             </div>
+            <!-- Sidebar: Updates -->
+            <UpdatesSidebar :updates="updates" class="md:w-1/4 w-full" />
+
         </div>
     </div>
 </template>
