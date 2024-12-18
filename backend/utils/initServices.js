@@ -19,6 +19,7 @@ function attributeEndpointToReactionGithub(name) {
         "create_issue": `https://api.github.com/repos/AdamLesage/area-epitech/issues`,
         "create_milestone": `https://api.github.com/repos/AdamLesage/area-epitech/milestones`,
         "create_pull_request": `https://api.github.com/repos/AdamLesage/area-epitech/pulls`,
+        "dropbox_shares_file": ``,
     };
 
     return nameDict[name];

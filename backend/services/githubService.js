@@ -12,6 +12,11 @@ const prisma = new PrismaClient();
 const router = express.Router();
 const axios = require('axios');
 require('dotenv').config();
+const Redis = require('ioredis');
+const redis = new Redis({
+    host: 'redis',
+    port: 6379
+});
 
 // ACTION
 
@@ -31,76 +36,32 @@ router.post('/webhook', async (req, res) => {
         const action = req.body['action'];
         const actionName = `${event}.${action}`;
 
-        // Check if service exists
-        let service = await prisma.service.findUnique({
+        console.log("receive github webhook", actionName)
+        // get active github area
+        const activeGithubActions = await prisma.actionReaction.findMany({
             where: {
-                name: 'github',
-            }
+                isActive: true,
+                action: {
+                    service: {
+                        name: "github",
+                    },
+                },
+            },
         });
 
-        if (!service) {
-            return res.status(404).send('Service not found');
-        }
-
-        const actionDB = await prisma.action.findFirst({
-            where: {
-                name: actionName,
-                serviceId: service.id,
-            }
-        });
-        console.log(actionDB);
-
-        // Todo: create a webhook for each action, actions will have an endpoint
-        // Retrieve all Area where actionId == actionDB.id
-        const areas = await prisma.actionReaction.findMany({
-            where: {
-                actionId: actionDB.id,
-            }
+        const promises = activeGithubActions.map(async (action) => {
+            // Push each action to the Redis queue
+            console.log("send to worker", action.uuid)
+            await redis.lpush(action.uuid, JSON.stringify({event: actionName, data: req.body}));
         });
 
-        areas.forEach(async (area) => {
-            const reaction = await prisma.reaction.findUnique({
-                where: {
-                    id: area.reactionId,
-                }
-            });
+        await Promise.all(promises);
 
-            if (!reaction) {
-                return;
-            }
-
-            const data = attributeDataToReactionGithub(reaction.endpoint);
-            const headers = {
-                Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
-                'Accept': 'application/vnd.github+json',
-                "X-GitHub-Api-Version": "2022-11-28"
-            }
-            console.log(`Creating POST request at endpoint: ${reaction.endpoint}`);
-            console.log(`Data: ${JSON.stringify(data)}`);
-
-            // TODO: Add the necessary data to the data object
-            // TODO: Adapt HTTP method (GET, POST, PUT, DELETE) for now it's only POST
-            const response = await axios.post(reaction.endpoint, data,
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
-                    'Accept': 'application/vnd.github+json',
-                    "X-GitHub-Api-Version": "2022-11-28"
-                }
-            });
-
-            if (response.status > 299) {
-                console.error(`Error calling reaction ${reaction.name}`);
-            }
-
-            // console.log(`response: ${response.data}`);
-        });
-
-        // res.status(200).send(responseRepoDetails.data);
-        res.status(200).send('Webhook received');
+        // Send a success response
+        return res.status(200).send('Webhook processed successfully');
     } catch (error) {
-        // console.error(error);
-        // res.status(500).send(`Error receiving webhook: ${error.message}`);
+        console.error(error);
+        res.status(500).send(`Error receiving webhook: ${error.message}`);
     }
 });
 

@@ -19,7 +19,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - db
+  
   server:
     image: area-server:latest
     privileged: true
@@ -42,8 +49,11 @@ services:
       - GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}
       - BACKEND_URL=${BACKEND_URL}
       - FRONTEND_URL=${FRONTEND_URL}
+      - DROPBOX_APP_KEY=${DROPBOX_APP_KEY}
+      - DROPBOX_APP_SECRET=${DROPBOX_APP_SECRET}
     depends_on:
       - db
+      - redis
     command: >
       sh -c "npx prisma migrate deploy && npx prisma generate && npm run start"
     networks:

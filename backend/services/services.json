@@ -69,5 +69,20 @@
         "description":"Create a pull request"
       }
     ]
+  },
+  {
+    "name":"dropbox",
+    "actions": [
+      {
+        "name":"dropbox_on_new_file",
+        "description":"A pull request review is submitted"
+      }
+    ],
+    "reactions": [
+      {
+        "name":"dropbox_shares_file",
+        "description":"Create an issue"
+      }
+    ]
   }
 ]

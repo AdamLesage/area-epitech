@@ -291,14 +291,14 @@ router.get('/github/redirect',
             let user = await prisma.user.findUnique({
                 where: { email: req.user.email },
             });
-            
+
             const linkedAccountParams = {
                 uuid: uuidv4(),
                 serviceName: 'github',
                 authToken: req.user.accessToken,
                 username: req.user.username || 'Username not found',
             };
-            
+
             const userParams = {
                 email: req.user.email,
                 name: req.user.displayName || '',
@@ -317,13 +317,7 @@ router.get('/github/redirect',
                 linkedAccountParams.username = req.user.username || 'Username not found';
                 linkedAccountParams.authToken = req.user.accessToken;
                 await prisma.linkedAccount.create({ data: linkedAccountParams });
-
-                return res.status(201).json(user);
             }
-
-            const clientId = req.user.id;
-            console.log('Client ID:', clientId);
-            console.log('Client: ', req.user);
 
             // Check if the account is already linked
             const linkedAccount = await prisma.linkedAccount.findFirst({
@@ -349,8 +343,83 @@ router.get('/github/redirect',
                     },
                 });
             }
+            return res.redirect(`${process.env.FRONTEND_URL}/#/github-callback?token=${user.authToken}&email=${user.email}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        }
+    }
+);
 
-            return res.redirect(process.env.FRONTEND_URL);
+// DropBox auth routes
+
+router.get('/dropbox', passport.authenticate('dropbox-oauth2'));
+
+router.get('/dropbox/callback', 
+    passport.authenticate('dropbox-oauth2', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            const { email, displayName, username, token: accessToken } = req.user;
+
+            const userParams = {
+                email: email,
+                name: displayName,
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: accessToken,
+            };
+
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'dropbox',
+                authToken: accessToken,
+                username: displayName,
+            };
+
+            // Check if the user already exists
+            let user = await prisma.user.findUnique({
+                where: { email: userParams.email },
+                include: { linkedAccounts: true }, // Include linked accounts in the result
+            });
+
+            if (!user) {
+                // Create a new user
+                userParams.authToken = uuidv4(); // Add authentication token
+                user = await prisma.user.create({ 
+                    data: {
+                        ...userParams,
+                        linkedAccounts: {
+                            create: [linkedAccountParams],
+                        },
+                    },
+                    include: { linkedAccounts: true },
+                });
+
+                return res.status(201).json(user);
+            }
+
+            // Check if the account is already linked
+            const linkedAccount = user.linkedAccounts.find(
+                account => account.serviceName === 'dropbox'
+            );
+
+            if (!linkedAccount) {
+                await prisma.linkedAccount.create({ 
+                    data: {
+                        ...linkedAccountParams,
+                        userId: user.id, // Use the numeric ID from Prisma
+                    },
+                });
+
+                // Refresh user data to include the new linked account
+                user = await prisma.user.findUnique({
+                    where: { email: userParams.email },
+                    include: { linkedAccounts: true },
+                });
+            }
+
+            // Return the existing user
+            return res.status(200).json(user);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
