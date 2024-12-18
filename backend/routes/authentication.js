@@ -15,12 +15,12 @@ const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 
 // Intern auth routes
 
 router.post('/login', (req, res) => {
     const { password, email } = req.body;
-    const headers = req.headers;
 
     if (!password || !email) {
         return res.status(400).json({ error: 'Missing parameters' });
@@ -236,23 +236,23 @@ router.get('/google/redirect',
                 authToken: req.user.id,
             };
 
-            // Vérifiez si l'utilisateur existe déjà
+            // Check if the user already exists
             let user = await prisma.user.findUnique({
                 where: { email: userParams.email },
             });
 
             if (!user) {
-                userParams.authToken = uuidv4(); // Ajout du token d'authentification
+                userParams.authToken = uuidv4();
                 user = await prisma.user.create({ data: userParams });
 
-                // Créer un compte lié pour le nouvel utilisateur
+                // Create a linked account for the new user
                 linkedAccountParams.userId = user.id;
                 await prisma.linkedAccount.create({ data: linkedAccountParams });
 
                 return res.status(201).json(user);
             }
 
-            // Vérifiez si le compte est déjà lié
+            // Check if the account is already linked
             const linkedAccount = await prisma.linkedAccount.findFirst({
                 where: {
                     userId: user.id,
@@ -265,7 +265,7 @@ router.get('/google/redirect',
                 await prisma.linkedAccount.create({ data: linkedAccountParams });
             }
 
-            // Retournez l'utilisateur existant
+            // Return the existing user
             return res.status(200).json(user);
         } catch (error) {
             console.error(error);
@@ -284,6 +284,11 @@ router.get('/github/redirect',
     passport.authenticate('github', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
+            const code = req.query.code;
+
+            const clientId = req.user.id;
+            console.log('Code:', code);
+            console.log('Client ID:', clientId);
             const userParams = {
                 email: req.user.emails[0].value,
                 name: req.user.displayName || '',
@@ -327,11 +332,57 @@ router.get('/github/redirect',
 
             if (!linkedAccount) {
                 linkedAccountParams.userId = user.id;
-                await prisma.linkedAccount.create({ data: linkedAccountParams });
+                const newLinkedAccount = await prisma.linkedAccount.create({ data: linkedAccountParams });
+                if (!newLinkedAccount) {
+                    return res.status(500).json({ error: 'Failed to create linked account' });
+                }
             }
 
-            // Return the existing user
-            return res.status(200).json(user);
+            try {
+                const tokenResponse = await axios.post(
+                    'https://github.com/login/oauth/access_token',
+                    {
+                        client_id: process.env.GITHUB_CLIENT_ID,
+                        client_secret: process.env.GITHUB_CLIENT_SECRET,
+                        code,
+                        redirect_uri: `http://localhost:8080/auth/github/redirect`,
+                        state: uuidv4(),
+                    },
+                    {
+                        headers: {
+                            Accept: 'application/json',
+                        },
+                    }
+                );
+
+                console.log(tokenResponse.data);
+
+                const { access_token } = tokenResponse.data;
+
+                if (!access_token) {
+                    return res.status(400).send("Failed to get access token");
+                }
+            } catch (error) {
+                console.log(error);
+                return res.status(500).send("Failed to exchange code for access token");
+            }
+
+
+            if (linkedAccount) {
+                await prisma.linkedAccount.update({
+                    where: {
+                        id: linkedAccount.id,
+                    },
+                    data: {
+                        authToken: authTokenResponse.data.access_token,
+                    },
+                });
+            } else {
+                return res.status(404).json({ error: 'Linked account not found' });
+            }
+
+            // Redirect to www.google.com
+            return res.redirect(process.env.FRONTEND_URL);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });

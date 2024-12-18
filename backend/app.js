@@ -13,7 +13,7 @@ const reactionRouter = require('./routes/reaction');
 const actionReactionRouter = require('./routes/ActionReaction');
 
 const cors = require('cors');
-const { initServices } = require('./initServices/initServices');
+const { initServices } = require('./utils/initServices');
 
 const app = express();
 const port = 8080;
