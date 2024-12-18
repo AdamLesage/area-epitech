@@ -275,7 +275,6 @@ router.get('/google/redirect',
 );
 
 // Github auth routes
-
 router.get('/github',
     passport.authenticate('github')
 );
@@ -284,43 +283,47 @@ router.get('/github/redirect',
     passport.authenticate('github', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
-            const code = req.query.code;
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
 
-            const clientId = req.user.id;
-            console.log('Code:', code);
-            console.log('Client ID:', clientId);
-            const userParams = {
-                email: req.user.emails[0].value,
-                name: req.user.displayName || '',
-                surname: '',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-            };
-
+            // Check if the user already exists
+            let user = await prisma.user.findUnique({
+                where: { email: req.user.email },
+            });
+            
             const linkedAccountParams = {
                 uuid: uuidv4(),
                 serviceName: 'github',
                 authToken: req.user.accessToken,
                 username: req.user.username || 'Username not found',
             };
-
-            // Check if the user already exists
-            let user = await prisma.user.findUnique({
-                where: { email: userParams.email },
-            });
+            
+            const userParams = {
+                email: req.user.email,
+                name: req.user.displayName || '',
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.accessToken,
+            };
 
             if (!user) {
                 // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
+                userParams.authToken = uuidv4();
                 user = await prisma.user.create({ data: userParams });
 
                 // Create a linked account for the new user
                 linkedAccountParams.userId = user.id;
                 linkedAccountParams.username = req.user.username || 'Username not found';
+                linkedAccountParams.authToken = req.user.accessToken;
                 await prisma.linkedAccount.create({ data: linkedAccountParams });
 
                 return res.status(201).json(user);
             }
+
+            const clientId = req.user.id;
+            console.log('Client ID:', clientId);
+            console.log('Client: ', req.user);
 
             // Check if the account is already linked
             const linkedAccount = await prisma.linkedAccount.findFirst({
@@ -336,52 +339,17 @@ router.get('/github/redirect',
                 if (!newLinkedAccount) {
                     return res.status(500).json({ error: 'Failed to create linked account' });
                 }
-            }
-
-            try {
-                const tokenResponse = await axios.post(
-                    'https://github.com/login/oauth/access_token',
-                    {
-                        client_id: process.env.GITHUB_CLIENT_ID,
-                        client_secret: process.env.GITHUB_CLIENT_SECRET,
-                        code,
-                        redirect_uri: `http://localhost:8080/auth/github/redirect`,
-                        state: uuidv4(),
-                    },
-                    {
-                        headers: {
-                            Accept: 'application/json',
-                        },
-                    }
-                );
-
-                console.log(tokenResponse.data);
-
-                const { access_token } = tokenResponse.data;
-
-                if (!access_token) {
-                    return res.status(400).send("Failed to get access token");
-                }
-            } catch (error) {
-                console.log(error);
-                return res.status(500).send("Failed to exchange code for access token");
-            }
-
-
-            if (linkedAccount) {
+            } else {
                 await prisma.linkedAccount.update({
                     where: {
                         id: linkedAccount.id,
                     },
                     data: {
-                        authToken: authTokenResponse.data.access_token,
+                        authToken: req.user.accessToken,
                     },
                 });
-            } else {
-                return res.status(404).json({ error: 'Linked account not found' });
             }
 
-            // Redirect to www.google.com
             return res.redirect(process.env.FRONTEND_URL);
         } catch (error) {
             console.error(error);
