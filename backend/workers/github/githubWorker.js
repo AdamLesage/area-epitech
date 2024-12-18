@@ -7,17 +7,13 @@ const redis = new Redis({
 
 async function processWebhook() {
     while (true) {
-        // await new Promise(resolve => setTimeout(resolve, 1000));
         const data = await redis.rpop(process.env.UUID);
         if (data) {
-            console.log(data)
             const webhookData = JSON.parse(data);
+            // Check if the event is the one we are looking for, if so, send the data
             if (webhookData.event == process.env.TARGET_ACTION) {
                 send(webhookData)
             }
-            // Process the webhook data here
-            console.log('Processing webhook data:', webhookData);
-            // Call the appropriate reaction or action based on the webhook data
         } else {
             // Wait for a while before checking the queue again
             await new Promise(resolve => setTimeout(resolve, 1000));
