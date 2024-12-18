@@ -9,7 +9,19 @@ var docker = new Docker();
 const actions = new Map();
 actions.set('dropbox_on_new_file', create_dropbox_workers);
 actions.set('dropbox_on_new_shares_file', create_dropbox_workers);
-
+actions.set('pull_request_review.submitted', create_github_workers);
+actions.set('pull_request.labeled', create_github_workers);
+actions.set('pull_request.unlabeled', create_github_workers);
+actions.set('issues.labeled', create_github_workers);
+actions.set('issues.unlabeled', create_github_workers);
+actions.set('issues.assigned', create_github_workers);
+actions.set('issues.unassigned', create_github_workers);
+actions.set('pull_request.assigned', create_github_workers);
+actions.set('pull_request.unassigned', create_github_workers);
+actions.set('issues.opened', create_github_workers);
+actions.set('issues.closed', create_github_workers);
+actions.set('pull_request.opened', create_github_workers);
+actions.set('pull_request.closed', create_github_workers);
 
 /**
  * @brief Ensures that a Docker image exists.
@@ -109,6 +121,29 @@ async function create_dropbox_workers(data, uuid, targetAction) {
     var onNewFileImage = path.resolve(__dirname, '../workers/dropbox'); // Path to the Dockerfile
     var image_name = "dropbox-worker"; // Name of the Docker image
     var workerFileName = "dropboxWorker.js" // Name of the worker file
+    try {
+        await ensureImageExists(image_name, onNewFileImage, workerFileName);
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
+        await container.start(); // Start the container
+        return container.id; // Return the container ID
+    } catch (e) {
+        console.log(e);
+        return "";
+    }
+}
+
+/**
+ * @brief Creates and starts a worker for Dropbox.
+ * This function ensures the Docker image exists, creates a container,
+ * and starts it to process github action.
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ */
+async function create_github_workers(data, uuid, targetAction) {
+    var onNewFileImage = path.resolve(__dirname, '../workers/github'); // Path to the Dockerfile
+    var image_name = "github-worker"; // Name of the Docker image
+    var workerFileName = "githubWorker.js" // Name of the worker file
     try {
         await ensureImageExists(image_name, onNewFileImage, workerFileName);
         const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
