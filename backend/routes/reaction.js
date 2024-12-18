@@ -27,7 +27,7 @@ router.post('/reaction/:uuid', async (req, res) => {
             return res.status(404).send("unknow Reaction");
         }
         // console.log("receive reaction", "service", reaction.name);
-        await reactions.get(reaction.name)(area.reactionData, req.body);
+        await reactions.get(reaction.name)(area.reactionData, req.body, area.userUuid);
         res.json({ message: "receive reaction" });
     } catch (e) {
         console.error("Error on receive reaction", e);
