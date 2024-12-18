@@ -102,7 +102,10 @@ router.post('/action', async (req, res) => {
 
     const uuid = uuidv4();
     // create and lunch the worker
-    const containerUuid = await actions.get(typeAction)(actionData, uuid);
+    const containerUuid = await actions.get(typeAction)(actionData, uuid, typeAction);
+    if (containerUuid === "") {
+        return res.status(400).json({ message: 'Error creating container' });
+    }
     try {
         // create the action reaction object
         const newAction = await prisma.actionReaction.create({

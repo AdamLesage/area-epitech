@@ -7,8 +7,8 @@ var docker = new Docker();
 
 // Create a map to hold creation of action worker
 const actions = new Map();
-actions.set('dropbox_on_new_file', create_dropbox_on_new_file_workers);
-actions.set('dropbox_on_new_shares_file', create_dropbox_on_new_shares_file_workers);
+actions.set('dropbox_on_new_file', create_dropbox_workers);
+actions.set('dropbox_on_new_shares_file', create_dropbox_workers);
 
 
 /**
@@ -75,7 +75,7 @@ async function ensureImageExists(imageName, dockerfilePath, workerFileName) {
  * @param workerFileName The name of the worker file
  * @return the docker container created
  */
-async function create_container(data, uuid, image_name, workerFileName) {
+async function create_container(data, uuid, image_name, workerFileName, targetAction) {
     return await docker.createContainer({
         Image: image_name, // Specify the image to use for the container
         AttachStdin: false,
@@ -85,7 +85,8 @@ async function create_container(data, uuid, image_name, workerFileName) {
         Env: [   
             `UUID=${uuid}`, // Set the UUID environment variable
             `DATA=${typeof data === 'object' && data !== null ? JSON.stringify(data) : '{}'}`, // Set the DATA environment variable
-            `CALL_BACK=http://server:8080/api/reaction/${uuid}` // Set the callback URL
+            `CALL_BACK=http://server:8080/api/reaction/${uuid}`, // Set the callback URL
+            `TARGET_ACTION=${targetAction}`
         ],
         HostConfig: {
             NetworkMode: "area-epitech_db"
@@ -97,44 +98,20 @@ async function create_container(data, uuid, image_name, workerFileName) {
 }
 
 /**
- * @brief Creates and starts a worker for new Dropbox files.
+ * @brief Creates and starts a worker for Dropbox.
  * This function ensures the Docker image exists, creates a container,
  * and starts it to process new files.
  * @param data The data to be processed by the worker.
  * @param uuid The unique identifier for the operation.
  * @return The ID of the started container or an empty string on failure.
  */
-async function create_dropbox_on_new_file_workers(data, uuid) {
-    var onNewFileImage = path.resolve(__dirname, '../workers/dropbox/onNewFile'); // Path to the Dockerfile
-    var image_name = "on-new-file"; // Name of the Docker image
-    var workerFileName = "dropBoxWorkerOnNewFile.js" // Name of the worker file
+async function create_dropbox_workers(data, uuid, targetAction) {
+    var onNewFileImage = path.resolve(__dirname, '../workers/dropbox'); // Path to the Dockerfile
+    var image_name = "dropbox-worker"; // Name of the Docker image
+    var workerFileName = "dropboxWorker.js" // Name of the worker file
     try {
         await ensureImageExists(image_name, onNewFileImage, workerFileName);
-        const container = await create_container(data, uuid, image_name, workerFileName);
-        await container.start(); // Start the container
-        return container.id; // Return the container ID
-    } catch (e) {
-        console.log(e);
-        return "";
-    }
-}
-
-/**
- * @brief Creates and starts a worker for new shared Dropbox files.
- * This function ensures the Docker image exists, creates a container,
- * and starts it to process new shared files.
- * @param data The data to be processed by the worker.
- * @param uuid The unique identifier for the operation.
- * @return The ID of the started container or an empty string on failure.
- */
-async function create_dropbox_on_new_shares_file_workers(data, uuid) {
-    var onNewFileImage = path.resolve(__dirname, '../workers/dropbox/onNewSharesFile'); // Path to the Dockerfile
-    var image_name = "on-new-shares-file"; // Name of the Docker image
-    var workerFileName = "dropBoxWorkerOnNewSharesFile.js" // Name of the worker file
-    try {
-        await ensureImageExists(image_name, onNewFileImage, workerFileName);
-        const container = await create_container(data, uuid, image_name, workerFileName);
-        console.log("run container");
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
         await container.start(); // Start the container
         return container.id; // Return the container ID
     } catch (e) {

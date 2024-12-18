@@ -4,4 +4,4 @@ COPY . .
 
 RUN npm install
 
-CMD [ "node", "dropBoxWorkerOnNewFile.js" ]
+CMD [ "node", "dropboxWorker.js" ]
