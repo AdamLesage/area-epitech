@@ -106,16 +106,19 @@ const availableServices = ref<Service[]>([])
 const serviceIdx = ref(0);
 
 const computedServices = computed(() => {
-    // Get the 3 services at the current index (if index > services.length, return the last 3 services)
-    const startIdx = serviceIdx.value;
-    const endIdx = startIdx + 3;
-    if (endIdx >= availableServices.value.length) {
-        return availableServices.value.slice(availableServices.value.length - 3, availableServices.value.length);
+    const numServicesToShow = 5;
+    const totalServices = availableServices.value.length;
+    const serviceIdxVal = Math.abs(serviceIdx.value);
+    
+    if (totalServices === 0) return [];
+
+    const startIdx = (serviceIdxVal + totalServices) % totalServices;
+
+    const services = [];
+    for (let i = 0; i < numServicesToShow; i++) {
+        services.push(availableServices.value[(startIdx + i) % totalServices]);
     }
-    if (startIdx < 0) {
-        return availableServices.value.slice(0, 3);
-    }
-    return availableServices.value.slice(startIdx, endIdx);
+    return services;
 });
 
 function handleServiceClick(name: string) {
@@ -281,7 +284,7 @@ onMounted(async() => {
             <h2 class="text-2xl font-bold text-home-text mb-12 pt-24"><span class="text-home-light hover:cursor-pointer" @click="scrollToServices">#</span> SERVICES</h2>
             <div class="flex gap-16 flex-wrap w-full justify-center">
                 <div class="flex items-center h-48 justify-center">
-                    <ArrowComponentLeft :animate="false" :color="serviceIdx > 0 ? '#4C4CDC' : '#777'" class="text-center hover:cursor-pointer" @click="serviceIdx = (serviceIdx > 0 ? serviceIdx - 1 : serviceIdx )" />
+                    <ArrowComponentLeft :animate="false" color="#4C4CDC" class="text-center hover:cursor-pointer" @click="serviceIdx--"/>
                 </div>
                 <div
                     v-for="(service) in computedServices.slice(0, 3)"
@@ -297,8 +300,7 @@ onMounted(async() => {
                     <RateComponent :rate="service.reviews.rate" :reviews="service.reviews.count" textcolor="white" color="white" />
                 </div>
                 <div class="flex items-center h-48 justify-center">
-                    <ArrowComponentRight :animate="false" :color="serviceIdx < availableServices.length - 3 ? '#4C4CDC' : '#777'" class="text-center hover:cursor-pointer"
-                    @click="serviceIdx = (serviceIdx < availableServices.length - 3 ? serviceIdx + 1 : serviceIdx )" />
+                    <ArrowComponentRight :animate="false" color="#4C4CDC" class="text-center hover:cursor-pointer" @click="serviceIdx++"/>
                 </div>
             </div>
             <button class="w-48 h-12 bg-home-div text-white rounded-lg mt-8 hover:cursor-pointer hover:bg-home-hover border-2 border-solid border-home-light" @click="navigateTo('/')">Explore all services</button>
