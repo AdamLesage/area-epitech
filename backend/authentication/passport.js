@@ -42,7 +42,7 @@ passport.use(
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
             callbackURL: `${process.env.BACKEND_URL}/auth/github/redirect`,
-            scope: ['user:email'],
+            scope: ['user:email', 'repo'],
         },
         async (accessToken, refreshToken, profile, done) => {
             const email = profile.emails?.[0]?.value || null;
@@ -51,10 +51,8 @@ passport.use(
     )
 );
 
-// Dropbox strategie
-
+// Dropbox strategy
 const DropboxStrategy = require('passport-dropbox-oauth2').Strategy;
-
 
 passport.use(new DropboxStrategy({
     apiVersion: '2',
