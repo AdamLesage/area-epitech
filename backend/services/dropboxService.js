@@ -16,7 +16,6 @@ const redis = new Redis({
     host: 'redis',
     port: 6379
 });
-let lasteventId = "0"
 
 router.get('/webhook', (req, res) => {
     // Get the 'challenge' parameter from the query string
@@ -34,8 +33,7 @@ router.get('/webhook', (req, res) => {
 router.post('/webhook', async (req, res) => {
     try {
         // Fetch all actionReactions that are active and have the service "dropbox"
-        console.log("receive dropbox webhook", req.body)
-        // if (lasteventId == req.body.event.id) {
+
         const activeDropboxActions = await prisma.actionReaction.findMany({
             where: {
                 isActive: true,
@@ -64,3 +62,4 @@ router.post('/webhook', async (req, res) => {
 });
 
 module.exports = router;
+

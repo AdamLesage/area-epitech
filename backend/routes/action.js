@@ -102,7 +102,20 @@ router.post('/action', async (req, res) => {
 
     const uuid = uuidv4();
     // create and lunch the worker
-    const containerUuid = await actions.get(typeAction)(actionData, uuid, typeAction);
+    const linkedAccount = await prisma.linkedAccount.findFirst({
+        where: {
+            userId: user.id,
+            serviceName: action.serviceId.name, // Match the service name
+        },
+    });
+    if (!linkedAccount) {
+        return res.status(400).json({ message: 'user not linked to the service' });
+    }
+    const newActionData = {
+        accessToken: linkedAccount.authToken,
+        ...actionData
+    }
+    const containerUuid = await actions.get(typeAction)(newActionData, uuid, typeAction);
     if (containerUuid === "") {
         return res.status(400).json({ message: 'Error creating container' });
     }
@@ -114,7 +127,7 @@ router.post('/action', async (req, res) => {
                 description: "",
                 userUuid: user.uuid,
                 reactionData: reactionData,
-                actionData: actionData,
+                actionData: newActionData,
                 uuid: uuid,
                 containerUuid: containerUuid,
                 action: {

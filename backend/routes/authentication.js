@@ -358,10 +358,10 @@ router.get('/dropbox/callback',
             };
 
             const linkedAccountParams = {
-                uuid: uuidv4(),
                 serviceName: 'dropbox',
                 authToken: accessToken,
                 username: displayName,
+                uuid: req.user.id
             };
 
             // Check if the user already exists
@@ -381,6 +381,16 @@ router.get('/dropbox/callback',
                         },
                     },
                     include: { linkedAccounts: true },
+                });
+                linkedAccountParams.userId = user.id;
+
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
                 });
 
                 return res.status(201).json(user);
