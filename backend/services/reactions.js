@@ -1,4 +1,7 @@
 const axios = require('axios');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
 // Create a new Map to store reaction handlers
 const reactions = new Map();
 reactions.set('dropbox_new_file', dropbox_new_file);
@@ -11,37 +14,81 @@ reactions.set('create_pull_request', github_pull_request);
  * Handler function for the 'dropbox_new_file' reaction.
  * 
  * @param {Object} reactionData Data related to the reaction
- * @param {Object} actionResponceData Data sent by the action that triggered this reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
  */
-async function dropbox_new_file(reactionData, actionResponceData) {
-    console.log("reaction new file", reactionData, actionResponceData);
+async function dropbox_new_file(reactionData, actionResponseData) {
+    console.log("reaction new file", reactionData, actionResponseData);
 }
 
 /**
  * Handler function for the 'dropbox_shares_file' reaction.
  * 
  * @param {Object} reactionData Data related to the reaction
- * @param {Object} actionResponceData Data sent by the action that triggered this reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
  */
-async function dropbox_shares_file(reactionData, actionResponceData) {
-    console.log("reaction dropbox_shares_file", reactionData, actionResponceData);
+async function dropbox_shares_file(reactionData, actionResponseData) {
+    console.log("reaction dropbox_shares_file", reactionData, actionResponseData);
+}
+
+/**
+ * Get the Github access token for a user.
+ * @param {string} userUuid The UUID of the user
+ * @returns {string} The Github access token
+ * @throws {Error} If the user does not have a Github linked account
+ * @throws {Error} If the Github linked account does not have an access token
+ */
+async function getGithubAccessToken(userUuid) {
+    const user = await prisma.user.findUnique({
+        where: {
+            uuid: userUuid,
+        },
+    });
+
+    // Find github linked account
+    const githubAccount = await prisma.linkedAccount.findFirst({
+        where: {
+            userId: user.id,
+            serviceName: 'github',
+        },
+    });
+
+    return githubAccount.authToken;
 }
 
 /**
  * Handler function for the 'github_create_issue' reaction.
  * 
  * @param {Object} reactionData Data related to the reaction
- * @param {Object} actionResponceData Data sent by the action that triggered this reaction.
- */
-async function github_create_issue(reactionData, actionResponceData) {
-    const response = await axios.post('https://api.github.com/repos/AdamLesage/area-epitech/issues',
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+*/
+async function github_create_issue(reactionData, actionResponseData, userUuid) {
+    const repoOwner = reactionData.repoOwner || null;
+    const repoName = reactionData.repoName || null;
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getGithubAccessToken(userUuid);
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`,
         {
             "title": reactionData.title || "default title",
             "body": reactionData.body || "enter the body here",
         },
         {
             headers: {
-                Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+                Authorization: `Bearer ${accessToken}`,
                 'Accept': 'application/vnd.github+json',
                 "X-GitHub-Api-Version": "2022-11-28"
             }
@@ -55,10 +102,29 @@ async function github_create_issue(reactionData, actionResponceData) {
  * Handler function for the 'github_create_milestone' reaction.
  * 
  * @param {Object} reactionData Data related to the reaction
- * @param {Object} actionResponceData Data sent by the action that triggered this reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
  */
-async function github_create_milestone(reactionData, actionResponceData) {
-    const response = await axios.post('https://api.github.com/repos/AdamLesage/area-epitech/milestones',
+async function github_create_milestone(reactionData, actionResponseData, userUuid) {
+    const repoOwner = reactionData.repoOwner || null;
+    const repoName = reactionData.repoName || null;
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getGithubAccessToken(userUuid);
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://api.github.com/repos/${repoOwner}/${repoName}/milestones`,
         {
             "title": reactionData.title || "default title",
             "state": reactionData.state || "open",
@@ -67,7 +133,7 @@ async function github_create_milestone(reactionData, actionResponceData) {
         },
         {
             headers: {
-                Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+                Authorization: `Bearer ${accessToken}`,
                 'Accept': 'application/vnd.github+json',
                 "X-GitHub-Api-Version": "2022-11-28"
             }
@@ -80,10 +146,29 @@ async function github_create_milestone(reactionData, actionResponceData) {
 /**
  * Handler function for the 'github_pull_request' reaction.
  * @param {Object} reactionData Data related to the reaction
- * @param {Object} actionResponceData Data sent by the action that triggered this reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
  */
-async function github_pull_request(reactionData, actionResponceData) {
-    const response = await axios.post('https://api.github.com/repos/AdamLesage/area-epitech/pulls',
+async function github_pull_request(reactionData, actionResponseData, userUuid) {
+    const repoOwner = reactionData.repoOwner || null;
+    const repoName = reactionData.repoName || null;
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getGithubAccessToken(userUuid);
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://api.github.com/repos/${repoOwner}/${repoName}/pulls`,
         {
             "title": reactionData.title || "default title",
             "body": reactionData.body || "enter the body here",
@@ -91,7 +176,7 @@ async function github_pull_request(reactionData, actionResponceData) {
         },
         {
             headers: {
-                Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+                Authorization: `Bearer ${accessToken}`,
                 'Accept': 'application/vnd.github+json',
                 "X-GitHub-Api-Version": "2022-11-28"
             }
