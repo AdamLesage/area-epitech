@@ -1,0 +1,16 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "dropBoxWorkerOnNewFile.js",
+    "scripts": {
+        "test": "jest",
+        "start": "node dropBoxWorkerOnNewFile.js",
+        "coverage": "jest --coverage"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "ioredis": "^5.4.1"
+    }
+}

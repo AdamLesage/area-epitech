@@ -47,7 +47,7 @@ async function ensureImageExists(imageName, dockerfilePath, workerFileName) {
     }
 
     const tarStream = tar.pack(dockerfilePath, {
-        entries: ['Dockerfile', workerFileName],
+        entries: ['Dockerfile', workerFileName, "package.json"],
     });
 
     // Build the Docker image using the tar stream
@@ -85,10 +85,10 @@ async function create_container(data, uuid, image_name, workerFileName) {
         Env: [   
             `UUID=${uuid}`, // Set the UUID environment variable
             `DATA=${typeof data === 'object' && data !== null ? JSON.stringify(data) : '{}'}`, // Set the DATA environment variable
-            `CALL_BACK=http://127.0.0.1:8080/api/reaction/${uuid}` // Set the callback URL
+            `CALL_BACK=http://server:8080/api/reaction/${uuid}` // Set the callback URL
         ],
         HostConfig: {
-            NetworkMode: "host"
+            NetworkMode: "area-epitech_db"
         },
         Cmd: ['node', workerFileName],
         OpenStdin: false,
