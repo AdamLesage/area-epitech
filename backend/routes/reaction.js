@@ -16,7 +16,7 @@ const reactions = require("../services/reactions")
  */
 router.post('/reaction/:uuid', async (req, res) => {
     try {
-        // const uuid = req.params.uuid;
+        const uuid = req.params.uuid;
         // console.log(uuid);
         // const action = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
         // if (action == null) {
@@ -25,8 +25,8 @@ router.post('/reaction/:uuid', async (req, res) => {
         // if (reactions.get(action.typeReaction) == undefined) {
         //     return res.status(404).send("unknow Reaction");
         // }
-        console.log("receive reaction", req.body);
-        reactions.get(action.typeReaction)(action.reactionData, req.body);
+        console.log("receive reaction", "uuid", uuid , "body" , req.body);
+        // reactions.get(action.typeReaction)(action.reactionData, req.body);
         res.json({ message: "receive reaction" });
     } catch (e) {
         console.error("Error on receive reaction", e);

@@ -8,7 +8,7 @@ const redis = new Redis({
 async function processWebhook() {
     while (true) {
         // await new Promise(resolve => setTimeout(resolve, 1000));
-        const data = await redis.rpop('webhookQueue');
+        const data = await redis.rpop(process.env.UUID);
         if (data) {
             console.log(data)
             const webhookData = JSON.parse(data);
