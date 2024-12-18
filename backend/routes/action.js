@@ -47,7 +47,6 @@ router.get('/action', async (req, res) => {
  *   }
  * @author Romain Chevallier
  */
-
 router.post('/action', async (req, res) => {
     const { title, typeAction, typeReaction, reactionData, actionData } = req.body;
     // check user autentification

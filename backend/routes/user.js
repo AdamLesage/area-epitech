@@ -247,17 +247,18 @@ router.delete('/user/:uuid', async (req, res) => {
 
     // Check if headers given are correct
     if (headers.authorization) {
+        const authToken = headers.authorization.split(' ')[1];
         const user = await prisma.user.findUnique({
             where: {
-                authToken: headers.authorization,
+                authToken: authToken,
             },
         });
 
         if (!user) {
-            return res.status(401).json({ error: 'Unauthorized' });
+            return res.status(404).json({ error: 'User not found' });
         }
     } else {
-        return res.status(401).json({ error: 'Unauthorized' });
+        return res.status(401).json({ error: 'Unauthorized: No auth token' });
     }
 
     try {
@@ -290,7 +291,7 @@ router.put('/user/:uuid', async (req, res) => {
         });
 
         if (!user) {
-            return res.status(401).json({ error: 'Unauthorized' });
+            return res.status(404).json({ error: 'User not found' });
         }
     } else {
         return res.status(401).json({ error: 'Unauthorized' });
