@@ -38,20 +38,15 @@ async function dropbox_shares_file(reactionData, actionResponseData) {
  * @throws {Error} If the Github linked account does not have an access token
  */
 async function getGithubAccessToken(userUuid) {
-    const user = await prisma.user.findUnique({
-        where: {
-            uuid: userUuid,
-        },
+    let user = await prisma.user.findUnique({
+        where: { uuid: userUuid },
+        include: { linkedAccounts: true },
     });
 
     // Find github linked account
-    const githubAccount = await prisma.linkedAccount.findFirst({
-        where: {
-            userId: user.id,
-            serviceName: 'github',
-        },
-    });
-
+    const githubAccount = user.linkedAccounts.find(
+        account => account.serviceName === 'github'
+    );
     return githubAccount.authToken;
 }
 
