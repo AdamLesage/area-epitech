@@ -192,17 +192,18 @@ const createArea = async () => {
 
     const token = Cookies.get('token');
 
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/action-reaction`, {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/action`, {
         title: title.value,
-        userUuid: user.uuid,
-        description: 'None',
-        actionName: selectedAction.value,
-        reactionName: selectedReaction.value,
-        reactionData: {},
+        typeAction: selectedAction.value,
+        typeReaction: selectedReaction.value,
+        reactionData: {
+          "repoOwner": "area-ownspace",
+          "repoName": "demo-repository",
+        },
         actionData: {},
     },{
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
         },
     });
 

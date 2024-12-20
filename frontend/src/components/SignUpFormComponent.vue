@@ -213,17 +213,7 @@ const onSubmit: SubmissionHandler<SignUpFormValues, GenericObject, unknown> = (v
 const authWithGoogle: () => void = () => console.log('Authenticating with Google...');
 const authWithGithub: () => void = async () => {
     console.log('Authenticating with Github...');
-    const res: { status: number, data: User } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/github`);
-    if (res.status === 200 || res.status === 201) {
-        console.log('Github authentication successful');
-        Cookies.set('token', res.data.authToken);
-        Cookies.set('email', res.data.email);
-        store.setUser(res.data);
-        router.push('/dashboard');
-    } else {
-        console.error('Github authentication failed');
-    }
-    console.log(res);
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github`;
 }
 const authWithTwitter: () => void = () => console.log('Authenticating with Twitter...');
 const authWithApple: () => void = () => console.log('Authenticating with Apple...');
