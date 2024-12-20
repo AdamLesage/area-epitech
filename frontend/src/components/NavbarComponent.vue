@@ -1,6 +1,6 @@
 <template>
     <header class="flex flex-col md:flex-row items-center justify-between bg-indigo-900 py-4 px-8 shadow-lg">
-        <!-- Titre principal -->
+        <!-- Main Title -->
         <h1 
             class="text-3xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer text-white" 
             @click="navigateTo('/')"
@@ -8,7 +8,7 @@
             AREA
         </h1>
 
-        <!-- Bouton Menu  pour Mobile -->
+        <!-- Menu Button for Mobile App -->
         <button 
             @click="toggleMenu" 
             class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-white p-2 rounded" 
@@ -42,20 +42,20 @@
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 
-// Contrôle de l'état du menu burger
+// Menu Burger
 const isMenuOpen = ref(false);
 
-// Fonction pour afficher/masquer le menu
+// Toggle Menu
 function toggleMenu() {
     isMenuOpen.value = !isMenuOpen.value;
 }
 
-// Fonction pour naviguer vers une route spécifique
+// Navigate to a given route
 function navigateTo(route: string) {
     console.log(`Navigating to ${route}`);
 }
 
-// Liste des liens du header
+// Header links for the navigation
 const headerLinks = [
     { name: 'Explore', icon: 'mdi:compass-outline', route: '' },
     { name: 'My Areas', icon: 'mdi:folder-outline', route: '/areas' },
@@ -65,7 +65,7 @@ const headerLinks = [
 </script>
 
 <style scoped>
-/* Ajout d'une animation pour l'affichage du menu */
+/* Menu animation */
 nav {
     transition: all 0.3s ease-in-out;
 }

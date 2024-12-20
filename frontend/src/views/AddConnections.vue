@@ -1,8 +1,8 @@
 <template>
     <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white font-sans flex justify-center items-center px-4 sm:px-8">
-        <!-- Container principal -->
+        <!-- Main container -->
         <div class="bg-gray-900 rounded-3xl p-6 sm:p-10 w-full max-w-3xl text-center shadow-2xl relative">
-            <!-- Bouton Back -->
+            <!-- Back button -->
             <button 
                 @click="goBack" 
                 class="absolute top-4 right-4 p-2 sm:p-3 md:p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all text-sm sm:text-lg md:text-xl focus:outline-none focus:ring-2 focus:ring-gray-500" 
@@ -11,10 +11,10 @@
             >
                 Back
             </button>
-            <!-- Titre -->
+            <!-- Title -->
             <h2 class="text-2xl sm:text-4xl font-semibold mb-6 sm:mb-8 tracking-wide">Add a New Connection</h2>
 
-            <!-- Grille d'icônes responsive -->
+            <!-- Responsive icons grid -->
             <div class="grid grid-cols-3 sm:grid-cols-4 gap-4 sm:gap-6">
                 <button
                     v-for="platform in platforms"
@@ -23,8 +23,7 @@
                     @click="selectPlatform(platform.name)"
                     class="p-4 sm:p-6 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all focus:outline-none focus:ring-2 focus:ring-white"
                     :aria-label="`Select ${platform.name}`"
-                    role="button"
-                >
+                    role="button">
                     <Icon :icon="platform.icon" class="text-3xl sm:text-4xl text-white" />
                 </button>
             </div>
@@ -38,7 +37,6 @@ import { Icon } from "@iconify/vue";
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
 
 // List of platforms to connect to with their respective icons and colors
 const platforms = ref([
