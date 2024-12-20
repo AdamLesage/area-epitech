@@ -14,6 +14,11 @@ const actions = require("../services/actions");
 const reactions = require("../services/reactions");
 var Docker = require('dockerode');
 var docker = new Docker();
+const Redis = require('ioredis');
+const redis = new Redis({
+    host: 'redis',
+    port: 6379
+});
 
 /**
  * @brief return a list of all actions of the user
@@ -80,28 +85,66 @@ router.post('/action', async (req, res) => {
             authToken: headers.authorization,
         },
     });
+    const action = await prisma.action.findFirst({
+        where: {
+            name: typeAction,
+        },
+    });
+
+    if (!action) {
+        return res.status(400).json({ message: 'Action not found' });
+    }
+    const reaction = await prisma.reaction.findFirst({
+        where: {
+            name: typeReaction,
+        },
+    });
+
     const uuid = uuidv4();
     // create and lunch the worker
-    const containerUuid = await actions.get(typeAction)(actionData, uuid);
+    const linkedAccount = await prisma.linkedAccount.findFirst({
+        where: {
+            userId: user.id,
+            serviceName: action.serviceId.name, // Match the service name
+        },
+    });
+    if (!linkedAccount) {
+        return res.status(400).json({ message: 'user not linked to the service' });
+    }
+    const newActionData = {
+        accessToken: linkedAccount.authToken,
+        ...actionData
+    }
+    const containerUuid = await actions.get(typeAction)(newActionData, uuid, typeAction);
+    if (containerUuid === "") {
+        return res.status(400).json({ message: 'Error creating container' });
+    }
     try {
         // create the action reaction object
         const newAction = await prisma.actionReaction.create({
             data: {
                 title: title,
-                uuid: uuid,
-                typeAction: typeAction,
-                typeReaction: typeReaction,
-                actionData: actionData,
+                description: "",
+                userUuid: user.uuid,
                 reactionData: reactionData,
-                user: {
-                    connect: { id: user.id },
-                },
+                actionData: newActionData,
+                uuid: uuid,
                 containerUuid: containerUuid,
+                action: {
+                    connect: {
+                        id: action.id,
+                    },
+                },
+                reaction: {
+                    connect: {
+                        id: reaction.id,
+                    },
+                },
             },
         });
         res.json(newAction);
     } catch (e) {
-        console.error(e);
+        console.error("Error on create action ", e);
         return res.status(500).send("error on create action");
     }
 });

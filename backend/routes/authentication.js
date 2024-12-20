@@ -339,4 +339,90 @@ router.get('/github/redirect',
     }
 );
 
+// DropBox auth routes
+
+router.get('/dropbox', passport.authenticate('dropbox-oauth2'));
+
+router.get('/dropbox/callback', 
+    passport.authenticate('dropbox-oauth2', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            const { email, displayName, username, token: accessToken } = req.user;
+
+            const userParams = {
+                email: email,
+                name: displayName,
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: accessToken,
+            };
+
+            const linkedAccountParams = {
+                serviceName: 'dropbox',
+                authToken: accessToken,
+                username: displayName,
+                uuid: req.user.id
+            };
+
+            // Check if the user already exists
+            let user = await prisma.user.findUnique({
+                where: { email: userParams.email },
+                include: { linkedAccounts: true }, // Include linked accounts in the result
+            });
+
+            if (!user) {
+                // Create a new user
+                userParams.authToken = uuidv4(); // Add authentication token
+                user = await prisma.user.create({ 
+                    data: {
+                        ...userParams,
+                        linkedAccounts: {
+                            create: [linkedAccountParams],
+                        },
+                    },
+                    include: { linkedAccounts: true },
+                });
+                linkedAccountParams.userId = user.id;
+
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                return res.status(201).json(user);
+            }
+
+            // Check if the account is already linked
+            const linkedAccount = user.linkedAccounts.find(
+                account => account.serviceName === 'dropbox'
+            );
+
+            if (!linkedAccount) {
+                await prisma.linkedAccount.create({ 
+                    data: {
+                        ...linkedAccountParams,
+                        userId: user.id, // Use the numeric ID from Prisma
+                    },
+                });
+
+                // Refresh user data to include the new linked account
+                user = await prisma.user.findUnique({
+                    where: { email: userParams.email },
+                    include: { linkedAccounts: true },
+                });
+            }
+
+            // Return the existing user
+            return res.status(200).json(user);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        }
+    }
+);
+
 module.exports = router;

@@ -7,9 +7,21 @@ var docker = new Docker();
 
 // Create a map to hold creation of action worker
 const actions = new Map();
-actions.set('dropbox_on_new_file', create_dropbox_on_new_file_workers);
-actions.set('dropbox_on_new_shares_file', create_dropbox_on_new_shares_file_workers);
-
+actions.set('dropbox_on_new_file', create_dropbox_workers);
+actions.set('dropbox_on_new_shares_file', create_dropbox_workers);
+actions.set('pull_request_review.submitted', create_github_workers);
+actions.set('pull_request.labeled', create_github_workers);
+actions.set('pull_request.unlabeled', create_github_workers);
+actions.set('issues.labeled', create_github_workers);
+actions.set('issues.unlabeled', create_github_workers);
+actions.set('issues.assigned', create_github_workers);
+actions.set('issues.unassigned', create_github_workers);
+actions.set('pull_request.assigned', create_github_workers);
+actions.set('pull_request.unassigned', create_github_workers);
+actions.set('issues.opened', create_github_workers);
+actions.set('issues.closed', create_github_workers);
+actions.set('pull_request.opened', create_github_workers);
+actions.set('pull_request.closed', create_github_workers);
 
 /**
  * @brief Ensures that a Docker image exists.
@@ -47,7 +59,7 @@ async function ensureImageExists(imageName, dockerfilePath, workerFileName) {
     }
 
     const tarStream = tar.pack(dockerfilePath, {
-        entries: ['Dockerfile', workerFileName],
+        entries: ['Dockerfile', workerFileName, "package.json"],
     });
 
     // Build the Docker image using the tar stream
@@ -75,7 +87,7 @@ async function ensureImageExists(imageName, dockerfilePath, workerFileName) {
  * @param workerFileName The name of the worker file
  * @return the docker container created
  */
-async function create_container(data, uuid, image_name, workerFileName) {
+async function create_container(data, uuid, image_name, workerFileName, targetAction) {
     return await docker.createContainer({
         Image: image_name, // Specify the image to use for the container
         AttachStdin: false,
@@ -85,10 +97,11 @@ async function create_container(data, uuid, image_name, workerFileName) {
         Env: [   
             `UUID=${uuid}`, // Set the UUID environment variable
             `DATA=${typeof data === 'object' && data !== null ? JSON.stringify(data) : '{}'}`, // Set the DATA environment variable
-            `CALL_BACK=http://127.0.0.1:8080/api/reaction/${uuid}` // Set the callback URL
+            `CALL_BACK=http://server:8080/api/reaction/${uuid}`, // Set the callback URL
+            `TARGET_ACTION=${targetAction}`
         ],
         HostConfig: {
-            NetworkMode: "host"
+            NetworkMode: "area-epitech_db"
         },
         Cmd: ['node', workerFileName],
         OpenStdin: false,
@@ -97,20 +110,20 @@ async function create_container(data, uuid, image_name, workerFileName) {
 }
 
 /**
- * @brief Creates and starts a worker for new Dropbox files.
+ * @brief Creates and starts a worker for Dropbox.
  * This function ensures the Docker image exists, creates a container,
  * and starts it to process new files.
  * @param data The data to be processed by the worker.
  * @param uuid The unique identifier for the operation.
  * @return The ID of the started container or an empty string on failure.
  */
-async function create_dropbox_on_new_file_workers(data, uuid) {
-    var onNewFileImage = path.resolve(__dirname, '../workers/dropbox/onNewFile'); // Path to the Dockerfile
-    var image_name = "on-new-file"; // Name of the Docker image
-    var workerFileName = "dropBoxWorkerOnNewFile.js" // Name of the worker file
+async function create_dropbox_workers(data, uuid, targetAction) {
+    var onNewFileImage = path.resolve(__dirname, '../workers/dropbox'); // Path to the Dockerfile
+    var image_name = "dropbox-worker"; // Name of the Docker image
+    var workerFileName = "dropboxWorker.js" // Name of the worker file
     try {
         await ensureImageExists(image_name, onNewFileImage, workerFileName);
-        const container = await create_container(data, uuid, image_name, workerFileName);
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
         await container.start(); // Start the container
         return container.id; // Return the container ID
     } catch (e) {
@@ -120,21 +133,20 @@ async function create_dropbox_on_new_file_workers(data, uuid) {
 }
 
 /**
- * @brief Creates and starts a worker for new shared Dropbox files.
+ * @brief Creates and starts a worker for Dropbox.
  * This function ensures the Docker image exists, creates a container,
- * and starts it to process new shared files.
+ * and starts it to process github action.
  * @param data The data to be processed by the worker.
  * @param uuid The unique identifier for the operation.
  * @return The ID of the started container or an empty string on failure.
  */
-async function create_dropbox_on_new_shares_file_workers(data, uuid) {
-    var onNewFileImage = path.resolve(__dirname, '../workers/dropbox/onNewSharesFile'); // Path to the Dockerfile
-    var image_name = "on-new-shares-file"; // Name of the Docker image
-    var workerFileName = "dropBoxWorkerOnNewSharesFile.js" // Name of the worker file
+async function create_github_workers(data, uuid, targetAction) {
+    var onNewFileImage = path.resolve(__dirname, '../workers/github'); // Path to the Dockerfile
+    var image_name = "github-worker"; // Name of the Docker image
+    var workerFileName = "githubWorker.js" // Name of the worker file
     try {
         await ensureImageExists(image_name, onNewFileImage, workerFileName);
-        const container = await create_container(data, uuid, image_name, workerFileName);
-        console.log("run container");
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
         await container.start(); // Start the container
         return container.id; // Return the container ID
     } catch (e) {
