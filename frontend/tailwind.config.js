@@ -44,6 +44,16 @@ export default {
           DEFAULT: '#79777B',
           100: '#D9D9D9',
         }
+      },
+      'home': {
+        DEFAULT: '#1C1C53',
+        text: {
+          DEFAULT: '#4C4CDC',
+          light: '#B4B4F2',
+        },
+        div: '#13134C',
+        light: '#373779',
+        hover: '#131340',
       }
     },
     extend: {
