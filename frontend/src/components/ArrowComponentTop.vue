@@ -3,11 +3,14 @@ import { Icon } from '@iconify/vue';
 
 defineProps<{
     color: string,
+    animate: boolean
 }>()
 </script>
 
 <template>
-    <Icon icon="solar:arrow-down-bold-duotone" class="w-6 h-6 animation-up-down" :style="{ color: color }" />
+    <Icon icon="iconamoon:arrow-up-2-light"
+        :class="'w-12 h-12 ' + (animate ? 'animation-up-down' : '')"
+        :style="{ color: color }" />
 </template>
 
 <style scoped>
@@ -16,7 +19,7 @@ defineProps<{
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-10px);
+        transform: translateY(10px);
     }
 }
 
