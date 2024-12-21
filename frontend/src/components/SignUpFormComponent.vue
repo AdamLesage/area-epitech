@@ -11,6 +11,7 @@
                 <AuthButton icon="ic:baseline-apple" color="black" @click="authWithApple" />
                 <AuthButton icon="flat-color-icons:google" color="" @click="authWithGoogle" />
                 <AuthButton icon="logos:microsoft-icon" color="blue" @click="authWithMicrosoft" />
+                <AuthButton icon="logos:spotify-icon" color="green" @click="authWithSpotify" />
             </div>
             <div class="flex justify-between items-center px-4">
                 <span class="w-2/5 web:bg-auth-neutral mobile:bg-auth-secondary h-0.5 rounded-md"></span>
@@ -218,6 +219,10 @@ const authWithGithub: () => void = async () => {
 const authWithTwitter: () => void = () => console.log('Authenticating with Twitter...');
 const authWithApple: () => void = () => console.log('Authenticating with Apple...');
 const authWithMicrosoft: () => void = () => console.log('Authenticating with Microsoft...');
+const authWithSpotify: () => void = async () => {
+    console.log('Authenticating with Spotify...');
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify`;
+}
 </script>
 
 <style scoped>

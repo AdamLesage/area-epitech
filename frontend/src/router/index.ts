@@ -74,6 +74,11 @@ const router = createRouter({
       component: () => import('@/views/GithubCallbackPage.vue'),
     },
     {
+      path: '/spotify-callback',
+      name: 'spotify-callback',
+      component: () => import('@/views/SpotifyCallbackPage.vue'),
+    },
+    {
       path: '/spotify',
       name: 'spotify',
       component: () => import('@/components/SpotifyProfile.vue'),

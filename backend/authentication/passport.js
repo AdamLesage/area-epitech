@@ -80,3 +80,20 @@ passport.use(new DropboxStrategy({
   }
 ));
 
+const SpotifyStrategy = require('passport-spotify').Strategy;
+
+passport.use(
+  new SpotifyStrategy(
+    {
+      clientID: process.env.SPOTIFY_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      callbackURL: `${process.env.BACKEND_URL}/auth/spotify/callback`,
+    //   scope: ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private'],
+    },
+    function(accessToken, refreshToken, expires_in, profile, done) {
+      User.findOrCreate({ spotifyId: profile.id }, function(err, user) {
+        return done(err, user);
+      });
+    }
+  )
+);
