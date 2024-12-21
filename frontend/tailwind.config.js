@@ -7,6 +7,9 @@ export default {
     './index.html',
   ],
   theme: {
+    fontFamily: {
+      sans: ['geist', 'sans-serif'],
+    },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
