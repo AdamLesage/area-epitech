@@ -27,7 +27,87 @@
       "rate": 4.8,
       "count": 250000
     },
-    "saves": 2250000
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "pull_request",
+        "display_name": "Pull Request",
+        "actions": [
+          {
+            "name": "pull_request_review.submitted",
+            "display_name": "Pull Request Review Submitted",
+            "description": "A pull request review is submitted",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:git-pull-request",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "issue",
+        "display_name": "Issue",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "create_issue",
+            "display_name": "Create a new issue",
+            "description": "Create a new issue",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:git-issue",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "title",
+                "display_name": "Title",
+                "description": "The title of the issue",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the issue",
+                "type": "textarea",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     "name":"spotify",
