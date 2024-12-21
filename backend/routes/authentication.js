@@ -445,34 +445,39 @@ router.get('/dropbox/callback',
 );
 
 // Spotify auth routes
-router.get('/spotify', passport.authenticate('spotify'));
+router.get('/spotify', passport.authenticate('spotify', {
+    scope: ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private'],
+    showDialog: true,
+}));
 
 router.get('/spotify/callback', 
     passport.authenticate('spotify', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
-            const { email, displayName, username, token: accessToken } = req.user;
-
-            const userParams = {
-                email: email,
-                name: displayName,
-                surname: '',
-                uuid: uuidv4(),
-                hashedPassword: accessToken,
-            };
-
-            const linkedAccountParams = {
-                serviceName: 'spotify',
-                authToken: accessToken,
-                username: displayName,
-                uuid: req.user.id
-            };
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
 
             // Check if the user already exists
             let user = await prisma.user.findUnique({
-                where: { email: userParams.email },
-                include: { linkedAccounts: true }, // Include linked accounts in the result
+                where: { email: req.user.email },
+                include: { linkedAccounts: true },
             });
+
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'spotify',
+                authToken: req.user.accessToken,
+                username: req.user.username || 'Username not found',
+            };
+
+            const userParams = {
+                email: req.user.email,
+                name: req.user.displayName || '',
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.accessToken,
+            };
 
             if (!user) {
                 // Create a new user
@@ -496,31 +501,27 @@ router.get('/spotify/callback',
                         userId: user.id,
                     },
                 });
-
-                return res.redirect(`${process.env.FRONTEND_URL}/#/spotify-callback?token=${user.authToken}&email=${user.email}`);
+            } else {
+                // Check if the account is already linked
+                const linkedAccount = user.linkedAccounts.find(
+                    account => account.serviceName === 'spotify'
+                );
+    
+                if (!linkedAccount) {
+                    await prisma.linkedAccount.create({ 
+                        data: {
+                            ...linkedAccountParams,
+                            userId: user.id, // Use the numeric ID from Prisma
+                        },
+                    });
+    
+                    // Refresh user data to include the new linked account
+                    user = await prisma.user.findUnique({
+                        where: { email: userParams.email },
+                        include: { linkedAccounts: true },
+                    });
+                }
             }
-
-            // Check if the account is already linked
-            const linkedAccount = user.linkedAccounts.find(
-                account => account.serviceName === 'spotify'
-            );
-
-            if (!linkedAccount) {
-                await prisma.linkedAccount.create({ 
-                    data: {
-                        ...linkedAccountParams,
-                        userId: user.id, // Use the numeric ID from Prisma
-                    },
-                });
-
-                // Refresh user data to include the new linked account
-                user = await prisma.user.findUnique({
-                    where: { email: userParams.email },
-                    include: { linkedAccounts: true },
-                });
-            }
-
-            // Return the existing user
             return res.redirect(`${process.env.FRONTEND_URL}/#/spotify-callback?token=${user.authToken}&email=${user.email}`);
         } catch (error) {
             console.error(error);
