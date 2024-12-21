@@ -9,6 +9,7 @@
                 <AuthButton icon="mdi:github" color="black" @click="authWithGithub" />
                 <AuthButton icon="prime:twitter" color="black" @click="authWithTwitter" />
                 <AuthButton icon="ic:baseline-apple" color="black" @click="authWithApple" />
+                <AuthButton icon="logos:spotify-icon" color="green" @click="authWithSpotify" />
                 <AuthButton icon="flat-color-icons:google" color="" @click="authWithGoogle" />
                 <AuthButton icon="logos:microsoft-icon" color="blue" @click="authWithMicrosoft" />
             </div>
@@ -154,6 +155,20 @@ const authWithGithub: () => void = async () => {
 }
 const authWithTwitter: () => void = () => console.log('Authenticating with Twitter...');
 const authWithApple: () => void = () => console.log('Authenticating with Apple...');
+const authWithSpotify: () => void = async () => {
+    console.log('Authenticating with Spotify...');
+    const res: { status: number, data: User } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/spotify`);
+    if (res.status === 200 || res.status === 201) {
+        console.log('Spotify authentication successful');
+        Cookies.set('token', res.data.authToken);
+        Cookies.set('email', res.data.email);
+        store.setUser(res.data);
+        router.push('/spotify');
+    } else {
+        console.error('Spotify authentication failed');
+    }
+    console.log(res);
+}
 const authWithMicrosoft: () => void = () => console.log('Authenticating with Microsoft...');
 </script>
 

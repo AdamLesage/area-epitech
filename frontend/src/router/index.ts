@@ -68,6 +68,11 @@ const router = createRouter({
       name: 'aboutus',
       component: () => import('@/views/AboutUsPage.vue'),
     },
+    {
+      path: '/spotify',
+      name: 'spotify',
+      component: () => import('@/components/SpotifyProfile.vue'),
+    },
   ],
 })
 
