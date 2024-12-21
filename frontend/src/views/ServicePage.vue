@@ -19,10 +19,10 @@ const serviceId: string = Array.isArray(route.params.id) ? route.params.id[0] : 
 
 const store = useServiceStore();
 console.log('Service ID:', serviceId);
-const service = store.services.find(service => service.name === serviceId);
+const service = store.services.find(service => service.name === serviceId) || null;
 console.log('Service:', service);
 
-if (service === undefined) {
+if (!service) {
     console.error('Service not found');
     router.push('/dashboard');
 }
@@ -35,15 +35,23 @@ const reviews = ref<number>(service!.reviews.count);
 const saves = ref<number>(service!.saves);
 const isActivated = ref<boolean>(true);
 const nbActions = ref<number>(0);
+const nbReactions = ref<number>(0);
 
-if (service?.actions) {
-    nbActions.value = service.actions.length;
+const view = ref<string>('overview');
+
+function switchView(newView: string) {
+    console.log('Switching view to:', newView);
+    view.value = newView;
 }
 
-const nbTriggers = ref<number>(0);
-
-if (service?.reactions) {
-    nbTriggers.value = service.reactions.length;
+if (service && service.categories) {
+    for (const category of service.categories) {
+        console.log('Category:', category);
+        nbActions.value += category.actions.length;
+        nbReactions.value += category.reactions.length;
+    }
+} else {
+    console.error('No categories found in service');
 }
 
 const nameCapitalized = ref(name.value.toUpperCase());
@@ -109,6 +117,25 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
         isHeroVisible.value = true;
     }
 }
+
+function scrollToHavingTrouble() {
+    const element = document.getElementById('having-trouble');
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function copyEmail() {
+    navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
+    alert('Email copied to clipboard');
+}
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+};
 </script>
 
 <template>
@@ -130,7 +157,7 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
                 <div class="flex flex-col justify-end items-center p-4">
                     <h1 class="text-white web:text-[6rem] mobile:text-[3rem] web:leading-[5rem] mobile:leading-[2.5rem] font-bold">{{ nameCapitalized }}</h1>
-                    <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbTriggers }} Triggers / {{ nbActions }} Actions</h2>
+                    <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbActions }} Actions / {{ nbReactions }} Reactions</h2>
                 </div>
             </div>
             <div
@@ -155,7 +182,7 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
             </div>
         </div>
         <div class="flex flex-col web:hidden gap-2">
-            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbTriggers }} Triggers / {{ nbActions }} Actions</h2>
+            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbActions }} Actions / {{ nbReactions }} Reactions</h2>
             <div class="flex flex-row gap-2 items-center justify-center">
                 <button class="rounded-full py-2 px-6 bg-white w-32">
                     <h1 class="font-semibold">Activate</h1>
@@ -184,7 +211,7 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
                 <div class="flex flex-col justify-end items-center p-4">
                     <h1 class="text-white text-[6rem] leading-[5rem] font-bold">{{ nameCapitalized }}</h1>
-                    <h2 class="text-white text-xl font-medium text-right w-full pr-2">{{ nbTriggers }} Triggers / {{ nbActions }} Actions</h2>
+                    <h2 class="text-white text-xl font-medium text-right w-full pr-2">{{ nbActions }} Actions / {{ nbReactions }} Reactions</h2>
                 </div>
             </div>
             <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden"
@@ -198,7 +225,7 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
                     <Icon :icon="logo" class="web:w-36 mobile:w-[48px] web:h-36 mobile:h-[48px] text-white" />
                     <div class="flex flex-col justify-end items-center web:p-4 mobile:p-2">
                         <h1 class="text-white web:text-[6rem] mobile:text-[2rem] web:leading-[5rem] mobile:leading-[1.75rem] font-bold">{{ nameCapitalized }}</h1>
-                        <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbTriggers }} Triggers / {{ nbActions }} Actions</h2>
+                        <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbActions }} Actions / {{ nbReactions }} Reactions</h2>
                     </div>
                 </div>
                 <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer mr-4" />
@@ -210,30 +237,15 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
             </div>
             <div class="flex flex-col items-center justify-start w-full p-4 web:hidden gap-4 overflow-y-scroll"
                 @wheel.stop
-                v-if="service && service.actions && service.reactions">
-                <AREAInfoComponent
-                    v-for="action in service.actions"
-                    :key="action.name"
-                    :values="action"
-                    :icon="logo"
-                    :color="color"
-                    @menu-click="handleMenuClick(action.name)"
-                    @more-click="handleMoreClick(action.name)"
-                    @configure-click="handleConfigureClick(action.name)" />
-                <AREAInfoComponent
-                    v-for="reaction in service.reactions"
-                    :key="reaction.name"
-                    :values="reaction"
-                    :icon="logo"
-                    :color="color"
-                    @menu-click="handleMenuClick(reaction.name)"
-                    @more-click="handleMoreClick(reaction.name)"
-                    @configure-click="handleConfigureClick(reaction.name)" />
+                v-if="service">
+                <div v-for="category in service.categories" :key="category.name">
+                    <h1 class="text-white bg-black text-xl font-bold p-2 rounded-full w-full text-center">{{ category.name }}</h1>
+                </div>
             </div>
             <div class="mobile:hidden" />
             <MobileServiceNavComponent @back-button="handleBackButtonSecondPage" class="web:hidden" />
         </div>
-        <div class="flex justify-between items-center p-8 mobile:hidden">
+        <div class="flex justify-between items-center p-8 mobile:hidden web:hidden">
             <RateComponent :rate="rate" :reviews="reviews" :color="color" textcolor="black" class="w-1/3" />
             <div class="w-1/3 flex justify-center">
                 <div 
@@ -259,26 +271,140 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
             </div>
             <SaveComponent :saves="saves" :color="color" textcolor="black" class="w-1/3 flex justify-end" />
         </div>
-        <div class="flex flex-wrap gap-8 p-8 justify-center mobile:hidden"
-            v-if="service && service.actions">
-            <AREAInfoComponent
-                v-for="action in service.actions"
-                :key="action.name"
-                :values="action"
-                :icon="logo"
-                :color="color"
-                @menu-click="handleMenuClick(action.name)"
-                @more-click="handleMoreClick(action.name)"
-                @configure-click="handleConfigureClick(action.name)" />
-            <AREAInfoComponent
-                v-for="reaction in service.reactions"
-                :key="reaction.name"
-                :values="reaction"
-                :icon="logo"
-                :color="color"
-                @menu-click="handleMenuClick(reaction.name)"
-                @more-click="handleMoreClick(reaction.name)"
-                @configure-click="handleConfigureClick(reaction.name)" />
+        <div class="flex justify-center w-full gap-8 mt-6">
+            <button class="text-lg font-black hover:cursor-pointer decoration-2 hover:underline"
+                :class="view === 'overview' ? 'underline' : ''"
+                :style="{ color: service!.color, textDecorationColor: service!.color }"
+                @click="switchView('overview')">
+                Overview
+            </button>
+            <button class="text-lg font-black hover:cursor-pointer decoration-2 hover:underline"
+                :class="view === 'actions' ? 'underline' : ''"
+                :style="{ color: service!.color, textDecorationColor: service!.color }"
+                @click="switchView('actions')">
+                Actions
+            </button>
+            <button class="text-lg font-black hover:cursor-pointer decoration-2 hover:underline"
+                :class="view === 'reactions' ? 'underline' : ''"
+                :style="{ color: service!.color, textDecorationColor: service!.color }"
+                @click="switchView('reactions')">
+                Reactions
+            </button>
+            <button class="text-lg font-black hover:cursor-pointer decoration-2 hover:underline"
+                :class="view === 'details' ? 'underline' : ''"
+                :style="{ color: service!.color, textDecorationColor: service!.color }"
+                @click="switchView('details')">
+                Details
+            </button>
         </div>
+        <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-12"
+            v-if="service && view === 'actions'">
+            <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
+                :style="{ backgroundColor: service.color }">
+                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <h1 class="text-3xl font-extrabold text-white mb-2">Actions: {{ nbActions }}</h1>
+                <p class="text-lg text-white/80 text-center">
+                    Actions are triggered by events on the platform. They are retrieved automatically.<br />
+                    Click on an action card to see more details.
+                </p>
+            </div>
+            <div v-for="(category) in service.categories" :key="category.name"
+                class="flex justify-center w-[66.75rem]">
+                <div class="flex flex-col items-center w-full gap-4 mt-6" v-if="category.actions.length != 0">
+                    <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1" :style="{ color: service.color }">{{ category.display_name }}</h1>
+                    <div class="flex flex-wrap gap-6 w-full">
+                        <AREAInfoComponent
+                            v-for="action in category.actions"
+                            :key="action.name"
+                            :object="action"
+                            :color="service.color"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-12"
+            v-if="service && view === 'reactions'">
+            <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
+                :style="{ backgroundColor: service.color }">
+                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <h1 class="text-3xl font-extrabold text-white mb-2">Reactions: {{ nbReactions }}</h1>
+                <p class="text-lg text-white/80 text-center">
+                    Reactions are triggered by actions on the platform. They are executed automatically.<br />
+                    Click on a reaction card to see more details.
+                </p>
+            </div>
+            <div v-for="(category) in service.categories" :key="category.name"
+                class="flex justify-center w-[66.75rem]">
+                <div class="flex flex-col items-center w-full gap-4 mt-6" v-if="category.reactions.length != 0">
+                    <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1" :style="{ color: service.color }">{{ category.display_name }}</h1>
+                    <div class="flex flex-wrap gap-6 w-full">
+                        <AREAInfoComponent
+                            v-for="reaction in category.reactions"
+                            :key="reaction.name"
+                            :object="reaction"
+                            :color="service.color"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-12"
+            v-if="service && view === 'details'">
+            <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
+                :style="{ backgroundColor: service.color }">
+                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <h1 class="text-3xl font-extrabold text-white">{{ nameCapitalized }}</h1>
+                <p class="text-lg text-white/80 text-center">
+                    color: {{ service.color }}
+                </p>
+            </div>
+            <div class="flex flex-col justify-center items-start w-[66.75rem] p-6 gap-4">
+                <div class="flex justify-between w-full">
+                    <RateComponent :rate="service.reviews.rate" :reviews="service.reviews.count" :color="service.color" textcolor="#6b7280"/>
+                    <SaveComponent :saves="service.saves" :color="service.color" textcolor="#6b7280"/>
+                </div>
+                <h1 class="text-xl font-black text-start w-full rounded-lg pl-1 text-gray-900 mt-4">Categories:</h1>
+                <div class="flex justify-start flex-wrap w-full gap-4">
+                    <div class="gap-4 px-4 py-1 rounded-md" :style="{ backgroundColor: service.color }" v-for="category in service.categories" :key="category.name">
+                        <h1 class="text-lg font-semibold text-start w-full rounded-lg text-white">{{ category.display_name }}</h1>
+                    </div>
+                </div>
+                <h1 id="having-trouble" class="text-xl font-black text-start w-full rounded-lg pl-1 text-gray-900 mt-8 mb-4"><span class="hover:cursor-pointer text-gray-500" @click="scrollToHavingTrouble">#</span> Having trouble ?</h1>
+                <!-- Trouble advices -->
+                <!-- Verify your connected to the service, check the different service actions and reactions card description -->
+                <div class="flex flex-col w-full gap-6">
+                    <div class="flex justify-start gap-4 items-center pl-8">
+                        <span class="h-12 w-1.5 rounded-md" :style="{ backgroundColor: service.color }" />
+                        <div class="flex flex-col w-full">
+                            <h1 class="text-lg font-semibold text-start w-full rounded-lg text-gray-900">Verify your connected to the service</h1>
+                            <p class="text-lg text-start w-full text-gray-500">Make sure you are connected to the service. If not, please connect to the service.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-start gap-4 items-center pl-8">
+                        <span class="h-16 w-1.5 rounded-md" :style="{ backgroundColor: service.color }" />
+                        <div class="flex flex-col w-full">
+                            <h1 class="text-lg font-semibold text-start w-full rounded-lg text-gray-900">Check the different service actions and reactions card description</h1>
+                            <p class="text-lg text-start w-full text-gray-500">Make sure you understand the different actions and reactions card description. If not, please read the card description.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="flex justify-between items-center flex-col h-64 py-8 mt-12" :style="{ backgroundColor: service!.color }">
+            <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
+            <div class="flex w-full justify-center items-center px-8">
+                <div class="flex gap-4 items-center w-full justify-center">
+                    <Icon icon="material-symbols:mail-outline" class="w-6 h-6 text-white" />
+                    <p class="text-white hover:cursor-pointer" @click="copyEmail">contact.area.ownspace@gmail.com</p>
+                </div>
+                <p class="w-full text-center text-white">Project made under Epitech © PGE program</p>
+                <h1 class="text-4xl font-black text-white/60 text-center w-full hover:cursor-pointer" @click="scrollToTop">AREA</h1>
+            </div>
+            <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm">
+                <p class="hover:underline hover:cursor-pointer">Mentions</p>
+                <p class="hover:underline hover:cursor-pointer">Cookies</p>
+                <p class="hover:underline hover:cursor-pointer">Privacy</p>
+                <p class="hover:underline hover:cursor-pointer">Terms</p>
+            </div>
+        </footer>
     </div>
 </template>
