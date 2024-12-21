@@ -5,6 +5,7 @@ const passport = require('passport');
 require('./authentication/passport');
 
 const githubServiceRouter = require('./services/githubService')
+const dropboxServiceRouter = require('./services/dropboxService')
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
 const aboutRouter = require('./routes/about');
@@ -13,7 +14,7 @@ const reactionRouter = require('./routes/reaction');
 const actionReactionRouter = require('./routes/ActionReaction');
 
 const cors = require('cors');
-const { initServices } = require('./initServices/initServices');
+const { initServices } = require('./utils/initServices');
 
 const app = express();
 const port = 8080;
@@ -33,6 +34,7 @@ app.use(passport.session());
 
 app.use('/api', userRouter);
 app.use('/github', githubServiceRouter);
+app.use('/dropbox', dropboxServiceRouter);
 app.use('/api', actionsRouter);
 app.use('/api', reactionRouter);
 app.use('/auth', authRouter);

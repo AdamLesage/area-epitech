@@ -17,18 +17,19 @@ const reactions = require("../services/reactions")
 router.post('/reaction/:uuid', async (req, res) => {
     try {
         const uuid = req.params.uuid;
-        console.log(uuid);
-        const action = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
-        if (action == null) {
+        const area = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
+        if (area == null) {
             return res.status(404).send("unknow action-Reaction");
         }
-        if (reactions.get(action.typeReaction) == undefined) {
+        const reaction = await prisma.reaction.findUnique({ where: { id: area.reactionId } });
+        if (reaction == null || reactions.get(reaction.name) == undefined) {
             return res.status(404).send("unknow Reaction");
         }
-        reactions.get(action.typeReaction)(action.reactionData, req.body);
-        res.json({ message: "receive reaction", action: action });
+        // console.log("receive reaction", "service", reaction.name);
+        await reactions.get(reaction.name)(area.reactionData, req.body, area.userUuid);
+        res.json({ message: "receive reaction" });
     } catch (e) {
-        console.error(e);
+        console.error("Error on receive reaction", e);
         res.status(500).send("error on execute reaction");
     }
 });

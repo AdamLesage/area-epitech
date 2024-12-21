@@ -56,15 +56,15 @@ describe('Authentication Routes', () => {
         expect(response.body).toHaveProperty('error', 'Missing required parameters');
     });
 
-    // it('should not login a user with incorrect password (GET /auth/login)', async () => {
-    //     const response = await request(app).get('/auth/login').send({
-    //         email: userEmail,
-    //         password: 'wrongpassword',
-    //     });
+    it('should not login a user with incorrect password (GET /auth/login)', async () => {
+        const response = await request(app).post('/auth/login').send({
+            email: userEmail,
+            password: 'wrongpassword',
+        });
 
-    //     expect(response.statusCode).toBe(401);
-    //     expect(response.body).toHaveProperty('error', 'Invalid password');
-    // });
+        expect(response.statusCode).toBe(401);
+        expect(response.body).toHaveProperty('error', 'Invalid password');
+    });
 
     it('should not login a non-existent user (GET /auth/login)', async () => {
         const response = await request(app).get('/auth/login').send({

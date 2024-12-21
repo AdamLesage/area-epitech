@@ -42,7 +42,7 @@ passport.use(
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
             callbackURL: `${process.env.BACKEND_URL}/auth/github/redirect`,
-            scope: ['user:email'],
+            scope: ['user:email', 'repo'],
         },
         async (accessToken, refreshToken, profile, done) => {
             const email = profile.emails?.[0]?.value || null;
@@ -50,3 +50,33 @@ passport.use(
         }
     )
 );
+
+// Dropbox strategy
+const DropboxStrategy = require('passport-dropbox-oauth2').Strategy;
+
+passport.use(new DropboxStrategy({
+    apiVersion: '2',
+    clientID: process.env.DROPBOX_APP_KEY,
+    clientSecret: process.env.DROPBOX_APP_SECRET,
+    callbackURL: `${process.env.BACKEND_URL}/auth/dropbox/callback`,
+    scope: "account_info.read account_info.write files.metadata.write files.metadata.read files.content.write files.content.read sharing.write sharing.read file_requests.write file_requests.read contacts.write contacts.read"
+  },
+  function(token, tokenSecret, profile, cb) {
+    console.log("Dropbox Callback");
+
+    const email = profile.emails?.[0]?.value || null;
+    const displayName = profile.displayName || '';
+    const username = profile.username || 'Username not found';
+
+    // Pass token, tokenSecret, and derived properties into the callback
+    cb(null, { 
+        ...profile, 
+        token, 
+        tokenSecret, 
+        email, 
+        displayName, 
+        username 
+    });
+  }
+));
+
