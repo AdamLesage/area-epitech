@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useServiceStore } from '@/stores/service';
+import { Category } from '@/types/services';
 
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
@@ -27,6 +28,8 @@ if (!service) {
     router.push('/dashboard');
 }
 
+type Mode = 'Actions' | 'Reactions' | 'Both' | 'None';
+
 const color = ref<string>(service!.color);
 const name = ref<string>(service!.name);
 const logo = ref<string>(service!.icon);
@@ -36,6 +39,19 @@ const saves = ref<number>(service!.saves);
 const isActivated = ref<boolean>(true);
 const nbActions = ref<number>(0);
 const nbReactions = ref<number>(0);
+const currentSlide = ref<number>(0);
+const categorySelected = ref<Category | null>(null);
+const modeSelected = ref<Mode>('None');
+
+function prevSlide() {
+    currentSlide.value = (currentSlide.value - 1 + service!.categories.length) % service!.categories.length;
+    categorySelected.value = service!.categories[currentSlide.value];
+}
+
+function nextSlide() {
+    currentSlide.value = (currentSlide.value + 1) % service!.categories.length;
+    categorySelected.value = service!.categories[currentSlide.value];
+}
 
 const view = ref<string>('overview');
 
@@ -45,6 +61,7 @@ function switchView(newView: string) {
 }
 
 if (service && service.categories) {
+    categorySelected.value = service.categories[0];
     for (const category of service.categories) {
         console.log('Category:', category);
         nbActions.value += category.actions.length;
@@ -72,23 +89,6 @@ const handleClick = () => {
 const openServicePage = () => {
     console.log('Service page opened');
     isHeroVisible.value = false;
-}
-
-const handleBackButtonSecondPage = () => {
-    console.log('Back button clicked on second page');
-    isHeroVisible.value = true;
-}
-
-function handleMenuClick(name: string) {
-    console.log('Menu clicked on:', name);
-}
-
-function handleMoreClick(name: string) {
-    console.log('More clicked on:', name);
-}
-
-function handleConfigureClick(name: string) {
-    console.log('Configure clicked on:', name);
 }
 
 function handleBackButtonFirstPage() {
@@ -120,6 +120,20 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
 
 function scrollToHavingTrouble() {
     const element = document.getElementById('having-trouble');
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function scrollToAllApps() {
+    const element = document.getElementById('all-aps');
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function scrollToCategories() {
+    const element = document.getElementById('categories');
     if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -161,8 +175,8 @@ function scrollToTop() {
                 </div>
             </div>
             <div
-            class="border-4 border-auth-neutral w-[300px] h-[90px] rounded-full bg-white flex justify-between items-center px-4 cursor-pointer transition-transform duration-300 mobile:hidden"
-            @click.stop="handleClick">
+                class="border-4 border-auth-neutral w-[300px] h-[90px] rounded-full bg-white flex justify-between items-center px-4 cursor-pointer transition-transform duration-300 mobile:hidden"
+                @click.stop="handleClick">
                 <div
                     v-if="isCircleFirst" 
                     class="rounded-full w-[60px] h-[60px] transition-all duration-500" 
@@ -204,7 +218,7 @@ function scrollToTop() {
         <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full"
             :style="{ backgroundColor: color }">
             <ServiceNavComponent
-                @back-button="handleBackButtonSecondPage"
+                @back-button="handleBackButtonFirstPage"
                 @redirect-user-profile="handleRedirectUserPage"
                 class="mobile:hidden" />
             <div class="flex justify-center items-center p-4 mobile:hidden" v-if="scrollY == 0">
@@ -214,10 +228,10 @@ function scrollToTop() {
                     <h2 class="text-white text-xl font-medium text-right w-full pr-2">{{ nbActions }} Actions / {{ nbReactions }} Reactions</h2>
                 </div>
             </div>
-            <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden"
+            <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
                 :style="{ backgroundColor: color }"
                 v-else>
-                <ServiceNavScrollComponent @back-button="handleBackButtonSecondPage"
+                <ServiceNavScrollComponent @back-button="handleBackButtonFirstPage"
                     :logo="logo" :title="nameCapitalized" />
             </div>
             <div class="flex justify-between items-center w-full web:hidden">
@@ -243,7 +257,7 @@ function scrollToTop() {
                 </div>
             </div>
             <div class="mobile:hidden" />
-            <MobileServiceNavComponent @back-button="handleBackButtonSecondPage" class="web:hidden" />
+            <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden" />
         </div>
         <div class="flex justify-between items-center p-8 mobile:hidden web:hidden">
             <RateComponent :rate="rate" :reviews="reviews" :color="color" textcolor="black" class="w-1/3" />
@@ -274,29 +288,31 @@ function scrollToTop() {
         <div class="flex justify-center w-full gap-8 mt-6">
             <button class="text-lg font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'overview' ? 'underline' : ''"
-                :style="{ color: service!.color, textDecorationColor: service!.color }"
+                :style="{ color: '#444', textDecorationColor: '#444' }"
                 @click="switchView('overview')">
                 Overview
             </button>
             <button class="text-lg font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'actions' ? 'underline' : ''"
-                :style="{ color: service!.color, textDecorationColor: service!.color }"
+                :style="{ color: '#444', textDecorationColor: '#444' }"
                 @click="switchView('actions')">
                 Actions
             </button>
             <button class="text-lg font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'reactions' ? 'underline' : ''"
-                :style="{ color: service!.color, textDecorationColor: service!.color }"
+                :style="{ color: '#444', textDecorationColor: '#444' }"
                 @click="switchView('reactions')">
                 Reactions
             </button>
             <button class="text-lg font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'details' ? 'underline' : ''"
-                :style="{ color: service!.color, textDecorationColor: service!.color }"
+                :style="{ color: '#444', textDecorationColor: '#444' }"
                 @click="switchView('details')">
                 Details
             </button>
         </div>
+
+        <!-- Actions -->
         <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-12"
             v-if="service && view === 'actions'">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
@@ -311,7 +327,7 @@ function scrollToTop() {
             <div v-for="(category) in service.categories" :key="category.name"
                 class="flex justify-center w-[66.75rem]">
                 <div class="flex flex-col items-center w-full gap-4 mt-6" v-if="category.actions.length != 0">
-                    <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1" :style="{ color: service.color }">{{ category.display_name }}</h1>
+                    <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1" :style="{ color: '#444' }">{{ category.display_name }}</h1>
                     <div class="flex flex-wrap gap-6 w-full">
                         <AREAInfoComponent
                             v-for="action in category.actions"
@@ -322,6 +338,8 @@ function scrollToTop() {
                 </div>
             </div>
         </div>
+
+        <!-- Reactions -->
         <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-12"
             v-if="service && view === 'reactions'">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
@@ -336,7 +354,7 @@ function scrollToTop() {
             <div v-for="(category) in service.categories" :key="category.name"
                 class="flex justify-center w-[66.75rem]">
                 <div class="flex flex-col items-center w-full gap-4 mt-6" v-if="category.reactions.length != 0">
-                    <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1" :style="{ color: service.color }">{{ category.display_name }}</h1>
+                    <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1" :style="{ color: '#444' }">{{ category.display_name }}</h1>
                     <div class="flex flex-wrap gap-6 w-full">
                         <AREAInfoComponent
                             v-for="reaction in category.reactions"
@@ -347,6 +365,148 @@ function scrollToTop() {
                 </div>
             </div>
         </div>
+
+        <!-- Overview -->
+        <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-12"
+            v-if="service && view === 'overview'">
+            <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
+                :style="{ backgroundColor: service.color }">
+                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <h1 class="text-3xl font-extrabold text-white mb-2">Overview: {{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }}</h1>
+                <p class="text-lg text-white/80 text-center">
+                    Here is an overview of the {{ service.name }} service.
+                </p>
+            </div>
+
+            <div class="flex justify-between w-[66.75rem] mt-6">
+                <RateComponent :rate="service.reviews.rate" :reviews="service.reviews.count" :color="service.color" textcolor="#6b7280" class="w-full"/>
+                <div class="flex w-full items-center justify-center">
+                    <div
+                        class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
+                        @click.stop="handleClick">
+                        <div
+                            v-if="isCircleFirst" 
+                            class="rounded-full w-[30px] h-[30px] transition-all duration-500" 
+                            :style="{ backgroundColor: color }"/>
+                        <h1
+                            class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center" 
+                            :style="{ color: color, textAlign: isCircleFirst ? 'left' : 'right' }">
+                            {{ isCircleFirst ? 'Not Linked' : 'Linked' }}
+                        </h1>
+                        <div
+                            v-if="!isCircleFirst"
+                            class="rounded-full w-[30px] h-[30px] transition-all duration-500" 
+                            :style="{ backgroundColor: color }"/>
+                    </div>
+                </div>
+                <SaveComponent :saves="service.saves" :color="service.color" textcolor="#6b7280" class="w-full flex justify-end"/>
+            </div>
+
+            <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4 mt-6"
+                :style="{ backgroundColor: '#444' }">
+                <h1 id="categories" class="text-3xl font-extrabold text-white mb-2"><span class="text-white/75 hover:cursor-pointer" @click="scrollToCategories">#</span> Categories</h1>
+            </div>
+            <div class="relative w-[66.75rem] h-[30rem] overflow-hidden rounded-lg mt-6">
+                <div class="flex transition-transform duration-500 ease-in-out" 
+                    :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, width: `${service.categories.length * 66.75}rem` }">
+                    <div v-for="(category) in service.categories" 
+                        :key="category.name" 
+                        class="flex justify-center flex-col h-[30rem] items-center w-[66.75rem] hover:cursor-pointer"
+                        :style="{ backgroundColor: service!.color }">
+                        <div class="flex items-center justify-center gap-2 z-10">
+                            <h1 class="text-xl font-bold text-white hover:underline decoration-2">{{ category.display_name }}</h1>
+                            <Icon :icon="service.icon" class="text-white w-8 h-8" />
+                        </div>
+                        <p class="z-10">{{ category.actions.length }} Action{{ category.actions.length > 1 ? 's' : '' }}</p>
+                        <p class="z-10">{{ category.reactions.length }} Reaction{{ category.reactions.length > 1 ? 's' : '' }}</p>
+                    </div>
+                </div>
+
+                <button 
+                    class="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    @click="prevSlide">
+                    &#8592;
+                </button>
+                <button 
+                    class="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    @click="nextSlide">
+                    &#8594;
+                </button>
+            </div>
+            <div class="flex justify-center w-[66.75rem] gap-6 mt-6" v-if="categorySelected">
+                <div class="flex items-center gap-6" v-if="categorySelected.reactions.length != 0">
+                    <div class="flex flex-wrap gap-6">
+                        <AREAInfoComponent
+                            v-for="reaction in categorySelected.reactions"
+                            :key="reaction.name"
+                            :object="reaction"
+                            :color="service.color"/>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6" v-if="categorySelected.actions.length != 0">
+                    <div class="flex flex-wrap gap-6">
+                        <AREAInfoComponent
+                            v-for="action in categorySelected.actions"
+                            :key="action.name"
+                            :object="action"
+                            :color="service.color"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4 mt-6"
+                :style="{ backgroundColor: '#444' }">
+                <h1 id="all-aps" class="text-3xl font-extrabold text-white mb-2"><span class="text-white/75 hover:cursor-pointer" @click="scrollToAllApps">#</span> All apps</h1>
+            </div>
+            <div class="flex justify-between w-[66.75rem] mt-6 relative">
+                <div class="flex gap-2">
+                    <button class="p-2 rounded-full px-4"
+                        :style="{ backgroundColor: modeSelected == 'Actions' ? service!.color : '#fff',
+                            color: modeSelected == 'Actions' ? 'white' : '#444'
+                         }"
+                        @click="modeSelected = 'Actions'">
+                        <h1 class="text-lg font-semibold">Actions</h1>
+                    </button>
+                    <button class="p-2 rounded-full px-4"
+                        :style="{ backgroundColor: modeSelected == 'Reactions' ? service!.color : '#fff',
+                            color: modeSelected == 'Reactions' ? 'white' : '#444' }"
+                        @click="modeSelected = 'Reactions'">
+                        <h1 class="text-lg font-semibold">Reactions</h1>
+                    </button>
+                    <button class="p-2 rounded-full px-4"
+                        :style="{ backgroundColor: modeSelected == 'Both' ? service!.color : '#fff',
+                            color: modeSelected == 'Both' ? 'white' : '#444' }"
+                        @click="modeSelected = 'Both'">
+                        <h1 class="text-lg font-semibold">Both</h1>
+                    </button>
+                </div>
+                <input type="search" class="border-2 border-[#444] pl-4 pr-10 rounded-md mr-[2px]">
+                <Icon class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6" icon="akar-icons:search" />
+            </div>
+            <div v-for="(category) in service.categories" :key="category.name"
+                class="flex justify-center w-[66.75rem] gap-6">
+                <div class="flex items-center gap-4 mt-6" v-if="category.reactions.length != 0">
+                    <div class="flex flex-wrap gap-6 w-full">
+                        <AREAInfoComponent
+                            v-for="reaction in category.reactions"
+                            :key="reaction.name"
+                            :object="reaction"
+                            :color="service.color"/>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 mt-6" v-if="category.actions.length != 0">
+                    <div class="flex flex-wrap gap-6 w-full">
+                        <AREAInfoComponent
+                            v-for="action in category.actions"
+                            :key="action.name"
+                            :object="action"
+                            :color="service.color"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details -->
         <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-12"
             v-if="service && view === 'details'">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
@@ -382,14 +542,14 @@ function scrollToTop() {
                     <div class="flex justify-start gap-4 items-center pl-8">
                         <span class="h-16 w-1.5 rounded-md" :style="{ backgroundColor: service.color }" />
                         <div class="flex flex-col w-full">
-                            <h1 class="text-lg font-semibold text-start w-full rounded-lg text-gray-900">Check the different service actions and reactions card description</h1>
+                            <h1 class="text-lg font-semibold text-start w-full rounded-lg text-gray-900">Check the different service action and reaction cards description</h1>
                             <p class="text-lg text-start w-full text-gray-500">Make sure you understand the different actions and reactions card description. If not, please read the card description.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <footer class="flex justify-between items-center flex-col h-64 py-8 mt-12" :style="{ backgroundColor: service!.color }">
+        <footer class="flex justify-between items-center flex-col h-64 py-8 mt-12" :style="{ backgroundColor: '#444' }">
             <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
             <div class="flex w-full justify-center items-center px-8">
                 <div class="flex gap-4 items-center w-full justify-center">
