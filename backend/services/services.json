@@ -74,13 +74,49 @@
     "name":"dropbox",
     "actions": [
       {
-        "name":"dropbox_on_new_file",
-        "description":"A pull request review is submitted"
+        "name": "dropbox_on_new_file",
+        "description": "Triggered when a new file is added to Dropbox."
+      },
+      {
+        "name": "dropbox_on_file_renamed",
+        "description": "Triggered when an existing file is renamed in Dropbox."
+      },
+      {
+        "name": "dropbox_on_file_modified",
+        "description": "Triggered when an existing file is modified in Dropbox."
+      },
+      {
+        "name": "dropbox_on_new_folder",
+        "description": "Triggered when a new folder is created in Dropbox."
+      },
+      {
+        "name": "dropbox_on_folder_renamed",
+        "description": "Triggered when an existing folder is renamed in Dropbox."
+      },
+      {
+        "name": "dropbox_on_deleted",
+        "description": "Triggered when a file or folder is deleted from Dropbox."
       }
     ],
     "reactions": [
       {
-        "name":"dropbox_shares_file",
+        "name":"dropbox_share_file",
+        "description":"Create an issue"
+      },
+      {
+        "name":"dropbox_unshare_file",
+        "description":"Create an issue"
+      },
+      {
+        "name":"dropbox_add_file",
+        "description":"Create an issue"
+      },
+      {
+        "name":"dropbox_add_folder",
+        "description":"Create an issue"
+      },
+      {
+        "name":"dropbox_delete_file",
         "description":"Create an issue"
       }
     ]

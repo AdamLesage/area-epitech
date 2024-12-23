@@ -2,7 +2,7 @@ const axios = require('axios');
 // Create a new Map to store reaction handlers
 const reactions = new Map();
 reactions.set('dropbox_new_file', dropbox_new_file);
-reactions.set('dropbox_shares_file', dropbox_shares_file);
+reactions.set('dropbox_share_file', dropbox_shares_file);
 reactions.set('create_issue', github_create_issue);
 reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);

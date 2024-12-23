@@ -92,7 +92,7 @@ function initServices() {
                     data: {
                         name: reaction.name,
                         description: reaction.description,
-                        endpoint: attributeEndpointToReactionGithub(reaction.name),
+                        endpoint: attributeEndpointToReactionGithub(reaction.name) || '',
                         service: {
                             connect: { id: serviceDB.id },
                         }
