@@ -34,6 +34,7 @@
           nushell
           python3
           docker-compose
+          ngrok
         ];
 
         shellHook = ''
