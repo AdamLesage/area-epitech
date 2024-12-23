@@ -44,6 +44,11 @@ const router = createRouter({
       component: () => import('@/views/ServicePage.vue'),
     },
     {
+      path: '/service/:id/category/:category',
+      name: 'service-category',
+      component: () => import('@/views/CategoryPage.vue'),
+    },
+    {
       path: '/userinfo',
       name: 'userinfo',
       component: () => import('@/views/UserInfoPage.vue'),
