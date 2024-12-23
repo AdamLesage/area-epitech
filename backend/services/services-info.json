@@ -1,28 +1,135 @@
 [
   {
-    "name":"facebook",
-    "color":"#3b5998",
-    "icon":"ic:baseline-facebook",
+    "name": "facebook",
+    "color": "#3b5998",
+    "icon": "ic:baseline-facebook",
     "reviews": {
       "rate": 4.2,
       "count": 10000
     },
-    "saves": 100000
+    "saves": 100000,
+    "categories": [
+      {
+        "name": "posts",
+        "display_name": "Posts",
+        "actions": [
+          {
+            "name": "post_created",
+            "display_name": "Post Created",
+            "description": "A new post is created",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:post-outline",
+            "options": [
+              {
+                "name": "content",
+                "display_name": "Content",
+                "description": "The content of the post",
+                "type": "textarea",
+                "required": true
+              },
+              {
+                "name": "visibility",
+                "display_name": "Visibility",
+                "description": "The visibility of the post",
+                "type": "select",
+                "choices": ["Public", "Friends", "Only Me"],
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "like_post",
+            "display_name": "Like a Post",
+            "description": "Like a specific post",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:thumb-up-outline",
+            "options": [
+              {
+                "name": "post_id",
+                "display_name": "Post ID",
+                "description": "The ID of the post to like",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
-    "name":"dropbox",
-    "color":"#007ee5",
-    "icon":"ri:dropbox-fill",
+    "name": "dropbox",
+    "color": "#007ee5",
+    "icon": "ri:dropbox-fill",
     "reviews": {
       "rate": 2.5,
       "count": 100
     },
-    "saves": 8800
+    "saves": 8800,
+    "categories": [
+      {
+        "name": "files",
+        "display_name": "Files",
+        "actions": [
+          {
+            "name": "file_uploaded",
+            "display_name": "File Uploaded",
+            "description": "A file is uploaded to Dropbox",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:file-upload",
+            "options": [
+              {
+                "name": "file_name",
+                "display_name": "File Name",
+                "description": "The name of the file being uploaded",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "folder_path",
+                "display_name": "Folder Path",
+                "description": "The path of the folder where the file will be uploaded",
+                "type": "text",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "create_folder",
+            "display_name": "Create a Folder",
+            "description": "Create a new folder",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:folder-plus",
+            "options": [
+              {
+                "name": "folder_name",
+                "display_name": "Folder Name",
+                "description": "The name of the new folder",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
-    "name":"github",
-    "color":"#24292e",
-    "icon":"mdi:github",
+    "name": "github",
+    "color": "#24292e",
+    "icon": "mdi:github",
     "reviews": {
       "rate": 4.8,
       "count": 250000
@@ -110,33 +217,206 @@
     ]
   },
   {
-    "name":"spotify",
-    "color":"#35d96f",
-    "icon":"mdi:spotify",
+    "name": "spotify",
+    "color": "#35d96f",
+    "icon": "mdi:spotify",
     "reviews": {
       "rate": 4.5,
       "count": 50000
     },
-    "saves": 500000
+    "saves": 500000,
+    "categories": [
+      {
+        "name": "music",
+        "display_name": "Music",
+        "actions": [
+          {
+            "name": "track_played",
+            "display_name": "Track Played",
+            "description": "A music track is played",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:music-note",
+            "options": [
+              {
+                "name": "track_name",
+                "display_name": "Track Name",
+                "description": "The name of the track",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "add_to_playlist",
+            "display_name": "Add to Playlist",
+            "description": "Add a track to a playlist",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:playlist-music",
+            "options": [
+              {
+                "name": "playlist_name",
+                "display_name": "Playlist Name",
+                "description": "The name of the playlist",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "track_name",
+                "display_name": "Track Name",
+                "description": "The name of the track",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
-    "name":"gmail",
-    "color":"#ff8282",
-    "icon":"simple-icons:gmail",
+    "name": "gmail",
+    "color": "#ff8282",
+    "icon": "simple-icons:gmail",
     "reviews": {
       "rate": 4.7,
       "count": 500000
     },
-    "saves": 5000000
+    "saves": 5000000,
+    "categories": [
+      {
+        "name": "email",
+        "display_name": "Email",
+        "actions": [
+          {
+            "name": "email_received",
+            "display_name": "Email Received",
+            "description": "An email is received",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:email-outline",
+            "options": [
+              {
+                "name": "sender",
+                "display_name": "Sender",
+                "description": "The email address of the sender",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "send_email",
+            "display_name": "Send Email",
+            "description": "Send a new email",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:email-send",
+            "options": [
+              {
+                "name": "recipient",
+                "display_name": "Recipient",
+                "description": "The email address of the recipient",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "subject",
+                "display_name": "Subject",
+                "description": "The subject of the email",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the email",
+                "type": "textarea",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
-    "name":"discord",
-    "color":"#7289da",
-    "icon":"ic:baseline-discord",
+    "name": "discord",
+    "color": "#7289da",
+    "icon": "ic:baseline-discord",
     "reviews": {
       "rate": 4.3,
       "count": 10000
     },
-    "saves": 100000
+    "saves": 100000,
+    "categories": [
+      {
+        "name": "messages",
+        "display_name": "Messages",
+        "actions": [
+          {
+            "name": "message_sent",
+            "display_name": "Message Sent",
+            "description": "A message is sent in a channel",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:message-outline",
+            "options": [
+              {
+                "name": "channel_id",
+                "display_name": "Channel ID",
+                "description": "The ID of the channel",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "message_content",
+                "display_name": "Message Content",
+                "description": "The content of the message",
+                "type": "textarea",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "send_reaction",
+            "display_name": "Send Reaction",
+            "description": "React to a message",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:emoticon-outline",
+            "options": [
+              {
+                "name": "message_id",
+                "display_name": "Message ID",
+                "description": "The ID of the message to react to",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "reaction",
+                "display_name": "Reaction",
+                "description": "The reaction emoji",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]
