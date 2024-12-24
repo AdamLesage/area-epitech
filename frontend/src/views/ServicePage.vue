@@ -210,20 +210,20 @@ function scrollToTopInstant() {
                 class="border-4 border-auth-neutral w-[300px] h-[90px] rounded-full bg-white flex justify-between items-center px-4 cursor-pointer transition-transform duration-300 mobile:hidden"
                 @click.stop="handleClick">
                 <div
-                    v-if="isCircleFirst" 
-                    class="rounded-full w-[60px] h-[60px] transition-all duration-500" 
-                    :style="{ backgroundColor: color }" 
+                    v-if="isCircleFirst"
+                    class="rounded-full w-[60px] h-[60px] transition-all duration-500"
+                    :style="{ backgroundColor: color }"
                 />
                 <h1
-                    class="text-xl font-semibold w-1/2 transition-all duration-500 select-none" 
+                    class="text-xl font-semibold w-1/2 transition-all duration-500 select-none"
                     :style="{ color: color, textAlign: isCircleFirst ? 'left' : 'right' }"
                 >
                     {{ isCircleFirst ? 'Activate' : 'Deactivate' }}
                 </h1>
                 <div
                     v-if="!isCircleFirst"
-                    class="rounded-full w-[60px] h-[60px] transition-all duration-500" 
-                    :style="{ backgroundColor: color }" 
+                    class="rounded-full w-[60px] h-[60px] transition-all duration-500"
+                    :style="{ backgroundColor: color }"
                 />
             </div>
         </div>
@@ -294,24 +294,24 @@ function scrollToTopInstant() {
         <div class="flex justify-between items-center p-8 mobile:hidden web:hidden">
             <RateComponent :rate="rate" :reviews="reviews" :color="color" textcolor="black" class="w-1/3" />
             <div class="w-1/3 flex justify-center">
-                <div 
+                <div
                     class="border-4 border-auth-neutral w-[300px] h-[90px] rounded-full bg-white flex justify-between items-center px-4 cursor-pointer transition-transform duration-300"
                     @click.stop="handleClick">
-                    <div 
-                        v-if="isCircleFirst" 
-                        class="rounded-full w-[60px] h-[60px] transition-all duration-500" 
-                        :style="{ backgroundColor: color }" 
+                    <div
+                        v-if="isCircleFirst"
+                        class="rounded-full w-[60px] h-[60px] transition-all duration-500"
+                        :style="{ backgroundColor: color }"
                     />
                     <h1
-                        class="text-xl font-semibold w-1/2 transition-all duration-500 select-none" 
+                        class="text-xl font-semibold w-1/2 transition-all duration-500 select-none"
                         :style="{ color: color, textAlign: isCircleFirst ? 'left' : 'right' }"
                     >
                         {{ isCircleFirst ? 'Activate' : 'Deactivate' }}
                     </h1>
-                    <div 
+                    <div
                         v-if="!isCircleFirst"
-                        class="rounded-full w-[60px] h-[60px] transition-all duration-500" 
-                        :style="{ backgroundColor: color }" 
+                        class="rounded-full w-[60px] h-[60px] transition-all duration-500"
+                        :style="{ backgroundColor: color }"
                     />
                 </div>
             </div>
@@ -359,10 +359,10 @@ function scrollToTopInstant() {
             </div>
 
             <div class="relative w-[66.75rem] h-[30rem] overflow-hidden rounded-lg mt-6">
-                <div class="flex transition-transform duration-500 ease-in-out" 
+                <div class="flex transition-transform duration-500 ease-in-out"
                     :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, width: `${service.categories.length * 66.75}rem` }">
-                    <div v-for="(category) in service.categories" 
-                        :key="category.name" 
+                    <div v-for="(category) in service.categories"
+                        :key="category.name"
                         class="flex justify-center flex-col h-[30rem] items-center w-[66.75rem] hover:cursor-pointer"
                         :style="{ backgroundColor: service!.color }"
                         @click="redirectToCategory(category.name)">
@@ -375,12 +375,12 @@ function scrollToTopInstant() {
                     </div>
                 </div>
 
-                <button 
+                <button
                     class="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
                     @click="prevSlide">
                     &#8592;
                 </button>
-                <button 
+                <button
                     class="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
                     @click="nextSlide">
                     &#8594;
@@ -482,17 +482,17 @@ function scrollToTopInstant() {
                         class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
                         @click.stop="handleClick">
                         <div
-                            v-if="isCircleFirst" 
-                            class="rounded-full w-[30px] h-[30px] transition-all duration-500" 
+                            v-if="isCircleFirst"
+                            class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                             :style="{ backgroundColor: color }"/>
                         <h1
-                            class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center" 
+                            class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
                             :style="{ color: color, textAlign: isCircleFirst ? 'left' : 'right' }">
                             {{ isCircleFirst ? 'Not Linked' : 'Linked' }}
                         </h1>
                         <div
                             v-if="!isCircleFirst"
-                            class="rounded-full w-[30px] h-[30px] transition-all duration-500" 
+                            class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                             :style="{ backgroundColor: color }"/>
                     </div>
                 </div>
@@ -504,10 +504,10 @@ function scrollToTopInstant() {
                 <h1 id="categories" class="text-3xl font-extrabold text-white mb-2"><span class="text-white/75 hover:cursor-pointer" @click="switchView('categories')">#</span> Categories</h1>
             </div>
             <div class="relative w-[66.75rem] h-[30rem] overflow-hidden rounded-lg mt-6">
-                <div class="flex transition-transform duration-500 ease-in-out" 
+                <div class="flex transition-transform duration-500 ease-in-out"
                     :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, width: `${service.categories.length * 66.75}rem` }">
-                    <div v-for="(category) in service.categories" 
-                        :key="category.name" 
+                    <div v-for="(category) in service.categories"
+                        :key="category.name"
                         class="flex justify-center flex-col h-[30rem] items-center w-[66.75rem] hover:cursor-pointer"
                         :style="{ backgroundColor: service!.color }"
                         @click="redirectToCategory(category.name)">
@@ -520,12 +520,12 @@ function scrollToTopInstant() {
                     </div>
                 </div>
 
-                <button 
+                <button
                     class="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
                     @click="prevSlide">
                     &#8592;
                 </button>
-                <button 
+                <button
                     class="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
                     @click="nextSlide">
                     &#8594;
