@@ -1,132 +1,5 @@
 [
   {
-    "name": "facebook",
-    "color": "#3b5998",
-    "icon": "ic:baseline-facebook",
-    "reviews": {
-      "rate": 4.2,
-      "count": 10000
-    },
-    "saves": 100000,
-    "categories": [
-      {
-        "name": "posts",
-        "display_name": "Posts",
-        "actions": [
-          {
-            "name": "post_created",
-            "display_name": "Post Created",
-            "description": "A new post is created",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "icon": "mdi:post-outline",
-            "options": [
-              {
-                "name": "content",
-                "display_name": "Content",
-                "description": "The content of the post",
-                "type": "textarea",
-                "required": true
-              },
-              {
-                "name": "visibility",
-                "display_name": "Visibility",
-                "description": "The visibility of the post",
-                "type": "select",
-                "choices": ["Public", "Friends", "Only Me"],
-                "required": true
-              }
-            ]
-          }
-        ],
-        "reactions": [
-          {
-            "name": "like_post",
-            "display_name": "Like a Post",
-            "description": "Like a specific post",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "icon": "mdi:thumb-up-outline",
-            "options": [
-              {
-                "name": "post_id",
-                "display_name": "Post ID",
-                "description": "The ID of the post to like",
-                "type": "text",
-                "required": true
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "dropbox",
-    "color": "#007ee5",
-    "icon": "ri:dropbox-fill",
-    "reviews": {
-      "rate": 2.5,
-      "count": 100
-    },
-    "saves": 8800,
-    "categories": [
-      {
-        "name": "files",
-        "display_name": "Files",
-        "actions": [
-          {
-            "name": "file_uploaded",
-            "display_name": "File Uploaded",
-            "description": "A file is uploaded to Dropbox",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "icon": "mdi:file-upload",
-            "options": [
-              {
-                "name": "file_name",
-                "display_name": "File Name",
-                "description": "The name of the file being uploaded",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "folder_path",
-                "display_name": "Folder Path",
-                "description": "The path of the folder where the file will be uploaded",
-                "type": "text",
-                "required": false
-              }
-            ]
-          }
-        ],
-        "reactions": [
-          {
-            "name": "create_folder",
-            "display_name": "Create a Folder",
-            "description": "Create a new folder",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "icon": "mdi:folder-plus",
-            "options": [
-              {
-                "name": "folder_name",
-                "display_name": "Folder Name",
-                "description": "The name of the new folder",
-                "type": "text",
-                "required": true
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
     "name": "github",
     "color": "#24292e",
     "icon": "mdi:github",
@@ -137,8 +10,77 @@
     "saves": 2250000,
     "categories": [
       {
-        "name": "pull_request",
-        "display_name": "Pull Request",
+        "name": "milestone",
+        "display_name": "Milestone",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "create_milestone",
+            "display_name": "Create a new milestone",
+            "description": "Create a new milestone",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "title",
+                "display_name": "Title",
+                "description": "The title of the milestone",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "description",
+                "display_name": "Description",
+                "description": "The description of the milestone",
+                "type": "textarea",
+                "required": true
+              },
+              {
+                "name": "due_on",
+                "display_name": "Due On",
+                "description": "The due date of the milestone",
+                "type": "datetime",
+                "required": false
+              },
+              {
+                "name": "state",
+                "display_name": "State",
+                "description": "The state of the milestone",
+                "type": "select",
+                "options": [
+                  {
+                    "name": "open",
+                    "display_name": "Open"
+                  },
+                  {
+                    "name": "closed",
+                    "display_name": "Closed"
+                  }
+                ],
+                "required": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "pull_request_review",
+        "display_name": "Pull Request Review",
         "actions": [
           {
             "name": "pull_request_review.submitted",
@@ -147,7 +89,6 @@
             "version": "1.0.0",
             "release_date": "2024-12-18",
             "updated_date": "2024-12-20",
-            "icon": "mdi:git-pull-request",
             "options": [
               {
                 "name": "repository_name",
@@ -169,9 +110,344 @@
         "reactions": []
       },
       {
+        "name": "pull_request",
+        "display_name": "Pull Request",
+        "actions": [
+          {
+            "name": "pull_request.assigned",
+            "display_name": "Pull Request Assigned",
+            "description": "A pull request is assigned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.unassigned",
+            "display_name": "Pull Request Unassigned",
+            "description": "An pull request is unassigned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.labeled",
+            "display_name": "Pull Request Labeled",
+            "description": "A pull request is labeled",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.unlabeled",
+            "display_name": "Pull Request Unlabeled",
+            "description": "A pull request is unlabeled",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.opened",
+            "display_name": "Pull Request Opened",
+            "description": "A pull request is opened",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.closed",
+            "display_name": "Pull Request Closed",
+            "description": "An pull request is closed",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "create_pull_request",
+            "display_name": "Create a new pull request",
+            "description": "Create a new pull request",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "title",
+                "display_name": "Title",
+                "description": "The title of the pull request",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the pull request",
+                "type": "textarea",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
         "name": "issue",
         "display_name": "Issue",
-        "actions": [],
+        "actions": [
+          {
+            "name": "issues.assigned",
+            "display_name": "Issue Assigned",
+            "description": "An issue is assigned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.unassigned",
+            "display_name": "Issue Unassigned",
+            "description": "An issue is unassigned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.labeled",
+            "display_name": "Issue Labeled",
+            "description": "An issue is labeled",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.unlabeled",
+            "display_name": "Issue Unlabeled",
+            "description": "An issue is unlabeled",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.opened",
+            "display_name": "Issue Opened",
+            "description": "An issue is opened",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.closed",
+            "display_name": "Issue Closed",
+            "description": "An issue is closed",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
         "reactions": [
           {
             "name": "create_issue",
@@ -180,7 +456,6 @@
             "version": "1.0.0",
             "release_date": "2024-12-18",
             "updated_date": "2024-12-20",
-            "icon": "mdi:git-issue",
             "options": [
               {
                 "name": "repository_name",
@@ -217,203 +492,38 @@
     ]
   },
   {
-    "name": "spotify",
-    "color": "#35d96f",
-    "icon": "mdi:spotify",
+    "name": "dropbox",
+    "color": "#007ee5",
+    "icon": "mdi:dropbox",
     "reviews": {
       "rate": 4.5,
-      "count": 50000
+      "count": 200000
     },
-    "saves": 500000,
+    "saves": 2000000,
     "categories": [
       {
-        "name": "music",
-        "display_name": "Music",
+        "name": "file",
+        "display_name": "File",
         "actions": [
           {
-            "name": "track_played",
-            "display_name": "Track Played",
-            "description": "A music track is played",
+            "name": "dropbox_on_new_file",
+            "display_name": "New File",
+            "description": "A new file is added",
             "version": "1.0.0",
             "release_date": "2024-12-18",
             "updated_date": "2024-12-20",
-            "icon": "mdi:music-note",
-            "options": [
-              {
-                "name": "track_name",
-                "display_name": "Track Name",
-                "description": "The name of the track",
-                "type": "text",
-                "required": true
-              }
-            ]
+            "options": []
           }
         ],
         "reactions": [
           {
-            "name": "add_to_playlist",
-            "display_name": "Add to Playlist",
-            "description": "Add a track to a playlist",
+            "name": "dropbox_shares_file",
+            "display_name": "Share a file",
+            "description": "Share a file",
             "version": "1.0.0",
             "release_date": "2024-12-18",
             "updated_date": "2024-12-20",
-            "icon": "mdi:playlist-music",
-            "options": [
-              {
-                "name": "playlist_name",
-                "display_name": "Playlist Name",
-                "description": "The name of the playlist",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "track_name",
-                "display_name": "Track Name",
-                "description": "The name of the track",
-                "type": "text",
-                "required": true
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "gmail",
-    "color": "#ff8282",
-    "icon": "simple-icons:gmail",
-    "reviews": {
-      "rate": 4.7,
-      "count": 500000
-    },
-    "saves": 5000000,
-    "categories": [
-      {
-        "name": "email",
-        "display_name": "Email",
-        "actions": [
-          {
-            "name": "email_received",
-            "display_name": "Email Received",
-            "description": "An email is received",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "icon": "mdi:email-outline",
-            "options": [
-              {
-                "name": "sender",
-                "display_name": "Sender",
-                "description": "The email address of the sender",
-                "type": "text",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "reactions": [
-          {
-            "name": "send_email",
-            "display_name": "Send Email",
-            "description": "Send a new email",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "icon": "mdi:email-send",
-            "options": [
-              {
-                "name": "recipient",
-                "display_name": "Recipient",
-                "description": "The email address of the recipient",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "subject",
-                "display_name": "Subject",
-                "description": "The subject of the email",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "body",
-                "display_name": "Body",
-                "description": "The body of the email",
-                "type": "textarea",
-                "required": true
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "discord",
-    "color": "#7289da",
-    "icon": "ic:baseline-discord",
-    "reviews": {
-      "rate": 4.3,
-      "count": 10000
-    },
-    "saves": 100000,
-    "categories": [
-      {
-        "name": "messages",
-        "display_name": "Messages",
-        "actions": [
-          {
-            "name": "message_sent",
-            "display_name": "Message Sent",
-            "description": "A message is sent in a channel",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "icon": "mdi:message-outline",
-            "options": [
-              {
-                "name": "channel_id",
-                "display_name": "Channel ID",
-                "description": "The ID of the channel",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "message_content",
-                "display_name": "Message Content",
-                "description": "The content of the message",
-                "type": "textarea",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "reactions": [
-          {
-            "name": "send_reaction",
-            "display_name": "Send Reaction",
-            "description": "React to a message",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "icon": "mdi:emoticon-outline",
-            "options": [
-              {
-                "name": "message_id",
-                "display_name": "Message ID",
-                "description": "The ID of the message to react to",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "reaction",
-                "display_name": "Reaction",
-                "description": "The reaction emoji",
-                "type": "text",
-                "required": true
-              }
-            ]
+            "options": []
           }
         ]
       }
