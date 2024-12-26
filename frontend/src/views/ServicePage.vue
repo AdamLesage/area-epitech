@@ -18,6 +18,7 @@ const route = useRoute();
 const router = useRouter();
 
 const serviceId: string = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
+const noHeader: boolean = route.query.header === 'false';
 
 const store = useServiceStore();
 console.log('Service ID:', serviceId);
@@ -68,6 +69,11 @@ const sortedCategories = computed(() => {
     return allCategories;
 });
 
+const allItemsCategorySelected = computed(() => {
+    if (!categorySelected.value) return [];
+    return [...categorySelected.value.actions, ...categorySelected.value.reactions];
+})
+
 function prevSlide() {
     currentSlide.value = (currentSlide.value - 1 + service!.categories.length) % service!.categories.length;
     categorySelected.value = service!.categories[currentSlide.value];
@@ -98,7 +104,7 @@ if (service && service.categories) {
 }
 
 const nameCapitalized = ref(name.value.toUpperCase());
-const isHeroVisible = ref(true);
+const isHeroVisible = ref(!noHeader);
 
 const isCircleFirst = ref(true);
 const scrollY = ref(0);
@@ -119,7 +125,7 @@ const openServicePage = () => {
 
 function handleBackButtonFirstPage() {
     console.log('Back button clicked on first page');
-    window.history.back();
+    router.push(`/dashboard`);
 }
 
 function handleRedirectUserPage() {
@@ -178,9 +184,9 @@ function scrollToHavingTrouble() {
     }
 }
 
-function copyEmail() {
-    navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
-    alert('Email copied to clipboard');
+function copyColor() {
+    navigator.clipboard.writeText(service!.color);
+    alert('Color copied to clipboard');
 }
 
 function scrollToTop() {
@@ -395,26 +401,15 @@ function scrollToTop() {
             </div>
 
             <div class="flex justify-center w-[66.75rem] gap-6 mt-12" v-if="categorySelected">
-                <div class="flex items-center gap-6" v-if="categorySelected.reactions.length != 0">
+                <div class="flex items-center gap-6" v-if="allItemsCategorySelected.length != 0">
                     <div class="flex flex-wrap gap-6">
                         <AREAInfoComponent
-                            v-for="reaction in categorySelected.reactions"
-                            :key="reaction.name"
-                            :object="reaction"
+                            v-for="item in allItemsCategorySelected"
+                            :key="item.name"
+                            :object="item"
                             :color="service.color"
                             class="hover:cursor-pointer"
-                            @click="redirectToCard(categorySelected.name, reaction.name)"/>
-                    </div>
-                </div>
-                <div class="flex items-center gap-6" v-if="categorySelected.actions.length != 0">
-                    <div class="flex flex-wrap gap-6">
-                        <AREAInfoComponent
-                            v-for="action in categorySelected.actions"
-                            :key="action.name"
-                            :object="action"
-                            :color="service.color"
-                            class="hover:cursor-pointer"
-                            @click="redirectToCard(categorySelected.name, action.name)"/>
+                            @click="redirectToCard(categorySelected.name, item.name)"/>
                     </div>
                 </div>
             </div>
@@ -425,7 +420,7 @@ function scrollToTop() {
             v-if="service && view === 'actions'">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
-                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="switchView('overview')"/>
                 <h1 class="text-3xl font-extrabold text-white mb-2">Actions: {{ nbActions }}</h1>
                 <p class="text-lg text-white/80 text-center">
                     Actions are triggered by events on the platform. They are retrieved automatically.<br />
@@ -454,7 +449,7 @@ function scrollToTop() {
             v-if="service && view === 'reactions'">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
-                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="switchView('overview')"/>
                 <h1 class="text-3xl font-extrabold text-white mb-2">Reactions: {{ nbReactions }}</h1>
                 <p class="text-lg text-white/80 text-center">
                     Reactions are triggered by actions on the platform. They are executed automatically.<br />
@@ -483,7 +478,7 @@ function scrollToTop() {
             v-if="service && view === 'overview'">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
-                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="switchView('overview')"/>
                 <h1 class="text-3xl font-extrabold text-white mb-2">Overview: {{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }}</h1>
                 <p class="text-lg text-white/80 text-center">
                     Here is an overview of the {{ service.name }} service.
@@ -547,26 +542,15 @@ function scrollToTop() {
                 </button>
             </div>
             <div class="flex justify-center w-[66.75rem] gap-6 mt-12" v-if="categorySelected">
-                <div class="flex items-center gap-6" v-if="categorySelected.reactions.length != 0">
+                <div class="flex items-center gap-6" v-if="allItemsCategorySelected.length != 0">
                     <div class="flex flex-wrap gap-6">
                         <AREAInfoComponent
-                            v-for="reaction in categorySelected.reactions"
-                            :key="reaction.name"
-                            :object="reaction"
+                            v-for="item in allItemsCategorySelected"
+                            :key="item.name"
+                            :object="item"
                             :color="service.color"
                             class="hover:cursor-pointer"
-                            @click="redirectToCard(categorySelected.name, reaction.name)"/>
-                    </div>
-                </div>
-                <div class="flex items-center gap-6" v-if="categorySelected.actions.length != 0">
-                    <div class="flex flex-wrap gap-6">
-                        <AREAInfoComponent
-                            v-for="action in categorySelected.actions"
-                            :key="action.name"
-                            :object="action"
-                            :color="service.color"
-                            class="hover:cursor-pointer"
-                            @click="redirectToCard(categorySelected.name, action.name)"/>
+                            @click="redirectToCard(categorySelected.name, item.name)"/>
                     </div>
                 </div>
             </div>
@@ -624,9 +608,9 @@ function scrollToTop() {
             v-if="service && view === 'details'">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
-                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="switchView('overview')"/>
                 <h1 class="text-3xl font-extrabold text-white">{{ nameCapitalized }}</h1>
-                <p class="text-lg text-white/80 text-center">
+                <p class="text-lg text-white/80 text-center hover:cursor-pointer" @click="copyColor">
                     color: {{ service.color }}
                 </p>
             </div>

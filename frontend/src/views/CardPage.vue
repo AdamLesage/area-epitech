@@ -72,7 +72,12 @@ function redirectToCategory() {
 
 function handleBackButtonFirstPage() {
     console.log('Back button clicked on first page');
-    window.history.back();
+    router.push(`/service/${service!.name}?header=false`);
+}
+
+function redirectToService() {
+    console.log('Redirecting to service:', service!.name);
+    router.push(`/service/${service!.name}?header=false`);
 }
 
 window.addEventListener('scroll', () => {
@@ -92,7 +97,7 @@ window.addEventListener('scroll', () => {
             v-if="service">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
-                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="redirectToService"/>
                 <h1 class="text-3xl font-extrabold text-white mb-2">{{ category.display_name }}: {{ card.display_name }}</h1>
                 <p class="text-lg text-white/80 text-center">
                     "{{ card.display_name }}" {{ isAction ? 'action' : 'reaction' }} is part of the {{ category.display_name }} category on {{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }} service<br />
@@ -148,10 +153,10 @@ window.addEventListener('scroll', () => {
                         </div>
                     </div>
                     <div class="flex flex-col justify-start w-2/3">
-                        <h1 class="text-lg font-black text-[#333]">When {{ card.description.toLowerCase() }} on {{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }}</h1>
+                        <h1 class="text-lg font-black text-[#333]">{{ isAction ? 'When' : 'Then' }} {{ card.description.toLowerCase() }} on {{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }}</h1>
                         <ul>
                             <li v-for="(option, index) in card.options" :key="option.name">
-                                <p class="text-lg font-black text-[#333] break-words">• {{ index == 0 ? 'where:' : 'and where:' }} <span class="bg-gray-200">{{ option.display_name.toLowerCase() }}</span> is "<span class="underline decoration-2">{{ exampleOptions[index] }}</span>"</p>
+                                <p class="text-lg font-black text-[#333] break-words">• {{ isAction ? (index == 0 ? 'where:' : 'and where:') : (index == 0 ? 'with' : 'and with') }} <span class="bg-gray-200">{{ option.display_name.toLowerCase() }}</span> {{ isAction ? 'is' : 'as' }} "<span class="underline decoration-2">{{ exampleOptions[index] }}</span>"</p>
                             </li>
                         </ul>
                     </div>

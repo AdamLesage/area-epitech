@@ -70,7 +70,7 @@ const sortedItems = computed(() => {
 
 function handleBackButton() {
     console.log('Back button clicked on first page');
-    window.history.back();
+    router.push(`/service/${service!.name}?header=false`);
 }
 
 function redirectToCard(cardName: string) {
@@ -82,6 +82,11 @@ function redirectToCard(cardName: string) {
     if (!card)
         return;
     router.push(`/service/${serviceId}/category/${category.name}/${ isAction ? 'action' : 'reaction' }/${card.name}`);
+}
+
+function redirectToService() {
+    console.log('Redirecting to service:', service!.name);
+    router.push(`/service/${service!.name}?header=false`);
 }
 
 window.addEventListener('scroll', () => {
@@ -101,7 +106,7 @@ window.addEventListener('scroll', () => {
             v-if="service">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
-                <Icon :icon="service.icon" class="w-24 h-24 text-white" />
+                <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="redirectToService"/>
                 <h1 class="text-3xl font-extrabold text-white mb-2">{{ category.display_name }}</h1>
                 <p class="text-lg text-white/80 text-center">
                     Check every app the {{ category.display_name }} category has to offer...<br />
