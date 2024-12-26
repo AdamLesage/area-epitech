@@ -28,6 +28,17 @@ export interface Action {
     options: Option[];
 }
 
+export interface Item {
+    name: string;
+    description: string;
+    display_name: string;
+    icon: string;
+    version: string;
+    release_date: string;
+    updated_date: string;
+    options: Option[];
+}
+
 export interface Option {
     name: string;
     display_name: string;

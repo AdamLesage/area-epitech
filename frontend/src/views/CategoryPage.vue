@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useServiceStore } from '@/stores/service';
 import { Category } from '@/types/services';
 
-import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
-import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
-import RateComponent from '@/components/RateComponent.vue';
-import SaveComponent from '@/components/SaveComponent.vue';
-import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
+import FooterComponent from '@/components/FooterComponent.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -39,33 +35,13 @@ type Mode = 'Actions' | 'Reactions' | 'Both';
 const color = ref<string>(service!.color);
 const name = ref<string>(service!.name);
 const logo = ref<string>(service!.icon);
-const rate = ref<number>(service!.reviews.rate);
-const reviews = ref<number>(service!.reviews.count);
-const saves = ref<number>(service!.saves);
-const isActivated = ref<boolean>(true);
 const nbActions = ref<number>(0);
 const nbReactions = ref<number>(0);
-const currentSlide = ref<number>(0);
 const categorySelected = ref<Category | null>(null);
 const modeSelected = ref<Mode>('Both');
 const search = ref<string>('');
-
-function prevSlide() {
-    currentSlide.value = (currentSlide.value - 1 + service!.categories.length) % service!.categories.length;
-    categorySelected.value = service!.categories[currentSlide.value];
-}
-
-function nextSlide() {
-    currentSlide.value = (currentSlide.value + 1) % service!.categories.length;
-    categorySelected.value = service!.categories[currentSlide.value];
-}
-
-const view = ref<string>('both');
-
-function switchView(newView: string) {
-    console.log('Switching view to:', newView);
-    view.value = newView;
-}
+const nameCapitalized = ref(name.value.toUpperCase());
+const scrollY = ref(0);
 
 if (service && service.categories) {
     categorySelected.value = service.categories[0];
@@ -77,86 +53,6 @@ if (service && service.categories) {
 } else {
     console.error('No categories found in service');
 }
-
-const nameCapitalized = ref(name.value.toUpperCase());
-const isHeroVisible = ref(true);
-
-const isCircleFirst = ref(true);
-const scrollY = ref(0);
-
-window.addEventListener('scroll', () => {
-    scrollY.value = window.scrollY;
-})
-
-const handleClick = () => {
-    isActivated.value = !isActivated.value;
-    isCircleFirst.value = !isCircleFirst.value;
-}
-
-const openServicePage = () => {
-    console.log('Service page opened');
-    isHeroVisible.value = false;
-}
-
-function handleBackButtonFirstPage() {
-    console.log('Back button clicked on first page');
-    window.history.back();
-}
-
-function handleRedirectUserPage() {
-    console.log('Redirecting to user page');
-    router.push('/userinfo');
-}
-
-function handleAreaRedirect() {
-    console.log('Redirecting to area page');
-    router.push('/areas');
-}
-
-function handleScrollAttempt(event: WheelEvent) {
-    if (event.deltaY > 0) {
-        openServicePage();
-    }
-}
-
-function handleScrollAttemptSecondPage(event: WheelEvent) {
-    if (event.deltaY < 0 && scrollY.value === 0) {
-        isHeroVisible.value = true;
-    }
-}
-
-function scrollToHavingTrouble() {
-    const element = document.getElementById('having-trouble');
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-function scrollToAllApps() {
-    const element = document.getElementById('all-aps');
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-
-function scrollToCategories() {
-    const element = document.getElementById('categories');
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-
-function copyEmail() {
-    navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
-    alert('Email copied to clipboard');
-}
-
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-};
 
 const sortedItems = computed(() => {
     if (modeSelected.value === 'Actions' && category?.actions) {
@@ -171,18 +67,36 @@ const sortedItems = computed(() => {
         return [];
     }
 });
+
+function handleBackButton() {
+    console.log('Back button clicked on first page');
+    window.history.back();
+}
+
+function redirectToCard(cardName: string) {
+    console.log('Redirecting to card:', cardName, ' from category:', category!.name);
+    if (!category)
+        return;
+    const card = category.actions.find(action => action.name === cardName) || category.reactions.find(reaction => reaction.name === cardName);
+    const isAction = category.actions.find(action => action.name === cardName) ? true : false;
+    if (!card)
+        return;
+    router.push(`/service/${serviceId}/category/${category.name}/${ isAction ? 'action' : 'reaction' }/${card.name}`);
+}
+
+window.addEventListener('scroll', () => {
+    scrollY.value = window.scrollY;
+})
 </script>
 
 <template>
-    <!-- Second Page -->
     <div v-if="category" class="flex flex-col justify-between">
         <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
             :style="{ backgroundColor: color }">
-            <ServiceNavScrollComponent @back-button="handleBackButtonFirstPage"
+            <ServiceNavScrollComponent @back-button="handleBackButton"
                 :logo="logo" :title="nameCapitalized" />
         </div>
 
-        <!-- All Apps -->
         <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-36"
             v-if="service">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
@@ -227,7 +141,9 @@ const sortedItems = computed(() => {
                             v-for="item in sortedItems"
                             :key="item.name"
                             :object="item"
-                            :color="service.color"/>
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(item.name)"/>
                     </div>
                     <div class="flex flex-wrap gap-6 w-full" v-else>
                         <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1 text-[#333]">No results found</h1>
@@ -235,23 +151,6 @@ const sortedItems = computed(() => {
                 </div>
             </div>
         </div>
-
-        <footer class="flex justify-between items-center flex-col h-64 py-8 mt-24" :style="{ backgroundColor: '#333' }">
-            <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
-            <div class="flex w-full justify-center items-center px-8">
-                <div class="flex gap-4 items-center w-full justify-center">
-                    <Icon icon="material-symbols:mail-outline" class="w-6 h-6 text-white" />
-                    <p class="text-white hover:cursor-pointer" @click="copyEmail">contact.area.ownspace@gmail.com</p>
-                </div>
-                <p class="w-full text-center text-white">Project made under Epitech © PGE program</p>
-                <h1 class="text-4xl font-black text-white/60 text-center w-full hover:cursor-pointer" @click="scrollToTop">AREA</h1>
-            </div>
-            <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm">
-                <p class="hover:underline hover:cursor-pointer">Mentions</p>
-                <p class="hover:underline hover:cursor-pointer">Cookies</p>
-                <p class="hover:underline hover:cursor-pointer">Privacy</p>
-                <p class="hover:underline hover:cursor-pointer">Terms</p>
-            </div>
-        </footer>
+        <FooterComponent />
     </div>
 </template>

@@ -49,6 +49,11 @@ const router = createRouter({
       component: () => import('@/views/CategoryPage.vue'),
     },
     {
+      path: '/service/:id/category/:category/:type/:card',
+      name: 'service-card',
+      component: () => import('@/views/CardPage.vue'),
+    },
+    {
       path: '/userinfo',
       name: 'userinfo',
       component: () => import('@/views/UserInfoPage.vue'),

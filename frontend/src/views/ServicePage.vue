@@ -12,6 +12,7 @@ import RateComponent from '@/components/RateComponent.vue';
 import SaveComponent from '@/components/SaveComponent.vue';
 import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
+import FooterComponent from '@/components/FooterComponent.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -139,6 +140,25 @@ function redirectToCategory(categoryName: string) {
     }
 }
 
+function redirectToCard(categoryName: string | null, cardName: string) {
+    let category = null;
+    if (!categoryName) {
+        category = service!.categories.find(category => category.actions.find(action => action.name === cardName) || category.reactions.find(reaction => reaction.name === cardName));
+    } else
+        category = service!.categories.find(category => category.name === categoryName);
+    console.log('Redirecting to card:', cardName, ' from category:', categoryName);
+    if (category) {
+        const card = category.actions.find(action => action.name === cardName) || category.reactions.find(reaction => reaction.name === cardName);
+        const isAction = category.actions.find(action => action.name === cardName) ? true : false;
+        if (card) {
+            if (isAction)
+                router.push(`/service/${serviceId}/category/${category.name}/action/${card.name}`);
+            else
+                router.push(`/service/${serviceId}/category/${category.name}/reaction/${card.name}`);
+        }
+    }
+}
+
 function handleScrollAttempt(event: WheelEvent) {
     if (event.deltaY > 0) {
         openServicePage();
@@ -158,13 +178,6 @@ function scrollToHavingTrouble() {
     }
 }
 
-function scrollToAllApps() {
-    const element = document.getElementById('all-aps');
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-
 function copyEmail() {
     navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
     alert('Email copied to clipboard');
@@ -174,12 +187,6 @@ function scrollToTop() {
     window.scrollTo({
         top: 0,
         behavior: 'smooth'
-    });
-};
-
-function scrollToTopInstant() {
-    window.scrollTo({
-        top: 0
     });
 };
 </script>
@@ -354,7 +361,7 @@ function scrollToTopInstant() {
         <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-12"
             v-if="service && view === 'categories'">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
-                :style="{ backgroundColor: service.color }">
+                :style="{ backgroundColor: '#333' }">
                 <h1 class="text-3xl font-extrabold text-white mb-2 hover:underline decoration-2 hover:cursor-pointer" @click="redirectToCategory(categorySelected!.name)">Category: {{ categorySelected?.display_name }}</h1>
             </div>
 
@@ -394,7 +401,9 @@ function scrollToTopInstant() {
                             v-for="reaction in categorySelected.reactions"
                             :key="reaction.name"
                             :object="reaction"
-                            :color="service.color"/>
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(categorySelected.name, reaction.name)"/>
                     </div>
                 </div>
                 <div class="flex items-center gap-6" v-if="categorySelected.actions.length != 0">
@@ -403,7 +412,9 @@ function scrollToTopInstant() {
                             v-for="action in categorySelected.actions"
                             :key="action.name"
                             :object="action"
-                            :color="service.color"/>
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(categorySelected.name, action.name)"/>
                     </div>
                 </div>
             </div>
@@ -430,7 +441,9 @@ function scrollToTopInstant() {
                             v-for="action in category.actions"
                             :key="action.name"
                             :object="action"
-                            :color="service.color"/>
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(category.name, action.name)"/>
                     </div>
                 </div>
             </div>
@@ -457,7 +470,9 @@ function scrollToTopInstant() {
                             v-for="reaction in category.reactions"
                             :key="reaction.name"
                             :object="reaction"
-                            :color="service.color"/>
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(category.name, reaction.name)"/>
                     </div>
                 </div>
             </div>
@@ -538,7 +553,9 @@ function scrollToTopInstant() {
                             v-for="reaction in categorySelected.reactions"
                             :key="reaction.name"
                             :object="reaction"
-                            :color="service.color"/>
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(categorySelected.name, reaction.name)"/>
                     </div>
                 </div>
                 <div class="flex items-center gap-6" v-if="categorySelected.actions.length != 0">
@@ -547,7 +564,9 @@ function scrollToTopInstant() {
                             v-for="action in categorySelected.actions"
                             :key="action.name"
                             :object="action"
-                            :color="service.color"/>
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(categorySelected.name, action.name)"/>
                     </div>
                 </div>
             </div>
@@ -589,7 +608,9 @@ function scrollToTopInstant() {
                             v-for="item in sortedCategories"
                             :key="item.name"
                             :object="item"
-                            :color="service.color"/>
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(null, item.name)"/>
                     </div>
                     <div class="flex flex-wrap gap-6 w-full" v-else>
                         <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1 text-[#333]">No results found</h1>
@@ -616,22 +637,22 @@ function scrollToTopInstant() {
                 </div>
                 <h1 class="text-xl font-black text-start w-full rounded-lg text-[#333] mt-4">Categories:</h1>
                 <div class="flex justify-start flex-wrap w-full gap-4">
-                    <div class="gap-4 px-4 py-1 rounded-md" :style="{ backgroundColor: service.color }" v-for="category in service.categories" :key="category.name">
+                    <div class="gap-4 px-4 py-1 rounded-md hover:cursor-pointer ml-4" :style="{ backgroundColor: service.color }" v-for="category in service.categories" :key="category.name" @click="redirectToCategory(category.name)">
                         <h1 class="text-lg font-semibold text-start w-full rounded-lg text-white">{{ category.display_name }}</h1>
                     </div>
                 </div>
-                <h1 id="having-trouble" class="text-xl font-black text-start w-full rounded-lg pl-1 text-[#333] mt-8 mb-4"><span class="hover:cursor-pointer text-gray-500" @click="scrollToHavingTrouble">#</span> Having trouble ?</h1>
+                <h1 id="having-trouble" class="text-xl font-black text-start w-full rounded-lg pl-1 text-[#333] mt-12 mb-4"><span class="hover:cursor-pointer text-gray-500" @click="scrollToHavingTrouble">#</span> Having trouble ?</h1>
                 <!-- Trouble advices -->
                 <!-- Verify your connected to the service, check the different service actions and reactions card description -->
-                <div class="flex flex-col w-full gap-6">
-                    <div class="flex justify-start gap-4 items-center pl-8">
+                <div class="flex flex-col w-full gap-4">
+                    <div class="flex justify-start gap-4 items-center ml-7 p-1 hover:bg-gray-50 rounded-lg">
                         <span class="h-12 w-1.5 rounded-md" :style="{ backgroundColor: service.color }" />
                         <div class="flex flex-col w-full">
                             <h1 class="text-lg font-semibold text-start w-full rounded-lg text-[#333]">Verify your connected to the service</h1>
                             <p class="text-lg text-start w-full text-gray-500">Make sure you are connected to the service. If not, please connect to the service.</p>
                         </div>
                     </div>
-                    <div class="flex justify-start gap-4 items-center pl-8">
+                    <div class="flex justify-start gap-4 items-center ml-7 p-1 hover:bg-gray-50 rounded-lg">
                         <span class="h-16 w-1.5 rounded-md" :style="{ backgroundColor: service.color }" />
                         <div class="flex flex-col w-full">
                             <h1 class="text-lg font-semibold text-start w-full rounded-lg text-gray-900">Check the different service action and reaction cards description</h1>
@@ -641,22 +662,6 @@ function scrollToTopInstant() {
                 </div>
             </div>
         </div>
-        <footer class="flex justify-between items-center flex-col h-64 py-8 mt-24" :style="{ backgroundColor: '#333' }">
-            <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
-            <div class="flex w-full justify-center items-center px-8">
-                <div class="flex gap-4 items-center w-full justify-center">
-                    <Icon icon="material-symbols:mail-outline" class="w-6 h-6 text-white" />
-                    <p class="text-white hover:cursor-pointer" @click="copyEmail">contact.area.ownspace@gmail.com</p>
-                </div>
-                <p class="w-full text-center text-white">Project made under Epitech © PGE program</p>
-                <h1 class="text-4xl font-black text-white/60 text-center w-full hover:cursor-pointer" @click="scrollToTop">AREA</h1>
-            </div>
-            <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm">
-                <p class="hover:underline hover:cursor-pointer">Mentions</p>
-                <p class="hover:underline hover:cursor-pointer">Cookies</p>
-                <p class="hover:underline hover:cursor-pointer">Privacy</p>
-                <p class="hover:underline hover:cursor-pointer">Terms</p>
-            </div>
-        </footer>
+        <FooterComponent />
     </div>
 </template>
