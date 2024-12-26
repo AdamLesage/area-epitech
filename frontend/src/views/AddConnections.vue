@@ -1,17 +1,30 @@
 <template>
-    <div class="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white font-sans flex justify-center items-center">
-        <div class="bg-gray-900 rounded-3xl p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl relative">
-            <button @click="goBack" class="absolute top-4 right-4 p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all text-xl">Back</button>
-            <h2 class="text-4xl font-semibold mb-8 tracking-wide">Add a New Connection</h2>
-            <div class="grid grid-cols-4 gap-6">
+    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white font-sans flex justify-center items-center px-4 sm:px-8">
+        <!-- Main container -->
+        <div class="bg-gray-900 rounded-3xl p-6 sm:p-10 w-full max-w-3xl text-center shadow-2xl relative">
+            <!-- Back button -->
+            <button 
+                @click="goBack" 
+                class="absolute top-4 right-4 p-2 sm:p-3 md:p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all text-sm sm:text-lg md:text-xl focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                aria-label="Back to previous page"
+                role="button"
+            >
+                Back
+            </button>
+            <!-- Title -->
+            <h2 class="text-2xl sm:text-4xl font-semibold mb-6 sm:mb-8 tracking-wide">Add a New Connection</h2>
+
+            <!-- Responsive icons grid -->
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-4 sm:gap-6">
                 <button
                     v-for="platform in platforms"
                     :key="platform.name"
                     :style="{ backgroundColor: platform.color }"
                     @click="selectPlatform(platform.name)"
-                    class="p-6 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all"
-                >
-                    <Icon :icon="platform.icon" class="text-4xl text-white" />
+                    class="p-4 sm:p-6 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all focus:outline-none focus:ring-2 focus:ring-white"
+                    :aria-label="`Select ${platform.name}`"
+                    role="button">
+                    <Icon :icon="platform.icon" class="text-3xl sm:text-4xl text-white" />
                 </button>
             </div>
         </div>
@@ -24,7 +37,6 @@ import { Icon } from "@iconify/vue";
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
 
 // List of platforms to connect to with their respective icons and colors
 const platforms = ref([
