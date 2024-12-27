@@ -12,7 +12,7 @@ const { v4: uuidv4 } = require('uuid');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const service = require('../services/services.json');
+const service = require('../services/about.json');
 
 function attributeEndpointToReactionGithub(name) {
     const nameDict = {
