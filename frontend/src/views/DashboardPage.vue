@@ -34,7 +34,7 @@ import ExplorePlatformsComponent from '../components/ExplorePlatformsComponent.v
 
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { Service, Action, Reaction, ServiceDetails } from '@/types/services'; // Import the Service type
+import { Service, Action, Reaction, ServiceDetails, Category } from '@/types/services'; // Import the Service type
 import { useRouter } from 'vue-router';
 import { useServiceStore } from '@/stores/service'; // Import the useServiceStore function
 import { useUserStore } from '@/stores/users';
@@ -121,22 +121,6 @@ onMounted(async() => {
         console.log('Service:', service, 'added to serviceStore:', serviceStore.services);
     }
     console.log(availableServices.value);
-    // Getting all the services areas
-    const response2: {
-        status: number, data: { services: ServiceDetails[] }} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/services-areas.json`);
-    console.log(response2);
-    if (response2.status !== 200) {
-        console.error('Error while fetching services areas');
-        return;
-    }
-    for (const service of availableServices.value) {
-        const serviceDetails = response2.data.services.find(s => s.name === service.name);
-        if (!serviceDetails) {
-            console.error('No service details found for service:', service.name);
-            continue;
-        }
-        serviceStore.setServiceAreas(service.name, serviceDetails.actions, serviceDetails.reactions);
-    }
 })
 </script>
 
