@@ -89,7 +89,6 @@ const view = ref<string>('overview');
 function switchView(newView: string) {
     console.log('Switching view to:', newView);
     view.value = newView;
-    scrollToTop();
 }
 
 if (service && service.categories) {
@@ -125,16 +124,19 @@ const openServicePage = () => {
 
 function handleBackButtonFirstPage() {
     console.log('Back button clicked on first page');
+    window.scrollTo(0, 0);
     router.push(`/dashboard`);
 }
 
 function handleRedirectUserPage() {
     console.log('Redirecting to user page');
+    window.scrollTo(0, 0);
     router.push('/userinfo');
 }
 
 function handleAreaRedirect() {
     console.log('Redirecting to area page');
+    window.scrollTo(0, 0);
     router.push('/areas');
 }
 
@@ -142,7 +144,9 @@ function redirectToCategory(categoryName: string) {
     console.log('Redirecting to category:', categoryName);
     const category = service!.categories.find(category => category.name === categoryName);
     if (category) {
+        window.scrollTo(0, 0);
         router.push(`/service/${serviceId}/category/${category.name}`);
+        window.scrollTo(0, 0);
     }
 }
 
@@ -157,6 +161,7 @@ function redirectToCard(categoryName: string | null, cardName: string) {
         const card = category.actions.find(action => action.name === cardName) || category.reactions.find(reaction => reaction.name === cardName);
         const isAction = category.actions.find(action => action.name === cardName) ? true : false;
         if (card) {
+            window.scrollTo(0, 0);
             if (isAction)
                 router.push(`/service/${serviceId}/category/${category.name}/action/${card.name}`);
             else
@@ -188,13 +193,6 @@ function copyColor() {
     navigator.clipboard.writeText(service!.color);
     alert('Color copied to clipboard');
 }
-
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-};
 </script>
 
 <template>

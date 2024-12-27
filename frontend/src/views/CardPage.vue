@@ -1,62 +1,74 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useServiceStore } from '@/stores/service';
 import { Category, Item } from '@/types/services';
+import { usePopupStore } from '@/stores/popup';
 
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import CustomInput from '@/components/CustomInput.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
+import { is } from '@vee-validate/rules';
 
 const route = useRoute();
 const router = useRouter();
+const popupStore = usePopupStore();
 
 const serviceId: string = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 const categoryId: string = Array.isArray(route.params.category) ? route.params.category[0] : route.params.category;
 const cardId: string = Array.isArray(route.params.card) ? route.params.card[0] : route.params.card;
-const isAction: boolean = route.params.type === 'action';
+const isAction = ref<boolean>(route.params.type === 'action');
 
 console.log('Is Action:', isAction);
 const store = useServiceStore();
 console.log('Service ID:', serviceId);
-const service = store.services.find(service => service.name === serviceId) || null;
+const service = ref(store.services.find(service => service.name === serviceId) || null);
 console.log('Service:', service);
-const category = service?.categories.find(category => category.name === categoryId) || null;
+const category = ref(service.value?.categories.find(category => category.name === categoryId) || null);
 console.log('Category:', category);
-const card: Item | null = category?.actions.find(action => action.name === cardId) || category?.reactions.find(reaction => reaction.name === cardId) || null;
+const card = ref<Item | null>(category.value?.actions.find(action => action.name === cardId) || category.value?.reactions.find(reaction => reaction.name === cardId) || null);
 console.log('Card:', card);
 
-if (!service) {
+if (!service.value) {
     console.error('Service not found');
     router.push('/dashboard');
 }
-if (!category) {
+if (!category.value) {
     console.error('Category not found');
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
     router.push(`/service/${serviceId}`);
 }
-if (!card) {
+if (!card.value) {
     console.error('Card not found');
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
     router.push(`/service/${serviceId}/category/${categoryId}`);
 }
 
-const exampleOptions = ref(card?.options.map(option => option.name) || []);
+const exampleOptions = ref(card.value?.options.map(option => option.name) || []);
 for (let i = 0; i < exampleOptions.value.length; i++) {
     exampleOptions.value[i] = '';
 }
 
-const color = ref<string>(service!.color);
-const name = ref<string>(service!.name);
-const logo = ref<string>(service!.icon);
+const color = ref<string>(service.value!.color);
+const name = ref<string>(service.value!.name);
+const logo = ref<string>(service.value!.icon);
 const nbActions = ref<number>(0);
 const nbReactions = ref<number>(0);
 const categorySelected = ref<Category | null>(null);
 const nameCapitalized = ref(name.value.toUpperCase());
 const scrollY = ref(0);
+const reload = ref(0);
 
-if (service && service.categories) {
-    categorySelected.value = service.categories[0];
-    for (const category of service.categories) {
+if (service.value && service.value.categories) {
+    categorySelected.value = service.value.categories[0];
+    for (const category of service.value.categories) {
         console.log('Category:', category);
         nbActions.value += category.actions.length;
         nbReactions.value += category.reactions.length;
@@ -65,19 +77,91 @@ if (service && service.categories) {
     console.error('No categories found in service');
 }
 
+watch(() => route.params, (newRouteParams) => {
+    const newServiceId: string = Array.isArray(newRouteParams.id) ? newRouteParams.id[0] : newRouteParams.id;
+    const newCategoryId: string = Array.isArray(newRouteParams.category) ? newRouteParams.category[0] : newRouteParams.category;
+    const newCardId: string = Array.isArray(newRouteParams.card) ? newRouteParams.card[0] : newRouteParams.card;
+    const newIsAction: boolean = newRouteParams.type === 'action';
+
+    if (newServiceId != service.value?.name) {
+        console.log('Service ID changed:', newServiceId);
+        service.value = store.services.find(service => service.name === newServiceId) || null;
+        console.log('Service:', service);
+        if (!service.value) {
+            console.error('Service not found');
+            router.push('/dashboard');
+            return;
+        }
+        if (service.value.categories) {
+            categorySelected.value = service.value.categories[0];
+            for (const category of service.value.categories) {
+                console.log('Category:', category);
+                nbActions.value += category.actions.length;
+                nbReactions.value += category.reactions.length;
+            }
+        }
+        color.value = service.value.color;
+        name.value = service.value.name;
+        logo.value = service.value.icon;
+        nameCapitalized.value = name.value.toUpperCase();
+    }
+    if (newCategoryId != category.value?.name) {
+        console.log('Category ID changed:', newCategoryId);
+        category.value = service.value?.categories.find(category => category.name === newCategoryId) || null;
+        console.log('Category:', category);
+        if (!category.value) {
+            console.error('Category not found');
+            router.push(`/service/${serviceId}`);
+            return;
+        }
+    }
+    if (newCardId != card.value?.name) {
+        console.log('Card ID changed:', newCardId);
+        card.value = category.value?.actions.find(action => action.name === newCardId) || category.value?.reactions.find(reaction => reaction.name === newCardId) || null;
+        console.log('Card:', card);
+        if (!card.value) {
+            console.error('Card not found');
+            router.push(`/service/${serviceId}/category/${categoryId}`);
+            return;
+        }
+    }
+    if (newIsAction != isAction.value) {
+        console.log('Type changed:', newIsAction);
+        console.log('Is Action:', newIsAction);
+        isAction.value = newIsAction;
+    }
+    reload.value++;
+});
+
+function selectCard() {
+    console.log('Selected card:', card);
+    if (!card.value || !service.value || !category.value) return;
+    if (isAction.value) {
+        popupStore.setAction(card.value, category.value, service.value);
+    } else {
+        popupStore.setReaction(card.value, category.value, service.value);
+    }
+}
+
 function redirectToCategory() {
-    console.log('Redirecting to category:', category!.name);
-    router.push(`/service/${serviceId}/category/${category!.name}`);
+    console.log('Redirecting to category:', category.value!.name);
+    window.scrollTo(0, 0);
+    router.push(`/service/${serviceId}/category/${category.value!.name}`);
+    window.scrollTo(0, 0);
 }
 
 function handleBackButtonFirstPage() {
     console.log('Back button clicked on first page');
-    router.push(`/service/${service!.name}?header=false`);
+    window.scrollTo(0, 0);
+    router.push(`/service/${service.value!.name}?header=false`);
+    window.scrollTo(0, 0);
 }
 
 function redirectToService() {
-    console.log('Redirecting to service:', service!.name);
-    router.push(`/service/${service!.name}?header=false`);
+    console.log('Redirecting to service:', service.value!.name);
+    window.scrollTo(0, 0);
+    router.push(`/service/${service.value!.name}?header=false`);
+    window.scrollTo(0, 0);
 }
 
 window.addEventListener('scroll', () => {
@@ -86,7 +170,7 @@ window.addEventListener('scroll', () => {
 </script>
 
 <template>
-    <div v-if="service && category && card" class="flex flex-col justify-between">
+    <div v-if="service && category && card" class="flex flex-col justify-between" :key="reload">
         <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
             :style="{ backgroundColor: color }">
             <ServiceNavScrollComponent @back-button="handleBackButtonFirstPage"
@@ -103,6 +187,12 @@ window.addEventListener('scroll', () => {
                     "{{ card.display_name }}" {{ isAction ? 'action' : 'reaction' }} is part of the {{ category.display_name }} category on {{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }} service<br />
                     Below are the details of the {{ isAction ? 'action' : 'reaction' }}... 
                 </p>
+            </div>
+            <div class="w-full flex justify-center mt-12">
+                <button @click="selectCard" class="bg-[#333] p-4 w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4">
+                    Use this {{ isAction ? 'Action' : 'Reaction' }}
+                    <Icon icon="fluent:cursor-click-24-filled" class="w-8 h-8 text-white" />
+                </button>
             </div>
             <div class="flex w-[66.75rem] flex-col mt-12">
                 <div class="flex flex-col gap-1">
@@ -162,6 +252,12 @@ window.addEventListener('scroll', () => {
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="w-full flex justify-center mt-12">
+            <button @click="selectCard" class="bg-[#333] p-4 w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4">
+                Use this {{ isAction ? 'Action' : 'Reaction' }}
+                <Icon icon="fluent:cursor-click-24-filled" class="w-8 h-8 text-white" />
+            </button>
         </div>
         <FooterComponent />
     </div>

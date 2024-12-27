@@ -70,7 +70,9 @@ const sortedItems = computed(() => {
 
 function handleBackButton() {
     console.log('Back button clicked on first page');
+    window.scrollTo(0, 0);
     router.push(`/service/${service!.name}?header=false`);
+    window.scrollTo(0, 0);
 }
 
 function redirectToCard(cardName: string) {
@@ -81,12 +83,16 @@ function redirectToCard(cardName: string) {
     const isAction = category.actions.find(action => action.name === cardName) ? true : false;
     if (!card)
         return;
+    window.scrollTo(0, 0);
     router.push(`/service/${serviceId}/category/${category.name}/${ isAction ? 'action' : 'reaction' }/${card.name}`);
+    window.scrollTo(0, 0);
 }
 
 function redirectToService() {
     console.log('Redirecting to service:', service!.name);
+    window.scrollTo(0, 0);
     router.push(`/service/${service!.name}?header=false`);
+    window.scrollTo(0, 0);
 }
 
 window.addEventListener('scroll', () => {

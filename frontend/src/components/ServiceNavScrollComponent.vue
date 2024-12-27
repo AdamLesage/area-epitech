@@ -2,6 +2,7 @@
 import BackButton from '@/components/BackButton.vue';
 import NavButton from '@/components/NavButton.vue';
 import { Icon } from '@iconify/vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const emit = defineEmits([
     'redirect-explore',
@@ -35,6 +36,25 @@ const handleBackButton = () => {
     emit('back-button');
 }
 
+const router = useRouter();
+const route = useRoute();
+
+function redirectToService() {
+    console.log('Redirecting to service');
+    if (route.path === `/service/${props.title.toLowerCase()}`) {
+        console.log('Scrolling to top');
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        return;
+    }
+    console.log('Redirecting to service:', props.title);
+    window.scrollTo(0, 0);
+    router.push(`/service/${props.title.toLowerCase()}?header=false`);
+    window.scrollTo(0, 0);
+}
+
 const props = defineProps<{
     logo: string,
     title: string,
@@ -48,9 +68,9 @@ const props = defineProps<{
                 <BackButton color="white" class="hover:cursor-pointer" @click="handleBackButton" />
             </div>
             <div class="flex items-center w-1/3 justify-center gap-2">
-                <Icon :icon="props.logo" class="w-[3rem] h-[3rem] text-white" />
+                <Icon :icon="props.logo" class="w-[3rem] h-[3rem] text-white hover:cursor-pointer" @click="redirectToService" />
                 <div class="flex flex-col justify-end items-center">
-                    <h1 class="text-white text-[3rem] leading-[2.5rem] font-bold">{{ props.title }}</h1>
+                    <h1 class="text-white text-[3rem] leading-[2.5rem] font-bold hover:cursor-pointer select-none" @click="redirectToService">{{ props.title }}</h1>
                 </div>
             </div>
             <div class="flex gap-8 w-1/3 justify-end">
