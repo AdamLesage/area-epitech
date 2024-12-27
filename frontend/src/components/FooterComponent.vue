@@ -19,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
+
 function copyEmail() {
     navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
     alert('Email copied to clipboard');
