@@ -24,6 +24,6 @@ defineProps<{
 }
 
 .animation-up-down {
-    animation: upDown 1.5s infinite;
+    animation: upDown 1s infinite;
 }
 </style>
