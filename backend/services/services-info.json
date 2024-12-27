@@ -17,7 +17,219 @@
       "rate": 2.5,
       "count": 100
     },
-    "saves": 8800
+    "saves": 8800,
+    "categories": [
+      {
+        "name": "file_action",
+        "display_name": "File Action",
+        "actions": [
+          {
+            "name": "dropbox_on_new_file",
+            "display_name": "New File in Dropbox",
+            "description": "Triggered when a new file is added to the specified Dropbox folder.",
+            "version": "1.0.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "folder_name",
+                "display_name": "Folder name",
+                "description": "The name of the triger folder",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "dropbox_on_file_renamed",
+            "display_name": "File Renamed in Dropbox",
+            "description": "Triggered when an existing file is renamed in Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "folder_name",
+                "display_name": "Folder name",
+                "description": "The name of the triger folder",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "dropbox_on_file_modified",
+            "display_name": "File Modified in Dropbox",
+            "description": "Triggered when an existing file is modified in Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "folder_name",
+                "display_name": "Folder name",
+                "description": "The name of the triger folder",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "dropbox_on_deleted",
+            "display_name": "File or Folder Deleted in Dropbox",
+            "description": "Triggered when a file or folder is deleted from Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "folder_name",
+                "display_name": "Folder name",
+                "description": "The name of the trigger folder",
+                "type": "text",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "reaction": [
+          {
+            "name": "dropbox_share_file",
+            "display_name": "File Shared in Dropbox",
+            "description": "Triggered when a file is shared in Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "filePath",
+                "display_name": "File path",
+                "description": "The name of the file to shared",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "dropbox_unshare_file",
+            "display_name": "File Unshared in Dropbox",
+            "description": "Triggered when a file is unshared in Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "filePath",
+                "display_name": "File path",
+                "description": "The name of the file to shared",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "dropbox_add_file",
+            "display_name": "File Added to Dropbox",
+            "description": "Triggered when a new file is added to Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "file_name",
+                "display_name": "file name",
+                "description": "The name of the file to create",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "file_content",
+                "display_name": "file content",
+                "description": "The content of the file to create",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "dropbox_delete_file",
+            "display_name": "File Deleted from Dropbox",
+            "description": "Triggered when a file is deleted from Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "filePath",
+                "display_name": "File path",
+                "description": "The name of the file to shared",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "folder_action",
+        "display_name": "Folder Action",
+        "actions": [
+          {
+            "name": "dropbox_on_new_folder",
+            "display_name": "New Folder Created in Dropbox",
+            "description": "Triggered when a new folder is created in Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "folder_name",
+                "display_name": "Folder name",
+                "description": "The name of the trigger folder",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "dropbox_on_folder_renamed",
+            "display_name": "Folder Renamed in Dropbox",
+            "description": "Triggered when an existing folder is renamed in Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "folder_name",
+                "display_name": "Folder name",
+                "description": "The name of the trigger folder",
+                "type": "text",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "reaction": [
+          {
+            "name": "dropbox_add_folder",
+            "display_name": "Create a folder on Dropbox",
+            "description": "Triggered when a file is deleted from Dropbox.",
+            "version": "1.1.0",
+            "release_date": "2024-12-23",
+            "updated_date": "2024-12-23",
+            "options": [
+              {
+                "name": "folder_path",
+                "display_name": "Folder path",
+                "description": "The name of the file to shared",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     "name":"github",
@@ -27,7 +239,87 @@
       "rate": 4.8,
       "count": 250000
     },
-    "saves": 2250000
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "pull_request",
+        "display_name": "Pull Request",
+        "actions": [
+          {
+            "name": "pull_request_review.submitted",
+            "display_name": "Pull Request Review Submitted",
+            "description": "A pull request review is submitted",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:git-pull-request",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "issue",
+        "display_name": "Issue",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "create_issue",
+            "display_name": "Create a new issue",
+            "description": "Create a new issue",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "icon": "mdi:git-issue",
+            "options": [
+              {
+                "name": "repository_name",
+                "display_name": "Repository Name",
+                "description": "The name of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "repository_owner",
+                "display_name": "Repository Owner",
+                "description": "The owner of the repository",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "title",
+                "display_name": "Title",
+                "description": "The title of the issue",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the issue",
+                "type": "textarea",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     "name":"spotify",

@@ -112,11 +112,11 @@
         "description":"Create an issue"
       },
       {
-        "name":"dropbox_add_folder",
+        "name":"dropbox_delete_file",
         "description":"Create an issue"
       },
       {
-        "name":"dropbox_delete_file",
+        "name":"dropbox_add_folder",
         "description":"Create an issue"
       }
     ]
