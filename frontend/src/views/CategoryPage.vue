@@ -105,7 +105,8 @@ window.addEventListener('scroll', () => {
         <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
             :style="{ backgroundColor: color }">
             <ServiceNavScrollComponent @back-button="handleBackButton"
-                :logo="logo" :title="nameCapitalized" />
+                :logo="logo" :title="nameCapitalized"
+                :redirect="true" />
         </div>
 
         <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-36"
