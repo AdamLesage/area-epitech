@@ -1,36 +1,36 @@
 <template>
     <!-- In the style of gmail create Mail popup -->
      <!-- Minimal view -->
-    <div class="fixed w-[30rem] h-[3rem] bottom-4 right-8 rounded-xl shadow-2xl" v-if="view == 'Minimal'">
-        <header class="bg-gray-300 rounded-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="view = 'Normal'">
-            <h1 class="text-black font-black">New AREA</h1>
-            <div class="flex justify-end items-center gap-2">
-                <button class="text-2xl hover:text-red-400" @click.stop="view = 'Normal'">
-                    &plus;
+    <div class="fixed w-[30rem] h-[2.5rem] bottom-4 right-8 rounded-xl shadow-2xl" v-if="popupView == 'Minimal'">
+        <header class="bg-gray-300 rounded-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="normalView">
+            <h1 class="text-[#333] font-black">New AREA</h1>
+            <div class="flex justify-end items-center gap-1">
+                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="normalView">
+                    <Icon icon="heroicons:plus-20-solid" class="w-6 h-6 text-[#333]" />
                 </button>
-                <button class="text-2xl hover:text-red-400" @click.stop="resetPopup">
-                    &times;
+                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
+                    <Icon icon="eva:close-outline" class="w-6 h-6 text-[#333]" />
                 </button>
             </div>
         </header>
     </div>
     <!-- Normal view -->
-    <div class="fixed w-[30rem] h-[30rem] bottom-4 right-8 rounded-xl shadow-2xl" v-if="view == 'Normal'">
-        <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="view = 'Minimal'">
-            <h1 class="text-black font-black">New AREA</h1>
-            <div class="flex justify-end items-center gap-2">
-                <button class="text-2xl hover:text-red-400" @click.stop="view = 'Minimal'">
-                    &minus;
+    <div class="fixed w-[30rem] h-[29.5rem] bottom-4 right-8 rounded-xl shadow-2xl" v-if="popupView == 'Normal'">
+        <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="minimalView">
+            <h1 class="text-[#333] font-black">New AREA</h1>
+            <div class="flex justify-end items-center gap-1">
+                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="minimalView">
+                    <Icon icon="heroicons:minus-20-solid" class="w-6 h-6 text-[#333]" />
                 </button>
-                <button class="text-2xl hover:text-red-400" @click.stop="view = 'Extended'">
-                    &plus;
+                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="extendedView">
+                    <Icon icon="heroicons:plus-20-solid" class="w-6 h-6 text-[#333]" />
                 </button>
-                <button class="text-2xl hover:text-red-400" @click.stop="resetPopup">
-                    &times;
+                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
+                    <Icon icon="eva:close-outline" class="w-6 h-6 text-[#333]" />
                 </button>
             </div>
         </header>
-        <input type="text" class="w-full py-2 px-4 text-black" placeholder="Enter title" v-model="areaTitle">
+        <input type="text" class="w-full py-2 px-4 text-[#333]" placeholder="Enter title" v-model="areaTitle">
         <div class="bg-gray-100 h-[352px] flex justify-center flex-col">
             <Icon icon="mdi:arrow" class="w-36 h-36 text-[#111] absolute rotate-90 right-0" />
             <section id="action" class="h-1/2 w-full flex items-center justify-center">
@@ -68,25 +68,24 @@
                 </div>
             </section>
         </div>
-        <button class="w-full text-white rounded-b-xl h-[40px]"
-            :class="reactionSelected && actionSelected && areaTitle.length != 0 ? 'bg-blue-500 hover:cursor-pointer' : 'bg-gray-500 hover:cursor-not-allowed'"
-            @click="create">Create AREA</button>
+        <button class="w-full text-white rounded-b-xl h-[40px] bg-blue-500 hover:cursor-pointer"
+            @click="create">Continue</button>
     </div>
     <!-- Extended view -->
-    <div class="fixed w-full h-full top-0 bg-black/30 flex justify-center items-center z-50" v-if="view == 'Extended'" @click="view = 'Normal'">
+    <div class="fixed w-full h-full top-0 bg-black/30 flex justify-center items-center z-50" v-if="popupView == 'Extended'" @click="normalView">
         <div class="w-[60rem] h-[40rem] m-auto rounded-xl shadow-2xl relative flex flex-col items-center bg-gray-100 " @click.stop>
-            <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer w-full" @click="view = 'Normal'">
-                <h1 class="text-black font-black">New AREA</h1>
-                <div class="flex justify-end items-center gap-2">
-                    <button class="text-2xl hover:text-red-400" @click.stop="view = 'Normal'">
-                        &minus;
+            <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer w-full" @click="normalView">
+                <h1 class="text-[#333] font-black">New AREA</h1>
+                <div class="flex justify-end items-center gap-1">
+                    <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="normalView">
+                        <Icon icon="heroicons:minus-20-solid" class="w-6 h-6 text-[#333]" />
                     </button>
-                    <button class="text-2xl hover:text-red-400" @click.stop="resetPopup">
-                        &times;
+                    <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
+                        <Icon icon="eva:close-outline" class="w-6 h-6 text-[#333]" />
                     </button>
                 </div>
             </header>
-            <input type="text" class="w-full py-2 px-4 text-black" placeholder="Enter title" v-model="areaTitle">
+            <input type="text" class="w-full py-2 px-4 text-[#333]" placeholder="Enter title" v-model="areaTitle">
             <div class="bg-gray-100 h-full my-1 flex justify-center flex-col w-[30rem] relative">
                 <Icon icon="mdi:arrow" class="w-36 h-36 text-[#111] absolute rotate-90 right-0" />
                 <section id="action" class="h-[176px] w-full flex items-center justify-center">
@@ -124,9 +123,8 @@
                     </div>
                 </section>
             </div>
-            <button class="w-full text-white rounded-b-xl h-[60px]"
-                :class="reactionSelected && actionSelected && areaTitle.length != 0 ? 'bg-blue-500 hover:cursor-pointer' : 'bg-gray-500 hover:cursor-not-allowed'"
-                @click="create">Create AREA</button>
+            <button class="w-full text-white rounded-b-xl h-[60px] bg-blue-500 hover:cursor-pointer"
+                @click="create">Continue</button>
         </div>
     </div>
 </template>
@@ -148,6 +146,8 @@ interface ComponentProps {
         category: Category,
         service: Service
     };
+    title: string;
+    view: 'Extended' | 'Normal' | 'Minimal';
 }
 
 const props = defineProps<ComponentProps>();
@@ -167,9 +167,13 @@ const reactionSelected = ref<{
 const hoverActionIcon = ref<boolean>(false);
 const hoverReactionIcon = ref<boolean>(false);
 
-const areaTitle = ref<string>('');
+const areaTitle = ref<string>(props.title);
 
-const view = ref<'Extended' | 'Normal' | 'Minimal'>('Normal');
+const popupView = ref<'Extended' | 'Normal' | 'Minimal'>(props.view);
+
+watch(() => props.view, (newView) => {
+    popupView.value = newView;
+});
 
 watch(() => props.action, (newAction) => {
     actionSelected.value = newAction;
@@ -179,7 +183,23 @@ watch(() => props.reaction, (newReaction) => {
     reactionSelected.value = newReaction;
 });
 
-const emit = defineEmits(['remove-action', 'remove-reaction']);
+const emit = defineEmits(['remove-action', 'remove-reaction', 'create', 'change-title', 'change-view']);
+
+watch(() => areaTitle.value, (newTitle) => {
+    emit('change-title', newTitle);
+});
+
+function minimalView() {
+    emit('change-view', 'Minimal');
+}
+
+function normalView() {
+    emit('change-view', 'Normal');
+}
+
+function extendedView() {
+    emit('change-view', 'Extended');
+}
 
 function removeAction() {
     hoverActionIcon.value = false;
@@ -194,6 +214,7 @@ function removeReaction() {
 function resetPopup() {
     emit('remove-action');
     emit('remove-reaction');
+    emit('change-title', '');
 }
 
 function redirectToAction() {
@@ -215,14 +236,6 @@ function redirectToReaction() {
 }
 
 function create() {
-    if (!actionSelected.value || !reactionSelected.value) {
-        alert('Please select an action and a reaction');
-        return;
-    }
-    if (areaTitle.value.length === 0) {
-        alert('Please enter a title');
-        return;
-    }
-    console.log('Creating AREA with action:', actionSelected.value.card.display_name, 'and reaction:', reactionSelected.value.card.display_name);
+    emit('create');
 }
 </script>
