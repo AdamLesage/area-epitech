@@ -82,6 +82,11 @@ const router = createRouter({
       path: '/github-callback',
       name: 'github-callback',
       component: () => import('@/views/GithubCallbackPage.vue'),
+    },
+    {
+      path: '/workshop',
+      name: 'workshop',
+      component: () => import('@/views/WorkshopPage.vue'),
     }
   ],
 })
