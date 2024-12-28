@@ -1,32 +1,44 @@
 <script setup lang="ts">
 import BackButton from '@/components/BackButton.vue';
 import NavButton from '@/components/NavButton.vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/users';
 
+const userStore = useUserStore();
+const user = userStore.user;
+
+const router = useRouter();
 const emit = defineEmits([
-    'redirect-explore',
-    'redirect-my-areas',
-    'redirect-updates',
-    'redirect-user-profile',
     'back-button']);
 
 const handleExploreRedirect = () => {
     console.log('Redirecting to explore');
-    emit('redirect-explore');
+    window.scrollTo(0, 0);
+    router.push('');
 }
 
 const handleMyAreasRedirect = () => {
     console.log('Redirecting to my areas');
-    emit('redirect-my-areas');
+    window.scrollTo(0, 0);
+    router.push('/areas');
+}
+
+const handleWorkshopRedirect = () => {
+    console.log('Redirecting to workshop');
+    window.scrollTo(0, 0);
+    router.push('/workshop');
 }
 
 const handleUpdatesRedirect = () => {
     console.log('Redirecting to updates');
-    emit('redirect-updates');
+    window.scrollTo(0, 0);
+    router.push('');
 }
 
 const handleUserProfileRedirect = () => {
     console.log('Redirecting to user profile');
-    emit('redirect-user-profile');
+    window.scrollTo(0, 0);
+    router.push('/userinfo');
 }
 
 const handleBackButton = () => {
@@ -41,9 +53,9 @@ const handleBackButton = () => {
             <BackButton color="white" class="hover:cursor-pointer" @click="handleBackButton" />
             <div class="flex gap-8">
                 <NavButton icon="material-symbols:explore-rounded" text="Explore" @redirect="handleExploreRedirect" />
-                <NavButton icon="material-symbols:folder-outline" text="My Areas" @redirect="handleMyAreasRedirect" />
-                <NavButton icon="mdi:bell-outline" text="Updates" @redirect="handleUpdatesRedirect" />
-                <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" />
+                <NavButton icon="material-symbols:folder-outline" text="My Areas" @redirect="handleMyAreasRedirect" v-if="user" />
+                <NavButton icon="mdi:hammer-screwdriver" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
+                <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" v-if="user" />
             </div>
         </nav>
     </div>
