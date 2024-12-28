@@ -5,15 +5,17 @@ import { Icon } from '@iconify/vue';
 import { useServiceStore } from '@/stores/service';
 import { Category, Item } from '@/types/services';
 import { usePopupStore } from '@/stores/popup';
+import { useUserStore } from '@/stores/users';
 
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import CustomInput from '@/components/CustomInput.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
-import { is } from '@vee-validate/rules';
 
 const route = useRoute();
 const router = useRouter();
 const popupStore = usePopupStore();
+const userStore = useUserStore();
+const user = userStore.user;
 
 const serviceId: string = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 const categoryId: string = Array.isArray(route.params.category) ? route.params.category[0] : route.params.category;
@@ -136,6 +138,7 @@ watch(() => route.params, (newRouteParams) => {
 function selectCard() {
     console.log('Selected card:', card);
     if (!card.value || !service.value || !category.value) return;
+    popupStore.view = 'Normal';
     if (isAction.value) {
         popupStore.setAction(card.value, category.value, service.value);
     } else {
@@ -174,7 +177,8 @@ window.addEventListener('scroll', () => {
         <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
             :style="{ backgroundColor: color }">
             <ServiceNavScrollComponent @back-button="handleBackButtonFirstPage"
-                :logo="logo" :title="nameCapitalized" />
+                :logo="logo" :title="nameCapitalized"
+                :redirect="true" />
         </div>
 
         <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-36"
@@ -189,7 +193,8 @@ window.addEventListener('scroll', () => {
                 </p>
             </div>
             <div class="w-full flex justify-center mt-12">
-                <button @click="selectCard" class="bg-[#333] p-4 w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4">
+                <button @click="selectCard" class="bg-[#333] p-4 w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
+                    v-if="user">
                     Use this {{ isAction ? 'Action' : 'Reaction' }}
                     <Icon icon="fluent:cursor-click-24-filled" class="w-8 h-8 text-white" />
                 </button>
@@ -238,7 +243,7 @@ window.addEventListener('scroll', () => {
                     <div class="flex flex-col gap-4 w-1/3">
                         <div class="flex flex-col w-full gap-2">
                             <h1 class="text-lg font-black text-[#333] mb-2">{{ card.display_name }}:</h1>
-                            <CustomInput v-for="(option, index) in card.options" :key="option.name" :type="option.type" :name="option.display_name" class="ml-4"
+                            <CustomInput v-for="(option, index) in card.options" :key="option.name" :type="option.type" :name="option.display_name" class="ml-4" value=""
                                 @change="exampleOptions[index] = $event.target.value" />
                         </div>
                     </div>
@@ -254,7 +259,8 @@ window.addEventListener('scroll', () => {
             </div>
         </div>
         <div class="w-full flex justify-center mt-12">
-            <button @click="selectCard" class="bg-[#333] p-4 w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4">
+            <button @click="selectCard" class="bg-[#333] p-4 w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
+                v-if="user">
                 Use this {{ isAction ? 'Action' : 'Reaction' }}
                 <Icon icon="fluent:cursor-click-24-filled" class="w-8 h-8 text-white" />
             </button>
