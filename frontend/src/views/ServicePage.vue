@@ -122,22 +122,10 @@ const openServicePage = () => {
     isHeroVisible.value = false;
 }
 
-function handleBackButtonFirstPage() {
+function handleBackButton() {
     console.log('Back button clicked on first page');
     window.scrollTo(0, 0);
     router.push(`/dashboard`);
-}
-
-function handleRedirectUserPage() {
-    console.log('Redirecting to user page');
-    window.scrollTo(0, 0);
-    router.push('/userinfo');
-}
-
-function handleAreaRedirect() {
-    console.log('Redirecting to area page');
-    window.scrollTo(0, 0);
-    router.push('/areas');
 }
 
 function redirectToCategory(categoryName: string) {
@@ -204,9 +192,7 @@ function copyColor() {
         @wheel="handleScrollAttempt"
         v-if="isHeroVisible">
         <ServiceNavComponent
-            @back-button="handleBackButtonFirstPage"
-            @redirect-user-profile="handleRedirectUserPage"
-            @redirect-my-areas="handleAreaRedirect"
+            @back-button="handleBackButton"
             class="mobile:hidden" />
         <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4" />
         <div class="flex flex-col justify-center items-center">
@@ -252,7 +238,7 @@ function copyColor() {
             <ArrowComponentBottom color="white" class="mobile:hidden" :animate="true" />
             <SaveComponent :saves="saves" color="white" textcolor="white" />
         </div>
-        <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden" />
+        <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden" />
     </div>
     <!-- Second Page -->
     <div
@@ -261,8 +247,7 @@ function copyColor() {
         <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full"
             :style="{ backgroundColor: color }">
             <ServiceNavComponent
-                @back-button="handleBackButtonFirstPage"
-                @redirect-user-profile="handleRedirectUserPage"
+                @back-button="handleBackButton"
                 class="mobile:hidden" />
             <div class="flex justify-center items-center p-4 mobile:hidden" v-if="scrollY == 0">
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
@@ -274,8 +259,9 @@ function copyColor() {
             <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
                 :style="{ backgroundColor: color }"
                 v-else>
-                <ServiceNavScrollComponent @back-button="handleBackButtonFirstPage"
-                    :logo="logo" :title="nameCapitalized" />
+                <ServiceNavScrollComponent @back-button="handleBackButton"
+                    :logo="logo" :title="nameCapitalized"
+                    :redirect="true" />
             </div>
             <div class="flex justify-between items-center w-full web:hidden">
                 <div class="flex web:justify-center items-center p-4 w-full mobile:justify-start">
@@ -300,7 +286,7 @@ function copyColor() {
                 </div>
             </div>
             <div class="mobile:hidden" />
-            <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden" />
+            <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden" />
         </div>
         <div class="flex justify-between items-center p-8 mobile:hidden web:hidden">
             <RateComponent :rate="rate" :reviews="reviews" :color="color" textcolor="black" class="w-1/3" />
