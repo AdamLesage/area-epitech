@@ -4,8 +4,6 @@
         @wheel="handleScrollAttempt" v-if="isHeroVisible">
         <ServiceNavComponent @back-button="handleBackButtonFirstPage" @redirect-user-profile="handleRedirectUserPage"
             class="mobile:hidden" />
-        <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4 mobile:hidden" />
-        <div />
         <div class="flex flex-col justify-center items-center">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
@@ -13,14 +11,13 @@
                     <h1
                         class="text-white web:text-[6rem] mobile:text-[3rem] web:leading-[5rem] mobile:leading-[2.5rem] font-bold">
                         {{ nameCapitalized }}</h1>
-                    <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbActions }}
-                        {{ nbActions <= 1 ? 'Area' : 'Areas'}}</h2>
+                    <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbAreas }}
+                        {{ nbAreas <= 1 ? 'Area' : 'Areas'}}</h2>
                 </div>
             </div>
-
         </div>
         <div class="flex flex-col web:hidden gap-2">
-            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbActions }} Areas</h2>
+            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbAreas }} Area{{ nbAreas == 0 ? '' : 's' }}</h2>
             <div class="flex flex-row gap-2 items-center justify-center mobile:hidden">
                 <button class="rounded-full py-2 px-6 bg-white w-32 mobile:hidden">
                     <h1 class="font-semibold">Activate</h1>
@@ -43,13 +40,14 @@
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
                 <div class="flex flex-col justify-end items-center p-4">
                     <h1 class="text-white text-[6rem] leading-[5rem] font-bold">{{ nameCapitalized }}</h1>
-                    <h2 class="text-white text-xl font-medium text-right w-full pr-2">{{ nbActions }} Actions</h2>
+                    <h2 class="text-white text-xl font-medium text-right w-full pr-2">{{ nbAreas }} Area{{ nbAreas == 0 ? '' : 's' }}</h2>
                 </div>
             </div>
             <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden"
                 :style="{ backgroundColor: color }" v-else>
                 <ServiceNavScrollComponent @back-button="handleBackButtonSecondPage" :logo="logo"
-                    :title="nameCapitalized" />
+                    :title="nameCapitalized"
+                    :redirect="true" />
             </div>
             <div class="flex justify-between items-center w-full web:hidden">
                 <div class="flex web:justify-center items-center p-4 w-full mobile:justify-start">
@@ -58,8 +56,8 @@
                         <h1
                             class="text-white web:text-[6rem] mobile:text-[2rem] web:leading-[5rem] mobile:leading-[1.75rem] font-bold">
                             {{ nameCapitalized }}</h1>
-                        <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbActions }}
-                            Actions</h2>
+                        <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbAreas }}
+                            Area{{ nbAreas == 0 ? '' : 's' }}</h2>
                     </div>
                 </div>
                 <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer mr-4 mobile:hidden" />
@@ -71,34 +69,69 @@
             </div>
             <div class="flex flex-col items-center justify-start w-full p-4 web:hidden gap-4 overflow-y-scroll h-1/2 mx-auto"
                 @wheel.stop>
-                <div class="flex justify-center w-full">
-                    <button @click="handleCreateButtonClick" class="rounded-full py-2 px-6 bg-blue-500 text-white w-32">
-                        <h1 class="font-semibold">Create Area</h1>
-                    </button>
-                </div>
-                <AREACreationComponent v-if="showCreationComponent" @close="handleCloseCreationComponent" />
-                <!-- <AREAInfoComponent v-for="action in actions" :key="action.name" :values="action" :icon="action.icon"
-                    :color="action.color" @menu-click="handleMenuClick(action.name)"
-                    @more-click="handleMoreClick(action.name)" @configure-click="handleConfigureClick(action.name)" /> -->
             </div>
             <div class="mobile:hidden" />
             <MobileServiceNavComponent @back-button="handleBackButtonSecondPage" class="web:hidden" />
         </div>
-        <div class="flex justify-center items-center p-8 mobile:hidden">
-            <button @click="handleCreateButtonClick" class="rounded-full py-2 px-6 bg-blue-500 text-white w-32 ml-4">
-                <h1 class="font-semibold">Create Area</h1>
-            </button>
-        </div>
-        
-            <AREACreationComponent v-if="showCreationComponent" @close="handleCloseCreationComponent" />
+
         <div class="flex flex-wrap gap-8 p-8 justify-center mobile:hidden">
-            <!-- <AREAInfoComponent v-for="action in actions" :key="action.name" :values="action" :icon="action.icon"
-                :color="action.color" @menu-click="handleMenuClick(action.name)"
-                @more-click="handleMoreClick(action.name)" @configure-click="handleConfigureClick(action.name)" /> -->
+            <div
+                v-for="area in areas"
+                :key="area.id"
+                class="max-w-md w-full bg-white rounded-lg shadow-lg overflow-hidden flex flex-col"
+            >
+                <div :style="{ backgroundColor: area.isActive ? '#22c55e' : '#ef4444' }" class="h-2 w-full"></div>
+                <div class="p-6 flex flex-col gap-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-extrabold text-gray-800">AREA: {{ area.title }}</h2>
+                        <span :class="area.isActive ? 'text-green-600' : 'text-red-600'">
+                            {{ area.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-500">UUID: {{ area.uuid }}</p>
+                    <p class="text-sm text-gray-500">Created on: {{ formatDate(area.creationDate) }}</p>
+                    <p class="text-sm text-gray-500">Description: {{ area.description || 'No description provided' }}</p>
+                </div>
+
+                <div class="border-t border-gray-200 p-6">
+                    <h3 class="text-lg font-bold text-gray-700 mb-2">Action Data</h3>
+                    <div v-if="Object.keys(area.actionData).length" class="flex flex-col gap-2">
+                        <div
+                            v-for="(value, key) in area.actionData"
+                            :key="key"
+                            class="p-2 bg-gray-100 rounded-md shadow-sm"
+                        >
+                            <p class="text-sm font-semibold text-gray-600">{{ key }}</p>
+                            <p class="text-sm text-gray-700" v-if="key !== 'accessToken'">{{ value }}</p>
+                            <p class="text-sm text-gray-700" v-else>********</p>
+                        </div>
+                    </div>
+                    <p v-else class="text-sm text-gray-500 italic">No action data available</p>
+                </div>
+
+                <div class="border-t border-gray-200 p-6">
+                    <h3 class="text-lg font-bold text-gray-700 mb-2">Reaction Data</h3>
+                    <div v-if="Object.keys(area.reactionData).length" class="flex flex-col gap-2">
+                        <div
+                            v-for="(value, key) in area.reactionData"
+                            :key="key"
+                            class="p-2 bg-gray-100 rounded-md shadow-sm"
+                        >
+                            <p class="text-sm font-semibold text-gray-600">{{ key }}</p>
+                            <p class="text-sm text-gray-700" v-if="key !== 'accessToken'">{{ value }}</p>
+                            <p class="text-sm text-gray-700" v-else>********</p>
+                        </div>
+                    </div>
+                    <p v-else class="text-sm text-gray-500 italic">No reaction data available</p>
+                </div>
+
+                <div class="border-t border-gray-200 p-6">
+                    <p class="text-xs text-gray-500 break-words">Container UUID: {{ area.containerUuid }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
@@ -112,35 +145,35 @@ import Cookies from 'js-cookie';
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
-import RateComponent from '@/components/RateComponent.vue';
 import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
-import AREACreationComponent from '@/components/AREACreationComponent.vue';
+import { Area } from '@/types/area';
 
 const userStore = useUserStore();
 const router = useRouter();
 
 const color = ref<string>('#1C1C53');
-const name = ref<string>('MyArea');
-const logo = ref<string>('mdi:home-modern');
-const rate = ref<number>(4.5);
-const reviews = ref<number>(120);
-const saves = ref<number>(50);
-const isActivated = ref<boolean>(true);
-const nbActions = ref<number>(5);
+const name = ref<string>('My Area');
+const logo = ref<string>('simple-icons:bento');
+const nbAreas = ref<number>(0);
+const areas = ref<Area[]>([]);
 
 const nameCapitalized = ref(name.value.toUpperCase());
 const isHeroVisible = ref(true);
 
-const isCircleFirst = ref(true);
 const scrollY = ref(0);
 
 window.addEventListener('scroll', () => {
     scrollY.value = window.scrollY;
 })
 
-const handleClick = () => {
-    isActivated.value = !isActivated.value;
-    isCircleFirst.value = !isCircleFirst.value;
+function formatDate(date: string) {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 const openServicePage = () => {
@@ -151,18 +184,6 @@ const openServicePage = () => {
 const handleBackButtonSecondPage = () => {
     console.log('Back button clicked on second page');
     isHeroVisible.value = true;
-}
-
-function handleMenuClick(name: string) {
-    console.log('Menu clicked on:', name);
-}
-
-function handleMoreClick(name: string) {
-    console.log('More clicked on:', name);
-}
-
-function handleConfigureClick(name: string) {
-    console.log('Configure clicked on:', name);
 }
 
 function handleBackButtonFirstPage() {
@@ -182,50 +203,9 @@ function handleScrollAttempt(event: WheelEvent) {
 }
 
 function handleScrollAttemptSecondPage(event: WheelEvent) {
-    if (event.deltaY < 0 && scrollY.value === 0 && !showCreationComponent.value) {
+    if (event.deltaY < 0 && scrollY.value === 0) {
         isHeroVisible.value = true;
     }
-}
-
-const actions = ref<Array<{ name: string, description: string, icon: string, color: string }>>([]);
-
-const showCreationComponent = ref(false);
-
-const handleCreateButtonClick = () => {
-    showCreationComponent.value = true;
-}
-
-const handleCloseCreationComponent = async () => {
-    const user = userStore.user;
-    const token = Cookies.get('token');
-
-    showCreationComponent.value = false;
-
-    // Force update
-    const res: { status: number, data: [{
-        title: string, actionId: number, reactionId: number
-    }] } = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/areas`,
-        {
-            params: {
-                email: user!.email,
-            },
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    );
-    actions.value = [];
-    for (const area of res.data) {
-        console.log('Area:', area.title);
-        actions.value.push({
-            name: area.title,
-            description: 'Action: ' + area.actionId + ' Reaction: ' + area.reactionId,
-            icon: 'mdi:home-modern',
-            color: '#1C1C53',
-        });
-    }
-    nbActions.value = actions.value.length;
 }
 
 onMounted(async () => {
@@ -240,9 +220,7 @@ onMounted(async () => {
         console.error('Token not found');
         router.push('/');
     }
-    const res: { status: number, data: [{
-        title: string, actionId: number, reactionId: number
-    }] } = await axios.get(
+    const res: { status: number, data: [ Area ] } = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/areas`,
         {
             params: {
@@ -255,14 +233,9 @@ onMounted(async () => {
     );
     for (const area of res.data) {
         console.log('Area:', area.title);
-        actions.value.push({
-            name: area.title,
-            description: 'Action: ' + area.actionId + ' Reaction: ' + area.reactionId,
-            icon: 'mdi:home-modern',
-            color: '#1C1C53',
-        });
+        areas.value.push(area);
     }
-    nbActions.value = actions.value.length;
+    nbAreas.value = areas.value.length;
     console.log(res);
 })
 </script>
