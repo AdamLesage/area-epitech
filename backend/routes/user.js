@@ -99,7 +99,55 @@ router.get('/user/:uuid', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
-});;
+});
+
+/**
+ * @brief get a user linked accounts by uuid
+ *
+ * @param {string} uuid
+ * @return {object} array of user linked accounts
+ * @example GET /user/linked-accounts
+ * @autor Adam Lesage
+ */
+router.get('/user/:uuid/linked-accounts/', async (req, res) => {
+    const uuid = req.params.uuid;
+    const headers = req.headers;
+
+    console.log('headers', headers);
+    console.log('uuid', uuid);
+
+    // Check if headers given are correct
+    if (headers.authorization) {
+        const authToken = headers.authorization.split(' ')[1];
+        const user = await prisma.user.findUnique({
+            where: {
+                authToken: authToken,
+            },
+        });
+
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    } else {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { uuid },
+            include: { linkedAccounts: true }
+        });
+        if (user) {
+            console.log('user', user);
+            console.log('user.linkedAccounts', user.linkedAccounts);
+            res.status(200).json(user.linkedAccounts);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 /**
  * @brief Get a user by email
