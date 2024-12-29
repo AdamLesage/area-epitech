@@ -113,9 +113,6 @@ router.get('/user/:uuid/linked-accounts/', async (req, res) => {
     const uuid = req.params.uuid;
     const headers = req.headers;
 
-    console.log('headers', headers);
-    console.log('uuid', uuid);
-
     // Check if headers given are correct
     if (headers.authorization) {
         const authToken = headers.authorization.split(' ')[1];
@@ -138,8 +135,6 @@ router.get('/user/:uuid/linked-accounts/', async (req, res) => {
             include: { linkedAccounts: true }
         });
         if (user) {
-            console.log('user', user);
-            console.log('user.linkedAccounts', user.linkedAccounts);
             res.status(200).json(user.linkedAccounts);
         } else {
             res.status(404).json({ error: 'User not found' });
