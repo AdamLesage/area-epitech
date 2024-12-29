@@ -3,7 +3,7 @@ import BackButton from '@/components/BackButton.vue';
 import NavButton from '@/components/NavButton.vue';
 import { Icon } from '@iconify/vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const user = userStore.user;

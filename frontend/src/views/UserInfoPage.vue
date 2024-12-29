@@ -59,7 +59,7 @@ import { ref, computed } from "vue";
 import ConnectedApiIcons from "../components/ConnectedApiIcons.vue";
 import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
-import { useUserStore } from "@/stores/users";
+import { useUserStore } from "@/stores/user";
 import { User } from '@/types/auth'
 
 const store = useUserStore();

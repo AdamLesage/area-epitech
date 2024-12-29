@@ -137,7 +137,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';

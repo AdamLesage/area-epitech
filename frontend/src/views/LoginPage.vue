@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import Cookies from 'js-cookie'
-import { useUserStore } from '@/stores/users'
+import { useUserStore } from '@/stores/user'
 
 const store = useUserStore();
 const hover = ref(false);

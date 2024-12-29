@@ -5,7 +5,7 @@ import { Icon } from '@iconify/vue';
 import { useServiceStore } from '@/stores/service';
 import { Category, Item } from '@/types/services';
 import { usePopupStore } from '@/stores/popup';
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import CustomInput from '@/components/CustomInput.vue';

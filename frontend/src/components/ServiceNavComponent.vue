@@ -2,7 +2,7 @@
 import BackButton from '@/components/BackButton.vue';
 import NavButton from '@/components/NavButton.vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const user = userStore.user;

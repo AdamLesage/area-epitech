@@ -2,7 +2,7 @@
 import LogoComponent from '@/components/LogoComponent.vue';
 import DetailsFormComponent from '@/components/DetailsFormComponent.vue';
 import { DetailsFormValues } from '@/types/auth';
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 import { User } from '@/types/auth';
 import axios from 'axios';
 import { useRouter } from 'vue-router';

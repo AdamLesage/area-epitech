@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import { ref, onMounted } from 'vue';
 import Cookies from 'js-cookie'
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

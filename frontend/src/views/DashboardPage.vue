@@ -37,7 +37,7 @@ import axios from 'axios';
 import { Service, Action, Reaction, ServiceDetails, Category } from '@/types/services'; // Import the Service type
 import { useRouter } from 'vue-router';
 import { useServiceStore } from '@/stores/service'; // Import the useServiceStore function
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 import Cookies from 'js-cookie';
 import { User } from '@/types/auth';
 

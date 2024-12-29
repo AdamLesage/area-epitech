@@ -2,7 +2,9 @@ import { defineStore } from 'pinia';
 import { User } from '@/types/auth';
 
 export const useUserStore = defineStore('user', {
-    state: (): { user: User | null } => ({
+    state: (): {
+        user: User | null,
+    } => ({
         user: null, // Initialize as an array
     }),
     getters: {
