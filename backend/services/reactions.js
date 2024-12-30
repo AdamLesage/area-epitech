@@ -16,11 +16,12 @@ reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
 
 /**
- * Get the Github access token for a user.
- * @param {string} userUuid The UUID of the user
- * @returns {string} The Github access token
- * @throws {Error} If the user does not have a Github linked account
- * @throws {Error} If the Github linked account does not have an access token
+ * @brief Retrieve the access token for a user's linked service account.
+ * 
+ * @param {string} userUuid - The UUID of the user.
+ * @param {string} serviceName - The name of the linked service (e.g., "github").
+ * @returns {string} The access token for the linked service.
+ * @throws {Error} If the user or the linked service account does not exist, or if no token is found.
  */
 async function getAccessToken(userUuid, serviceName) {
     let user = await prisma.user.findUnique({
@@ -29,10 +30,10 @@ async function getAccessToken(userUuid, serviceName) {
     });
 
     // Find github linked account
-    const githubAccount = user.linkedAccounts.find(
+    const linkedAccount = user.linkedAccounts.find(
         account => account.serviceName === serviceName
     );
-    return githubAccount.authToken;
+    return linkedAccount.authToken;
 }
 
 /**
