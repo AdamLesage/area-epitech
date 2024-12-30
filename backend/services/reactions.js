@@ -41,6 +41,7 @@ async function getAccessToken(userUuid, serviceName) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function dropbox_add_file(reactionData, actionResponseData, userUuid) {
     try {
@@ -62,6 +63,7 @@ async function dropbox_add_file(reactionData, actionResponseData, userUuid) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function dropbox_share_file(reactionData, actionResponseData) {
     try {
@@ -82,6 +84,7 @@ async function dropbox_share_file(reactionData, actionResponseData) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function dropbox_unshare_file(reactionData, actionResponseData, userUuid) {
     try {
@@ -102,6 +105,7 @@ async function dropbox_unshare_file(reactionData, actionResponseData, userUuid) 
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function dropbox_add_folder(reactionData, actionResponseData, userUuid) {
     try {
@@ -122,6 +126,7 @@ async function dropbox_add_folder(reactionData, actionResponseData, userUuid) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function dropbox_delete_file(reactionData, actionResponseData, userUuid) {
     try {
@@ -142,6 +147,7 @@ async function dropbox_delete_file(reactionData, actionResponseData, userUuid) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
 */
 async function github_create_issue(reactionData, actionResponseData, userUuid) {
     const repoOwner = reactionData.repoOwner || null;
@@ -185,6 +191,7 @@ async function github_create_issue(reactionData, actionResponseData, userUuid) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function github_create_milestone(reactionData, actionResponseData, userUuid) {
     const repoOwner = reactionData.repoOwner || null;
@@ -229,6 +236,7 @@ async function github_create_milestone(reactionData, actionResponseData, userUui
  * Handler function for the 'github_pull_request' reaction.
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function github_pull_request(reactionData, actionResponseData, userUuid) {
     const repoOwner = reactionData.repoOwner || null;
