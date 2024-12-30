@@ -7,8 +7,6 @@
 
 const express = require('express');
 const router = express.Router();
-const service = require('../services/services.json');
-const servicesInfo = require('../services/services-info.json');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { v4: uuidv4 } = require('uuid');

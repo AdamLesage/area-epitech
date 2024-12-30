@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const service = require('../services/services.json');
+const service = require('../services/about.json');
 const servicesInfo = require('../services/services-info.json');
 
 /**

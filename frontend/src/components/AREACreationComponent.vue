@@ -117,8 +117,6 @@
   </div>
 </template>
 
-
-
 <script setup lang="ts">
 import { ref, onMounted, defineEmits } from 'vue';
 import { useServiceStore } from '@/stores/service';
@@ -162,12 +160,20 @@ const selectReactionPlatform = (platform: string) => {
 
 const fetchActions = () => {
     const service = serviceStore.services.find(s => s.name === selectedActionPlatform.value);
-    actions.value = service ? service.actions : [];
+    actions.value = [];
+    for (const category of service?.categories || []) {
+        actions.value.push(...category.actions);
+    }
+    console.log('Actions:', actions.value);
 };
 
 const fetchReactions = () => {
     const service = serviceStore.services.find(s => s.name === selectedReactionPlatform.value);
-    reactions.value = service ? service.reactions : [];
+    reactions.value = [];
+    for (const category of service?.categories || []) {
+        reactions.value.push(...category.reactions);
+    }
+    console.log('Reactions:', reactions.value);
 };
 
 const createArea = async () => {

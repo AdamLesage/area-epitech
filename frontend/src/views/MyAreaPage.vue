@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="flex justify-center items-center p-4 mobile:hidden">
-            <ArrowComponent color="white" class="mobile:hidden" />
+            <ArrowComponentBottom color="white" class="mobile:hidden" :animate="true" />
         </div>
         <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden" />
     </div>
@@ -77,9 +77,9 @@
                     </button>
                 </div>
                 <AREACreationComponent v-if="showCreationComponent" @close="handleCloseCreationComponent" />
-                <AREAInfoComponent v-for="action in actions" :key="action.name" :values="action" :icon="action.icon"
+                <!-- <AREAInfoComponent v-for="action in actions" :key="action.name" :values="action" :icon="action.icon"
                     :color="action.color" @menu-click="handleMenuClick(action.name)"
-                    @more-click="handleMoreClick(action.name)" @configure-click="handleConfigureClick(action.name)" />
+                    @more-click="handleMoreClick(action.name)" @configure-click="handleConfigureClick(action.name)" /> -->
             </div>
             <div class="mobile:hidden" />
             <MobileServiceNavComponent @back-button="handleBackButtonSecondPage" class="web:hidden" />
@@ -92,9 +92,9 @@
         
             <AREACreationComponent v-if="showCreationComponent" @close="handleCloseCreationComponent" />
         <div class="flex flex-wrap gap-8 p-8 justify-center mobile:hidden">
-            <AREAInfoComponent v-for="action in actions" :key="action.name" :values="action" :icon="action.icon"
+            <!-- <AREAInfoComponent v-for="action in actions" :key="action.name" :values="action" :icon="action.icon"
                 :color="action.color" @menu-click="handleMenuClick(action.name)"
-                @more-click="handleMoreClick(action.name)" @configure-click="handleConfigureClick(action.name)" />
+                @more-click="handleMoreClick(action.name)" @configure-click="handleConfigureClick(action.name)" /> -->
         </div>
     </div>
 </template>
@@ -113,9 +113,7 @@ import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import RateComponent from '@/components/RateComponent.vue';
-import SaveComponent from '@/components/SaveComponent.vue';
-import ArrowComponent from '@/components/ArrowComponentBottom.vue';
-import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
+import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
 import AREACreationComponent from '@/components/AREACreationComponent.vue';
 
 const userStore = useUserStore();
