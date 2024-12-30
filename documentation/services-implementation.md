@@ -99,7 +99,6 @@ passport.use(
           "name":"pull_request_review.submitted", // action name
           "display_name": "Pull Request Review Submitted", // action display name
           "description":"A pull request review is submitted", // action description
-          "icon":"mdi:git-pull-request", // action icon
           "release_date": "2024-12-18",
           "updated_date": "2024-12-20",
           "version": "1.0.0",
@@ -185,7 +184,6 @@ actions.set('{name action}', create_{nameService}_workers);
             "version": "1.0.0",
             "release_date": "2024-12-18",
             "updated_date": "2024-12-20",
-            "icon": "mdi:git-issue",
             "options": [
               {
                 "name": "repository_name",
@@ -245,7 +243,7 @@ async function github_create_milestone(reactionData, actionResponseData, userUui
         return;
     }
 
-    const accessToken = await getGithubAccessToken(userUuid);
+    const accessToken = await getAccessToken(userUuid, "github");
 
     if (!accessToken) {
         console.error("No access token found for user");
