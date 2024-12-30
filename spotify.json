@@ -1,0 +1,91 @@
+{
+  "name": "spotify",
+  "color": "#1db954",
+  "icon": "line-md:spotify",
+  "reviews": {
+    "rate": 4.8,
+    "count": 250000
+  },
+  "saves": 2250000,
+  "categories": [
+    {
+      "name": "playlist",
+      "display_name": "Playlist",
+      "actions": [],
+      "reactions": [
+        {
+          "name": "https://api.spotify.com/v1/users/${profile.id}/playlists",
+          "display_name": "Create a new playlist",
+          "description": "Create a new playlist",
+          "version": "1.0.0",
+          "release_date": "2024-12-21",
+          "updated_date": "2024-12-21",
+          "icon": "line-md:spotify",
+          "options": [
+            {
+              "name": "name",
+              "display_name": "Playlist Name",
+              "description": "The name of the playlist",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "description",
+              "display_name": "Playlist Description",
+              "description": "Description of the playlist",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "public",
+              "display_name": "Playlist status",
+              "description": "Choose if the playlist is public or private",
+              "type": "switch",
+              "required": true
+            },
+          ]
+        }
+        {
+          "name": "https://api.spotify.com/v1/playlists/${playlist.uri}/tracks",
+          "display_name": "add a track to a playlist",
+          "description": "add a track to a playlist",
+          "version": "1.0.0",
+          "release_date": "2024-12-21",
+          "updated_date": "2024-12-30",
+          "icon": "line-md:spotify",
+          "options": [
+            {
+              "name": "uri",
+              "display_name": "Music URI",
+              "description": "The URI of the music",
+              "type": "text",
+              "required": true
+            },
+          ]
+        }
+        {
+          "name": "https://api.spotify.com/v1/search?q=${inputText}&type=track",
+          "display_name": "search for a track",
+          "description": "search on spotify for a track",
+          "version": "1.0.0",
+          "release_date": "2024-12-21",
+          "updated_date": "2024-12-30",
+          "icon": "line-md:spotify",
+          "options": [
+          ]
+        }
+        {
+          "name": "https://api.spotify.com/v1/me/playlists",
+          "display_name": "playlist of the user",
+          "description": "get the playlist of the user",
+          "version": "1.0.0",
+          "release_date": "2024-12-21",
+          "updated_date": "2024-12-30",
+          "icon": "line-md:spotify",
+          "options": [
+          ]
+        }
+      ]
+    }
+  ]
+},
