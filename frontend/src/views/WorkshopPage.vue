@@ -72,7 +72,8 @@
                             @click.stop="removeAction" />
                     </div>
                     <div class="flex justify-between w-[85%] px-4 items-center mt-4">
-                        <h1 class="text-md font-black text-[#333]">You need to connect to {{ action.service.name.charAt(0).toUpperCase() + action.service.name.slice(1) }} in order to have access to this action.</h1>
+                        <h1 class="text-md font-black text-[#333]" v-if="!linkStatusAction">You need to connect to {{ action.service.name.charAt(0).toUpperCase() + action.service.name.slice(1) }} in order to have access to this action.</h1>
+                        <h1 class="text-md font-black text-[#333]" v-else>You are correctly linked to {{ action.service.name.charAt(0).toUpperCase() + action.service.name.slice(1) }}.</h1>
                         <div class="flex w-full items-center justify-end">
                             <div
                                 class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
@@ -116,7 +117,7 @@
                         </div>
                     </div>
                     <div class="w-[85%] h-full mb-4" v-if="showActionOptions && action?.card.options.length == 0">
-                        <div class="w-full h-full flex flex-col items-start justify-start gap-4 rounded-xl shadow-md p-4 pb-8">
+                        <div class="w-full h-full flex flex-col items-start justify-center gap-4 rounded-xl shadow-md p-4 pb-4">
                             <h1 class="text-lg font-black text-[#333]">No configuration needed for this action.</h1>
                         </div>
                     </div>
@@ -191,7 +192,8 @@
                             @click.stop="removeReaction" />
                     </div>
                     <div class="flex justify-between w-[85%] px-4 items-center mt-4">
-                        <h1 class="text-md font-black text-[#333]">You need to connect to {{ reaction.service.name.charAt(0).toUpperCase() + reaction.service.name.slice(1) }} in order to have access to this reaction.</h1>
+                        <h1 class="text-md font-black text-[#333]" v-if="!linkStatusReaction">You need to connect to {{ reaction.service.name.charAt(0).toUpperCase() + reaction.service.name.slice(1) }} in order to have access to this reaction.</h1>
+                        <h1 class="text-md font-black text-[#333]" v-else>You are correctly linked to {{ reaction.service.name.charAt(0).toUpperCase() + reaction.service.name.slice(1) }}.</h1>
                         <div class="flex w-full items-center justify-end">
                             <div
                                 class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
@@ -235,7 +237,7 @@
                         </div>
                     </div>
                     <div class="w-[85%] h-full mb-4" v-if="showReactionOptions && reaction?.card.options.length == 0">
-                        <div class="w-full h-full flex flex-col items-start justify-start gap-4 rounded-xl shadow-md p-4 pb-8">
+                        <div class="w-full h-full flex flex-col items-start justify-center gap-4 rounded-xl shadow-md p-4 pb-4">
                             <h1 class="text-lg font-black text-[#333]">No configuration needed for this reaction.</h1>
                         </div>
                     </div>
