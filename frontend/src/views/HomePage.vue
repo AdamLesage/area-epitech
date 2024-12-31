@@ -180,7 +180,8 @@ onMounted(async() => {
 </script>
 
 <template>
-    <div class="bg-home !h-full before:bg-[url('@/assets/img/Grid2.png')] before:absolute before:w-[200%] before:h-[200%] before:top-[-50%] before:left-[-50%] overflow-hidden relative before:z-0 before:rotate-[5deg] before:opacity-5">
+    <div class="bg-home !h-full relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-15 z-0"></div>
         <!-- Signup and login button -->
         <button class="fixed bottom-4 right-4 z-[100] w-12 h-12 bg-home-div text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0">
             <ArrowComponentTop color="#4C4CDC" class="text-center" @click="scrollToTop" :animate="false" />
@@ -208,7 +209,7 @@ onMounted(async() => {
         <!-- Area logo -->
         <div class="flex flex-col items-center justify-center h-[100vh]">
             <LogoComponent color="#4C4CDC" class="w-80 h-80 mb-10 z-[2]" />
-            <Icon icon="material-symbols:copyright-outline" class="absolute text-home-text w-6 h-6 mt-[-18rem] mr-[-19rem] z-0" />
+            <Icon icon="material-symbols:copyright-outline" class="absolute text-home-text w-6 h-6 mt-[-18rem] mr-[-19rem] z-[2]" />
         </div>
         <div class="fixed w-full flex justify-center items-center">
             <ArrowComponentBottom color="#4C4CDC" class="fixed bottom-4 text-center hover:cursor-pointer" v-if="scrollY == 0" @click="scrollToAboutUs" :animate="true" />
@@ -218,8 +219,8 @@ onMounted(async() => {
         <div id="about-us" class="flex flex-col items-center">
             <section class="flex justify-center gap-16 items-center">
                 <div class="flex flex-col gap-4 justify-center w-full">
-                    <h2 class="text-2xl font-bold text-home-text mb-4 pt-24"><span class="text-home-light hover:cursor-pointer" @click="scrollToAboutUs">#</span> ABOUT US</h2>
-                    <p class="text-lg leading-6 text-home-text-light w-[50rem]">
+                    <h2 class="text-2xl font-bold text-home-text mb-4 pt-24 z-[2]"><span class="text-home-light hover:cursor-pointer" @click="scrollToAboutUs">#</span> ABOUT US</h2>
+                    <p class="text-lg leading-6 text-home-text-light w-[50rem] z-[2]">
                         We are a team of 5 developers currently in Tek3 at Epitech, working on an exciting project called
                         <strong>AREA</strong> (Automated Reactive Event Application).
                         <br><br>
@@ -279,28 +280,28 @@ onMounted(async() => {
 
         <!-- How It Works -->
         <div id="how-it-works" class="flex flex-col items-center">
-            <h2 class="text-2xl font-bold text-home-text mb-8 mt-8 pt-24">
+            <h2 class="text-2xl font-bold text-home-text mb-8 mt-8 pt-24 z-[2]">
                 <span class="text-home-light hover:cursor-pointer" @click="scrollToHowItWorks">#</span> HOW IT WORKS
             </h2>
             <div class="flex gap-8 flex-wrap justify-center w-full max-w-5xl text-center">
                 <div class="flex flex-col items-center w-1/3">
-                    <Icon icon="majesticons:hand-pointer-event-line" class="text-4xl w-16 h-16 mb-4 text-home-light" aria-hidden="true" />
-                    <h3 class="font-bold text-home-text-light text-lg">Choose an Action</h3>
-                    <p class="text-sm text-home-text-light">
+                    <Icon icon="majesticons:hand-pointer-event-line" class="text-4xl w-16 h-16 mb-4 text-home-light z-[2]" aria-hidden="true" />
+                    <h3 class="font-bold text-home-text-light text-lg z-[2]">Choose an Action</h3>
+                    <p class="text-sm text-home-text-light z-[2]">
                         Select an event from your favorite service. For example, "New song added to Spotify playlist."
                     </p>
                 </div>
                 <div class="flex flex-col items-center w-1/3">
-                    <Icon icon="icon-park-outline:robot-two" class="text-4xl w-16 h-16 mb-4 text-home-light" aria-hidden="true" />
-                    <h3 class="font-bold text-home-text-light text-lg">Define a Reaction</h3>
-                    <p class="text-sm text-home-text-light">
+                    <Icon icon="icon-park-outline:robot-two" class="text-4xl w-16 h-16 mb-4 text-home-light z-[2]" aria-hidden="true" />
+                    <h3 class="font-bold text-home-text-light text-lg z-[2]">Define a Reaction</h3>
+                    <p class="text-sm text-home-text-light z-[2]">
                         Set the automated task you want to happen. For example, "Save song details to Dropbox."
                     </p>
                 </div>
                 <div class="flex flex-col items-center w-1/3">
-                    <Icon icon="material-symbols:chair" class="text-4xl w-16 h-16 mb-4 text-home-light" aria-hidden="true" />
-                    <h3 class="font-bold text-home-text-light text-lg">Let US Work</h3>
-                    <p class="text-sm text-home-text-light">
+                    <Icon icon="material-symbols:chair" class="text-4xl w-16 h-16 mb-4 text-home-light z-[2]" aria-hidden="true" />
+                    <h3 class="font-bold text-home-text-light text-lg z-[2]">Let US Work</h3>
+                    <p class="text-sm text-home-text-light z-[2]">
                         Sit back and relax as our app automates your workflows seamlessly.
                     </p>
                 </div>
@@ -332,7 +333,7 @@ onMounted(async() => {
         </div>
 
         <div id="services" class="flex flex-col items-center">
-            <h2 class="text-2xl font-bold text-home-text mb-12 pt-24"><span class="text-home-light hover:cursor-pointer" @click="scrollToServices">#</span> SERVICES</h2>
+            <h2 class="text-2xl font-bold text-home-text mb-12 pt-24 z-[2]"><span class="text-home-light hover:cursor-pointer" @click="scrollToServices">#</span> SERVICES</h2>
             <div class="flex gap-16 flex-wrap w-full justify-center">
                 <div class="flex items-center h-48 justify-center">
                     <ArrowComponentLeft :animate="false" color="#4C4CDC" class="text-center hover:cursor-pointer" @click="serviceIdx--"/>
@@ -362,8 +363,8 @@ onMounted(async() => {
         <div id="reviews" class="flex flex-col items-center justify-center mt-12 mb-80">
             <section class="flex justify-center gap-4 items-center h-[360px]">
                 <div class="flex flex-col gap-4 justify-center w-full">
-                    <h2 class="text-2xl font-bold text-home-text mb-4 pt-24"><span class="text-home-light hover:cursor-pointer" @click="scrollToReviews">#</span> REVIEWS</h2>
-                    <p class="text-lg leading-6 text-home-text-light w-[50rem]">
+                    <h2 class="text-2xl font-bold text-home-text mb-4 pt-24 z-[2]"><span class="text-home-light hover:cursor-pointer" @click="scrollToReviews">#</span> REVIEWS</h2>
+                    <p class="text-lg leading-6 text-home-text-light w-[50rem] z-[2]">
                         "I love AREA! It's so easy to use and it makes my life so much easier. I can't imagine my life without it now." <span class="text-home-text">@anonymous</span>
                         <br><br>
                         "AREA is a game changer! I've been using it for a few weeks now and I'm already seeing the benefits. I highly recommend it." <span class="text-home-text">@anonymous</span>
