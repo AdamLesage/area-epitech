@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="0 0 800 800" width="800" height="800"><defs><pattern id="mmmotif-pattern" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="translate(-10 0) scale(1.4) rotate(44) skewX(-1) skewY(0)">
+    <rect width="11.3638" height="11.3638" transform="matrix(0.872008 0.489492 -0.872008 0.489492 20.0005 16.4375)" fill="#13134c"></rect>
+    <rect width="11.3638" height="6" transform="matrix(0.872008 0.489492 0 1 10.0908 22)" fill="#423979"></rect>
+    <rect width="11.3638" height="6" transform="matrix(0.872008 -0.489492 0 1 20 27.5625)" fill="#000025"></rect>
+    <rect width="11.3638" height="11.3638" transform="matrix(0.872008 0.489492 -0.872008 0.489492 20.0005 6.4375)" fill="#13134c"></rect>
+    <rect width="11.3638" height="6" transform="matrix(0.872008 0.489492 0 1 10.0908 12)" fill="#423979"></rect>
+    <rect width="11.3638" height="6" transform="matrix(0.872008 -0.489492 0 1 20 17.5625)" fill="#000025"></rect>
+</pattern></defs><rect width="800" height="800" fill="url(#mmmotif-pattern)"></rect></svg>
