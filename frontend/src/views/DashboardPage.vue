@@ -1,11 +1,15 @@
 <template>
-    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white font-sans">
+    <div class="text-white font-sans h-screen bg-[#333] flex flex-col">
+        <!-- Help Assistant Popup -->
+        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#333333" class="z-50" />
+
         <!-- Navbar -->
         <NavbarComponent />
 
-        <div class="flex flex-col md:flex-row-reverse h-full">
-
-            <div class="flex-1 bg-gray-800 p-4">
+        <!-- Main Content -->
+        <div class="flex flex-col md:flex-row-reverse flex-1 overflow-hidden">
+            <!-- Main Section -->
+            <div class="flex-1 p-4 overflow-auto">
                 <!-- Search Bar -->
                 <SearchBarComponent class="mb-4 md:mb-0 py-4" />
 
@@ -18,9 +22,9 @@
                         v-if="availableServices" />
                 </div>
             </div>
-            <!-- Sidebar: Updates -->
-            <UpdatesSidebar :updates="updates" class="md:w-1/4 w-full" />
 
+            <!-- Sidebar: Updates -->
+            <UpdatesSidebar :updates="updates" class="md:w-1/4 w-full overflow-auto" />
         </div>
     </div>
 </template>
@@ -31,6 +35,7 @@ import UpdatesSidebar from '../components/UpdatesSidebar.vue'; // Import the Upd
 import SearchBarComponent from '../components/SearchBarComponent.vue'; // Import the SearchBarComponent
 import SuggestionsComponent from '../components/SuggestionsComponent.vue'; // Import the SuggestionsComponent
 import ExplorePlatformsComponent from '../components/ExplorePlatformsComponent.vue'; // Import the ExplorePlatformsComponent
+import HelpAssistantPopupComponent from '../components/HelpAssistantPopupComponent.vue'; // Import the HelpAssistantPopupComponent
 
 import { ref, onMounted } from 'vue';
 import axios from 'axios';

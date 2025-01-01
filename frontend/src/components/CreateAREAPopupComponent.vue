@@ -1,7 +1,7 @@
 <template>
     <!-- In the style of gmail create Mail popup -->
      <!-- Minimal view -->
-    <div class="fixed w-[30rem] h-[2.5rem] bottom-4 right-8 rounded-xl shadow-2xl" v-if="popupView == 'Minimal'">
+    <div class="fixed w-[30rem] h-[2.5rem] bottom-4 right-4 rounded-xl shadow-2xl" v-if="popupView == 'Minimal'">
         <header class="bg-gray-300 rounded-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="normalView">
             <h1 class="text-[#333] font-black">New AREA</h1>
             <div class="flex justify-end items-center gap-1">
@@ -15,7 +15,7 @@
         </header>
     </div>
     <!-- Normal view -->
-    <div class="fixed w-[30rem] h-[29.5rem] bottom-4 right-8 rounded-xl shadow-2xl" v-if="popupView == 'Normal'">
+    <div class="fixed w-[30rem] h-[29.5rem] bottom-4 right-4 rounded-xl shadow-2xl" v-if="popupView == 'Normal'">
         <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="minimalView">
             <h1 class="text-[#333] font-black">New AREA</h1>
             <div class="flex justify-end items-center gap-1">
@@ -130,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { Action, Reaction, Category, Service } from '@/types/services';
 import { Icon } from '@iconify/vue';

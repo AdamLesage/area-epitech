@@ -2,8 +2,8 @@
     <div :style="{ backgroundColor: '#333' }"
         class="flex flex-col justify-between before:bg-[url('@/assets/svg/Grid12.svg')] before:absolute before:w-full before:h-full overflow-hidden relative before:z-0"
         @click="workshopVisible = true"
-        @wheel="handleScrollAttempt" v-if="!workshopVisible"
-    >
+        @wheel="handleScrollAttempt" v-if="!workshopVisible">
+        <HelpAssistantPopupComponent :bottom="8" :left="8" color="#333" class="z-50" />
         <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" />
         <div class="flex flex-col justify-center items-center z-10">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
@@ -11,7 +11,10 @@
                 <div class="flex flex-col justify-end items-center p-4">
                     <h1
                         class="text-white web:text-[6rem] mobile:text-[3rem] web:leading-[5rem] mobile:leading-[2.5rem] font-bold">
-                        Workshop</h1>
+                        WORKSHOP</h1>
+                    <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">
+                        Let's build your next AREA
+                    </h2>
                 </div>
             </div>
 
@@ -21,19 +24,23 @@
         </div>
     </div>
     <div @wheel="handleScrollAttemptSecondPage" v-else>
+        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#333" class="z-50" />
         <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full before:bg-[url('@/assets/svg/Grid12.svg')] before:absolute before:rotate-[12deg] before:w-[200%] before:h-[200%] before:top-[-50%] before:left-[-50%] overflow-hidden relative before:z-0"
             :style="{ backgroundColor: '#333' }">
             <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" />
             <div class="flex justify-center items-center p-4 mobile:hidden z-10" v-if="scrollY == 0">
                 <Icon icon="mdi:hammer-screwdriver" class="w-36 h-36 text-white" />
                 <div class="flex flex-col justify-end items-center p-4">
-                    <h1 class="text-white text-[6rem] leading-[5rem] font-bold">Workshop</h1>
+                    <h1 class="text-white text-[6rem] leading-[5rem] font-bold">WORKSHOP</h1>
+                    <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">
+                        Let's build your next AREA
+                    </h2>
                 </div>
             </div>
             <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-10"
                 :style="{ backgroundColor: '#333' }" v-else>
                 <ServiceNavScrollComponent
-                    title="Workshop"
+                    title="WORKSHOP"
                     logo="mdi:hammer-screwdriver"
                     @back-button="handleBackButton"
                     :redirect="false"
@@ -42,7 +49,7 @@
             <div />
         </div>
         <div class="flex flex-col items-center">
-            <div class="flex justify-between w-[93%] mt-12 rounded-lg">
+            <div class="flex justify-between w-full mt-12 rounded-lg px-8">
                 <div class="w-1/2 flex justify-start gap-2 items-center">
                     <input type="text" class="w-full h-12 rounded-xl border-4 border-[#333] bg-[#333] text-white text-lg font-black text-start pl-4 placeholder:text-white/90"
                         v-model="title"
@@ -59,7 +66,7 @@
             </div>
             <main class="w-full flex justify-center items-start gap-8 h-full mt-12">
                 <section id="action" class="h-full w-full flex flex-col items-center justify-center" v-if="action">
-                    <div class="w-[85%] h-32 rounded-xl flex items-center justify-center gap-4 hover:cursor-pointer relative"
+                    <div class="w-[75%] h-32 rounded-xl flex items-center justify-center gap-4 hover:cursor-pointer relative"
                         :style="{ backgroundColor: action.service.color }"
                         @click="redirectToAction">
                         <Icon :icon="action.service.icon" class="w-12 h-12 text-white" />
@@ -71,7 +78,7 @@
                             class="w-8 h-8 hover:cursor-pointer text-white hover:text-red-500 absolute top-3 left-3"
                             @click.stop="removeAction" />
                     </div>
-                    <div class="flex justify-between w-[85%] px-4 items-center mt-4">
+                    <div class="flex justify-between w-[75%] px-4 items-center mt-4">
                         <h1 class="text-md font-black text-[#333]" v-if="!linkStatusAction">You need to connect to {{ action.service.name.charAt(0).toUpperCase() + action.service.name.slice(1) }} in order to have access to this action.</h1>
                         <h1 class="text-md font-black text-[#333]" v-else>You are correctly linked to {{ action.service.name.charAt(0).toUpperCase() + action.service.name.slice(1) }}.</h1>
                         <div class="flex w-full items-center justify-end">
@@ -94,7 +101,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex w-[85%] h-16 justify-between px-4 my-4 items-center bg-gray-300 rounded-xl hover:cursor-pointer"
+                    <div class="flex w-[75%] h-16 justify-between px-4 my-4 items-center bg-gray-300 rounded-xl hover:cursor-pointer"
                         @click="showActionOptions = !showActionOptions">
                         <h2 class="text-lg text-[#333] font-black select-none">Configuration</h2>
                         <Icon icon="material-symbols:hide-rounded" class="w-8 h-8 text-[#333]"
@@ -102,7 +109,7 @@
                         <Icon icon="eva:expand-fill" class="w-8 h-8 text-[#333]"
                             v-else />
                     </div>
-                    <div class="w-[85%] h-full mb-4" v-if="showActionOptions && action?.card.options.length != 0">
+                    <div class="w-[75%] h-full mb-4" v-if="showActionOptions && action?.card.options.length != 0">
                         <div class="w-full h-full flex flex-col items-start justify-start gap-4 rounded-xl shadow-md p-4 pb-8">
                             <div v-for="(option) in action?.card.options" :key="option.name" class="flex flex-col gap-2 px-8">
                                 <label :for="option.name" class="text-black">• {{ option.display_name }}</label>
@@ -116,12 +123,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="w-[85%] h-full mb-4" v-if="showActionOptions && action?.card.options.length == 0">
+                    <div class="w-[75%] h-full mb-4" v-if="showActionOptions && action?.card.options.length == 0">
                         <div class="w-full h-full flex flex-col items-start justify-center gap-4 rounded-xl shadow-md p-4 pb-4">
                             <h1 class="text-lg font-black text-[#333]">No configuration needed for this action.</h1>
                         </div>
                     </div>
-                    <div class="flex flex-col justify-start w-[85%] rounded-xl p-4 h-full shadow-lg"
+                    <div class="flex flex-col justify-start w-[75%] rounded-xl p-4 h-full shadow-lg"
                         :style="{ backgroundColor: action.service.color }">
                         <h1 class="text-lg font-black text-white">When {{ action.card.description.toLowerCase() }} on {{ action.service.name.charAt(0).toUpperCase() + action.service.name.slice(1) }}</h1>
                         <ul class="mt-4" v-if="action.card.options.length != 0">
@@ -136,10 +143,10 @@
                     </div>
                 </section>
                 <section id="action" class="h-full w-full flex flex-col items-center justify-center" v-else>
-                    <div class="flex w-[85%] h-16 justify-between px-4 my-4 items-center bg-gray-100 rounded-xl">
+                    <div class="flex w-[75%] h-16 justify-between px-4 my-4 items-center bg-gray-100 rounded-xl">
                         <h1 class="text-2xl text-center w-full font-black text-[#333]">No action selected</h1>
                     </div>
-                    <div v-if="!actionSearch.service" class="w-[85%]">
+                    <div v-if="!actionSearch.service" class="w-[75%]">
                         <h1 class="text-2xl font-black text-[#333] pb-2">Select a Service</h1>
                         <div v-for="service in serviceStore.services.filter(service => service.categories.filter(category => category.actions.length > 0).length > 0)" :key="service.name" class="flex w-full h-16 justify-between px-4 my-4 items-center bg-[#333] rounded-xl text-white hover:cursor-pointer shadow-lg"
                             @click="actionSearch.service = service"
@@ -147,7 +154,7 @@
                             <h1>-> {{ service.name.toUpperCase() }}</h1>
                         </div>
                     </div>
-                    <div v-if="actionSearch.service && !actionSearch.category" class="w-[85%]">
+                    <div v-if="actionSearch.service && !actionSearch.category" class="w-[75%]">
                         <div class="flex justify-between items-start">
                             <h1 class="text-2xl font-black text-[#333]">Select a Category</h1>
                             <button @click="actionSearch.service = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Change Service</button>
@@ -158,7 +165,7 @@
                             <h1>-> {{ category.name.toUpperCase() }}</h1>
                         </div>
                     </div>
-                    <div v-if="actionSearch.service && actionSearch.category && !actionSearch.card" class="w-[85%]">
+                    <div v-if="actionSearch.service && actionSearch.category && !actionSearch.card" class="w-[75%]">
                         <div class="flex justify-between items-start">
                             <h1 class="text-2xl font-black text-[#333]">Select an Action</h1>
                             <div class="flex justify-end gap-2">
@@ -179,7 +186,7 @@
                     </div>
                 </section>
                 <section id="reaction" class="h-full w-full flex flex-col items-center justify-center" v-if="reaction">
-                    <div class="w-[85%] h-32 rounded-xl flex items-center justify-center gap-4 hover:cursor-pointer relative"
+                    <div class="w-[75%] h-32 rounded-xl flex items-center justify-center gap-4 hover:cursor-pointer relative"
                         :style="{ backgroundColor: reaction.service.color }"
                         @click="redirectToReaction">
                         <Icon :icon="reaction.service.icon" class="w-12 h-12 text-white" />
@@ -191,7 +198,7 @@
                             class="w-8 h-8 hover:cursor-pointer text-white hover:text-red-500 absolute top-3 left-3"
                             @click.stop="removeReaction" />
                     </div>
-                    <div class="flex justify-between w-[85%] px-4 items-center mt-4">
+                    <div class="flex justify-between w-[75%] px-4 items-center mt-4">
                         <h1 class="text-md font-black text-[#333]" v-if="!linkStatusReaction">You need to connect to {{ reaction.service.name.charAt(0).toUpperCase() + reaction.service.name.slice(1) }} in order to have access to this reaction.</h1>
                         <h1 class="text-md font-black text-[#333]" v-else>You are correctly linked to {{ reaction.service.name.charAt(0).toUpperCase() + reaction.service.name.slice(1) }}.</h1>
                         <div class="flex w-full items-center justify-end">
@@ -214,7 +221,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex w-[85%] h-16 justify-between px-4 my-4 items-center bg-gray-300 rounded-xl hover:cursor-pointer"
+                    <div class="flex w-[75%] h-16 justify-between px-4 my-4 items-center bg-gray-300 rounded-xl hover:cursor-pointer"
                         @click="showReactionOptions = !showReactionOptions">
                         <h2 class="text-lg text-[#333] font-black select-none">Configuration</h2>
                         <Icon icon="material-symbols:hide-rounded" class="w-8 h-8 text-[#333]"
@@ -222,7 +229,7 @@
                         <Icon icon="eva:expand-fill" class="w-8 h-8 text-[#333]"
                             v-else />
                     </div>
-                    <div class="w-[85%] h-full mb-4" v-if="showReactionOptions && reaction?.card.options.length != 0">
+                    <div class="w-[75%] h-full mb-4" v-if="showReactionOptions && reaction?.card.options.length != 0">
                         <div class="w-full h-full flex flex-col items-start justify-start gap-4 rounded-xl shadow-md p-4 pb-8">
                             <div v-for="(option) in reaction?.card.options" :key="option.name" class="flex flex-col gap-2 px-8">
                                 <label :for="option.name" class="text-black">• {{ option.display_name }}</label>
@@ -236,12 +243,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="w-[85%] h-full mb-4" v-if="showReactionOptions && reaction?.card.options.length == 0">
+                    <div class="w-[75%] h-full mb-4" v-if="showReactionOptions && reaction?.card.options.length == 0">
                         <div class="w-full h-full flex flex-col items-start justify-center gap-4 rounded-xl shadow-md p-4 pb-4">
                             <h1 class="text-lg font-black text-[#333]">No configuration needed for this reaction.</h1>
                         </div>
                     </div>
-                    <div class="flex flex-col justify-start w-[85%] rounded-xl p-4 h-full shadow-lg"
+                    <div class="flex flex-col justify-start w-[75%] rounded-xl p-4 h-full shadow-lg"
                         :style="{ backgroundColor: reaction.service.color }">
                         <h1 class="text-lg font-black text-white">Then {{ reaction.card.description.toLowerCase() }} on {{ reaction.service.name.charAt(0).toUpperCase() + reaction.service.name.slice(1) }}</h1>
                         <ul class="mt-4" v-if="reaction.card.options.length != 0">
@@ -256,10 +263,10 @@
                     </div>
                 </section>
                 <section id="reaction" class="h-full w-full flex flex-col items-center justify-center" v-else>
-                    <div class="flex w-[85%] h-16 justify-between px-4 my-4 items-center bg-gray-100 rounded-xl">
+                    <div class="flex w-[75%] h-16 justify-between px-4 my-4 items-center bg-gray-100 rounded-xl">
                         <h1 class="text-2xl text-center w-full font-black text-[#333]">No reaction selected</h1>
                     </div>
-                    <div v-if="!reactionSearch.service" class="w-[85%]">
+                    <div v-if="!reactionSearch.service" class="w-[75%]">
                         <h1 class="text-2xl font-black text-[#333] pb-2">Select a Service</h1>
                         <div v-for="service in serviceStore.services.filter(service => service.categories.filter(category => category.reactions.length > 0).length > 0)" :key="service.name" class="flex w-full h-16 justify-between px-4 my-4 items-center bg-[#333] rounded-xl text-white hover:cursor-pointer shadow-lg"
                             @click="reactionSearch.service = service"
@@ -267,7 +274,7 @@
                             <h1>-> {{ service.name.toUpperCase() }}</h1>
                         </div>
                     </div>
-                    <div v-if="reactionSearch.service && !reactionSearch.category" class="w-[85%]">
+                    <div v-if="reactionSearch.service && !reactionSearch.category" class="w-[75%]">
                         <div class="flex justify-between items-start">
                             <h1 class="text-2xl font-black text-[#333]">Select a Category</h1>
                             <button @click="reactionSearch.service = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Change Service</button>
@@ -278,7 +285,7 @@
                             <h1>-> {{ category.name.toUpperCase() }}</h1>
                         </div>
                     </div>
-                    <div v-if="reactionSearch.service && reactionSearch.category && !reactionSearch.card" class="w-[85%]">
+                    <div v-if="reactionSearch.service && reactionSearch.category && !reactionSearch.card" class="w-[75%]">
                         <div class="flex justify-between items-start">
                             <h1 class="text-2xl font-black text-[#333]">Select a Reaction</h1>
                             <div class="flex justify-end gap-2">
@@ -300,23 +307,31 @@
 </template>
 
 <script setup lang="ts">
+// Vue Lib
+import { computed, ref, watch, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+// Types
+import { Action, Reaction, Category, Service } from '@/types/services';
+import { User, LinkedAccount } from '@/types/auth';
+
+// Stores
 import { usePopupStore } from '@/stores/popup';
 import { useServiceStore } from '@/stores/service';
 import { useUserStore } from '@/stores/user';
-import BackButton from '@/components/BackButton.vue';
-import NavButton from '@/components/NavButton.vue';
-import { computed, ref, watch, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+
+// External Lib
 import { Icon } from '@iconify/vue';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
+// Components
 import CustomInput from '@/components/CustomInput.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
-import { Action, Reaction, Category, Service } from '@/types/services';
-import axios from 'axios';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
-import Cookies from 'js-cookie';
-import { User, LinkedAccount } from '@/types/auth';
+import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
 
 const store = usePopupStore();
 const serviceStore = useServiceStore();

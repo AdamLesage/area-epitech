@@ -13,6 +13,7 @@ import SaveComponent from '@/components/SaveComponent.vue';
 import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
+import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -194,6 +195,7 @@ function copyColor() {
         <ServiceNavComponent
             @back-button="handleBackButton"
             class="mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="56" :left="8" :color="color" />
         <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4" />
         <div class="flex flex-col justify-center items-center">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
@@ -234,9 +236,9 @@ function copyColor() {
             </div>
         </div>
         <div class="flex justify-between items-center p-4 mobile:hidden">
-            <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" />
-            <ArrowComponentBottom color="white" class="mobile:hidden" :animate="true" />
-            <SaveComponent :saves="saves" color="white" textcolor="white" />
+            <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="w-1/3" />
+            <ArrowComponentBottom color="white" :animate="true" class="w-1/3" />
+            <SaveComponent :saves="saves" color="white" textcolor="white" class="w-1/3 flex justify-end" />
         </div>
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden" />
     </div>
@@ -244,6 +246,7 @@ function copyColor() {
     <div
         @wheel="handleScrollAttemptSecondPage"
         v-else>
+        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="color" />
         <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full"
             :style="{ backgroundColor: color }">
             <ServiceNavComponent

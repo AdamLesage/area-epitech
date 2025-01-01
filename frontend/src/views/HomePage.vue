@@ -13,6 +13,7 @@ import ArrowComponentLeft from '@/components/ArrowComponentLeft.vue';
 import ArrowComponentRight from '@/components/ArrowComponentRight.vue';
 import TimelineComponent from '@/components/TimelineComponent.vue';
 import RateComponent from '@/components/RateComponent.vue';
+import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
 
 import { Service, ServiceDetails } from '@/types/services';
 import { useServiceStore } from '@/stores/service';
@@ -181,6 +182,7 @@ onMounted(async() => {
 
 <template>
     <div class="bg-home !h-full relative overflow-hidden">
+        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#13134c" class="z-50" />
         <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-5 z-0"></div>
         <!-- Signup and login button -->
         <button class="fixed bottom-4 right-4 z-[100] w-12 h-12 bg-home-div text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0">
