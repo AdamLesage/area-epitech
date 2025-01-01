@@ -8,6 +8,7 @@ import { Category } from '@/types/services';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
+import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -101,7 +102,8 @@ window.addEventListener('scroll', () => {
 </script>
 
 <template>
-    <div v-if="category" class="flex flex-col justify-between">
+    <div v-if="service && category" class="flex flex-col justify-between min-h-screen">
+        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="service.color" />
         <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
             :style="{ backgroundColor: color }">
             <ServiceNavScrollComponent @back-button="handleBackButton"
@@ -109,8 +111,7 @@ window.addEventListener('scroll', () => {
                 :redirect="true" />
         </div>
 
-        <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-36"
-            v-if="service">
+        <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-36">
             <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
                 <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="redirectToService"/>

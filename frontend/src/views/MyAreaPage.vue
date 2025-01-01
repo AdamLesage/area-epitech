@@ -2,8 +2,8 @@
     <!-- First Page -->
     <div :style="{ backgroundColor: color }" class="flex flex-col justify-between" @click="openServicePage"
         @wheel="handleScrollAttempt" v-if="isHeroVisible">
-        <ServiceNavComponent @back-button="handleBackButtonFirstPage" @redirect-user-profile="handleRedirectUserPage"
-            class="mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="8" :left="8" :color="color" class="z-50" />
+        <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" />
         <div class="flex flex-col justify-center items-center">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
@@ -28,13 +28,18 @@
         <div class="flex justify-center items-center p-4 mobile:hidden">
             <ArrowComponentBottom color="white" class="mobile:hidden" :animate="true" />
         </div>
-        <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden" />
+        <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden" />
     </div>
     <!-- Second Page -->
     <div @wheel="handleScrollAttemptSecondPage" v-else>
-        <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full"
+        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="color" class="z-50" />
+        <button class="fixed bottom-4 right-4 z-[100] w-12 h-12 text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0"
             :style="{ backgroundColor: color }">
-            <ServiceNavComponent @back-button="handleBackButtonSecondPage"
+            <ArrowComponentTop color="white" class="text-center" @click="scrollToTop" :animate="false" />
+        </button>
+        <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full mb-12"
+            :style="{ backgroundColor: color }">
+            <ServiceNavComponent @back-button="handleBackButton"
                 @redirect-user-profile="handleRedirectUserPage" class="mobile:hidden" />
             <div class="flex justify-center items-center p-4 mobile:hidden" v-if="scrollY == 0">
                 <Icon :icon="logo" class="w-36 h-36 text-white" />
@@ -45,9 +50,12 @@
             </div>
             <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden"
                 :style="{ backgroundColor: color }" v-else>
-                <ServiceNavScrollComponent @back-button="handleBackButtonSecondPage" :logo="logo"
-                    :title="nameCapitalized"
-                    :redirect="true" />
+                <ServiceNavScrollComponent
+                    title="MY AREA"
+                    :logo="logo"
+                    @back-button="handleBackButton"
+                    :redirect="false"
+                    :class="color" />
             </div>
             <div class="flex justify-between items-center w-full web:hidden">
                 <div class="flex web:justify-center items-center p-4 w-full mobile:justify-start">
@@ -71,7 +79,7 @@
                 @wheel.stop>
             </div>
             <div class="mobile:hidden" />
-            <MobileServiceNavComponent @back-button="handleBackButtonSecondPage" class="web:hidden" />
+            <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden" />
         </div>
 
         <div class="flex flex-wrap gap-8 p-8 justify-center mobile:hidden">
@@ -130,6 +138,24 @@
                 </div>
             </div>
         </div>
+        <footer class="flex justify-between items-center flex-col h-64 py-8 relative z-[2] mt-24"
+            :style="{ backgroundColor: color }">
+            <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
+            <div class="flex w-full justify-center items-center px-8">
+                <div class="flex gap-4 items-center w-full justify-center">
+                    <Icon icon="material-symbols:mail-outline" class="w-6 h-6 text-white" />
+                    <p class="text-white hover:cursor-pointer" @click="copyEmail">contact.area.ownspace@gmail.com</p>
+                </div>
+                <p class="w-full text-center text-white">Project made under Epitech © PGE program</p>
+                <h1 class="text-4xl font-black text-white text-center w-full hover:cursor-pointer" @click="scrollToTop">AREA</h1>
+            </div>
+            <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm">
+                <p class="hover:underline hover:cursor-pointer">Mentions</p>
+                <p class="hover:underline hover:cursor-pointer">Cookies</p>
+                <p class="hover:underline hover:cursor-pointer">Privacy</p>
+                <p class="hover:underline hover:cursor-pointer">Terms</p>
+            </div>
+        </footer>
     </div>
 </template>
 
@@ -146,6 +172,9 @@ import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
+import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
+import ArrowComponentTop from '@/components/ArrowComponentTop.vue';
+
 import { Area } from '@/types/area';
 
 const userStore = useUserStore();
@@ -176,17 +205,24 @@ function formatDate(date: string) {
   });
 }
 
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+};
+
+function copyEmail() {
+    navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
+    alert('Email copied to clipboard');
+}
+
 const openServicePage = () => {
     console.log('Service page opened');
     isHeroVisible.value = false;
 }
 
-const handleBackButtonSecondPage = () => {
-    console.log('Back button clicked on second page');
-    isHeroVisible.value = true;
-}
-
-function handleBackButtonFirstPage() {
+function handleBackButton() {
     console.log('Back button clicked on first page');
     router.push('/dashboard');
 }

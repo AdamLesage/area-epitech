@@ -10,6 +10,7 @@ import { useUserStore } from '@/stores/user';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import CustomInput from '@/components/CustomInput.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
+import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -173,7 +174,8 @@ window.addEventListener('scroll', () => {
 </script>
 
 <template>
-    <div v-if="service && category && card" class="flex flex-col justify-between" :key="reload">
+    <div v-if="service && category && card" class="flex flex-col justify-between min-h-screen" :key="reload">
+        <HelpAssistantPopupComponent :bottom="16" :left="8" :color="service.color" />
         <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
             :style="{ backgroundColor: color }">
             <ServiceNavScrollComponent @back-button="handleBackButtonFirstPage"
