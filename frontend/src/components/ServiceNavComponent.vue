@@ -53,7 +53,7 @@ const handleBackButton = () => {
             <BackButton color="white" class="hover:cursor-pointer" @click="handleBackButton" />
             <div class="flex gap-8">
                 <NavButton icon="material-symbols:explore-rounded" text="Explore" @redirect="handleExploreRedirect" />
-                <NavButton icon="material-symbols:folder-outline" text="My Areas" @redirect="handleMyAreasRedirect" v-if="user" />
+                <NavButton icon="material-symbols:folder-outline" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />
                 <NavButton icon="mdi:hammer-screwdriver" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
                 <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" v-if="user" />
             </div>
