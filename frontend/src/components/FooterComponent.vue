@@ -1,5 +1,5 @@
 <template>
-    <footer class="flex justify-between items-center flex-col h-64 py-8 mt-24" :style="{ backgroundColor: '#333' }">
+    <footer class="flex justify-between items-center flex-col !h-64 py-8 mt-24 shrink-0" :style="{ backgroundColor: '#333' }">
         <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
         <div class="flex w-full justify-center items-center px-8">
             <div class="flex gap-4 items-center w-full justify-center">
