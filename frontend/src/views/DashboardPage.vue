@@ -78,54 +78,7 @@ function handleServiceClick(name: string) {
 const availableServices = ref<Service[]>([])
 
 onMounted(async() => {
-    const email = Cookies.get('email');
-    const token = Cookies.get('token');
-
-    if (!email && !token) {
-        console.error('Not logged in.');
-        router.push('/');
-        return;
-    } else {
-        const user = userStore.user;
-        console.log(user);
-        if (!user) {
-            const res: { status: number, data: User } = await axios.get<User>(
-                `${import.meta.env.VITE_BACKEND_URL}/api/user`,
-                {
-                    params: {
-                        email: email,
-                    },
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            console.log(res);
-            if (res.status === 200) {
-                console.log('User fetched successfully');
-                userStore.setUser(res.data);
-            } else {
-                console.log('User fetching failed');
-                router.push('/');
-                Cookies.remove('email');
-                Cookies.remove('token');
-            }
-        }
-    }
-    // Fetch the different services from the API
-    console.log(import.meta.env.VITE_BACKEND_URL);
-    const response: { status: number, data: { services: Service[] }} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/services-info.json`);
-    console.log(response);
-    if (response.status !== 200) {
-        console.error('Error while fetching services');
-        return;
-    }
-    availableServices.value = response.data.services;
-    for (const service of availableServices.value) {
-        serviceStore.setNewService(service);
-        console.log('Service:', service, 'added to serviceStore:', serviceStore.services);
-    }
-    console.log(availableServices.value);
+    availableServices.value = serviceStore.services;
 })
 </script>
 
