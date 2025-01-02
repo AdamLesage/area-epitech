@@ -1,20 +1,23 @@
 import { defineStore } from 'pinia';
 import { User } from '@/types/auth';
+import { Area } from '@/types/area';
 
 export const useUserStore = defineStore('user', {
     state: (): {
         user: User | null,
+        areas: Area[],
     } => ({
         user: null, // Initialize as an array
+        areas: [],
     }),
     getters: {
     },
     actions: {
-        setUser(user: User): void {
+        setUser(user: User | null): void {
             this.user = user; // Set the user
         },
-        clearUser(): void {
-            this.user = null; // Clear the user
-        },
+        addArea(area: Area): void {
+            this.areas.push(area); // Add an area to the list
+        }
     },
 });
