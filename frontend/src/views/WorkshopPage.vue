@@ -596,7 +596,9 @@ function cancelSetup() {
 
 function handleBackButton() {
     console.log('Back button clicked');
+    window.scrollTo(0, 0);
     router.push('/dashboard');
+    window.scrollTo(0, 0);
     store.display = true;
     store.title = title.value;
     store.view = 'Minimal';
@@ -616,25 +618,11 @@ function switchReactionLinkStatus() {
     }
 }
 
-function handleExploreRedirect() {
-    console.log('Redirecting to explore');
-}
-
-function handleMyAreasRedirect() {
-    console.log('Redirecting to my areas');
-}
-
-function handleUpdatesRedirect() {
-    console.log('Redirecting to updates');
-}
-
-function handleUserProfileRedirect() {
-    console.log('Redirecting to user profile');
-}
-
 function redirectToAction() {
     console.log('Redirecting to action:', action.value?.card.display_name);
+    window.scrollTo(0, 0);
     router.push(`/service/${action.value?.service.name}/category/${action.value?.category.name}/action/${action.value?.card.name}`);
+    window.scrollTo(0, 0);
     store.display = true;
     store.title = title.value;
     store.view = 'Minimal';
@@ -642,91 +630,33 @@ function redirectToAction() {
 
 function redirectToReaction() {
     console.log('Redirecting to reaction:', reaction.value?.card.display_name);
+    window.scrollTo(0, 0);
     router.push(`/service/${reaction.value?.service.name}/category/${reaction.value?.category.name}/reaction/${reaction.value?.card.name}`);
+    window.scrollTo(0, 0);
     store.display = true;
     store.title = title.value;
     store.view = 'Minimal';
 }
 
-onMounted(async() => {
-    const email = Cookies.get('email');
-    const token = Cookies.get('token');
-
-    if (!email && !token) {
-        console.error('Not logged in.');
-        router.push('/');
-        return;
-    } else {
-        const user = userStore.user;
-        console.log(user);
-        if (!user) {
-            const res: { status: number, data: User } = await axios.get<User>(
-                `${import.meta.env.VITE_BACKEND_URL}/api/user`,
-                {
-                    params: {
-                        email: email,
-                    },
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            console.log(res);
-            if (res.status === 200) {
-                console.log('User fetched successfully');
-                userStore.setUser(res.data);
-            } else {
-                console.log('User fetching failed');
-                router.push('/');
-                Cookies.remove('email');
-                Cookies.remove('token');
-            }
-        }
-    }
-    // Fetch the different linked accounts from the API
+onMounted(() => {
     const user = userStore.user;
-    if (user) {
-        user.linkedAccounts = [];
-        const res: { status: number, data: LinkedAccount[] } = await axios.get<LinkedAccount[]>(
-            `${import.meta.env.VITE_BACKEND_URL}/api/user/${user.uuid}/linked-accounts`,
-            {
-                params: {
-                    uuid: user.uuid,
-                },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        console.log(res);
-        const linkedAccounts = res.data;
-
-        for (const linkedAccount of linkedAccounts) {
-            console.log('Linked account:', linkedAccount);
-            user.linkedAccounts.push(linkedAccount);
-        }
-
-        if (action.value && action.value.service) {
-            linkStatusAction.value = user.linkedAccounts.some(linkedAccount => linkedAccount.serviceName === action.value?.service.name);
-        }
-
-        if (reaction.value && reaction.value.service) {
-            linkStatusReaction.value = user.linkedAccounts.some(linkedAccount => linkedAccount.serviceName === reaction.value?.service.name);
-        }
-    }
-
-    // Fetch the different services from the API
-    console.log(import.meta.env.VITE_BACKEND_URL);
-    const response: { status: number, data: { services: Service[] }} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/services-info.json`);
-    console.log(response);
-    if (response.status !== 200) {
-        console.error('Error while fetching services');
+    if (!user) {
+        console.error('User is not logged in.');
         return;
     }
-    const services = response.data.services;
-    for (const service of services) {
-        serviceStore.setNewService(service);
-        console.log('Service:', service, 'added to serviceStore:', serviceStore.services);
+
+    const linkedAccounts = user.linkedAccounts;
+
+    for (const linkedAccount of linkedAccounts) {
+        console.log('Linked account:', linkedAccount);
+    }
+
+    if (action.value && action.value.service) {
+        linkStatusAction.value = user.linkedAccounts.some(linkedAccount => linkedAccount.serviceName === action.value?.service.name);
+    }
+
+    if (reaction.value && reaction.value.service) {
+        linkStatusReaction.value = user.linkedAccounts.some(linkedAccount => linkedAccount.serviceName === reaction.value?.service.name);
     }
 })
 </script>
