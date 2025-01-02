@@ -1,185 +1,3 @@
-<script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { Icon } from '@iconify/vue';
-
-import LogoComponent from '@/components/LogoComponent.vue';
-import SignUpButtonText from '@/components/SignUpButtonText.vue';
-import LoginButtonText from '@/components/LoginButtonText.vue';
-import IconsComponent from '@/components/IconsComponent.vue';
-import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
-import ArrowComponentTop from '@/components/ArrowComponentTop.vue';
-import ArrowComponentLeft from '@/components/ArrowComponentLeft.vue';
-import ArrowComponentRight from '@/components/ArrowComponentRight.vue';
-import TimelineComponent from '@/components/TimelineComponent.vue';
-import RateComponent from '@/components/RateComponent.vue';
-import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
-
-import { Service, ServiceDetails } from '@/types/services';
-import { useServiceStore } from '@/stores/service';
-
-import axios from 'axios';
-import UserSvgComponent from '@/components/UserSvgComponent.vue';
-
-const router = useRouter();
-const scrollY = ref(0);
-const serviceStore = useServiceStore();
-const userReview = ref('');
-const userRate = ref(1);
-const showDetails = ref(false);
-
-function sendReview() {
-    console.log('Review:', userReview.value, 'Rate:', userRate.value);
-    userReview.value = '';
-    userRate.value = 0;
-}
-
-const navigateTo = (route: string) => {
-    if (router) {
-        router.push(route);
-    } else {
-        console.error('Router is not defined');
-    }
-};
-
-const scrollToTop = () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-};
-
-const scrollToAboutUs = () => {
-    const aboutUs = document.getElementById('about-us');
-    if (aboutUs) {
-        aboutUs.scrollIntoView({ behavior: 'smooth' });
-    }
-};
-
-const scrollToServices = () => {
-    const services = document.getElementById('services');
-    if (services) {
-        services.scrollIntoView({ behavior: 'smooth' });
-    }
-};
-
-const scrollToHowItWorks = () => {
-    const howItWorks = document.getElementById('how-it-works');
-    if (howItWorks) {
-        howItWorks.scrollIntoView({ behavior: 'smooth' });
-    }
-};
-
-const scrollToReviews = () => {
-    const reviews = document.getElementById('reviews');
-    if (reviews) {
-        reviews.scrollIntoView({ behavior: 'smooth' });
-    }
-};
-
-const scrollToHigher = () => {
-    window.scrollTo({
-        top: scrollY.value - 100,
-        behavior: 'smooth'
-    });
-};
-
-const scrollToLower = () => {
-    window.scrollTo({
-        top: scrollY.value + 100,
-        behavior: 'smooth'
-    });
-};
-
-const currentStep = ref(0);
-window.addEventListener('scroll', () => {
-    const aboutUs = document.getElementById('about-us');
-    const services = document.getElementById('services');
-    const reviews = document.getElementById('reviews');
-    scrollY.value = window.scrollY;
-
-    // Check if we go pass one of theses sections
-    if (aboutUs && window.scrollY >= aboutUs.offsetTop && services && window.scrollY < services?.offsetTop) {
-        currentStep.value = 1;
-    } else if (services && window.scrollY >= services.offsetTop && reviews && window.scrollY < reviews?.offsetTop) {
-        currentStep.value = 2;
-    } else if (reviews && window.scrollY >= reviews.offsetTop) {
-        currentStep.value = 3;
-    } else {
-        currentStep.value = 0;
-    }
-});
-
-// Available services
-const availableServices = ref<Service[]>([])
-const serviceIdx = ref(0);
-
-const computedServices = computed(() => {
-    const numServicesToShow = Math.min(3, availableServices.value.length); // Dynamically adjust if fewer services
-    const totalServices = availableServices.value.length;
-    const serviceIdxVal = Math.abs(serviceIdx.value);
-    
-    if (totalServices === 0) return [];
-
-    const startIdx = (serviceIdxVal + totalServices) % totalServices;
-    const services = [];
-
-    for (let i = 0; i < numServicesToShow; i++) {
-        services.push(availableServices.value[(startIdx + i) % totalServices]);
-    }
-    
-    return services;
-});
-
-function handleServiceClick(name: string) {
-    console.log('Service clicked:', name);
-    const service = availableServices.value.find(service => service.name === name);
-    if (!service) {
-        console.error('Service not found');
-        return;
-    }
-    console.log('Service:', service);
-    router.push(`/service/${service.name.toLowerCase()}`);
-}
-
-function copyEmail() {
-    navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
-    alert('Email copied to clipboard');
-}
-
-onMounted(async() => {
-    const aboutUs = document.getElementById('about-us');
-    const services = document.getElementById('services');
-    const reviews = document.getElementById('reviews');
-    scrollY.value = window.scrollY;
-
-    // Check if we go pass one of theses sections
-    if (aboutUs && window.scrollY >= aboutUs.offsetTop && services && window.scrollY < services?.offsetTop) {
-        currentStep.value = 1;
-    } else if (services && window.scrollY >= services.offsetTop && reviews && window.scrollY < reviews?.offsetTop) {
-        currentStep.value = 2;
-    } else if (reviews && window.scrollY >= reviews.offsetTop) {
-        currentStep.value = 3;
-    } else {
-        currentStep.value = 0;
-    }
-    // Fetch the different services from the API
-    console.log(import.meta.env.VITE_BACKEND_URL);
-    const response: { status: number, data: { services: Service[] }} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/services-info.json`);
-    console.log(response);
-    if (response.status !== 200) {
-        console.error('Error while fetching services');
-        return;
-    }
-    availableServices.value = response.data.services;
-    for (const service of availableServices.value) {
-        serviceStore.setNewService(service);
-        console.log('Service:', service, 'added to serviceStore:', serviceStore.services);
-    }
-    console.log(availableServices.value);
-})
-</script>
-
 <template>
     <div class="bg-home !h-full relative overflow-hidden">
         <HelpAssistantPopupComponent :bottom="16" :left="16" color="#13134c" class="z-50" />
@@ -430,3 +248,157 @@ onMounted(async() => {
     opacity: 0;
 }
 </style>
+
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { Icon } from '@iconify/vue';
+
+import LogoComponent from '@/components/LogoComponent.vue';
+import SignUpButtonText from '@/components/SignUpButtonText.vue';
+import LoginButtonText from '@/components/LoginButtonText.vue';
+import IconsComponent from '@/components/IconsComponent.vue';
+import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
+import ArrowComponentTop from '@/components/ArrowComponentTop.vue';
+import ArrowComponentLeft from '@/components/ArrowComponentLeft.vue';
+import ArrowComponentRight from '@/components/ArrowComponentRight.vue';
+import TimelineComponent from '@/components/TimelineComponent.vue';
+import RateComponent from '@/components/RateComponent.vue';
+import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
+
+import { Service } from '@/types/services';
+import { useServiceStore } from '@/stores/service';
+
+import UserSvgComponent from '@/components/UserSvgComponent.vue';
+
+const router = useRouter();
+const scrollY = ref(0);
+const serviceStore = useServiceStore();
+const userReview = ref('');
+const userRate = ref(1);
+const showDetails = ref(false);
+
+function sendReview() {
+    console.log('Review:', userReview.value, 'Rate:', userRate.value);
+    userReview.value = '';
+    userRate.value = 0;
+}
+
+const navigateTo = (route: string) => {
+    if (router) {
+        router.push(route);
+    } else {
+        console.error('Router is not defined');
+    }
+};
+
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+};
+
+const scrollToAboutUs = () => {
+    const aboutUs = document.getElementById('about-us');
+    if (aboutUs) {
+        aboutUs.scrollIntoView({ behavior: 'smooth' });
+    }
+};
+
+const scrollToServices = () => {
+    const services = document.getElementById('services');
+    if (services) {
+        services.scrollIntoView({ behavior: 'smooth' });
+    }
+};
+
+const scrollToHowItWorks = () => {
+    const howItWorks = document.getElementById('how-it-works');
+    if (howItWorks) {
+        howItWorks.scrollIntoView({ behavior: 'smooth' });
+    }
+};
+
+const scrollToReviews = () => {
+    const reviews = document.getElementById('reviews');
+    if (reviews) {
+        reviews.scrollIntoView({ behavior: 'smooth' });
+    }
+};
+
+const currentStep = ref(0);
+window.addEventListener('scroll', () => {
+    const aboutUs = document.getElementById('about-us');
+    const services = document.getElementById('services');
+    const reviews = document.getElementById('reviews');
+    scrollY.value = window.scrollY;
+
+    // Check if we go pass one of theses sections
+    if (aboutUs && window.scrollY >= aboutUs.offsetTop && services && window.scrollY < services?.offsetTop) {
+        currentStep.value = 1;
+    } else if (services && window.scrollY >= services.offsetTop && reviews && window.scrollY < reviews?.offsetTop) {
+        currentStep.value = 2;
+    } else if (reviews && window.scrollY >= reviews.offsetTop) {
+        currentStep.value = 3;
+    } else {
+        currentStep.value = 0;
+    }
+});
+
+// Available services
+const availableServices = ref<Service[]>([])
+const serviceIdx = ref(0);
+
+const computedServices = computed(() => {
+    const numServicesToShow = Math.min(3, availableServices.value.length); // Dynamically adjust if fewer services
+    const totalServices = availableServices.value.length;
+    const serviceIdxVal = Math.abs(serviceIdx.value);
+    
+    if (totalServices === 0) return [];
+
+    const startIdx = (serviceIdxVal + totalServices) % totalServices;
+    const services = [];
+
+    for (let i = 0; i < numServicesToShow; i++) {
+        services.push(availableServices.value[(startIdx + i) % totalServices]);
+    }
+    
+    return services;
+});
+
+function handleServiceClick(name: string) {
+    console.log('Service clicked:', name);
+    const service = availableServices.value.find(service => service.name === name);
+    if (!service) {
+        console.error('Service not found');
+        return;
+    }
+    console.log('Service:', service);
+    router.push(`/service/${service.name.toLowerCase()}`);
+}
+
+function copyEmail() {
+    navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
+    alert('Email copied to clipboard');
+}
+
+onMounted(async() => {
+    const aboutUs = document.getElementById('about-us');
+    const services = document.getElementById('services');
+    const reviews = document.getElementById('reviews');
+    scrollY.value = window.scrollY;
+
+    // Check if we go pass one of theses sections
+    if (aboutUs && window.scrollY >= aboutUs.offsetTop && services && window.scrollY < services?.offsetTop) {
+        currentStep.value = 1;
+    } else if (services && window.scrollY >= services.offsetTop && reviews && window.scrollY < reviews?.offsetTop) {
+        currentStep.value = 2;
+    } else if (reviews && window.scrollY >= reviews.offsetTop) {
+        currentStep.value = 3;
+    } else {
+        currentStep.value = 0;
+    }
+    availableServices.value = serviceStore.services;
+})
+</script>
