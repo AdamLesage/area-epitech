@@ -1,3 +1,22 @@
+<template>
+    <div class="bg-auth-primary flex web:justify-center items-center mobile:justify-between mobile:flex-col">
+        <LogoComponent color="#80C4E9" class="absolute top-0 left-5 half:hidden" />
+        <button @click="goToHomePage"
+            class="absolute top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 z-20 mobile:static mobile:mt-4">
+            Go to Home Page
+        </button>
+        <LoginButton
+            class="hover:cursor-pointer absolute top-5 right-5 mobile:hidden"
+            :color="hover ? '#eee' : 'white'"
+            @mouseover="hover = true"
+            @mouseleave="hover = false" />
+        <div class="flex flex-col items-center z-10 mobile:justify-between web:justify-center h-full">
+            <h1 class="text-[4rem] leading-[3rem] font-black text-auth-secondary web:hidden my-4">AREA</h1>
+            <SignUpFormComponent @submit="handleSubmit" />
+        </div>
+    </div>
+</template>
+
 <script setup lang="ts">
 import SignUpFormComponent from '@/components/SignUpFormComponent.vue';
 import LogoComponent from '@/components/LogoComponent.vue';
@@ -30,7 +49,6 @@ const handleSubmit = async (values: SignUpFormValues) => {
         if (res.status == 201) {
             console.log('User registered successfully');
             Cookies.set('token', res.data.authToken);
-            Cookies.set('email', values.email);
             store.setUser(res.data);
             router.push('/signup/user-details');
         } else {
@@ -53,25 +71,6 @@ const goToHomePage = () => {
 };
 
 </script>
-
-<template>
-    <div class="bg-auth-primary flex web:justify-center items-center mobile:justify-between mobile:flex-col">
-        <LogoComponent color="#80C4E9" class="absolute top-0 left-5 half:hidden" />
-        <button @click="goToHomePage"
-            class="absolute top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 z-20 mobile:static mobile:mt-4">
-            Go to Home Page
-        </button>
-        <LoginButton
-            class="hover:cursor-pointer absolute top-5 right-5 mobile:hidden"
-            :color="hover ? '#eee' : 'white'"
-            @mouseover="hover = true"
-            @mouseleave="hover = false" />
-        <div class="flex flex-col items-center z-10 mobile:justify-between web:justify-center h-full">
-            <h1 class="text-[4rem] leading-[3rem] font-black text-auth-secondary web:hidden my-4">AREA</h1>
-            <SignUpFormComponent @submit="handleSubmit" />
-        </div>
-    </div>
-</template>
 
 <style scoped>
 </style>
