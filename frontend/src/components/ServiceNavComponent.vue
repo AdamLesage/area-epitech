@@ -34,12 +34,6 @@ const handleWorkshopRedirect = () => {
     router.push('/workshop');
 }
 
-const handleUpdatesRedirect = () => {
-    console.log('Redirecting to updates');
-    window.scrollTo(0, 0);
-    router.push('');
-}
-
 const handleUserProfileRedirect = () => {
     console.log('Redirecting to user profile');
     window.scrollTo(0, 0);
