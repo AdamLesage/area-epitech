@@ -1,23 +1,23 @@
 <template>
     <!-- First Page -->
-    <div :style="{ backgroundColor: color }" class="flex flex-col justify-between" @click="openServicePage"
+    <div :style="{ backgroundColor: '#1C1C53' }" class="flex flex-col justify-between" @click="openServicePage"
         @wheel="handleScrollAttempt" v-if="isHeroVisible">
-        <HelpAssistantPopupComponent :bottom="8" :left="8" :color="color" class="z-50" />
+        <HelpAssistantPopupComponent :bottom="8" :left="8" color="#1C1C53" class="z-50" />
         <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" />
         <div class="flex flex-col justify-center items-center">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
-                <Icon :icon="logo" class="w-36 h-36 text-white" />
+                <Icon icon="simple-icons:bento" class="w-36 h-36 text-white" />
                 <div class="flex flex-col justify-end items-center p-4">
                     <h1
                         class="text-white web:text-[6rem] mobile:text-[3rem] web:leading-[5rem] mobile:leading-[2.5rem] font-bold">
-                        {{ nameCapitalized }}</h1>
-                    <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbAreas }}
-                        {{ nbAreas <= 1 ? 'Area' : 'Areas'}}</h2>
+                        MY AREA</h1>
+                    <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ areas.length }}
+                        {{ areas.length <= 1 ? 'Area' : 'Areas'}}</h2>
                 </div>
             </div>
         </div>
         <div class="flex flex-col web:hidden gap-2">
-            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbAreas }} Area{{ nbAreas == 0 ? '' : 's' }}</h2>
+            <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ areas.length }} Area{{ areas.length == 0 ? '' : 's' }}</h2>
             <div class="flex flex-row gap-2 items-center justify-center mobile:hidden">
                 <button class="rounded-full py-2 px-6 bg-white w-32 mobile:hidden">
                     <h1 class="font-semibold">Activate</h1>
@@ -32,40 +32,39 @@
     </div>
     <!-- Second Page -->
     <div @wheel="handleScrollAttemptSecondPage" v-else>
-        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="color" class="z-50" />
+        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#1C1C53" class="z-50" />
         <button class="fixed bottom-4 right-4 z-[100] w-12 h-12 text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0"
-            :style="{ backgroundColor: color }">
+            :style="{ backgroundColor: '#1C1C53' }">
             <ArrowComponentTop color="white" class="text-center" @click="scrollToTop" :animate="false" />
         </button>
         <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full mb-12"
-            :style="{ backgroundColor: color }">
+            :style="{ backgroundColor: '#1C1C53' }">
             <ServiceNavComponent @back-button="handleBackButton"
                 @redirect-user-profile="handleRedirectUserPage" class="mobile:hidden" />
             <div class="flex justify-center items-center p-4 mobile:hidden" v-if="scrollY == 0">
-                <Icon :icon="logo" class="w-36 h-36 text-white" />
+                <Icon icon="simple-icons:bento" class="w-36 h-36 text-white" />
                 <div class="flex flex-col justify-end items-center p-4">
-                    <h1 class="text-white text-[6rem] leading-[5rem] font-bold">{{ nameCapitalized }}</h1>
-                    <h2 class="text-white text-xl font-medium text-right w-full pr-2">{{ nbAreas }} Area{{ nbAreas == 0 ? '' : 's' }}</h2>
+                    <h1 class="text-white text-[6rem] leading-[5rem] font-bold">MY AREA</h1>
+                    <h2 class="text-white text-xl font-medium text-right w-full pr-2">{{ areas.length }} Area{{ areas.length == 0 ? '' : 's' }}</h2>
                 </div>
             </div>
             <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden"
-                :style="{ backgroundColor: color }" v-else>
+                :style="{ backgroundColor: '#1C1C53' }" v-else>
                 <ServiceNavScrollComponent
                     title="MY AREA"
-                    :logo="logo"
+                    logo="simple-icons:bento"
                     @back-button="handleBackButton"
-                    :redirect="false"
-                    :class="color" />
+                    :redirect="false" />
             </div>
             <div class="flex justify-between items-center w-full web:hidden">
                 <div class="flex web:justify-center items-center p-4 w-full mobile:justify-start">
-                    <Icon :icon="logo" class="web:w-36 mobile:w-[48px] web:h-36 mobile:h-[48px] text-white" />
+                    <Icon icon="simple-icons:bento" class="web:w-36 mobile:w-[48px] web:h-36 mobile:h-[48px] text-white" />
                     <div class="flex flex-col justify-end items-center web:p-4 mobile:p-2">
                         <h1
                             class="text-white web:text-[6rem] mobile:text-[2rem] web:leading-[5rem] mobile:leading-[1.75rem] font-bold">
-                            {{ nameCapitalized }}</h1>
-                        <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ nbAreas }}
-                            Area{{ nbAreas == 0 ? '' : 's' }}</h2>
+                            MY AREA</h1>
+                        <h2 class="text-white text-xl font-medium text-right w-full pr-2 mobile:hidden">{{ areas.length }}
+                            Area{{ areas.length == 0 ? '' : 's' }}</h2>
                     </div>
                 </div>
                 <Icon icon="material-symbols:bookmark-outline" class="w-8 h-8 text-white hover:cursor-pointer mr-4 mobile:hidden" />
@@ -139,7 +138,7 @@
             </div>
         </div>
         <footer class="flex justify-between items-center flex-col h-64 py-8 relative z-[2] mt-24"
-            :style="{ backgroundColor: color }">
+            :style="{ backgroundColor: '#1C1C53' }">
             <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
             <div class="flex w-full justify-center items-center px-8">
                 <div class="flex gap-4 items-center w-full justify-center">
@@ -160,13 +159,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useUserStore } from '@/stores/user';
-
-import axios from 'axios';
-import Cookies from 'js-cookie';
 
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
@@ -180,13 +176,12 @@ import { Area } from '@/types/area';
 const userStore = useUserStore();
 const router = useRouter();
 
-const color = ref<string>('#1C1C53');
-const name = ref<string>('My Area');
-const logo = ref<string>('simple-icons:bento');
-const nbAreas = ref<number>(0);
-const areas = ref<Area[]>([]);
+const areas = ref<Area[]>(userStore.areas);
 
-const nameCapitalized = ref(name.value.toUpperCase());
+watch(() => userStore.areas, (newAreas) => {
+    areas.value = newAreas;
+});
+
 const isHeroVisible = ref(true);
 
 const scrollY = ref(0);
@@ -243,35 +238,4 @@ function handleScrollAttemptSecondPage(event: WheelEvent) {
         isHeroVisible.value = true;
     }
 }
-
-onMounted(async () => {
-    const token = Cookies.get('token');
-    const user = userStore.user;
-
-    if (!user) {
-        console.error('User not logged in');
-        router.push('/dashboard');
-    }
-    if (!token) {
-        console.error('Token not found');
-        router.push('/');
-    }
-    const res: { status: number, data: [ Area ] } = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/areas`,
-        {
-            params: {
-                email: user!.email,
-            },
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    );
-    for (const area of res.data) {
-        console.log('Area:', area.title);
-        areas.value.push(area);
-    }
-    nbAreas.value = areas.value.length;
-    console.log(res);
-})
 </script>
