@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { watch, ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
 import NavButton from '@/components/NavButton.vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
-const user = userStore.user;
+const user = ref(userStore.user);
+
+watch(() => userStore.user, (newUser) => {
+    user.value = newUser;
+});
 
 const router = useRouter();
 const emit = defineEmits([
