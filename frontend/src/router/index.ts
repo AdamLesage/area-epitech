@@ -1,4 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import auth from '@/middleware/auth';
+
+import HomePage from '@/views/HomePage.vue'
+import LoginPage from '@/views/LoginPage.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -6,7 +10,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginPage.vue'),
+      component: LoginPage,
     },
     {
       path: '/signup',
@@ -22,6 +26,7 @@ const router = createRouter({
       path: '/email-verification',
       name: 'email-verification',
       component: () => import('@/views/EmailVerificationPage.vue'),
+      beforeEnter: auth,
     },
     {
       path: '/forgot-password',
@@ -32,11 +37,12 @@ const router = createRouter({
       path: '/change-password',
       name: 'change-password',
       component: () => import('@/views/ChangePasswordPage.vue'),
+      beforeEnter: auth,
     },
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomePage.vue'),
+      component: HomePage,
     },
     {
       path: '/service/:id',
@@ -57,36 +63,41 @@ const router = createRouter({
       path: '/userinfo',
       name: 'userinfo',
       component: () => import('@/views/UserInfoPage.vue'),
+      beforeEnter: auth,
     },
     {
       path: '/add-connections',
       name: 'add-connections',
       component: () => import('@/views/AddConnections.vue'),
+      beforeEnter: auth,
     },
     {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: () => import('@/views/DashboardPage.vue'),
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('@/views/DashboardPage.vue'),
+      beforeEnter: auth,
     },
     {
       path: '/areas',
       name: 'areas',
       component: () => import('@/views/MyAreaPage.vue'),
+      beforeEnter: auth,
     },
     {
-      path: '/aboutus',
-      name: 'aboutus',
-      component: () => import('@/views/AboutUsPage.vue'),
-    },
-    {
-      path: '/github-callback',
-      name: 'github-callback',
-      component: () => import('@/views/GithubCallbackPage.vue'),
+      path: '/auth-callback',
+      name: 'auth-callback',
+      component: () => import('@/views/AuthCallbackPage.vue'),
     },
     {
       path: '/workshop',
       name: 'workshop',
       component: () => import('@/views/WorkshopPage.vue'),
+      beforeEnter: auth,
+    },
+    {
+      path: '/not-authorized',
+      name: 'not-authorized',
+      component: () => import('@/views/NotAuthorizedPage.vue'),
     }
   ],
 })
