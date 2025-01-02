@@ -1,3 +1,70 @@
+<template>
+    <div v-if="service && category" class="flex flex-col justify-between min-h-screen">
+        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="service.color" />
+        <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
+            :style="{ backgroundColor: color }">
+            <ServiceNavScrollComponent @back-button="handleBackButton"
+                :logo="logo" :title="nameCapitalized"
+                :redirect="true" />
+        </div>
+
+        <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-36">
+            <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
+                :style="{ backgroundColor: service.color }">
+                <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="redirectToService"/>
+                <h1 class="text-3xl font-extrabold text-white mb-2">{{ category.display_name }}</h1>
+                <p class="text-lg text-white/80 text-center">
+                    Check every app the {{ category.display_name }} category has to offer...<br />
+                    Click on a card to see more details.
+                </p>
+            </div>
+            <div class="flex justify-between w-[66.75rem] mt-6 relative">
+                <div class="flex gap-2">
+                    <button class="p-2 rounded-full px-4"
+                        :style="{ backgroundColor: modeSelected == 'Actions' ? service!.color : '#fff',
+                            color: modeSelected == 'Actions' ? 'white' : '#333'
+                         }"
+                        @click="modeSelected = 'Actions'">
+                        <h1 class="text-lg font-semibold">Actions</h1>
+                    </button>
+                    <button class="p-2 rounded-full px-4"
+                        :style="{ backgroundColor: modeSelected == 'Reactions' ? service!.color : '#fff',
+                            color: modeSelected == 'Reactions' ? 'white' : '#333' }"
+                        @click="modeSelected = 'Reactions'">
+                        <h1 class="text-lg font-semibold">Reactions</h1>
+                    </button>
+                    <button class="p-2 rounded-full px-4"
+                        :style="{ backgroundColor: modeSelected == 'Both' ? service!.color : '#fff',
+                            color: modeSelected == 'Both' ? 'white' : '#333' }"
+                        @click="modeSelected = 'Both'">
+                        <h1 class="text-lg font-semibold">Both</h1>
+                    </button>
+                </div>
+                <input type="search" v-model="search" class="border-2 border-[#999] pl-4 pr-10 rounded-md mr-[2px]" placeholder="Search . . .">
+                <Icon class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6" icon="akar-icons:search" />
+            </div>
+            <div
+                class="flex justify-center w-[66.75rem] gap-6 mt-6">
+                <div class="flex items-center gap-4 mt-6">
+                    <div class="flex flex-wrap gap-6 w-full" v-if="sortedItems.length > 0">
+                        <AREAInfoComponent
+                            v-for="item in sortedItems"
+                            :key="item.name"
+                            :object="item"
+                            :color="service.color"
+                            class="hover:cursor-pointer"
+                            @click="redirectToCard(item.name)"/>
+                    </div>
+                    <div class="flex flex-wrap gap-6 w-full" v-else>
+                        <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1 text-[#333]">No results found</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <FooterComponent />
+    </div>
+</template>
+
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -100,70 +167,3 @@ window.addEventListener('scroll', () => {
     scrollY.value = window.scrollY;
 })
 </script>
-
-<template>
-    <div v-if="service && category" class="flex flex-col justify-between min-h-screen">
-        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="service.color" />
-        <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
-            :style="{ backgroundColor: color }">
-            <ServiceNavScrollComponent @back-button="handleBackButton"
-                :logo="logo" :title="nameCapitalized"
-                :redirect="true" />
-        </div>
-
-        <div class="flex flex-wrap justify-center mobile:hidden w-full items-center flex-col mt-36">
-            <div class="flex flex-col justify-center items-center w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
-                :style="{ backgroundColor: service.color }">
-                <Icon :icon="service.icon" class="w-24 h-24 text-white hover:cursor-pointer" @click="redirectToService"/>
-                <h1 class="text-3xl font-extrabold text-white mb-2">{{ category.display_name }}</h1>
-                <p class="text-lg text-white/80 text-center">
-                    Check every app the {{ category.display_name }} category has to offer...<br />
-                    Click on a card to see more details.
-                </p>
-            </div>
-            <div class="flex justify-between w-[66.75rem] mt-6 relative">
-                <div class="flex gap-2">
-                    <button class="p-2 rounded-full px-4"
-                        :style="{ backgroundColor: modeSelected == 'Actions' ? service!.color : '#fff',
-                            color: modeSelected == 'Actions' ? 'white' : '#333'
-                         }"
-                        @click="modeSelected = 'Actions'">
-                        <h1 class="text-lg font-semibold">Actions</h1>
-                    </button>
-                    <button class="p-2 rounded-full px-4"
-                        :style="{ backgroundColor: modeSelected == 'Reactions' ? service!.color : '#fff',
-                            color: modeSelected == 'Reactions' ? 'white' : '#333' }"
-                        @click="modeSelected = 'Reactions'">
-                        <h1 class="text-lg font-semibold">Reactions</h1>
-                    </button>
-                    <button class="p-2 rounded-full px-4"
-                        :style="{ backgroundColor: modeSelected == 'Both' ? service!.color : '#fff',
-                            color: modeSelected == 'Both' ? 'white' : '#333' }"
-                        @click="modeSelected = 'Both'">
-                        <h1 class="text-lg font-semibold">Both</h1>
-                    </button>
-                </div>
-                <input type="search" v-model="search" class="border-2 border-[#999] pl-4 pr-10 rounded-md mr-[2px]" placeholder="Search . . .">
-                <Icon class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6" icon="akar-icons:search" />
-            </div>
-            <div
-                class="flex justify-center w-[66.75rem] gap-6 mt-6">
-                <div class="flex items-center gap-4 mt-6">
-                    <div class="flex flex-wrap gap-6 w-full" v-if="sortedItems.length > 0">
-                        <AREAInfoComponent
-                            v-for="item in sortedItems"
-                            :key="item.name"
-                            :object="item"
-                            :color="service.color"
-                            class="hover:cursor-pointer"
-                            @click="redirectToCard(item.name)"/>
-                    </div>
-                    <div class="flex flex-wrap gap-6 w-full" v-else>
-                        <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1 text-[#333]">No results found</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <FooterComponent />
-    </div>
-</template>
