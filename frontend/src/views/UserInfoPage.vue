@@ -1,125 +1,120 @@
 <template>
-  <div
-    class="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black font-sans text-white">
-    <header
-      class="fixed top-0 left-0 w-full flex flex-wrap items-center justify-between bg-indigo-900 py-4 px-4 md:px-8 shadow-lg z-50">
-      <h1 class="text-2xl md:text-3xl font-bold tracking-wide cursor-pointer" @click="navigateTo('/dashboard')">AREA</h1>
-      <nav class="flex gap-2 md:gap-6 mt-4 md:mt-0">
-        <button v-for="link in headerLinks" :key="link.name" @click="navigateTo(link.route)"
-          class="flex items-center gap-1 md:gap-2 text-xs md:text-lg font-medium bg-indigo-700 px-2 md:px-4 py-2 rounded-full shadow-md hover:bg-indigo-600 transition-transform transform hover:scale-105">
-          <Icon :icon="link.icon" class="text-lg md:text-2xl" />
-          {{ link.name }}
-        </button>
-      </nav>
-    </header>
     <div
-      class="bg-gray-900 rounded-3xl p-4 md:p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform hover:scale-105 mt-20"
-      v-if="user">
-      <!-- PFP -->
-      <img :src="(user.user.profilePicture == null) ? '/images/temppfp.jpeg' : user.user.profilePicture.url" alt="Profile Picture"
-        class="w-24 h-24 md:w-48 md:h-48 rounded-full mb-6 border-4 border-gray-700 mx-auto shadow-lg" />
+        class="flex flex-col justify-center items-center min-h-screen bg-home font-sans text-white">
+        <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10 absolute top-0" />
+        <div
+            class="bg-home-div rounded-xl p-4 md:p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform mt-20"
+            v-if="user">
 
-      <!-- Username and creation date -->
-      <h2 class="text-xl md:text-4xl font-semibold tracking-wide mb-2">{{ user.user.name }}</h2>
-      <p class="text-xs md:text-sm text-gray-400 font-light">{{ user.user.bio }}</p>
+            <!-- PFP -->
+            <img
+                :src="(user.profilePicture == null) ? '/images/temppfp.jpeg' : user.profilePicture.url"
+                alt="Profile Picture"
+                class="w-24 h-24 md:w-48 md:h-48 rounded-full mb-6 border-4 border-[#333] mx-auto shadow-lg" />
 
-      <!-- Actions -->
-      <div class="flex flex-col md:flex-row justify-around mt-8 text-center text-gray-300">
-        <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0">
-          <h3 class="text-2xl md:text-5xl font-extrabold">0</h3>
-          <p class="text-xs md:text-base font-light">Actions Created</p>
+            <!-- Username and creation date -->
+            <h2 class="text-xl md:text-4xl font-semibold tracking-wide mb-2">{{ user.name }}</h2>
+            <p class="text-xs md:text-sm text-gray-400 font-light">{{ user.bio }}</p>
+
+            <!-- Actions -->
+            <div class="flex flex-col md:flex-row justify-around mt-8 text-center text-gray-300">
+                <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0 w-1/3">
+                    <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.length }}</h3>
+                    <p class="text-xs md:text-base font-light">Actions Created</p>
+                </div>
+                <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0 w-1/3">
+                    <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == true).length }}</h3>
+                    <p class="text-xs md:text-base font-light">Actions <span class="text-green-500">On</span></p>
+                </div>
+                <div class="hover:text-white transition-all duration-300 w-1/3">
+                    <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == false).length }}</h3>
+                    <p class="text-xs md:text-base font-light">Actions <span class="text-red-500">Off</span></p>
+                </div>
+            </div>
+
+            <!-- Connected Platforms -->
+            <div class="mt-8 md:mt-12">
+                <h3 class="text-lg md:text-2xl font-semibold mb-4 md:mb-6 tracking-wide">Connected Platforms</h3>
+                <ConnectedApiIcons :platforms="detailedPlatforms ?? []" @socialClick="handleSocialClick" />
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex gap-4 justify-center items-center w-full">
+                <button
+                    @click="goToAddConnections"
+                    class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+                    Add Connections
+                </button>
+                <button
+                    @click="logout"
+                    class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-red-600 hover:bg-red-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+                    Logout
+                </button>
+            </div>
         </div>
-        <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0">
-          <h3 class="text-2xl md:text-5xl font-extrabold">0</h3>
-          <p class="text-xs md:text-base font-light">Actions On</p>
-        </div>
-        <div class="hover:text-white transition-all duration-300">
-          <h3 class="text-2xl md:text-5xl font-extrabold">0</h3>
-          <p class="text-xs md:text-base font-light">Actions Off</p>
-        </div>
-      </div>
-
-      <!-- Connected Platforms -->
-      <div class="mt-8 md:mt-12">
-        <h3 class="text-lg md:text-2xl font-semibold mb-4 md:mb-6 tracking-wide">Connected Platforms</h3>
-        <ConnectedApiIcons :platforms="detailedPlatforms ?? []" @socialClick="handleSocialClick" />
-      </div>
-
-      <!-- Add Connections Button -->
-      <button @click="goToAddConnections"
-        class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
-        Add Connections
-      </button>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import ConnectedApiIcons from "../components/ConnectedApiIcons.vue";
 import { useRouter } from "vue-router";
-import { Icon } from "@iconify/vue";
 import { useUserStore } from "@/stores/user";
-import { User } from '@/types/auth'
+import { useServiceStore } from "@/stores/service";
+import Cookies from 'js-cookie';
+import ServiceNavComponent from "@/components/ServiceNavComponent.vue";
 
-const store = useUserStore();
+const userStore = useUserStore();
+const servicesStore = useServiceStore();
 const router = useRouter();
 
 // User Info
-const user = ref<{ user: User, connectedPlatforms: string[] } | null>(store.user ? {
-  user: store.user,
-  connectedPlatforms: ["Spotify", "Google", "Twitter", "Facebook", "Instagram", "LinkedIn", "YouTube", "Slack"],
-} : null);
+const user = ref(userStore.user);
 
-if (!user.value) {
-  console.error('Not logged in.')
-  router.push('/')
+watch(() => userStore.user, (newUser) => {
+    user.value = newUser;
+});
+
+function handleBackButton() {
+    router.push('/dashboard');
 }
 
-// Platforms
-const platformsDetails: { [key: string]: { icon: string; color: string } } = {
-  Spotify: { icon: "mdi:spotify", color: "#1DB954" },
-  Google: { icon: "mdi:google", color: "#FF0000" },
-  Twitter: { icon: "mdi:twitter", color: "#1DA1F2" },
-  Facebook: { icon: "mdi:facebook", color: "#1877F2" },
-  Instagram: { icon: "mdi:instagram", color: "#E4405F" },
-  LinkedIn: { icon: "mdi:linkedin", color: "#0077B5" },
-  YouTube: { icon: "mdi:youtube", color: "#FF0000" },
-  Slack: { icon: "mdi:slack", color: "#611F69" },
-};
+function logout() {
+    userStore.setUser(null);
+    Cookies.remove('token');
+    router.push('/');
+}
+
+interface Platform {
+    name: string;
+    color: string;
+    icon: string;
+}
 
 // Computed Properties for ConnectedApiIcons
-const detailedPlatforms = computed(() =>
-  user.value?.connectedPlatforms.map((platform) => ({
-    name: platform,
-    icon: platformsDetails[platform].icon,
-    color: platformsDetails[platform].color,
-  }))
-);
+const detailedPlatforms = computed<Platform[]>(() => {
+    if (!user.value?.linkedAccounts) return [];
+
+    return user.value.linkedAccounts
+        .map((linkedService) => {
+        const service = servicesStore.services.find((s) => s.name === linkedService.serviceName);
+        if (!service) return null;
+
+        return {
+            name: service.name,
+            color: service.color,
+            icon: service.icon,
+        };
+    }).filter((service): service is Platform => service !== null);
+});
 
 // Functions for ConnectedApiIcons
 function handleSocialClick(platformName: string) {
-  console.log(`Connect with ${platformName}`);
+    console.log(`Connect with ${platformName}`);
 }
 
 // Navigation to Add Connections
 function goToAddConnections() {
-  router.push("/add-connections");
-}
-
-// Header Links
-const headerLinks = [
-  { name: "Explore", icon: "mdi:compass-outline", route: "/explore" },
-  { name: "My Areas", icon: "mdi:folder-outline", route: "/areas" },
-  { name: "Updates", icon: "mdi:bell-outline", route: "/updates" },
-  { name: "Profile", icon: "mdi:account-outline", route: "/userinfo" },
-];
-
-// Navigation Function for Header Links
-function navigateTo(route: string) {
-  router.push(route);
+    router.push("/add-connections");
 }
 </script>
-
-<style scoped>
-</style>

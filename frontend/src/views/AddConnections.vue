@@ -7,8 +7,7 @@
                 @click="goBack" 
                 class="absolute top-4 right-4 p-2 sm:p-3 md:p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all text-sm sm:text-lg md:text-xl focus:outline-none focus:ring-2 focus:ring-gray-500" 
                 aria-label="Back to previous page"
-                role="button"
-            >
+                role="button">
                 Back
             </button>
             <!-- Title -->
@@ -65,12 +64,10 @@ const platforms = ref([
     { name: "GitHub", icon: "mdi:github", color: "#181717" }
 ]);
 
-
 // Function to select a platform
 function selectPlatform(platformName: string) {
     console.log(`Selected platform: ${platformName}`);
 }
-
 
 // Function to navigate back to the user info page
 function goBack() {

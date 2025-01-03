@@ -9,7 +9,7 @@ export const useServiceStore = defineStore('service', {
     getters: {
     },
     actions: {
-        setNewService(service: Service): void {
+        addService(service: Service): void {
             const storedService: Service | null = this.services.find((s) => s.name === service.name) || null;
             if (!storedService) { // If the service is not found, add it
                 this.services.push(service);

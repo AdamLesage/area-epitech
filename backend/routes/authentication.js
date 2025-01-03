@@ -351,7 +351,7 @@ router.get('/github/redirect',
                     });
                 }
             }
-            return res.redirect(`${process.env.FRONTEND_URL}/#/github-callback?token=${user.authToken}&email=${user.email}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });

@@ -102,45 +102,45 @@ router.get('/user/:uuid', async (req, res) => {
 });
 
 /**
- * @brief get a user linked accounts by uuid
+ * @brief Get a user by auth token
  *
- * @param {string} uuid
- * @return {object} array of user linked accounts
- * @example GET /user/linked-accounts
- * @autor Adam Lesage
+ * @return {object} user
+ * @example GET /user
+ * @author Tugdual de Reviers
  */
-router.get('/user/:uuid/linked-accounts/', async (req, res) => {
-    const uuid = req.params.uuid;
-    const headers = req.headers;
+router.get('/user', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    const authToken = authHeader && authHeader.split(' ')[1];
 
-    // Check if headers given are correct
-    if (headers.authorization) {
-        const authToken = headers.authorization.split(' ')[1];
-        const user = await prisma.user.findUnique({
-            where: {
-                authToken: authToken,
-            },
-        });
-
-        if (!user) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
-    } else {
-        return res.status(401).json({ error: 'Unauthorized' });
+    // Validate authorization header
+    if (!authToken) {
+        return res.status(401).json({ error: 'Unauthorized: Missing authorization token' });
     }
 
     try {
-        const user = await prisma.user.findUnique({
-            where: { uuid },
-            include: { linkedAccounts: true }
+        // Verify the authorization token
+        const authenticatedUser = await prisma.user.findUnique({
+            where: { authToken },
         });
+
+        if (!authenticatedUser) {
+            return res.status(401).json({ error: 'Unauthorized: Invalid authorization token' });
+        }
+
+        // Query user by email
+        const user = await prisma.user.findUnique({
+            where: { authToken },
+            include: { linkedAccounts: true },
+        });
+
         if (user) {
-            res.status(200).json(user.linkedAccounts);
+            return res.status(200).json(user);
         } else {
-            res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error fetching user:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -191,15 +191,13 @@ router.get('/user', async (req, res) => {
 });
 
 /**
- * @brief Get all areas of a user
+ * @brief Get all areas of a user from token
  *
- * @param {string} email : email of the user
  * @return {object} user
- * @example GET /areas?email=example@example.com
+ * @example GET /areas
  * @author Tugdual de Reviers
  */
 router.get('/areas', async (req, res) => {
-    const email = req.query.email;
     const authHeader = req.headers.authorization;
     const authToken = authHeader && authHeader.split(' ')[1];
 
@@ -210,27 +208,16 @@ router.get('/areas', async (req, res) => {
 
     try {
         // Verify the authorization token
-        const authenticatedUser = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { authToken },
         });
 
-        if (!authenticatedUser) {
+        if (!user) {
             return res.status(401).json({ error: 'Unauthorized: Invalid authorization token' });
         }
 
-        // Validate the email parameter
-        if (!email || !email.includes('@')) {
-            return res.status(400).json({ error: 'Bad Request: Invalid or missing email parameter' });
-        }
-
-        // Query user by email
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (user) {
-            const areas = await prisma.actionReaction.findMany({ where: { userUuid: user.uuid } });
-            return res.status(200).json(areas);
-        } else {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        const areas = await prisma.actionReaction.findMany({ where: { userUuid: user.uuid } });
+        return res.status(200).json(areas);
     } catch (error) {
         console.error('Error fetching user:', error);
         return res.status(500).json({ error: 'Internal Server Error' });

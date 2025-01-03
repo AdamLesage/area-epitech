@@ -1,81 +1,116 @@
-<script setup lang="ts">
-import CreateAREAPopupComponent from './components/CreateAREAPopupComponent.vue';
-import { usePopupStore } from './stores/popup';
-import { ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { Action, Reaction, Category, Service } from './types/services';
-
-const store = usePopupStore();
-const router = useRouter();
-
-const actionSelected = ref<{
-    card: Action,
-    category: Category,
-    service: Service
-} | null>(store.action);
-const reactionSelected = ref<{
-    card: Reaction,
-    category: Category,
-    service: Service
-} | null>(store.reaction);
-const displayPopup = ref<boolean>(store.display);
-const popupView = ref<'Extended' | 'Normal' | 'Minimal'>('Normal');
-
-watch(() => store.view, (newView) => {
-    popupView.value = newView;
-});
-
-watch(() => store.action, (newAction) => {
-    actionSelected.value = newAction;
-});
-
-watch(() => store.reaction, (newReaction) => {
-    reactionSelected.value = newReaction;
-});
-
-watch(() => store.display, (display) => {
-    displayPopup.value = display;
-});
-
-function removeAction() {
-    store.action = null;
-}
-
-function removeReaction() {
-    store.reaction = null;
-}
-
-function changeTitle(title: string) {
-    store.title = title;
-}
-
-function changeView(view: 'Extended' | 'Normal' | 'Minimal') {
-    store.view = view;
-}
-
-function handleCreate() {
-    console.log('Creating AREA:', store.title, 'with action:', actionSelected.value, 'and reaction:', reactionSelected.value);
-    store.display = false;
-    window.scrollTo(0, 0);
-    router.push('/workshop');
-    window.scrollTo(0, 0);
-}
-</script>
-
 <template>
     <RouterView class="w-screen h-screen"/>
     <CreateAREAPopupComponent
         :action="actionSelected"
         :reaction="reactionSelected"
-        :title="store.title"
+        :title="popupStore.title"
         :view="popupView"
-        @remove-action="removeAction"
-        @remove-reaction="removeReaction"
+        @remove-action="popupStore.action = null"
+        @remove-reaction="popupStore.reaction = null"
         @create="handleCreate"
-        @change-title="changeTitle"
-        @change-view="changeView"
-        v-if="(actionSelected || reactionSelected || store.title) && displayPopup" />
+        @change-title="popupStore.title = $event"
+        @change-view="popupStore.view = $event"
+        v-if="(actionSelected || reactionSelected || popupStore.title) && displayPopup" />
 </template>
 
-<style scoped>
-</style>
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+import { Action, Reaction, Category, Service } from './types/services';
+
+import { usePopupStore } from './stores/popup';
+import { useUserStore } from './stores/user';
+import { useServiceStore } from './stores/service';
+
+import CreateAREAPopupComponent from './components/CreateAREAPopupComponent.vue';
+
+import Cookies from 'js-cookie';
+
+import { fetchServices } from '@/logic/services';
+import { fetchUser, fetchUserAreas } from '@/logic/user';
+
+// State
+const router = useRouter();
+const route = useRoute();
+
+const popupStore = usePopupStore();
+const userStore = useUserStore();
+const servicesStore = useServiceStore();
+
+const actionSelected = ref<{
+    card: Action,
+    category: Category,
+    service: Service
+} | null>(popupStore.action);
+const reactionSelected = ref<{
+    card: Reaction,
+    category: Category,
+    service: Service
+} | null>(popupStore.reaction);
+const popupView = ref<'Extended' | 'Normal' | 'Minimal'>('Normal');
+
+const displayPopup = ref<boolean>(popupStore.display);
+
+// Watch the popupStore for changes and update the local variables
+watch(() => {
+    return {
+        view: popupStore.view,
+        action: popupStore.action,
+        reaction: popupStore.reaction,
+        display: popupStore.display
+    };
+}, (newValues) => {
+    popupView.value = newValues.view;
+    actionSelected.value = newValues.action;
+    reactionSelected.value = newValues.reaction;
+    displayPopup.value = newValues.display;
+});
+
+/**
+ * Function to handle the creation of an AREA.
+ * We redirect the user to the workshop page and hide the popup.
+ */
+function handleCreate() {
+    console.log('Creating AREA:', popupStore.title, 'with action:',
+        actionSelected.value, 'and reaction:', reactionSelected.value);
+    popupStore.display = false;
+    window.scrollTo(0, 0);
+    router.push('/workshop');
+    window.scrollTo(0, 0);
+}
+
+// Watches the route for changes and initializes the stores if necessary
+watch(async () => route.fullPath, async (newPath) => {
+    await initStores();
+})
+
+/**
+ * Initializes the stores.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the stores are initialized.
+ */
+async function initStores(): Promise<void> {
+    const token = Cookies.get('token');
+
+    if (!userStore.user) {
+        const user = await fetchUser(token);
+        userStore.setUser(user);
+        userStore.areas = [];
+    }
+    if (userStore.user) {
+        if (userStore.areas.length === 0) {
+            const areas = await fetchUserAreas(token);
+            for (const area of areas) {
+                userStore.addArea(area);
+            }
+        }
+    }
+    if (servicesStore.services.length === 0) {
+        const services = await fetchServices();
+        for (const service of services) {
+            servicesStore.addService(service);
+        }
+    }
+}
+</script>

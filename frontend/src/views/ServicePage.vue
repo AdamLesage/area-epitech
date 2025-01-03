@@ -1,189 +1,3 @@
-<script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { Icon } from '@iconify/vue';
-import { useServiceStore } from '@/stores/service';
-import { Category } from '@/types/services';
-
-import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
-import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
-import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
-import RateComponent from '@/components/RateComponent.vue';
-import SaveComponent from '@/components/SaveComponent.vue';
-import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
-import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
-import FooterComponent from '@/components/FooterComponent.vue';
-import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
-
-const route = useRoute();
-const router = useRouter();
-
-const serviceId: string = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
-const noHeader: boolean = route.query.header === 'false';
-
-const store = useServiceStore();
-console.log('Service ID:', serviceId);
-const service = store.services.find(service => service.name === serviceId) || null;
-console.log('Service:', service);
-
-if (!service) {
-    console.error('Service not found');
-    router.push('/dashboard');
-}
-
-type Mode = 'Actions' | 'Reactions' | 'Both';
-
-const color = ref<string>(service!.color);
-const name = ref<string>(service!.name);
-const logo = ref<string>(service!.icon);
-const rate = ref<number>(service!.reviews.rate);
-const reviews = ref<number>(service!.reviews.count);
-const saves = ref<number>(service!.saves);
-const isActivated = ref<boolean>(true);
-const nbActions = ref<number>(0);
-const nbReactions = ref<number>(0);
-const currentSlide = ref<number>(0);
-const categorySelected = ref<Category | null>(null);
-const modeSelected = ref<Mode>('Both');
-const search = ref<string>('');
-const sortedCategories = computed(() => {
-    const allCategories = [];
-    for (const category of service!.categories) {
-        if (modeSelected.value === 'Actions' && category.actions) {
-            const filteredActions = category.actions.filter(action => action.name.toLowerCase().includes(search.value.toLowerCase()) || action.description.toLowerCase().includes(search.value.toLowerCase()));
-            allCategories.push(...filteredActions);
-        } else if (modeSelected.value === 'Reactions' && category.reactions) {
-            const filteredReactions = category.reactions.filter(reaction => reaction.name.toLowerCase().includes(search.value.toLowerCase()) || reaction.description.toLowerCase().includes(search.value.toLowerCase()));
-            allCategories.push(...filteredReactions);
-        } else {
-            const filteredActions = [];
-            const filteredReactions = [];
-            if (category.actions) {
-                filteredActions.push(...category.actions.filter(action => action.name.toLowerCase().includes(search.value.toLowerCase()) || action.description.toLowerCase().includes(search.value.toLowerCase())));
-            }
-            if (category.reactions) {
-                filteredReactions.push(...category.reactions.filter(reaction => reaction.name.toLowerCase().includes(search.value.toLowerCase()) || reaction.description.toLowerCase().includes(search.value.toLowerCase())));
-            }
-            allCategories.push(...filteredActions, ...filteredReactions);
-        }
-    }
-    return allCategories;
-});
-
-const allItemsCategorySelected = computed(() => {
-    if (!categorySelected.value) return [];
-    return [...categorySelected.value.actions, ...categorySelected.value.reactions];
-})
-
-function prevSlide() {
-    currentSlide.value = (currentSlide.value - 1 + service!.categories.length) % service!.categories.length;
-    categorySelected.value = service!.categories[currentSlide.value];
-}
-
-function nextSlide() {
-    currentSlide.value = (currentSlide.value + 1) % service!.categories.length;
-    categorySelected.value = service!.categories[currentSlide.value];
-}
-
-const view = ref<string>('overview');
-
-function switchView(newView: string) {
-    console.log('Switching view to:', newView);
-    view.value = newView;
-}
-
-if (service && service.categories) {
-    categorySelected.value = service.categories[0];
-    for (const category of service.categories) {
-        console.log('Category:', category);
-        nbActions.value += category.actions.length;
-        nbReactions.value += category.reactions.length;
-    }
-} else {
-    console.error('No categories found in service');
-}
-
-const nameCapitalized = ref(name.value.toUpperCase());
-const isHeroVisible = ref(!noHeader);
-
-const isCircleFirst = ref(true);
-const scrollY = ref(0);
-
-window.addEventListener('scroll', () => {
-    scrollY.value = window.scrollY;
-})
-
-const handleClick = () => {
-    isActivated.value = !isActivated.value;
-    isCircleFirst.value = !isCircleFirst.value;
-}
-
-const openServicePage = () => {
-    console.log('Service page opened');
-    isHeroVisible.value = false;
-}
-
-function handleBackButton() {
-    console.log('Back button clicked on first page');
-    window.scrollTo(0, 0);
-    router.push(`/dashboard`);
-}
-
-function redirectToCategory(categoryName: string) {
-    console.log('Redirecting to category:', categoryName);
-    const category = service!.categories.find(category => category.name === categoryName);
-    if (category) {
-        window.scrollTo(0, 0);
-        router.push(`/service/${serviceId}/category/${category.name}`);
-        window.scrollTo(0, 0);
-    }
-}
-
-function redirectToCard(categoryName: string | null, cardName: string) {
-    let category = null;
-    if (!categoryName) {
-        category = service!.categories.find(category => category.actions.find(action => action.name === cardName) || category.reactions.find(reaction => reaction.name === cardName));
-    } else
-        category = service!.categories.find(category => category.name === categoryName);
-    console.log('Redirecting to card:', cardName, ' from category:', categoryName);
-    if (category) {
-        const card = category.actions.find(action => action.name === cardName) || category.reactions.find(reaction => reaction.name === cardName);
-        const isAction = category.actions.find(action => action.name === cardName) ? true : false;
-        if (card) {
-            window.scrollTo(0, 0);
-            if (isAction)
-                router.push(`/service/${serviceId}/category/${category.name}/action/${card.name}`);
-            else
-                router.push(`/service/${serviceId}/category/${category.name}/reaction/${card.name}`);
-        }
-    }
-}
-
-function handleScrollAttempt(event: WheelEvent) {
-    if (event.deltaY > 0) {
-        openServicePage();
-    }
-}
-
-function handleScrollAttemptSecondPage(event: WheelEvent) {
-    if (event.deltaY < 0 && scrollY.value === 0) {
-        isHeroVisible.value = true;
-    }
-}
-
-function scrollToHavingTrouble() {
-    const element = document.getElementById('having-trouble');
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-function copyColor() {
-    navigator.clipboard.writeText(service!.color);
-    alert('Color copied to clipboard');
-}
-</script>
-
 <template>
     <!-- First Page -->
     <div
@@ -237,7 +51,11 @@ function copyColor() {
         </div>
         <div class="flex justify-between items-center p-4 mobile:hidden">
             <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="w-1/3" />
-            <ArrowComponentBottom color="white" :animate="true" class="w-1/3" />
+            <ArrowComponent
+                direction="bottom"
+                color="white"
+                :animate="true"
+                class="w-1/3" />
             <SaveComponent :saves="saves" color="white" textcolor="white" class="w-1/3 flex justify-end" />
         </div>
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden" />
@@ -359,7 +177,7 @@ function copyColor() {
             </div>
 
             <div class="relative w-[66.75rem] h-[30rem] overflow-hidden rounded-lg mt-6">
-                <div class="flex transition-transform duration-500 ease-in-out"
+                <div class="flex transition-transform duration-500 ease-in-out relative"
                     :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, width: `${service.categories.length * 66.75}rem` }">
                     <div v-for="(category) in service.categories"
                         :key="category.name"
@@ -374,16 +192,27 @@ function copyColor() {
                         <p class="z-10 text-white/75">{{ category.reactions.length }} Reaction{{ category.reactions.length > 1 ? 's' : '' }}</p>
                     </div>
                 </div>
-
                 <button
-                    class="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    class="absolute h-full top-0 left-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
+                    v-if="service.categories.length > 1"
+                    :style="{ backgroundColor: service!.color }"
                     @click="prevSlide">
-                    &#8592;
+                    <ArrowComponent
+                        direction="left"
+                        color="white"
+                        :animate="false"
+                        class="w-1/3" />
                 </button>
                 <button
-                    class="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    class="absolute h-full top-0 right-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
+                    v-if="service.categories.length > 1"
+                    :style="{ backgroundColor: service!.color }"
                     @click="nextSlide">
-                    &#8594;
+                    <ArrowComponent
+                        direction="right"
+                        color="white"
+                        :animate="false"
+                        class="w-1/3" />
                 </button>
             </div>
 
@@ -396,7 +225,7 @@ function copyColor() {
                             :object="item"
                             :color="service.color"
                             class="hover:cursor-pointer"
-                            @click="redirectToCard(categorySelected.name, item.name)"/>
+                            @click="redirectToCard(categorySelected.name, item.name)" />
                     </div>
                 </div>
             </div>
@@ -481,7 +310,7 @@ function copyColor() {
                         <div
                             v-if="isCircleFirst"
                             class="rounded-full w-[30px] h-[30px] transition-all duration-500"
-                            :style="{ backgroundColor: color }"/>
+                            :style="{ backgroundColor: color }" />
                         <h1
                             class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
                             :style="{ color: color, textAlign: isCircleFirst ? 'left' : 'right' }">
@@ -490,7 +319,7 @@ function copyColor() {
                         <div
                             v-if="!isCircleFirst"
                             class="rounded-full w-[30px] h-[30px] transition-all duration-500"
-                            :style="{ backgroundColor: color }"/>
+                            :style="{ backgroundColor: color }" />
                     </div>
                 </div>
                 <SaveComponent :saves="service.saves" :color="service.color" textcolor="#6b7280" class="w-full flex justify-end"/>
@@ -516,16 +345,27 @@ function copyColor() {
                         <p class="z-10 text-white/75">{{ category.reactions.length }} Reaction{{ category.reactions.length > 1 ? 's' : '' }}</p>
                     </div>
                 </div>
-
                 <button
-                    class="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    class="absolute h-full top-0 left-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
+                    v-if="service.categories.length > 1"
+                    :style="{ backgroundColor: service!.color }"
                     @click="prevSlide">
-                    &#8592;
+                    <ArrowComponent
+                        direction="left"
+                        color="white"
+                        :animate="false"
+                        class="w-1/3" />
                 </button>
                 <button
-                    class="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    class="absolute h-full top-0 right-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
+                    v-if="service.categories.length > 1"
+                    :style="{ backgroundColor: service!.color }"
                     @click="nextSlide">
-                    &#8594;
+                    <ArrowComponent
+                        direction="right"
+                        color="white"
+                        :animate="false"
+                        class="w-1/3" />
                 </button>
             </div>
             <div class="flex justify-center w-[66.75rem] gap-6 mt-12" v-if="categorySelected">
@@ -581,10 +421,11 @@ function copyColor() {
                             :object="item"
                             :color="service.color"
                             class="hover:cursor-pointer"
-                            @click="redirectToCard(null, item.name)"/>
+                            @click="redirectToCard(null, item.name)" />
                     </div>
                     <div class="flex flex-wrap gap-6 w-full" v-else>
-                        <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1 text-[#333]">No results found</h1>
+                        <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1 text-[#333]">
+                            No results found</h1>
                     </div>
                 </div>
             </div>
@@ -636,3 +477,199 @@ function copyColor() {
         <FooterComponent />
     </div>
 </template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { Icon } from '@iconify/vue';
+import { useServiceStore } from '@/stores/service';
+import { Category } from '@/types/services';
+
+import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
+import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
+import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
+import RateComponent from '@/components/RateComponent.vue';
+import SaveComponent from '@/components/SaveComponent.vue';
+import ArrowComponent from '@/components/ArrowComponent.vue';
+import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
+import FooterComponent from '@/components/FooterComponent.vue';
+import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
+
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
+const user = ref(userStore.user);
+
+const route = useRoute();
+const router = useRouter();
+
+const serviceId: string = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
+const noHeader: boolean = route.query.header === 'false';
+
+const store = useServiceStore();
+console.log('Service ID:', serviceId);
+const service = store.services.find(service => service.name === serviceId) || null;
+console.log('Service:', service);
+
+if (!service) {
+    console.error('Service not found');
+    router.push('/dashboard');
+}
+
+type Mode = 'Actions' | 'Reactions' | 'Both';
+
+const color = ref<string>(service!.color);
+const name = ref<string>(service!.name);
+const logo = ref<string>(service!.icon);
+const rate = ref<number>(service!.reviews.rate);
+const reviews = ref<number>(service!.reviews.count);
+const saves = ref<number>(service!.saves);
+const isActivated = ref<boolean>(true);
+const nbActions = ref<number>(0);
+const nbReactions = ref<number>(0);
+const currentSlide = ref<number>(0);
+const categorySelected = ref<Category | null>(null);
+const modeSelected = ref<Mode>('Both');
+const search = ref<string>('');
+
+const sortedCategories = computed(() => {
+    const allCategories = [];
+    for (const category of service!.categories) {
+        if (modeSelected.value === 'Actions' && category.actions) {
+            const filteredActions = category.actions.filter(action => action.name.toLowerCase().includes(search.value.toLowerCase()) || action.description.toLowerCase().includes(search.value.toLowerCase()));
+            allCategories.push(...filteredActions);
+        } else if (modeSelected.value === 'Reactions' && category.reactions) {
+            const filteredReactions = category.reactions.filter(reaction => reaction.name.toLowerCase().includes(search.value.toLowerCase()) || reaction.description.toLowerCase().includes(search.value.toLowerCase()));
+            allCategories.push(...filteredReactions);
+        } else {
+            const filteredActions = [];
+            const filteredReactions = [];
+            if (category.actions) {
+                filteredActions.push(...category.actions.filter(action => action.name.toLowerCase().includes(search.value.toLowerCase()) || action.description.toLowerCase().includes(search.value.toLowerCase())));
+            }
+            if (category.reactions) {
+                filteredReactions.push(...category.reactions.filter(reaction => reaction.name.toLowerCase().includes(search.value.toLowerCase()) || reaction.description.toLowerCase().includes(search.value.toLowerCase())));
+            }
+            allCategories.push(...filteredActions, ...filteredReactions);
+        }
+    }
+    return allCategories;
+});
+
+const allItemsCategorySelected = computed(() => {
+    if (!categorySelected.value) return [];
+    return [...categorySelected.value.actions, ...categorySelected.value.reactions];
+})
+
+function prevSlide() {
+    currentSlide.value = (currentSlide.value - 1 + service!.categories.length) % service!.categories.length;
+    categorySelected.value = service!.categories[currentSlide.value];
+}
+
+function nextSlide() {
+    currentSlide.value = (currentSlide.value + 1) % service!.categories.length;
+    categorySelected.value = service!.categories[currentSlide.value];
+}
+
+const view = ref<string>('overview');
+
+function switchView(newView: string) {
+    console.log('Switching view to:', newView);
+    view.value = newView;
+}
+
+if (service && service.categories) {
+    categorySelected.value = service.categories[0];
+    for (const category of service.categories) {
+        console.log('Category:', category);
+        nbActions.value += category.actions.length;
+        nbReactions.value += category.reactions.length;
+    }
+} else {
+    console.error('No categories found in service');
+}
+
+const nameCapitalized = ref(name.value.toUpperCase());
+const isHeroVisible = ref(!noHeader);
+
+const isCircleFirst = ref(true);
+const scrollY = ref(0);
+
+window.addEventListener('scroll', () => {
+    scrollY.value = window.scrollY;
+})
+
+function handleClick() {
+    isActivated.value = !isActivated.value;
+    isCircleFirst.value = !isCircleFirst.value;
+}
+
+function openServicePage() {
+    console.log('Service page opened');
+    isHeroVisible.value = false;
+}
+
+function handleBackButton() {
+    console.log('Back button clicked on first page');
+    window.scrollTo(0, 0);
+    if (!user.value) {
+        router.push('/');
+    } else {
+        router.push('/dashboard');
+    }
+}
+
+function redirectToCategory(categoryName: string) {
+    console.log('Redirecting to category:', categoryName);
+    const category = service!.categories.find(category => category.name === categoryName);
+    if (category) {
+        window.scrollTo(0, 0);
+        router.push(`/service/${serviceId}/category/${category.name}`);
+        window.scrollTo(0, 0);
+    }
+}
+
+function redirectToCard(categoryName: string | null, cardName: string) {
+    let category = null;
+    if (!categoryName) {
+        category = service!.categories.find(category => category.actions.find(action => action.name === cardName) || category.reactions.find(reaction => reaction.name === cardName));
+    } else
+        category = service!.categories.find(category => category.name === categoryName);
+    console.log('Redirecting to card:', cardName, ' from category:', categoryName);
+    if (category) {
+        const card = category.actions.find(action => action.name === cardName) || category.reactions.find(reaction => reaction.name === cardName);
+        const isAction = category.actions.find(action => action.name === cardName) ? true : false;
+        if (card) {
+            window.scrollTo(0, 0);
+            if (isAction)
+                router.push(`/service/${serviceId}/category/${category.name}/action/${card.name}`);
+            else
+                router.push(`/service/${serviceId}/category/${category.name}/reaction/${card.name}`);
+        }
+    }
+}
+
+function handleScrollAttempt(event: WheelEvent) {
+    if (event.deltaY > 0) {
+        openServicePage();
+    }
+}
+
+function handleScrollAttemptSecondPage(event: WheelEvent) {
+    if (event.deltaY < 0 && scrollY.value === 0) {
+        isHeroVisible.value = true;
+    }
+}
+
+function scrollToHavingTrouble() {
+    const element = document.getElementById('having-trouble');
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function copyColor() {
+    navigator.clipboard.writeText(service!.color);
+    alert('Color copied to clipboard');
+}
+</script>
