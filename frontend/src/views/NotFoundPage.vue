@@ -22,7 +22,7 @@
         <div class="flex flex-col items-center justify-center h-[100vh] z-[2]">
             <h1 class="text-5xl font-extrabold text-white mb-4">Not Found</h1>
             <p class="text-xl text-home-text-light text-center mb-2 bg-home">
-                The page you requested is either not existant or currently unavailable.
+                The page you requested is either not existent or currently unavailable.
             </p>
             <p class="text-sm text-home-text-light mb-6 text-center">
                 * If you believe this is an error, please contact an administrator.
