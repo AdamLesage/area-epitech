@@ -4,7 +4,12 @@
         <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-5 z-0"></div>
         <!-- Signup and login button -->
         <button class="fixed bottom-4 right-4 z-[100] w-12 h-12 bg-home-div text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0">
-            <ArrowComponentTop color="#4C4CDC" class="text-center" @click="scrollToTop" :animate="false" />
+            <ArrowComponent
+                direction="top"
+                color="#4C4CDC"
+                :animate="false"
+                class="text-center"
+                @click="scrollToTop" />
         </button>
         <nav class="flex items-center w-full justify-between px-8 py-4 fixed bg-home z-10">
             <h1 class="w-1/2 text-3xl font-black tracking-wide mb-4 md:mb-0 cursor-pointer text-home-text" @click="scrollToTop">AREA</h1>
@@ -31,8 +36,14 @@
             <LogoComponent color="#4C4CDC" class="w-80 h-80 mb-10 z-[2]" />
             <Icon icon="material-symbols:copyright-outline" class="absolute text-home-text w-6 h-6 mt-[-18rem] mr-[-19rem] z-[2]" />
         </div>
-        <div class="fixed w-full flex justify-center items-center">
-            <ArrowComponentBottom color="#4C4CDC" class="fixed bottom-4 text-center hover:cursor-pointer" v-if="scrollY == 0" @click="scrollToAboutUs" :animate="true" />
+        <div class="fixed w-full flex justify-center items-center bottom-6">
+            <ArrowComponent
+                direction="bottom"
+                color="#4C4CDC"
+                :animate="true"
+                class="fixed bottom-4 text-center hover:cursor-pointer"
+                v-if="scrollY == 0"
+                @click="scrollToAboutUs" />
         </div>
 
         <!-- About us -->
@@ -159,9 +170,14 @@
 
         <div id="services" class="flex flex-col items-center">
             <h2 class="text-2xl font-bold text-home-text mb-12 pt-24 z-[2]"><span class="text-home-light hover:cursor-pointer" @click="scrollToServices">#</span> SERVICES</h2>
-            <div class="flex gap-16 flex-wrap w-full justify-center">
+            <div class="flex gap-16 flex-wrap w-full justify-center z-[2]">
                 <div class="flex items-center h-48 justify-center">
-                    <ArrowComponentLeft :animate="false" color="#4C4CDC" class="text-center hover:cursor-pointer" @click="serviceIdx--"/>
+                    <ArrowComponent
+                        direction="left"
+                        :animate="false"
+                        color="#4C4CDC"
+                        class="text-center hover:cursor-pointer"
+                        @click="serviceIdx--" />
                 </div>
                 <div
                     v-for="(service) in computedServices"
@@ -178,7 +194,12 @@
                     <RateComponent :rate="service.reviews.rate" :reviews="service.reviews.count" textcolor="white" color="white" />
                 </div>
                 <div class="flex items-center h-48 justify-center">
-                    <ArrowComponentRight :animate="false" color="#4C4CDC" class="text-center hover:cursor-pointer" @click="serviceIdx++"/>
+                    <ArrowComponent
+                        direction="right"
+                        :animate="false"
+                        color="#4C4CDC"
+                        class="text-center hover:cursor-pointer"
+                        @click="serviceIdx++" />
                 </div>
             </div>
             <button class="w-48 h-12 bg-home-div text-white rounded-lg mt-8 hover:cursor-pointer hover:bg-home-hover border-2 border-solid border-home-light z-[2]"
@@ -252,10 +273,7 @@ import LogoComponent from '@/components/LogoComponent.vue';
 import SignUpButtonText from '@/components/SignUpButtonText.vue';
 import LoginButtonText from '@/components/LoginButtonText.vue';
 import IconsComponent from '@/components/IconsComponent.vue';
-import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
-import ArrowComponentTop from '@/components/ArrowComponentTop.vue';
-import ArrowComponentLeft from '@/components/ArrowComponentLeft.vue';
-import ArrowComponentRight from '@/components/ArrowComponentRight.vue';
+import ArrowComponent from '@/components/ArrowComponent.vue';
 import TimelineComponent from '@/components/TimelineComponent.vue';
 import RateComponent from '@/components/RateComponent.vue';
 import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';

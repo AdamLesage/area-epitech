@@ -51,7 +51,11 @@
         </div>
         <div class="flex justify-between items-center p-4 mobile:hidden">
             <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="w-1/3" />
-            <ArrowComponentBottom color="white" :animate="true" class="w-1/3" />
+            <ArrowComponent
+                direction="bottom"
+                color="white"
+                :animate="true"
+                class="w-1/3" />
             <SaveComponent :saves="saves" color="white" textcolor="white" class="w-1/3 flex justify-end" />
         </div>
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden" />
@@ -173,7 +177,7 @@
             </div>
 
             <div class="relative w-[66.75rem] h-[30rem] overflow-hidden rounded-lg mt-6">
-                <div class="flex transition-transform duration-500 ease-in-out"
+                <div class="flex transition-transform duration-500 ease-in-out relative"
                     :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, width: `${service.categories.length * 66.75}rem` }">
                     <div v-for="(category) in service.categories"
                         :key="category.name"
@@ -188,16 +192,27 @@
                         <p class="z-10 text-white/75">{{ category.reactions.length }} Reaction{{ category.reactions.length > 1 ? 's' : '' }}</p>
                     </div>
                 </div>
-
                 <button
-                    class="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    class="absolute h-full top-0 left-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
+                    v-if="service.categories.length > 1"
+                    :style="{ backgroundColor: service!.color }"
                     @click="prevSlide">
-                    &#8592;
+                    <ArrowComponent
+                        direction="left"
+                        color="white"
+                        :animate="false"
+                        class="w-1/3" />
                 </button>
                 <button
-                    class="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    class="absolute h-full top-0 right-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
+                    v-if="service.categories.length > 1"
+                    :style="{ backgroundColor: service!.color }"
                     @click="nextSlide">
-                    &#8594;
+                    <ArrowComponent
+                        direction="right"
+                        color="white"
+                        :animate="false"
+                        class="w-1/3" />
                 </button>
             </div>
 
@@ -330,16 +345,27 @@
                         <p class="z-10 text-white/75">{{ category.reactions.length }} Reaction{{ category.reactions.length > 1 ? 's' : '' }}</p>
                     </div>
                 </div>
-
                 <button
-                    class="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    class="absolute h-full top-0 left-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
+                    v-if="service.categories.length > 1"
+                    :style="{ backgroundColor: service!.color }"
                     @click="prevSlide">
-                    &#8592;
+                    <ArrowComponent
+                        direction="left"
+                        color="white"
+                        :animate="false"
+                        class="w-1/3" />
                 </button>
                 <button
-                    class="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+                    class="absolute h-full top-0 right-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
+                    v-if="service.categories.length > 1"
+                    :style="{ backgroundColor: service!.color }"
                     @click="nextSlide">
-                    &#8594;
+                    <ArrowComponent
+                        direction="right"
+                        color="white"
+                        :animate="false"
+                        class="w-1/3" />
                 </button>
             </div>
             <div class="flex justify-center w-[66.75rem] gap-6 mt-12" v-if="categorySelected">
@@ -464,7 +490,7 @@ import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vu
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
 import RateComponent from '@/components/RateComponent.vue';
 import SaveComponent from '@/components/SaveComponent.vue';
-import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
+import ArrowComponent from '@/components/ArrowComponent.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';

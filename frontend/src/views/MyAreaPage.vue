@@ -26,7 +26,11 @@
             </div>
         </div>
         <div class="flex justify-center items-center p-4 mobile:hidden">
-            <ArrowComponentBottom color="white" class="mobile:hidden" :animate="true" />
+            <ArrowComponent
+                direction="bottom"
+                color="white"
+                :animate="true"
+                class="mobile:hidden" />
         </div>
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden" />
     </div>
@@ -35,7 +39,12 @@
         <HelpAssistantPopupComponent :bottom="16" :left="16" color="#1C1C53" class="z-50" />
         <button class="fixed bottom-4 right-4 z-[100] w-12 h-12 text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0"
             :style="{ backgroundColor: '#1C1C53' }">
-            <ArrowComponentTop color="white" class="text-center" @click="scrollToTop" :animate="false" />
+            <ArrowComponent
+                direction="top"
+                color="white"
+                :animate="false"
+                class="text-center"
+                @click="scrollToTop" />
         </button>
         <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full mb-12"
             :style="{ backgroundColor: '#1C1C53' }">
@@ -168,9 +177,8 @@ import { useUserStore } from '@/stores/user';
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
-import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
+import ArrowComponent from '@/components/ArrowComponent.vue';
 import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
-import ArrowComponentTop from '@/components/ArrowComponentTop.vue';
 
 import { Area } from '@/types/area';
 

@@ -20,7 +20,7 @@
 
         </div>
         <div class="flex justify-center items-center p-4 mobile:hidden z-10">
-            <ArrowComponentBottom color="white" class="mobile:hidden hover:cursor-pointer" :animate="true" />
+            <ArrowComponent direction="bottom" color="white" class="mobile:hidden hover:cursor-pointer" :animate="true" />
         </div>
     </div>
     <div @wheel="handleScrollAttemptSecondPage" v-else>
@@ -313,7 +313,6 @@ import { useRouter } from 'vue-router';
 
 // Types
 import { Action, Reaction, Category, Service } from '@/types/services';
-import { User, LinkedAccount } from '@/types/auth';
 
 // Stores
 import { usePopupStore } from '@/stores/popup';
@@ -329,7 +328,7 @@ import axios from 'axios';
 import CustomInput from '@/components/CustomInput.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
-import ArrowComponentBottom from '@/components/ArrowComponentBottom.vue';
+import ArrowComponent from '@/components/ArrowComponent.vue';
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
 
