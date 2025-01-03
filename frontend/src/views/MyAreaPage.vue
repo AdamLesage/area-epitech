@@ -142,12 +142,12 @@
                     <p class="text-xs text-gray-500 break-words">Container UUID: {{ area.containerUuid }}</p>
                 </div>
             </div>
-            <div v-if="areas.length == 0" class="flex flex-col items-center justify-center w-full">
+            <div v-if="areas.length == 0" class="flex flex-col items-center justify-center w-full mt-8">
                 <h1 class="text-3xl font-black text-[#1C1C53] text-center">No areas found</h1>
                 <p class="text-[#1C1C53] text-center">You have not created any areas yet.</p>
             </div>
         </div>
-        <footer class="flex justify-between items-center flex-col h-64 py-8 z-[2] mt-24 absolute bottom-0 w-full"
+        <footer class="flex justify-between items-center flex-col h-64 py-8 z-[2] mt-24 w-full"
             :style="{ backgroundColor: '#1C1C53' }">
             <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
             <div class="flex w-full justify-center items-center px-8">
