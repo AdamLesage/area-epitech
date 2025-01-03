@@ -63,36 +63,41 @@
                     <div
                         class="bg-home-div w-1/4 rounded-2xl p-6 text-center shadow-lg transform transition duration-500">
                         <h3 class="font-bold text-home-text-light text-xl">Adam Lesage</h3>
-                        <p class="text-sm text-gray-300 mt-2">Scrum Master<br>Ensures the project stays on track and
-                            meets its goals.</p>
+                        <p class="text-sm text-gray-300 mt-2">
+                            Scrum Master<br>Ensures the project stays on track and meets its goals.
+                        </p>
                     </div>
 
                     <div
                         class="bg-home-div w-1/4 rounded-2xl p-6 text-center shadow-lg transform transition duration-500">
                         <h3 class="font-bold text-home-text-light text-xl">Mathieu Mazeau</h3>
-                        <p class="text-sm text-gray-300 mt-2">Front Developer and Designer<br>Creates and optimizes the front-end
-                            experience.</p>
+                        <p class="text-sm text-gray-300 mt-2">
+                            Front Developer and Designer<br>Creates and optimizes the front-end experience.
+                        </p>
                     </div>
 
                     <div
                         class="bg-home-div w-1/4 rounded-2xl p-6 text-center shadow-lg transform transition duration-500">
                         <h3 class="font-bold text-home-text-light text-xl">Romain Chevallier</h3>
-                        <p class="text-sm text-gray-300 mt-2">DevOps Engineer<br>Handles backend systems and automation.
+                        <p class="text-sm text-gray-300 mt-2">
+                            DevOps Engineer<br>Handles backend systems and automation.
                         </p>
                     </div>
 
                     <div
                         class="bg-home-div w-1/4 rounded-2xl p-6 text-center shadow-lg transform transition duration-500">
                         <h3 class="font-bold text-home-text-light text-xl">Victor Hritsea</h3>
-                        <p class="text-sm text-gray-300 mt-2">Backend Developer<br>Builds and manages the API backend.
+                        <p class="text-sm text-gray-300 mt-2">
+                            Backend Developer<br>Builds and manages the API backend.
                         </p>
                     </div>
 
                     <div
                         class="bg-home-div w-1/4 rounded-2xl p-6 text-center shadow-lg transform transition duration-500">
                         <h3 class="font-bold text-home-text-light text-xl">Tugdual de Reviers</h3>
-                        <p class="text-sm text-gray-300 mt-2">Front Developer<br>Creates and optimizes the front-end
-                            experience.</p>
+                        <p class="text-sm text-gray-300 mt-2">
+                            Front Developer<br>Creates and optimizes the front-end experience.
+                        </p>
                     </div>
                 </div>
             </section>
@@ -205,15 +210,13 @@
                             class="w-6 h-6 text-gray-100 hover:cursor-pointer"
                             v-for="index in userRate"
                             :key="'filled-' + index"
-                            @click="userRate = index"
-                        />
+                            @click="userRate = index" />
                         <Icon
                             icon="material-symbols:star-outline"
                             class="w-6 h-6 text-gray-100 hover:cursor-pointer"
                             v-for="index in (5 - userRate)"
                             :key="'empty-' + index"
-                            @click="userRate = index + userRate"
-                        />
+                            @click="userRate = index + userRate" />
                     </div>
                     <button class="w-48 h-12 bg-home-light text-white rounded-lg mt-4 hover:cursor-pointer" @click="sendReview">Add a review</button>
                 </div>
@@ -239,15 +242,6 @@
         </footer>
     </div>
 </template>
-
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 0.3s ease;
-}
-.fade-enter-from, .fade-leave-to {
-    opacity: 0;
-}
-</style>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
@@ -284,7 +278,7 @@ function sendReview() {
     userRate.value = 0;
 }
 
-const navigateTo = (route: string) => {
+function navigateTo(route: string) {
     if (router) {
         router.push(route);
     } else {
@@ -292,35 +286,35 @@ const navigateTo = (route: string) => {
     }
 };
 
-const scrollToTop = () => {
+function scrollToTop() {
     window.scrollTo({
         top: 0,
         behavior: 'smooth'
     });
 };
 
-const scrollToAboutUs = () => {
+function scrollToAboutUs() {
     const aboutUs = document.getElementById('about-us');
     if (aboutUs) {
         aboutUs.scrollIntoView({ behavior: 'smooth' });
     }
 };
 
-const scrollToServices = () => {
+function scrollToServices() {
     const services = document.getElementById('services');
     if (services) {
         services.scrollIntoView({ behavior: 'smooth' });
     }
 };
 
-const scrollToHowItWorks = () => {
+function scrollToHowItWorks() {
     const howItWorks = document.getElementById('how-it-works');
     if (howItWorks) {
         howItWorks.scrollIntoView({ behavior: 'smooth' });
     }
 };
 
-const scrollToReviews = () => {
+function scrollToReviews() {
     const reviews = document.getElementById('reviews');
     if (reviews) {
         reviews.scrollIntoView({ behavior: 'smooth' });
@@ -328,6 +322,7 @@ const scrollToReviews = () => {
 };
 
 const currentStep = ref(0);
+
 window.addEventListener('scroll', () => {
     const aboutUs = document.getElementById('about-us');
     const services = document.getElementById('services');
@@ -402,3 +397,12 @@ onMounted(async() => {
     availableServices.value = serviceStore.services;
 })
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
+</style>

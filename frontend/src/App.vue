@@ -14,19 +14,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
 import { Action, Reaction, Category, Service } from './types/services';
+
 import { usePopupStore } from './stores/popup';
 import { useUserStore } from './stores/user';
 import { useServiceStore } from './stores/service';
+
 import CreateAREAPopupComponent from './components/CreateAREAPopupComponent.vue';
+
 import Cookies from 'js-cookie';
+
 import { fetchServices } from '@/logic/services';
 import { fetchUser, fetchUserAreas } from '@/logic/user';
 
 // State
 const router = useRouter();
+const route = useRoute();
+
 const popupStore = usePopupStore();
 const userStore = useUserStore();
 const servicesStore = useServiceStore();
@@ -73,12 +80,23 @@ function handleCreate() {
     window.scrollTo(0, 0);
 }
 
-onMounted(async() => {
+// Watches the route for changes and initializes the stores if necessary
+watch(async () => route.fullPath, async (newPath) => {
+    await initStores();
+})
+
+/**
+ * Initializes the stores.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the stores are initialized.
+ */
+async function initStores(): Promise<void> {
     const token = Cookies.get('token');
 
     if (!userStore.user) {
         const user = await fetchUser(token);
         userStore.setUser(user);
+        userStore.areas = [];
     }
     if (userStore.user) {
         if (userStore.areas.length === 0) {
@@ -94,5 +112,5 @@ onMounted(async() => {
             servicesStore.addService(service);
         }
     }
-})
+}
 </script>

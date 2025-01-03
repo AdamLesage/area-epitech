@@ -210,7 +210,7 @@
                             :object="item"
                             :color="service.color"
                             class="hover:cursor-pointer"
-                            @click="redirectToCard(categorySelected.name, item.name)"/>
+                            @click="redirectToCard(categorySelected.name, item.name)" />
                     </div>
                 </div>
             </div>
@@ -295,7 +295,7 @@
                         <div
                             v-if="isCircleFirst"
                             class="rounded-full w-[30px] h-[30px] transition-all duration-500"
-                            :style="{ backgroundColor: color }"/>
+                            :style="{ backgroundColor: color }" />
                         <h1
                             class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
                             :style="{ color: color, textAlign: isCircleFirst ? 'left' : 'right' }">
@@ -304,7 +304,7 @@
                         <div
                             v-if="!isCircleFirst"
                             class="rounded-full w-[30px] h-[30px] transition-all duration-500"
-                            :style="{ backgroundColor: color }"/>
+                            :style="{ backgroundColor: color }" />
                     </div>
                 </div>
                 <SaveComponent :saves="service.saves" :color="service.color" textcolor="#6b7280" class="w-full flex justify-end"/>
@@ -395,10 +395,11 @@
                             :object="item"
                             :color="service.color"
                             class="hover:cursor-pointer"
-                            @click="redirectToCard(null, item.name)"/>
+                            @click="redirectToCard(null, item.name)" />
                     </div>
                     <div class="flex flex-wrap gap-6 w-full" v-else>
-                        <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1 text-[#333]">No results found</h1>
+                        <h1 class="text-2xl font-black text-start w-full rounded-lg pl-1 text-[#333]">
+                            No results found</h1>
                     </div>
                 </div>
             </div>
@@ -504,6 +505,7 @@ const currentSlide = ref<number>(0);
 const categorySelected = ref<Category | null>(null);
 const modeSelected = ref<Mode>('Both');
 const search = ref<string>('');
+
 const sortedCategories = computed(() => {
     const allCategories = [];
     for (const category of service!.categories) {
@@ -571,12 +573,12 @@ window.addEventListener('scroll', () => {
     scrollY.value = window.scrollY;
 })
 
-const handleClick = () => {
+function handleClick() {
     isActivated.value = !isActivated.value;
     isCircleFirst.value = !isCircleFirst.value;
 }
 
-const openServicePage = () => {
+function openServicePage() {
     console.log('Service page opened');
     isHeroVisible.value = false;
 }

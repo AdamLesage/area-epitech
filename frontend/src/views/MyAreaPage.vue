@@ -85,8 +85,7 @@
             <div
                 v-for="area in areas"
                 :key="area.id"
-                class="max-w-md w-full bg-white rounded-lg shadow-lg overflow-hidden flex flex-col"
-            >
+                class="max-w-md w-full bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
                 <div :style="{ backgroundColor: area.isActive ? '#22c55e' : '#ef4444' }" class="h-2 w-full"></div>
                 <div class="p-6 flex flex-col gap-4">
                     <div class="flex justify-between items-center">
@@ -106,8 +105,7 @@
                         <div
                             v-for="(value, key) in area.actionData"
                             :key="key"
-                            class="p-2 bg-gray-100 rounded-md shadow-sm"
-                        >
+                            class="p-2 bg-gray-100 rounded-md shadow-sm">
                             <p class="text-sm font-semibold text-gray-600">{{ key }}</p>
                             <p class="text-sm text-gray-700" v-if="key !== 'accessToken'">{{ value }}</p>
                             <p class="text-sm text-gray-700" v-else>********</p>
@@ -122,8 +120,7 @@
                         <div
                             v-for="(value, key) in area.reactionData"
                             :key="key"
-                            class="p-2 bg-gray-100 rounded-md shadow-sm"
-                        >
+                            class="p-2 bg-gray-100 rounded-md shadow-sm">
                             <p class="text-sm font-semibold text-gray-600">{{ key }}</p>
                             <p class="text-sm text-gray-700" v-if="key !== 'accessToken'">{{ value }}</p>
                             <p class="text-sm text-gray-700" v-else>********</p>
@@ -136,8 +133,12 @@
                     <p class="text-xs text-gray-500 break-words">Container UUID: {{ area.containerUuid }}</p>
                 </div>
             </div>
+            <div v-if="areas.length == 0" class="flex flex-col items-center justify-center w-full">
+                <h1 class="text-3xl font-black text-[#1C1C53] text-center">No areas found</h1>
+                <p class="text-[#1C1C53] text-center">You have not created any areas yet.</p>
+            </div>
         </div>
-        <footer class="flex justify-between items-center flex-col h-64 py-8 relative z-[2] mt-24"
+        <footer class="flex justify-between items-center flex-col h-64 py-8 z-[2] mt-24 absolute bottom-0 w-full"
             :style="{ backgroundColor: '#1C1C53' }">
             <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
             <div class="flex w-full justify-center items-center px-8">
@@ -200,7 +201,7 @@ function formatDate(date: string) {
   });
 }
 
-const scrollToTop = () => {
+function scrollToTop() {
     window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -212,7 +213,7 @@ function copyEmail() {
     alert('Email copied to clipboard');
 }
 
-const openServicePage = () => {
+function openServicePage() {
     console.log('Service page opened');
     isHeroVisible.value = false;
 }

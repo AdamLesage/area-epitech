@@ -3,6 +3,10 @@ import auth from '@/middleware/auth';
 
 import HomePage from '@/views/HomePage.vue'
 import LoginPage from '@/views/LoginPage.vue'
+import AuthCallbackPage from '@/views/AuthCallbackPage.vue';
+import ServicePage from '@/views/ServicePage.vue';
+import CardPage from '@/views/CardPage.vue';
+import CategoryPage from '@/views/CategoryPage.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -47,17 +51,17 @@ const router = createRouter({
     {
       path: '/service/:id',
       name: 'service',
-      component: () => import('@/views/ServicePage.vue'),
+      component: ServicePage,
     },
     {
       path: '/service/:id/category/:category',
       name: 'service-category',
-      component: () => import('@/views/CategoryPage.vue'),
+      component: CategoryPage,
     },
     {
       path: '/service/:id/category/:category/:type/:card',
       name: 'service-card',
-      component: () => import('@/views/CardPage.vue'),
+      component: CardPage,
     },
     {
       path: '/userinfo',
@@ -86,7 +90,7 @@ const router = createRouter({
     {
       path: '/auth-callback',
       name: 'auth-callback',
-      component: () => import('@/views/AuthCallbackPage.vue'),
+      component: AuthCallbackPage,
     },
     {
       path: '/workshop',

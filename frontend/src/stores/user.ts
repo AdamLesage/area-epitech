@@ -17,7 +17,8 @@ export const useUserStore = defineStore('user', {
             this.user = user; // Set the user
         },
         addArea(area: Area): void {
-            this.areas.push(area); // Add an area to the list
+            if (!this.areas.includes(area))
+                this.areas.push(area); // Add an area to the list
         }
     },
 });

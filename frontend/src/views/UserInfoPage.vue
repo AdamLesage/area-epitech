@@ -18,15 +18,15 @@
 
             <!-- Actions -->
             <div class="flex flex-col md:flex-row justify-around mt-8 text-center text-gray-300">
-                <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0">
+                <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0 w-1/3">
                     <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.length }}</h3>
                     <p class="text-xs md:text-base font-light">Actions Created</p>
                 </div>
-                <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0">
+                <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0 w-1/3">
                     <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == true).length }}</h3>
                     <p class="text-xs md:text-base font-light">Actions <span class="text-green-500">On</span></p>
                 </div>
-                <div class="hover:text-white transition-all duration-300">
+                <div class="hover:text-white transition-all duration-300 w-1/3">
                     <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == false).length }}</h3>
                     <p class="text-xs md:text-base font-light">Actions <span class="text-red-500">Off</span></p>
                 </div>
@@ -118,6 +118,3 @@ function goToAddConnections() {
     router.push("/add-connections");
 }
 </script>
-
-<style scoped>
-</style>

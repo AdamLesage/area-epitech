@@ -21,20 +21,20 @@
 import LogoComponent from '@/components/LogoComponent.vue';
 import LoginFormComponent from '@/components/LoginFormComponent.vue';
 import SignUpButton from '@/components/SignUpButton.vue';
-import { LoginFormValues, User } from '@/types/auth';
 
-import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import axios from 'axios';
 import Cookies from 'js-cookie'
-import { useUserStore } from '@/stores/user'
 
-const store = useUserStore();
+import { LoginFormValues, User } from '@/types/auth';
+
 const hover = ref(false);
 const router = useRouter();
 
 // Form submission handler
-const handleSubmit = async (values: LoginFormValues) => {
+async function handleSubmit(values: LoginFormValues): Promise<void> {
     console.log('Login Form Received:', values);
     try {
         const res: { status: number, data: { user: User } } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
@@ -45,7 +45,6 @@ const handleSubmit = async (values: LoginFormValues) => {
         if (res.status == 200) {
             console.log('User registered successfully');
             Cookies.set('token', res.data.user.authToken);
-            store.setUser(res.data.user);
             router.push('/dashboard');
         } else {
             console.log('User registration failed');
@@ -55,16 +54,17 @@ const handleSubmit = async (values: LoginFormValues) => {
     }
 };
 
-onMounted(() => {
+// Go to home page
+function goToHomePage() {
+    router.push('/');
+};
+
+onMounted(async () => {
     const token = Cookies.get('token');
-    if (token) {
+    if (token && token != '') {
         router.push('/dashboard');
     }
 });
-
-const goToHomePage = () => {
-    router.push('/');
-};
 </script>
 
 <style scoped>
