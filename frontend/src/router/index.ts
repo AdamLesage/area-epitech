@@ -98,7 +98,13 @@ const router = createRouter({
       path: '/not-authorized',
       name: 'not-authorized',
       component: () => import('@/views/NotAuthorizedPage.vue'),
-    }
+    },
+    {
+      // Catch-all route
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFoundPage.vue'),
+    },
   ],
 })
 
