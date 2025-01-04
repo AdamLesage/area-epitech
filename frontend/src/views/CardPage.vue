@@ -70,8 +70,15 @@
                     <div class="flex flex-col gap-4 w-1/3">
                         <div class="flex flex-col w-full gap-2">
                             <h1 class="text-lg font-black text-[#333] mb-2">{{ card.display_name }}:</h1>
-                            <CustomInput v-for="(option, index) in card.options" :key="option.name" :type="option.type" :name="option.display_name" class="ml-4" value=""
-                                @change="exampleOptions[index] = $event.target.value" />
+                            <CustomInput
+                                v-for="(option, index) in card.options"
+                                :key="option.name"
+                                :type="option.type"
+                                :name="option.display_name"
+                                :action="isAction"
+                                :required="option.required"
+                                value=""
+                                @change="(newValue) => handleChange(index, newValue)" />
                         </div>
                     </div>
                     <div class="flex flex-col justify-start w-2/3">
@@ -110,6 +117,7 @@ import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vu
 import CustomInput from '@/components/CustomInput.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
+import { required } from '@vee-validate/rules';
 
 const route = useRoute();
 const router = useRouter();
@@ -156,6 +164,10 @@ if (!card.value) {
 const exampleOptions = ref(card.value?.options.map(option => option.name) || []);
 for (let i = 0; i < exampleOptions.value.length; i++) {
     exampleOptions.value[i] = '';
+}
+
+function handleChange(optionIndex: number, newValue: string) {
+    exampleOptions.value[optionIndex] = newValue;
 }
 
 const color = ref<string>(service.value!.color);

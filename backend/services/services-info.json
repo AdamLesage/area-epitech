@@ -23,17 +23,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               },
               {
@@ -91,17 +84,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -122,17 +108,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -146,17 +125,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -170,17 +142,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -194,17 +159,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -218,17 +176,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -242,17 +193,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -268,17 +212,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               },
               {
@@ -312,17 +249,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -336,17 +266,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -360,17 +283,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -384,17 +300,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -408,17 +317,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -432,17 +334,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
@@ -458,17 +353,10 @@
             "updated_date": "2024-12-20",
             "options": [
               {
-                "name": "repository_name",
-                "display_name": "Repository Name",
-                "description": "The name of the repository",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "repository_owner",
-                "display_name": "Repository Owner",
-                "description": "The owner of the repository",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               },
               {

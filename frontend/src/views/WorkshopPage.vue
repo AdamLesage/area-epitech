@@ -111,15 +111,16 @@
                     </div>
                     <div class="w-[75%] h-full mb-4" v-if="showActionOptions && action?.card.options.length != 0">
                         <div class="w-full h-full flex flex-col items-start justify-start gap-4 rounded-xl shadow-md p-4 pb-8">
-                            <div v-for="(option) in action?.card.options" :key="option.name" class="flex flex-col gap-2 px-8">
-                                <label :for="option.name" class="text-black">• {{ option.display_name }}</label>
-                                <div class="flex justify-start items-center">
-                                    <CustomInput :id="option.name" :key="option.name" :type="option.type" :name="option.display_name" class="ml-4" :value="actionOptions[option.name]"
-                                        @change="actionOptions[option.name] = $event.target.value" />
-                                    <Icon icon="mdi:required"
-                                        :class="{ 'text-gray-500': !option.required, 'text-red-500': option.required }"
-                                        class="w-6 h-6 ml-2" />
-                                </div>
+                            <div v-for="(option) in action?.card.options" :key="option.name" class="flex flex-col gap-2 w-full">
+                                <CustomInput
+                                    :id="option.name"
+                                    :key="option.name"
+                                    :type="option.type"
+                                    :name="option.display_name"
+                                    :required="option.required"
+                                    :value="actionOptions[option.name]"
+                                    :action="true"
+                                    @change="(newValue) => handleChange(option.name, newValue, true)" />
                             </div>
                         </div>
                     </div>
@@ -231,15 +232,16 @@
                     </div>
                     <div class="w-[75%] h-full mb-4" v-if="showReactionOptions && reaction?.card.options.length != 0">
                         <div class="w-full h-full flex flex-col items-start justify-start gap-4 rounded-xl shadow-md p-4 pb-8">
-                            <div v-for="(option) in reaction?.card.options" :key="option.name" class="flex flex-col gap-2 px-8">
-                                <label :for="option.name" class="text-black">• {{ option.display_name }}</label>
-                                <div class="flex justify-start items-center">
-                                    <CustomInput :id="option.name" :key="option.name" :type="option.type" :name="option.display_name" class="ml-4" :value="reactionOptions[option.name]"
-                                        @change="reactionOptions[option.name] = $event.target.value" />
-                                    <Icon icon="mdi:required"
-                                        :class="{ 'text-gray-500': !option.required, 'text-red-500': option.required }"
-                                        class="w-6 h-6 ml-2" />
-                                </div>
+                            <div v-for="(option) in reaction?.card.options" :key="option.name" class="flex flex-col gap-2 w-full">
+                                <CustomInput
+                                    :id="option.name"
+                                    :key="option.name"
+                                    :type="option.type"
+                                    :name="option.display_name"
+                                    :required="option.required"
+                                    :value="reactionOptions[option.name]"
+                                    :action="false"
+                                    @change="(newValue) => handleChange(option.name, newValue, false)" />
                             </div>
                         </div>
                     </div>
@@ -382,6 +384,16 @@ const scrollY = ref(0);
 window.addEventListener('scroll', () => {
     scrollY.value = window.scrollY;
 })
+
+function handleChange(optionName: string, newValue: string, action: boolean) {
+    if (action) {
+        actionOptions.value[optionName] = newValue;
+        console.log(`Updated ${optionName}:`, newValue);
+    } else {
+        reactionOptions.value[optionName] = newValue;
+        console.log(`Updated ${optionName}:`, newValue);
+    }
+}
 
 function handleScrollAttempt(event: WheelEvent) {
     if (event.deltaY > 0) {
@@ -571,8 +583,8 @@ async function save() {
         title: title.value,
         typeAction: action.value.card.name,
         typeReaction: reaction.value.card.name,
-        reactionData: actionOptions.value,
-        actionData: reactionOptions.value,
+        reactionData: reactionOptions.value,
+        actionData: actionOptions.value,
     },{
         headers: {
             Authorization: token,
