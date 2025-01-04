@@ -98,6 +98,11 @@ const router = createRouter({
       beforeEnter: auth,
     },
     {
+      path: '/explore',
+      name: 'explore',
+      component: () => import('@/views/ExplorePage.vue'),
+    },
+    {
       path: '/not-authorized',
       name: 'not-authorized',
       component: () => import('@/views/NotAuthorizedPage.vue'),
