@@ -3,7 +3,6 @@ import auth from '@/middleware/auth';
 
 import HomePage from '@/views/HomePage.vue'
 import LoginPage from '@/views/LoginPage.vue'
-import AuthCallbackPage from '@/views/AuthCallbackPage.vue';
 import ServicePage from '@/views/ServicePage.vue';
 import CardPage from '@/views/CardPage.vue';
 import CategoryPage from '@/views/CategoryPage.vue';
@@ -90,7 +89,7 @@ const router = createRouter({
     {
       path: '/auth-callback',
       name: 'auth-callback',
-      component: AuthCallbackPage,
+      component: () => import('@/views/AuthCallbackPage.vue'),
     },
     {
       path: '/workshop',

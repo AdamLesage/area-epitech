@@ -18,18 +18,13 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
 
-const store = useUserStore();
+const userStore = useUserStore();
 const router = useRouter();
-
-const user = store.user;
-
-if (!user) {
-    console.error('Not logged in.');
-    router.push('/');
-}
 
 // Form submission handler
 async function handleSubmit(values: DetailsFormValues): Promise<void> {
+    const user = userStore.user;
+
     console.log('Login Form Received:', values);
     if (!user) {
         console.error('Not logged in.');
@@ -46,7 +41,7 @@ async function handleSubmit(values: DetailsFormValues): Promise<void> {
         console.log(res);
         if (res.status !== 500) {
             console.log('User modified successfully');
-            store.setUser(res.data);
+            userStore.setUser(null);
             router.push('/dashboard');
         } else {
             console.log('User registration failed');

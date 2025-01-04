@@ -21,36 +21,47 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
 import Cookies from 'js-cookie';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 // Access the router
 const router = useRouter();
 const route = useRoute();
 
-const { token } = route.query;
-
 function back() {
     router.push('/');
 }
 
+// Reactive reference for the token
+const token = ref<string | null>(null);
+
 // Handle the callback
 const handleAuthCallback = async () => {
-    if (token) {
+    if (token.value) {
         // Save token in cookies
-        const tokenString = token.toString();
+        Cookies.set('token', token.value);
+        console.log('Token saved:', token.value);
 
-        Cookies.set('token', tokenString);
-
+        // Wait for a bit for the token to be saved
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         // Redirect to the dashboard
-        router.push('/dashboard');
+        await router.push('/dashboard');
     } else {
         console.error('Invalid Auth callback data');
-        console.error('Token:', token);
+        back();
     }
 };
 
-// Run the handler when the component is mounted
+// Watch for token changes or extract it on mounted
 onMounted(async () => {
-    await handleAuthCallback();
+    // Extract token from route query
+    const queryToken = route.query.token;
+
+    if (typeof queryToken === 'string') {
+        token.value = queryToken;
+        await handleAuthCallback();
+    } else {
+        console.error('Token not found or invalid:', queryToken);
+        back();
+    }
 });
 </script>
