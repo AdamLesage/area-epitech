@@ -51,6 +51,7 @@ const reactionSelected = ref<{
 const popupView = ref<'Extended' | 'Normal' | 'Minimal'>('Normal');
 
 const displayPopup = ref<boolean>(popupStore.display);
+const tempHide = ref<boolean>(false);
 
 // Watch the popupStore for changes and update the local variables
 watch(() => {
@@ -82,6 +83,15 @@ function handleCreate() {
 
 // Watches the route for changes and initializes the stores if necessary
 watch(async () => route.fullPath, async (newPath) => {
+    if (tempHide.value) {
+        tempHide.value = false;
+        popupStore.display = true;
+        return;
+    }
+    if (await newPath === '/') {
+        popupStore.display = false;
+        tempHide.value = true;
+    }
     await initStores();
 })
 
@@ -92,11 +102,16 @@ watch(async () => route.fullPath, async (newPath) => {
  */
 async function initStores(): Promise<void> {
     const token = Cookies.get('token');
+    console.log('Token:', token);
 
     if (!userStore.user) {
         const user = await fetchUser(token);
-        userStore.setUser(user);
-        userStore.areas = [];
+        if (!user) {
+            console.log('No user found');
+        } else {
+            userStore.setUser(user);
+            userStore.areas = [];
+        }
     }
     if (userStore.user) {
         if (userStore.areas.length === 0) {
