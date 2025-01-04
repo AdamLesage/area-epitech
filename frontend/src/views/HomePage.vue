@@ -203,7 +203,7 @@
                 </div>
             </div>
             <button class="w-48 h-12 bg-home-div text-white rounded-lg mt-8 hover:cursor-pointer hover:bg-home-hover border-2 border-solid border-home-light z-[2]"
-                @click="navigateTo('/')">Explore all services</button>
+                @click="navigateTo('/explore')">Explore all services</button>
         </div>
 
         <div id="reviews" class="flex flex-col items-center justify-center mt-12 mb-80">
