@@ -57,8 +57,13 @@ async function getGithubAccessToken(userUuid) {
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
 */
 async function github_create_issue(reactionData, actionResponseData, userUuid) {
-    const repoOwner = reactionData.repoOwner || null;
-    const repoName = reactionData.repoName || null;
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
 
     if (!repoOwner || !repoName) {
         console.error("Missing repoOwner or repoName in reaction data");
@@ -100,8 +105,13 @@ async function github_create_issue(reactionData, actionResponseData, userUuid) {
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
  */
 async function github_create_milestone(reactionData, actionResponseData, userUuid) {
-    const repoOwner = reactionData.repoOwner || null;
-    const repoName = reactionData.repoName || null;
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
 
     if (!repoOwner || !repoName) {
         console.error("Missing repoOwner or repoName in reaction data");
@@ -144,8 +154,13 @@ async function github_create_milestone(reactionData, actionResponseData, userUui
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
  */
 async function github_pull_request(reactionData, actionResponseData, userUuid) {
-    const repoOwner = reactionData.repoOwner || null;
-    const repoName = reactionData.repoName || null;
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
 
     if (!repoOwner || !repoName) {
         console.error("Missing repoOwner or repoName in reaction data");
