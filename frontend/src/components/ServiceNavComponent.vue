@@ -19,7 +19,7 @@ const emit = defineEmits([
 const handleExploreRedirect = () => {
     console.log('Redirecting to explore');
     window.scrollTo(0, 0);
-    router.push('');
+    router.push('/explore');
 }
 
 const handleMyAreasRedirect = () => {
