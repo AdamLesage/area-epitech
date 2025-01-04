@@ -1,7 +1,7 @@
 <template>
     <!-- In the style of gmail create Mail popup -->
      <!-- Minimal view -->
-    <div class="fixed w-[30rem] h-[2.5rem] bottom-4 right-4 rounded-xl shadow-2xl" v-if="popupView == 'Minimal'">
+    <div class="fixed w-[30rem] h-[2.5rem] bottom-4 right-4 rounded-xl shadow-2xl z-[10000]" v-if="popupView == 'Minimal'">
         <header class="bg-gray-300 rounded-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="normalView">
             <h1 class="text-[#333] font-black">New AREA</h1>
             <div class="flex justify-end items-center gap-1">
@@ -15,7 +15,7 @@
         </header>
     </div>
     <!-- Normal view -->
-    <div class="fixed w-[30rem] h-[29.5rem] bottom-4 right-4 rounded-xl shadow-2xl" v-if="popupView == 'Normal'">
+    <div class="fixed w-[30rem] h-[29.5rem] bottom-4 right-4 rounded-xl shadow-2xl z-[10000]" v-if="popupView == 'Normal'">
         <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="minimalView">
             <h1 class="text-[#333] font-black">New AREA</h1>
             <div class="flex justify-end items-center gap-1">
@@ -72,7 +72,7 @@
             @click="create">Continue</button>
     </div>
     <!-- Extended view -->
-    <div class="fixed w-full h-full top-0 bg-black/30 flex justify-center items-center z-50" v-if="popupView == 'Extended'" @click="normalView">
+    <div class="fixed w-full h-full top-0 bg-black/30 flex justify-center items-center z-[10000]" v-if="popupView == 'Extended'" @click="normalView">
         <div class="w-[60rem] h-[40rem] m-auto rounded-xl shadow-2xl relative flex flex-col items-center bg-gray-100 " @click.stop>
             <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer w-full" @click="normalView">
                 <h1 class="text-[#333] font-black">New AREA</h1>
