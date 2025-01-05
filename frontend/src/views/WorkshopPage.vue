@@ -51,7 +51,7 @@
         <div class="flex flex-col items-center">
             <div class="flex justify-between w-full mt-12 rounded-lg px-8">
                 <div class="w-1/2 flex justify-start gap-2 items-center">
-                    <input type="text" class="w-full h-12 rounded-xl border-4 border-[#333] bg-[#333] text-white text-lg font-black text-start pl-4 placeholder:text-white/90"
+                    <input type="text" class="w-full h-12 rounded-xl border-4 border-[#333] bg-[#333] text-white text-lg font-black text-start pl-4 placeholder:text-white/40"
                         v-model="title"
                         placeholder="Name your AREA" />
                     <div class="h-12 w-5 rounded-xl bg-[#333]" />
@@ -304,6 +304,54 @@
                 </section>
             </main>
         </div>
+        <section id="help-section" class="flex flex-col items-center justify-center w-full pt-24 px-8">
+            <div class="flex flex-col items-center justify-center w-full bg-white rounded-lg gap-12">
+                <!-- Title -->
+                <div class="flex items-center space-x-2">
+                    <Icon icon="mdi:lightbulb-on-outline" class="text-2xl text-black" />
+                    <h2 class="text-2xl font-bold text-gray-800 underline decoration-2">How does the workshop work?</h2>
+                </div>
+                <!-- Visual Flow -->
+                <div class="flex w-full items-center justify-around h-[18rem]">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col items-center justify-between w-1/4 h-full text-center bg-gray-100 p-8 rounded-lg">
+                        <div class="flex flex-col items-center justify-start gap-3">
+                            <Icon icon="mdi:form-select" class="text-3xl text-black" />
+                            <h3 class="text-xl font-bold text-gray-800">Step 1: Select an Action and a Reaction</h3>
+                        </div>
+                        <p class="text-gray-700">Choose an action and a reaction from the available services.</p>
+                        <p class="text-gray-500">It could be either from this page or from the service pages directly.</p>
+                    </div>
+                    <!-- Arrow -->
+                    <div class="flex justify-center">
+                        <Icon icon="mdi:arrow-right" class="text-2xl text-gray-500" />
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="flex flex-col items-center justify-between w-1/4 h-full text-center bg-gray-100 p-8 rounded-lg">
+                        <div class="flex flex-col items-center justify-start gap-3">
+                            <Icon icon="mdi:settings-outline" class="text-3xl text-black" />
+                            <h3 class="text-xl font-bold text-gray-800">Step 2: Configure</h3>
+                        </div>
+                        <p class="text-gray-700">Click the "Configuration" button to set up your action and reaction.</p>
+                        <p class="text-gray-500">The info you give in this part will be used as data for your AREA. Some data are optional.</p>
+                    </div>
+                    <!-- Arrow -->
+                    <div class="flex justify-center">
+                        <Icon icon="mdi:arrow-right" class="text-2xl text-gray-500" />
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="flex flex-col items-center justify-between w-1/4 h-full text-center bg-gray-100 p-8 rounded-lg">
+                        <div class="flex flex-col items-center justify-start gap-3">
+                            <Icon icon="mdi:content-save-outline" class="text-3xl text-black" />
+                            <h3 class="text-xl font-bold text-gray-800">Step 3: Save and Name</h3>
+                        </div>
+                        <p class="text-gray-700">Give your AREA a name and save it to complete the process.</p>
+                        <p class="text-gray-500">Make sure to review all the details before saving.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <FooterComponent />
     </div>
 </template>
