@@ -463,7 +463,7 @@
             ]
           }
         ],
-        "reaction": [
+        "reactions": [
           {
             "name": "dropbox_share_file",
             "display_name": "File Shared in Dropbox",
@@ -587,7 +587,7 @@
             ]
           }
         ],
-        "reaction": [
+        "reactions": [
           {
             "name": "dropbox_add_folder",
             "display_name": "Create a folder on Dropbox",
