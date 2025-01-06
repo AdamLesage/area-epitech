@@ -113,16 +113,6 @@ const router = createRouter({
       name: 'not-found',
       component: () => import('@/views/NotFoundPage.vue'),
     },
-    {
-      path: '/spotify-callback',
-      name: 'spotify-callback',
-      component: () => import('@/views/SpotifyCallbackPage.vue'),
-    },
-    {
-      path: '/spotify',
-      name: 'spotify',
-      component: () => import('@/components/SpotifyProfile.vue'),
-    },
   ],
 })
 
