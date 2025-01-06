@@ -275,23 +275,70 @@ router.get('/google/redirect',
 );
 
 // Github auth routes
-router.get('/github',
-    passport.authenticate('github')
-);
+router.get('/github', async (req, res) => {
+    const email = req.query.email;
+
+    req.session.userEmail = email
+
+    passport.session.email = email;
+
+    passport.authenticate('github')(req, res);
+});
 
 router.get('/github/redirect',
     passport.authenticate('github', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
+            console.log(req.user.accountEmail);
+
             if (req.user === undefined) {
                 return res.status(401).json({ error: 'Unauthorized' });
             }
 
+            let userEmail = req.user.accountEmail;
+            let user;
+
+            if (req.user.sessionEmail != undefined) {
+                // User is already logged in with primary email, we search the user from the sessionEmail
+                userEmail = req.user.sessionEmail;
+                user = await prisma.user.findUnique({
+                    where: { email: userEmail },
+                    include: { linkedAccounts: true },
+                });
+                console.log('User is already logged in:', user);
+            } else {
+                // User is not logged in, there is no user with the sessionEmail
+                // Check if a user exists with the accountEmail
+                user = await prisma.user.findUnique({
+                    where: { email: userEmail },
+                    include: { linkedAccounts: true },
+                });
+                if (user) {
+                    // User exists
+                    console.log('User exists:', user);
+                } else {
+                    // User does not exist, we check if a linkedAccount with this email exists for github
+                    console.log('User with this email does not exist');
+                    const linkedAccount = await prisma.linkedAccount.findFirst({
+                        where: {
+                            accountEmail: userEmail,
+                            serviceName: 'github',
+                        },
+                    });
+                    if (linkedAccount) {
+                        // User exists but with different primary email
+                        console.log('User exists with different email:', linkedAccount);
+                        const userId = linkedAccount.userId;
+                        user = await prisma.user.findUnique({
+                            where: { id: userId },
+                            include: { linkedAccounts: true },
+                        });
+                        console.log('User:', user);
+                    }
+                }
+            }
+
             // Check if the user already exists
-            let user = await prisma.user.findUnique({
-                where: { email: req.user.email },
-                include: { linkedAccounts: true },
-            });
 
             console.log('User:', user);
 
@@ -300,10 +347,11 @@ router.get('/github/redirect',
                 serviceName: 'github',
                 authToken: req.user.accessToken,
                 username: req.user.username || 'Username not found',
+                accountEmail: req.user.accountEmail,
             };
 
             const userParams = {
-                email: req.user.email,
+                email: userEmail,
                 name: req.user.displayName || '',
                 surname: '',
                 uuid: uuidv4(),
@@ -337,7 +385,7 @@ router.get('/github/redirect',
                 const linkedAccount = user.linkedAccounts.find(
                     account => account.serviceName === 'github'
                 );
-    
+
                 if (!linkedAccount) {
                     console.log('Creating linked account342');
                     await prisma.linkedAccount.create({ 
@@ -449,34 +497,84 @@ router.get('/dropbox/callback',
 );
 
 // Spotify auth routes
-router.get('/spotify', passport.authenticate('spotify', {
-    scope: ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private'],
-    showDialog: true,
-}));
+router.get('/spotify', async(req, res) => {
+    const email = req.query.email;
+
+    req.session.userEmail = email
+
+    passport.session.email = email;
+
+    passport.authenticate('spotify', {
+        scope: ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private'],
+        showDialog: true,
+    })(req, res);
+});
 
 router.get('/spotify/callback', 
     passport.authenticate('spotify', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
+            console.log(req.user.accountEmail);
+
             if (req.user === undefined) {
                 return res.status(401).json({ error: 'Unauthorized' });
             }
 
-            // Check if the user already exists
-            let user = await prisma.user.findUnique({
-                where: { email: req.user.email },
-                include: { linkedAccounts: true },
-            });
+            let userEmail = req.user.accountEmail;
+            let user;
+
+            if (req.user.sessionEmail != undefined) {
+                // User is already logged in with primary email, we search the user from the sessionEmail
+                userEmail = req.user.sessionEmail;
+                user = await prisma.user.findUnique({
+                    where: { email: userEmail },
+                    include: { linkedAccounts: true },
+                });
+                console.log('User is already logged in:', user);
+            } else {
+                // User is not logged in, there is no user with the sessionEmail
+                // Check if a user exists with the accountEmail
+                user = await prisma.user.findUnique({
+                    where: { email: userEmail },
+                    include: { linkedAccounts: true },
+                });
+                if (user) {
+                    // User exists
+                    console.log('User exists:', user);
+                } else {
+                    // User does not exist, we check if a linkedAccount with this email exists for github
+                    console.log('User with this email does not exist');
+                    const linkedAccount = await prisma.linkedAccount.findFirst({
+                        where: {
+                            accountEmail: userEmail,
+                            serviceName: 'spotify',
+                        },
+                    });
+                    if (linkedAccount) {
+                        // User exists but with different primary email
+                        console.log('User exists with different email:', linkedAccount);
+                        const userId = linkedAccount.userId;
+                        user = await prisma.user.findUnique({
+                            where: { id: userId },
+                            include: { linkedAccounts: true },
+                        });
+                        console.log('User:', user);
+                    }
+                }
+            }
+            
+            console.log('User:', user);
 
             const linkedAccountParams = {
                 uuid: uuidv4(),
                 serviceName: 'spotify',
                 authToken: req.user.accessToken,
                 username: req.user.username || 'Username not found',
+                accountEmail: req.user.accountEmail,
             };
 
             const userParams = {
-                email: req.user.email,
+                email: userEmail,
                 name: req.user.displayName || '',
                 surname: '',
                 uuid: uuidv4(),
@@ -510,7 +608,7 @@ router.get('/spotify/callback',
                 const linkedAccount = user.linkedAccounts.find(
                     account => account.serviceName === 'spotify'
                 );
-    
+
                 if (!linkedAccount) {
                     await prisma.linkedAccount.create({ 
                         data: {

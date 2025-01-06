@@ -42,11 +42,21 @@ passport.use(
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
             callbackURL: `${process.env.BACKEND_URL}/auth/github/redirect`,
-            scope: ['user:email', 'repo'],
+            scope: ['user:email', 'repo']
         },
         async (accessToken, refreshToken, profile, done) => {
-            const email = profile.emails?.[0]?.value || null;
-            done(null, { ...profile, accessToken, email });
+            const sessionEmail = passport.session.email;
+            const profileEmail = profile.emails?.[0]?.value || null;
+
+            console.log('session:', sessionEmail, 'profile:', profileEmail);
+
+            const user = { 
+                ...profile,
+                accessToken,
+                sessionEmail: sessionEmail,
+                accountEmail: profileEmail
+            };
+            done(null, user);
         }
     )
 );
@@ -90,10 +100,18 @@ passport.use(
       callbackURL: `${process.env.BACKEND_URL}/auth/spotify/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
-        const email = profile.emails?.[0]?.value || null;
-        console.log('Profile:', profile);
-        console.log('Access token:', accessToken);
-        done(null, { ...profile, accessToken, email });
+        const sessionEmail = passport.session.email;
+        const profileEmail = profile.emails?.[0]?.value || null;
+
+        console.log('session:', sessionEmail, 'profile:', profileEmail);
+
+        const user = { 
+            ...profile,
+            accessToken,
+            sessionEmail: sessionEmail,
+            accountEmail: profileEmail
+        };
+        done(null, user);
     }
   )
 );

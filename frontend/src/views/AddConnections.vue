@@ -34,6 +34,9 @@
 import { ref } from "vue";
 import { Icon } from "@iconify/vue";
 import { useRouter } from 'vue-router';
+import { useUserStore } from "@/stores/user";
+
+const userStore = useUserStore();
 
 const router = useRouter();
 
@@ -66,11 +69,17 @@ const platforms = ref([
 
 // Function to select a platform
 function selectPlatform(platformName: string) {
+    const user = userStore.user
+    if (!user) {
+        console.error('User not found');
+        return;
+    }
+    const email = user.email
     console.log(`Selected platform: ${platformName}`);
     if (platformName === 'GitHub') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github`;
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github?email=${user.email}`;
     } else if (platformName === 'Spotify') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify`;
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify?email=${user.email}`;
     } else {
         console.error(`Platform ${platformName} not yet supported`);
     }

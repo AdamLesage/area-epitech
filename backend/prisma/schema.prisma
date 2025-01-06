@@ -31,13 +31,14 @@ model ProfilePicture {
 }
 
 model LinkedAccount {
-  id          Int    @id @default(autoincrement())
-  uuid        String @unique
-  serviceName String
-  username    String @unique
-  authToken   String @unique
-  userId      Int
-  user        User   @relation(fields: [userId], references: [id])
+  id           Int    @id @default(autoincrement())
+  uuid         String @unique
+  serviceName  String
+  accountEmail String
+  username     String
+  authToken    String @unique
+  userId       Int
+  user         User   @relation(fields: [userId], references: [id])
 }
 
 model Service {
