@@ -293,6 +293,8 @@ router.get('/github/redirect',
                 include: { linkedAccounts: true },
             });
 
+            console.log('User:', user);
+
             const linkedAccountParams = {
                 uuid: uuidv4(),
                 serviceName: 'github',
@@ -337,6 +339,7 @@ router.get('/github/redirect',
                 );
     
                 if (!linkedAccount) {
+                    console.log('Creating linked account342');
                     await prisma.linkedAccount.create({ 
                         data: {
                             ...linkedAccountParams,
@@ -349,6 +352,7 @@ router.get('/github/redirect',
                         where: { email: userParams.email },
                         include: { linkedAccounts: true },
                     });
+                    console.log('User355:', user);
                 }
             }
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);

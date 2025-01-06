@@ -67,6 +67,13 @@ const platforms = ref([
 // Function to select a platform
 function selectPlatform(platformName: string) {
     console.log(`Selected platform: ${platformName}`);
+    if (platformName === 'GitHub') {
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github`;
+    } else if (platformName === 'Spotify') {
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify`;
+    } else {
+        console.error(`Platform ${platformName} not yet supported`);
+    }
 }
 
 // Function to navigate back to the user info page

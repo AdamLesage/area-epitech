@@ -38,6 +38,19 @@ async function getAccessToken(userUuid, serviceName) {
     return linkedAccount.authToken;
 }
 
+async function getusername(userUuid, serviceName) {
+    let user = await prisma.user.findUnique({
+        where: { uuid: userUuid },
+        include: { linkedAccounts: true },
+    });
+
+    // Find github linked account
+    const linkedAccount = user.linkedAccounts.find(
+        account => account.serviceName === serviceName
+    );
+    return linkedAccount.username;
+}
+
 /**
  * Handler function for the 'dropbox_new_file' reaction.
  * 
@@ -301,7 +314,7 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         return;
     }
 
-    const response = await axios.post(`https://api.spotify.com/v1/users/${userUuid}/playlists`,
+    const response = await axios.post(`https://api.spotify.com/v1/users/${getusername(userUuid, "spotify")}/playlists`,
         {
             "name": reactionData.name || "default name",
             "description": reactionData.description || "enter the description here",

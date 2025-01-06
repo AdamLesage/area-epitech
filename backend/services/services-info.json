@@ -462,7 +462,7 @@
             ]
           }
         ],
-        "reaction": [
+        "reactions": [
           {
             "name": "dropbox_share_file",
             "display_name": "File Shared in Dropbox",
@@ -579,7 +579,7 @@
             ]
           }
         ],
-        "reaction": [
+        "reactions": [
           {
             "name": "dropbox_add_folder",
             "display_name": "Create a folder on Dropbox",
@@ -617,7 +617,7 @@
         "actions": [],
         "reactions": [
           {
-            "name": "playlist.create",
+            "name": "playlist_create",
             "display_name": "Create a new playlist",
             "description": "Create a new playlist",
             "version": "1.0.0",
@@ -642,14 +642,7 @@
                 "name": "public",
                 "display_name": "Playlist status",
                 "description": "Choose if the playlist is public or private",
-                "type": "switch",
-                "required": true
-              },
-              {
-                "name": "playlist_uri",
-                "display_name": "Playlist URI",
-                "description": "The URI of the playlist",
-                "type": "text",
+                "type": "checkbox",
                 "required": true
               }
             ]
