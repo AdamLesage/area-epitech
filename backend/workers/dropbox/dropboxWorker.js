@@ -33,22 +33,47 @@ async function send(data2) {
     }
 }
 
+async function getFilecontent(entry) {
+    try {
+        // Ensure the filesDownload method returns a promise
+        const downloadResponse = await dbx.filesDownload({ path: entry.path_lower });
+        
+        // The file content will be in the fileBlob of the response
+        const fileBlob = downloadResponse.fileBlob;
+
+        return fileBlob
+    } catch (error) {
+        console.error("Error downloading file from Dropbox:", error);
+        return "fail"
+    }
+}
+
 function trigger_action(entry) {
     switch (entry['.tag']) {
         case 'file':
             const oldMetadata = fileMetadataStore[entry.id];
             // Check if the file is new
             if (!oldMetadata) {
-                if (targetAction == "dropbox_on_new_file")
-                    send({ event: 'file-added', data: entry });
+                if (targetAction == "dropbox_on_new_file") {
+                        entry.fileContent = getFilecontent(entry);
+                        send(entry);
+                }
             } else if (oldMetadata && oldMetadata.path_display !== entry.path_display) {
                 // Check if the file has been renamed
-                if (targetAction == "dropbox_on_file_renamed")
-                    send({ event: 'file-renamed', data: entry });
+                if (targetAction == "dropbox_on_file_renamed") {
+                    const downloadResponse = dbx.filesDownload({ path: entry.path_lower });
+                    const fileBlob = downloadResponse.fileBlob
+                    entry.fileContent = fileBlob
+                    send(entry);
+                }
             } else if (oldMetadata.client_modified !== entry.client_modified) {
                 // Check if the file has been modified
-                if (targetAction == "dropbox_on_file_modified")
-                    send({ event: 'file-modified', data: entry });
+                if (targetAction == "dropbox_on_file_modified") {
+                    const downloadResponse = dbx.filesDownload({ path: entry.path_lower });
+                    const fileBlob = downloadResponse.fileBlob
+                    entry.fileContent = fileBlob
+                    send(entry);
+                }
             }
             // Update the metadata storage
             fileMetadataStore[entry.id] = {
@@ -65,11 +90,11 @@ function trigger_action(entry) {
             // Check if the folder is new
             if (!oldfolderMetadata) {
                 if (targetAction == "dropbox_on_new_folder")
-                    send({ event: 'folder-added', data: entry });
+                    send(entry);
             } else if (oldfolderMetadata && oldfolderMetadata.path_display !== entry.path_display) {
                 // Check if the folder has been renamed
                 if (targetAction == "dropbox_on_folder_renamed")
-                    send({ event: 'folder-renamed', data: entry });
+                    send(entry);
             }
             // Update the metadata storage for the folder
             fileMetadataStore[entry.id] = {

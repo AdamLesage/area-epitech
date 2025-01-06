@@ -5,6 +5,35 @@ const prisma = new Prisma.PrismaClient;
 const reactions = require("../services/reactions")
 
 /**
+ * @brief Replace placeholders in reaction data with values from returnAction.
+ * 
+ * This function replaces placeholders like `${key}` in `reactionData` with corresponding values 
+ * from the `returnAction` object. Unmatched placeholders remain unchanged.
+ * 
+ * @param {Object} returnAction - Object containing replacement values.
+ * @param {Object} reactionData - Object with placeholders to replace.
+ * @returns {Object} - Updated reaction data.
+ * 
+ * @example
+ * useActionReturn({ name: "John" }, { message: "Hello, ${name}!" });
+ * // Output: { message: "Hello, John!" }
+ * @author Romain Chevallier
+ */
+function useActionReturn(returnAction, reactionData) {
+    for (let key in reactionData) {
+        if (reactionData.hasOwnProperty(key)) {
+            // Replace occurrences of ${name} with the corresponding property value in returnAction
+            if (typeof reactionData[key] === 'string') {
+                reactionData[key] = reactionData[key].replace(/\$\{(\w+)\}/g, (match, p1) => {
+                    return returnAction[p1] !== undefined ? returnAction[p1] : match;
+                });
+            }
+        }
+    }
+    return reactionData;
+}
+
+/**
  * @brief create a new reaction and return the reaction
  * @param uuid the uuid of the action reaction
  * @param req.body the data send by the action
@@ -26,7 +55,8 @@ router.post('/reaction/:uuid', async (req, res) => {
         if (reaction == null || reactions.get(reaction.name) == undefined) {
             return res.status(404).send("unknow Reaction");
         }
-        // console.log("receive reaction", "service", reaction.name);
+        console.log(area.reactionData, req.body)
+        area.reactionData = useActionReturn(req.body, area.reactionData);
         await reactions.get(reaction.name)(area.reactionData, req.body, area.userUuid);
         res.json({ message: "receive reaction" });
     } catch (e) {

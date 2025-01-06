@@ -47,10 +47,10 @@ async function dropbox_add_file(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "dropbox");
         const dbx = new Dropbox({ accessToken: accessToken });
-        console.log("Adding new file to Dropbox:", reactionData, actionResponseData);
         const response = await dbx.filesUpload({
             path: `${reactionData.fileName}`,
             contents: reactionData.fileContent || '',
+            mode: { ".tag": reactionData.mode || "add" }
         });
         console.log("File added successfully:", response);
     } catch (error) {

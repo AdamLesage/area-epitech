@@ -408,7 +408,8 @@
                 "type": "text",
                 "required": false
               }
-            ]
+            ],
+            "returnData": ["name", "fileContent", "size", "id", "path_display", ".tag"]
           },
           {
             "name": "dropbox_on_file_renamed",
@@ -516,6 +517,13 @@
                 "name": "file_content",
                 "display_name": "file content",
                 "description": "The content of the file to create",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "mode",
+                "display_name": "mode",
+                "description": "can  be 'overwrite' or 'add'",
                 "type": "text",
                 "required": false
               }
