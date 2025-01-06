@@ -33,7 +33,16 @@ router.get('/webhook', (req, res) => {
 router.post('/webhook', async (req, res) => {
     try {
         // Fetch all actionReactions that are active and have the service "dropbox"
-
+        const targetuser = await prisma.user.findFirst({
+            where: {
+                linkedAccounts: {
+                    some: {
+                        serviceName:  "dropbox",
+                        uuid: req.body.list_folder.accounts[0]
+                    }
+                },
+            }
+        })
         const activeDropboxActions = await prisma.actionReaction.findMany({
             where: {
                 isActive: true,
@@ -42,6 +51,7 @@ router.post('/webhook', async (req, res) => {
                         name: "dropbox",
                     },
                 },
+                userUuid: targetuser.uuid,
             },
         });
 

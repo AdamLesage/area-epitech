@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dockerode": "^4.0.2",
     "dotenv": "^16.4.5",
+    "dropbox": "^10.34.0",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "ioredis": "^5.4.1",

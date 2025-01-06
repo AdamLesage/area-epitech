@@ -1,23 +1,61 @@
 const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { Dropbox } = require('dropbox');
 
 // Create a new Map to store reaction handlers
 const reactions = new Map();
-reactions.set('dropbox_new_file', dropbox_new_file);
-reactions.set('dropbox_shares_file', dropbox_shares_file);
+reactions.set('dropbox_add_file', dropbox_add_file);
+reactions.set('dropbox_share_file', dropbox_share_file);
+reactions.set('dropbox_unshare_file', dropbox_unshare_file);
+reactions.set('dropbox_add_folder', dropbox_add_folder);
+reactions.set('dropbox_delete_file', dropbox_delete_file);
+
 reactions.set('create_issue', github_create_issue);
 reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
+
+/**
+ * @brief Retrieve the access token for a user's linked service account.
+ * 
+ * @param {string} userUuid - The UUID of the user.
+ * @param {string} serviceName - The name of the linked service (e.g., "github").
+ * @returns {string} The access token for the linked service.
+ * @throws {Error} If the user or the linked service account does not exist, or if no token is found.
+ */
+async function getAccessToken(userUuid, serviceName) {
+    let user = await prisma.user.findUnique({
+        where: { uuid: userUuid },
+        include: { linkedAccounts: true },
+    });
+
+    // Find github linked account
+    const linkedAccount = user.linkedAccounts.find(
+        account => account.serviceName === serviceName
+    );
+    return linkedAccount.authToken;
+}
 
 /**
  * Handler function for the 'dropbox_new_file' reaction.
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
-async function dropbox_new_file(reactionData, actionResponseData) {
-    console.log("reaction new file", reactionData, actionResponseData);
+async function dropbox_add_file(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "dropbox");
+        const dbx = new Dropbox({ accessToken: accessToken });
+        console.log("Adding new file to Dropbox:", reactionData, actionResponseData);
+        const response = await dbx.filesUpload({
+            path: `${reactionData.fileName}`,
+            contents: reactionData.fileContent || '',
+        });
+        console.log("File added successfully:", response);
+    } catch (error) {
+        console.error("Error adding file to Dropbox:", error);
+    }
 }
 
 /**
@@ -25,29 +63,83 @@ async function dropbox_new_file(reactionData, actionResponseData) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
-async function dropbox_shares_file(reactionData, actionResponseData) {
-    console.log("reaction dropbox_shares_file", reactionData, actionResponseData);
+async function dropbox_share_file(reactionData, actionResponseData) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "dropbox");
+        const dbx = new Dropbox({ accessToken: accessToken });
+        console.log("Sharing file in Dropbox:", reactionData, actionResponseData);
+        const response = await dbx.sharingCreateSharedLinkWithSettings({
+            path: reactionData.filePath,
+        });
+        console.log("File shared successfully:", response);
+    } catch (error) {
+        console.error("Error sharing file in Dropbox:", error);
+    }
 }
 
 /**
- * Get the Github access token for a user.
- * @param {string} userUuid The UUID of the user
- * @returns {string} The Github access token
- * @throws {Error} If the user does not have a Github linked account
- * @throws {Error} If the Github linked account does not have an access token
+ * Handler function for the 'dropbox_unshare_file' reaction.
+ * 
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
-async function getGithubAccessToken(userUuid) {
-    let user = await prisma.user.findUnique({
-        where: { uuid: userUuid },
-        include: { linkedAccounts: true },
-    });
+async function dropbox_unshare_file(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "dropbox");
+        const dbx = new Dropbox({ accessToken: accessToken });
+        console.log("Unsharing file in Dropbox:", reactionData, actionResponseData);
+        const response = await dbx.sharingRevokeSharedLink({
+            url: reactionData.sharedLink,
+        });
+        console.log("File unshared successfully:", response);
+    } catch (error) {
+        console.error("Error unsharing file in Dropbox:", error);
+    }
+}
 
-    // Find github linked account
-    const githubAccount = user.linkedAccounts.find(
-        account => account.serviceName === 'github'
-    );
-    return githubAccount.authToken;
+/**
+ * Handler function for the 'dropbox_add_folder' reaction.
+ * 
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function dropbox_add_folder(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "dropbox");
+        const dbx = new Dropbox({ accessToken: accessToken });
+        console.log("Adding folder to Dropbox:", reactionData, actionResponseData);
+        const response = await dbx.filesCreateFolderV2({
+            path: `/${reactionData.folderName}`,
+        });
+        console.log("Folder added successfully:", response);
+    } catch (error) {
+        console.error("Error adding folder to Dropbox:", error);
+    }
+}
+
+/**
+ * Handler function for the 'dropbox_delete_file' reaction.
+ * 
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function dropbox_delete_file(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "dropbox");
+        const dbx = new Dropbox({ accessToken: accessToken });
+        console.log("Deleting file in Dropbox:", reactionData, actionResponseData);
+        const response = await dbx.filesDeleteV2({
+            path: reactionData.filePath,
+        });
+        console.log("File deleted successfully:", response);
+    } catch (error) {
+        console.error("Error deleting file in Dropbox:", error);
+    }
 }
 
 /**
@@ -55,6 +147,7 @@ async function getGithubAccessToken(userUuid) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
 */
 async function github_create_issue(reactionData, actionResponseData, userUuid) {
     const repository = reactionData.repository || null;
@@ -74,7 +167,7 @@ async function github_create_issue(reactionData, actionResponseData, userUuid) {
         return;
     }
 
-    const accessToken = await getGithubAccessToken(userUuid);
+    const accessToken = await getAccessToken(userUuid, "github");
 
     if (!accessToken) {
         console.error("No access token found for user");
@@ -103,6 +196,7 @@ async function github_create_issue(reactionData, actionResponseData, userUuid) {
  * 
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function github_create_milestone(reactionData, actionResponseData, userUuid) {
     const repository = reactionData.repository || null;
@@ -122,7 +216,7 @@ async function github_create_milestone(reactionData, actionResponseData, userUui
         return;
     }
 
-    const accessToken = await getGithubAccessToken(userUuid);
+    const accessToken = await getAccessToken(userUuid, "github");
 
     if (!accessToken) {
         console.error("No access token found for user");
@@ -152,6 +246,7 @@ async function github_create_milestone(reactionData, actionResponseData, userUui
  * Handler function for the 'github_pull_request' reaction.
  * @param {Object} reactionData Data related to the reaction
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function github_pull_request(reactionData, actionResponseData, userUuid) {
     const repository = reactionData.repository || null;
@@ -171,7 +266,7 @@ async function github_pull_request(reactionData, actionResponseData, userUuid) {
         return;
     }
 
-    const accessToken = await getGithubAccessToken(userUuid);
+    const accessToken = await getAccessToken(userUuid, "github");
 
     if (!accessToken) {
         console.error("No access token found for user");
