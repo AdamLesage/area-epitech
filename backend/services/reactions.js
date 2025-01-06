@@ -35,6 +35,7 @@ async function getAccessToken(userUuid, serviceName) {
     const linkedAccount = user.linkedAccounts.find(
         account => account.serviceName === serviceName
     );
+    console.log("Linked account:", linkedAccount);
     return linkedAccount.authToken;
 }
 
@@ -307,14 +308,15 @@ async function github_pull_request(reactionData, actionResponseData, userUuid) {
 }
 
 async function spotify_create_playlist(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getSpotifyAccessToken(userUuid);
+    const accessToken = await getAccessToken(userUuid, "spotify");
 
     if (!accessToken) {
         console.error("No access token found for user");
         return;
     }
-
-    const response = await axios.post(`https://api.spotify.com/v1/users/${getusername(userUuid, "spotify")}/playlists`,
+    const username = await getusername(userUuid, "spotify");
+    console.log("Creating playlist in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/users/${username}/playlists`,
         {
             "name": reactionData.name || "default name",
             "description": reactionData.description || "enter the description here",
@@ -329,8 +331,9 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         });
     if (response.status > 299) {
         console.error(`Error calling reaction create_playlist`);
+        return;
     }
-    
+    console.log("Playlist created successfully:", response);   
 }
 
 module.exports = reactions;
