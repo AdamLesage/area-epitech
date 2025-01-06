@@ -68,7 +68,7 @@ async function ensureImageExists(imageName, dockerfilePath, workerFileName) {
     });
 
     // Build the Docker image using the tar stream
-    const stream = await docker.buildImage(tarStream, { t: imageName });
+    const stream = await docker.buildImage(tarStream, { t: `${imageName}:areaWorker` });
 
     // Return a promise that resolves when the image build process is complete
     return new Promise((resolve, reject) => {
@@ -94,7 +94,7 @@ async function ensureImageExists(imageName, dockerfilePath, workerFileName) {
  */
 async function create_container(data, uuid, image_name, workerFileName, targetAction) {
     return await docker.createContainer({
-        Image: image_name, // Specify the image to use for the container
+        Image: `${image_name}:areaWorker`, // Specify the image to use for the container
         AttachStdin: false,
         AttachStdout: false,
         AttachStderr: false,
