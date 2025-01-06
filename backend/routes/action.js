@@ -100,7 +100,6 @@ router.post('/action', async (req, res) => {
         },
     });
 
-    console.log("reaction", reaction);
     const uuid = uuidv4();
     // create and lunch the worker
     const linkedAccount = await prisma.linkedAccount.findFirst({
