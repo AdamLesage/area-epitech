@@ -17,7 +17,9 @@ const actionReactionRouter = require('./routes/ActionReaction');
 
 const cors = require('cors');
 const { initServices } = require('./utils/initServices');
-// const { initWorkers } = require('./utils/initWorkers');
+const { initWorkers } = require('./utils/initWorkers');
+const { migrateDatabase } = require("./utils/migrateDatabase")
+const { stopWorkingWorkers } = require('./utils/stopWorkingWorker');
 
 const app = express();
 const port = 8080;
@@ -53,7 +55,12 @@ app.use('', aboutRouter);
 
 var server = https.createServer(options, app);
 
-server.listen(port, () => {
+server.listen(port, async () => {
+  await migrateDatabase();
   initServices();
+  await initWorkers();
   console.log("server starting on port : " + port)
 });
+
+process.on('SIGTERM', stopWorkingWorkers);
+process.on('SIGINT', stopWorkingWorkers);
