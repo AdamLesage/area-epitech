@@ -41,6 +41,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // Menu Burger
 const isMenuOpen = ref(false);
@@ -53,12 +56,14 @@ function toggleMenu() {
 // Navigate to a given route
 function navigateTo(route: string) {
     console.log(`Navigating to ${route}`);
+    router.push(route);
 }
 
 // Header links for the navigation
 const headerLinks = [
     { name: 'Explore', icon: 'mdi:compass-outline', route: '' },
     { name: 'My Areas', icon: 'mdi:folder-outline', route: '/areas' },
+    { name: 'Workshop', icon: 'mdi:hammer-screwdriver', route: '/workshop' },
     { name: 'Updates', icon: 'mdi:bell-outline', route: '' },
     { name: 'Profile', icon: 'mdi:account-outline', route: '/userinfo' },
 ];

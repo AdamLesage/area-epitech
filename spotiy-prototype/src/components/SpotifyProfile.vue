@@ -11,22 +11,62 @@
         <li>Email: <span>{{ profile.email }}</span></li>
         <li>Spotify URI: <a :href="profile.external_urls.spotify">{{ profile.uri }}</a></li>
         <li>Link: <a :href="profile.href">{{ profile.href }}</a></li>
-        <li>Profile Image: <span>{{ profile.images[0]?.url || '(no profile image)' }}</span></li>
       </ul>
     </section>
 
     <!-- Ajout du bouton -->
     <button @click="createPlaylist">Create Playlist</button>
+    <br />
+    <button @click="search">Search for id</button>
+    <br />
+    <button @click="get_playlist">Get Playlist</button>
+    <br />
+    <br />
+    <textarea v-model="inputText" placeholder="Enter some text"></textarea>
+
+    <section v-if="searchResults && searchResults.length" id="search-results">
+      <h2>Search Results</h2>
+      <ul>
+        <li v-for="track in searchResults" :key="track.id">
+          <img :src="track.album.images[0]?.url" alt="Album Cover" width="50" height="50" />
+          <div>
+            <span><strong>{{ track.name }}</strong> by {{ track.artists.map(artist => artist.name).join(', ') }}</span>
+            <br />
+            <span>URI: <a :href="`https://open.spotify.com/track/${track.id}`" target="_blank">{{ track.uri
+                }}</a></span>
+            <button @click="addTrackToPlaylist(track.uri)">Add Track to Playlist</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <section v-if="playlists && playlists.length" id="playlists">
+      <h2>Your Playlists</h2>
+      <ul>
+        <li v-for="playlist in playlists" :key="playlist.id">
+          <img v-if="playlist.images && playlist.images[0]" :src="playlist.images[0].url" alt="Playlist Cover" width="50" height="50" />
+          <div>
+            <strong>{{ playlist.name }}</strong> ({{ playlist.tracks.total }} tracks)
+            <br />
+            <span>URI: <a :href="playlist.external_urls.spotify" target="_blank">{{ playlist.uri }}</a></span>
+            <button @click="uri2 = playlist.id">Choose Playlist</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 
-const clientId = "ea8c3996d9524646ab6cf7c7608119ba"; // Remplace par ton client ID
+const clientId = "ea8c3996d9524646ab6cf7c7608119ba"; // client ID de l'application Spotify
 const profile = ref<any | null>(null);
-const accessToken = ref<string | null>(null); // Déclare un accessToken pour le stocker une fois récupéré
-
+const accessToken = ref<string | null>(null);
+const inputText = ref<string | null>(null);
+const searchResults = ref<any | null>(null);
+const playlists = ref<any[] | null>(null);
+const uri2 = ref<string | null>(null);
 // Fonction pour rediriger l'utilisateur vers le flow d'authentification
 const redirectToAuthCodeFlow = async (clientId: string) => {
   const verifier = generateCodeVerifier(128);
@@ -37,7 +77,7 @@ const redirectToAuthCodeFlow = async (clientId: string) => {
   const params = new URLSearchParams();
   params.append("client_id", clientId);
   params.append("response_type", "code");
-  params.append("redirect_uri", "http://localhost:5173/callback");
+  params.append("redirect_uri", "http://localhost:5173/spotify");
   params.append("scope", "user-read-private user-read-email playlist-modify-public playlist-modify-private");
   params.append("code_challenge_method", "S256");
   params.append("code_challenge", challenge);
@@ -74,7 +114,7 @@ const getAccessToken = async (clientId: string, code: string): Promise<string> =
   params.append("client_id", clientId);
   params.append("grant_type", "authorization_code");
   params.append("code", code);
-  params.append("redirect_uri", "http://localhost:5173/callback");
+  params.append("redirect_uri", "http://localhost:5173/spotify");
   params.append("code_verifier", verifier!);
 
   const result = await fetch("https://accounts.spotify.com/api/token", {
@@ -117,6 +157,7 @@ const createPlaylist = async () => {
   console.log(profile.value); // Affiche les informations du profil dans la console
   console.log(accessToken.value); // Affiche le token dans la console
   console.log(profile.value.id); // Affiche l'ID de l'utilisateur dans la console
+  console.log("Creating playlist..."); // Affiche un message dans la console
   // Envoie la requête POST pour créer une playlist
   const result = await fetch(`https://api.spotify.com/v1/users/${profile.value.id}/playlists`, {
     method: 'POST',
@@ -125,15 +166,75 @@ const createPlaylist = async () => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      name: 'My new playlist',
+      name: 'Violator2',
       description: 'My new playlist description',
-      public: false
+      public: true
     })
   });
 
   const newPlaylist = await result.json();
   console.log(newPlaylist); // Affiche la nouvelle playlist dans la console
 };
+
+const addTrackToPlaylist = async (uri: string) => {
+  if (!profile.value || !accessToken.value) return; // Vérifie si l'utilisateur et le token sont définis
+
+  console.log("Adding track to playlist...");
+  console.log(profile.value);
+  console.log(accessToken.value);
+  console.log(profile.value.id);
+  console.log("uri2 =");
+  console.log(uri2);
+
+  const result = await fetch(`https://api.spotify.com/v1/playlists/${uri2.value}/tracks`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken.value}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      uris: [uri]
+    })
+  });
+
+  const newTrack = await result.json();
+  console.log(newTrack);
+};
+
+const search = async () => {
+  if (!profile.value || !accessToken.value) return;
+
+  console.log("Searching for track...");
+  const result = await fetch(`https://api.spotify.com/v1/search?q=${inputText.value}&type=track`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken.value}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  const data = await result.json();
+  searchResults.value = data.tracks?.items || []; // Stocke les résultats de recherche dans searchResults
+  console.log(searchResults.value); // Affiche les résultats dans la console
+};
+
+const get_playlist = async () => {
+  if (!profile.value || !accessToken.value) return;
+
+  console.log("Getting playlist...");
+  const result = await fetch(`https://api.spotify.com/v1/me/playlists`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken.value}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  const data = await result.json();
+  playlists.value = data.items || []; // Stocke les playlists récupérées
+  console.log(playlists.value); // Affiche les playlists dans la console
+};
+
 
 </script>
 

@@ -94,7 +94,7 @@ import * as yup from 'yup';
 import { LoginFormValues } from '@/types/auth';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 import { User } from '@/types/auth';
 import { useRouter } from 'vue-router';
 

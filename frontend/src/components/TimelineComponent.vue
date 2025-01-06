@@ -21,7 +21,7 @@
                     </g>
                     <g id="g-root-tx_mvp_hu0k8p1ruqej1-fill" data-item-order="0" transform="translate(153 249)">
                         <text style="font:20px &quot;Roboto&quot;,sans-serif;white-space:pre" font-size="20" font-family="'Roboto', sans-serif" id="tx_mvp_hu0k8p1ruqej1-fill" stroke="none" fill="#B4B4F2">
-                            <tspan x="14.43" y="34" dominant-baseline="ideographic">M.V.P</tspan>
+                            <tspan :x="menuToggles[2] ? '-80' : '14.43'" y="34" dominant-baseline="ideographic">{{ menuToggles[2] ? 'Minimum Viable Product' : 'M.V.P' }}</tspan>
                         </text>
                     </g>
 

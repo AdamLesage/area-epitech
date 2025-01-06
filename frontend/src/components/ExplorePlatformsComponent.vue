@@ -4,7 +4,7 @@
         <h2 id="explore-label" class="text-2xl font-bold tracking-wide mb-6">Explore</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div
-                v-for="service in services"
+                v-for="service in props.services"
                 :key="service.name"
                 class="flex flex-col items-center p-4 rounded-lg hover:bg-opacity-75 transition-transform transform hover:scale-105"
                 :style="{ backgroundColor: service.color }"
@@ -13,14 +13,13 @@
                 tabindex="0"
                 @click="handleServiceClick(service.name)">
                 <Icon :icon="service.icon" class="text-4xl mb-2" aria-hidden="true" />
-                <span class="text-lg font-medium">{{ service.name }}</span>
+                <span class="text-lg font-medium">{{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }}</span>
             </div>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
 import { Icon } from '@iconify/vue';
 
 // services list
@@ -31,10 +30,6 @@ const props = defineProps<{
         icon: string;
     }>;
 }>();
-
-watch(() => props.services, (services) => {
-    console.log('Services:', services);
-});
 
 const emit = defineEmits(['click']);
 

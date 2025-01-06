@@ -8,7 +8,12 @@ var docker = new Docker();
 // Create a map to hold creation of action worker
 const actions = new Map();
 actions.set('dropbox_on_new_file', create_dropbox_workers);
-actions.set('dropbox_on_new_shares_file', create_dropbox_workers);
+actions.set('dropbox_on_file_renamed', create_dropbox_workers);
+actions.set('dropbox_on_file_modified', create_dropbox_workers);
+actions.set('dropbox_on_new_folder', create_dropbox_workers);
+actions.set('dropbox_on_folder_renamed', create_dropbox_workers);
+actions.set('dropbox_on_deleted', create_dropbox_workers);
+
 actions.set('pull_request_review.submitted', create_github_workers);
 actions.set('pull_request.labeled', create_github_workers);
 actions.set('pull_request.unlabeled', create_github_workers);

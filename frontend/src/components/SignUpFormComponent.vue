@@ -134,7 +134,7 @@ import { SignUpFormValues } from '@/types/auth';
 import axios from 'axios';
 import router from '@/router';
 import Cookies from 'js-cookie';
-import { useUserStore } from '@/stores/users';
+import { useUserStore } from '@/stores/user';
 import { User } from '@/types/auth';
 
 const store = useUserStore();

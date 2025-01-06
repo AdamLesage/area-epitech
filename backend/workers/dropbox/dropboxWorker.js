@@ -8,6 +8,7 @@ const redis = new Redis({
 actionData = JSON.parse(process.env.DATA)
 const ACCESS_TOKEN = actionData.accessToken;
 const dbx = new Dropbox({ accessToken: ACCESS_TOKEN });
+const targetAction = process.env.TARGET_ACTION;
 
 let fileMetadataStore = {};
 let cursorStore = {};
@@ -36,13 +37,18 @@ function trigger_action(entry) {
     switch (entry['.tag']) {
         case 'file':
             const oldMetadata = fileMetadataStore[entry.id];
-            // Check if the file has been renamed
-            if (oldMetadata && oldMetadata.path_display !== entry) {
-                send({ event: 'file-renamed', data: entry });
-            }
             // Check if the file is new
             if (!oldMetadata) {
-                send({ event: 'file-added', data: entry });
+                if (targetAction == "dropbox_on_new_file")
+                    send({ event: 'file-added', data: entry });
+            } else if (oldMetadata && oldMetadata.path_display !== entry.path_display) {
+                // Check if the file has been renamed
+                if (targetAction == "dropbox_on_file_renamed")
+                    send({ event: 'file-renamed', data: entry });
+            } else if (oldMetadata.client_modified !== entry.client_modified) {
+                // Check if the file has been modified
+                if (targetAction == "dropbox_on_file_modified")
+                    send({ event: 'file-modified', data: entry });
             }
             // Update the metadata storage
             fileMetadataStore[entry.id] = {
@@ -56,16 +62,15 @@ function trigger_action(entry) {
             break;
         case 'folder':
             const oldfolderMetadata = fileMetadataStore[entry.id];
-            // Check if the folder has been renamed
-            if (oldfolderMetadata && oldfolderMetadata.path_display !== entry.path_display) {
-                send({ event: 'folder-renamed', data: entry });
-            }
-
             // Check if the folder is new
             if (!oldfolderMetadata) {
-                send({ event: 'folder-added', data: entry });
+                if (targetAction == "dropbox_on_new_folder")
+                    send({ event: 'folder-added', data: entry });
+            } else if (oldfolderMetadata && oldfolderMetadata.path_display !== entry.path_display) {
+                // Check if the folder has been renamed
+                if (targetAction == "dropbox_on_folder_renamed")
+                    send({ event: 'folder-renamed', data: entry });
             }
-
             // Update the metadata storage for the folder
             fileMetadataStore[entry.id] = {
                 id: entry.id,
@@ -75,11 +80,13 @@ function trigger_action(entry) {
             break
         case 'deleted':
             // Update your metadata storage
-            send({ event: 'file-deleted', data: entry });
+            if (targetAction == "dropbox_on_deleted")
+                send({ event: 'file-deleted', data: entry });
             delete fileMetadataStore[entry.id];
             break;
         default:
             console.log("unknown")
+            console.log(entry)
             break;
     }
 }
@@ -109,7 +116,6 @@ async function process_user_change(webhookData) {
 async function initializeCursor(userId) {
     try {
         cursorStore[userId] = init_userId;
-        console.log(`Cursor initialize ${userId}: ${response.result.cursor}`);
     } catch (error) {
         console.error('Error on initialize cursor:', error);
     }
