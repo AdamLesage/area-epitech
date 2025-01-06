@@ -2,6 +2,8 @@ const Prisma = require('@prisma/client');
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
+const https = require('https');
+const fs = require('fs');
 require('./authentication/passport');
 
 const githubServiceRouter = require('./services/githubService')
@@ -15,9 +17,17 @@ const actionReactionRouter = require('./routes/ActionReaction');
 
 const cors = require('cors');
 const { initServices } = require('./utils/initServices');
+// const { initWorkers } = require('./utils/initWorkers');
 
 const app = express();
 const port = 8080;
+
+var key = fs.readFileSync(__dirname + '/selfsigned.key');
+var cert = fs.readFileSync(__dirname + '/selfsigned.crt');
+var options = {
+  key: key,
+  cert: cert
+};
 
 app.use(cors());
 app.use(express.json());
@@ -41,8 +51,9 @@ app.use('/auth', authRouter);
 app.use('/api', actionReactionRouter);
 app.use('', aboutRouter);
 
-app.listen(port, () => {
-  // Init database to store every action/reaction in the db, if they do not exists
+var server = https.createServer(options, app);
+
+server.listen(port, () => {
   initServices();
-  console.log(`Listening on port ${port}`);
+  console.log("server starting on port : " + port)
 });
