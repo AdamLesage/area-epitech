@@ -71,6 +71,17 @@
     ]
   },
   {
+    "name":"spotify",
+    "actions": [
+    ],
+    "reactions": [
+      {
+        "name":"playlist_create",
+        "description":"Create a playlist"
+      }
+    ]
+  },
+  {
     "name":"dropbox",
     "actions": [
       {

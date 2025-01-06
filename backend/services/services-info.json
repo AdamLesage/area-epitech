@@ -625,7 +625,7 @@
         "actions": [],
         "reactions": [
           {
-            "name": "playlist.create",
+            "name": "playlist_create",
             "display_name": "Create a new playlist",
             "description": "Create a new playlist",
             "version": "1.0.0",
@@ -650,38 +650,7 @@
                 "name": "public",
                 "display_name": "Playlist status",
                 "description": "Choose if the playlist is public or private",
-                "type": "switch",
-                "required": true
-              },
-              {
-                "name": "playlist_uri",
-                "display_name": "Playlist URI",
-                "description": "The URI of the playlist",
-                "type": "text",
-                "required": true
-              }
-            ]
-          },
-          {
-            "name": "playlist.add_track",
-            "display_name": "Add a track to a playlist",
-            "description": "Add a track to a playlist",
-            "version": "1.0.0",
-            "release_date": "2024-12-21",
-            "updated_date": "2024-12-30",
-            "options": [
-              {
-                "name": "music_uri",
-                "display_name": "Music URI",
-                "description": "The URI of the music",
-                "type": "text",
-                "required": true
-              },
-              {
-                "name": "playlist_uri",
-                "display_name": "Playlist URI",
-                "description": "The URI of the playlist",
-                "type": "text",
+                "type": "boolean",
                 "required": true
               }
             ]

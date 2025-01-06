@@ -9,6 +9,7 @@
                 <AuthButton icon="mdi:github" color="black" @click="authWithGithub" />
                 <AuthButton icon="prime:twitter" color="black" @click="authWithTwitter" />
                 <AuthButton icon="ic:baseline-apple" color="black" @click="authWithApple" />
+                <AuthButton icon="logos:spotify-icon" color="green" @click="authWithSpotify" />
                 <AuthButton icon="flat-color-icons:google" color="" @click="authWithGoogle" />
                 <AuthButton icon="logos:microsoft-icon" color="blue" @click="authWithMicrosoft" />
             </div>
@@ -144,6 +145,10 @@ const authWithGithub: () => void = async () => {
 }
 const authWithTwitter: () => void = () => console.log('Authenticating with Twitter...');
 const authWithApple: () => void = () => console.log('Authenticating with Apple...');
+const authWithSpotify: () => void = async () => {
+    console.log('Authenticating with Spotify...');
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify`;
+}
 const authWithMicrosoft: () => void = () => console.log('Authenticating with Microsoft...');
 </script>
 

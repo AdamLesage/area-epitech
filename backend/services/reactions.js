@@ -15,6 +15,8 @@ reactions.set('create_issue', github_create_issue);
 reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
 
+reactions.set('playlist_create', spotify_create_playlist);
+
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -33,7 +35,21 @@ async function getAccessToken(userUuid, serviceName) {
     const linkedAccount = user.linkedAccounts.find(
         account => account.serviceName === serviceName
     );
+    console.log("Linked account:", linkedAccount);
     return linkedAccount.authToken;
+}
+
+async function getusername(userUuid, serviceName) {
+    let user = await prisma.user.findUnique({
+        where: { uuid: userUuid },
+        include: { linkedAccounts: true },
+    });
+
+    // Find github linked account
+    const linkedAccount = user.linkedAccounts.find(
+        account => account.serviceName === serviceName
+    );
+    return linkedAccount.username;
 }
 
 /**
@@ -289,6 +305,35 @@ async function github_pull_request(reactionData, actionResponseData, userUuid) {
     if (response.status > 299) {
         console.error(`Error calling reaction create_milestone`);
     }
+}
+
+async function spotify_create_playlist(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    const username = await getusername(userUuid, "spotify");
+    console.log("Creating playlist in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/users/${username}/playlists`,
+        {
+            "name": reactionData.name || "default name",
+            "description": reactionData.description || "enter the description here",
+            "public": reactionData.public || false
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction create_playlist`);
+        return;
+    }
+    console.log("Playlist created successfully:", response);   
 }
 
 module.exports = reactions;

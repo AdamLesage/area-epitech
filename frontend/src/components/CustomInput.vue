@@ -277,7 +277,7 @@ const githubRepositories = ref<Repository[]>([]);
 
 if (props.type == 'text' || props.type == 'number' || props.type == 'email' || props.type == 'password'
     || props.type == 'date' || props.type == 'time' || props.type == 'month' || props.type == 'week'
-    || props.type == 'file' || props.type == 'checkbox' || props.type == 'radio') {
+    || props.type == 'file' || props.type == 'checkbox' || props.type == 'radio' || props.type == 'boolean') {
     isSupported.value = true;
     isDefaultInput.value = true;
 }

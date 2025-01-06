@@ -62,6 +62,7 @@ export type OptionType =
     | 'number'
     | 'month'
     | 'week'
+    | 'boolean'
     | 'GithubRepository';
 
 export interface Reaction {
