@@ -2,32 +2,39 @@
 import BackButton from '@/components/BackButton.vue';
 import NavButton from '@/components/NavButton.vue';
 import { Icon } from '@iconify/vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useUserStore } from '@/stores/user';
 
+const userStore = useUserStore();
+const user = userStore.user;
+
+const router = useRouter();
+const route = useRoute();
 const emit = defineEmits([
-    'redirect-explore',
-    'redirect-my-areas',
-    'redirect-updates',
-    'redirect-user-profile',
     'back-button']);
 
 const handleExploreRedirect = () => {
     console.log('Redirecting to explore');
-    emit('redirect-explore');
+    window.scrollTo(0, 0);
+    router.push('/explore');
 }
 
 const handleMyAreasRedirect = () => {
     console.log('Redirecting to my areas');
-    emit('redirect-my-areas');
+    window.scrollTo(0, 0);
+    router.push('/areas');
 }
 
-const handleUpdatesRedirect = () => {
-    console.log('Redirecting to updates');
-    emit('redirect-updates');
+const handleWorkshopRedirect = () => {
+    console.log('Redirecting to workshop');
+    window.scrollTo(0, 0);
+    router.push('/workshop');
 }
 
 const handleUserProfileRedirect = () => {
     console.log('Redirecting to user profile');
-    emit('redirect-user-profile');
+    window.scrollTo(0, 0);
+    router.push('/userinfo');
 }
 
 const handleBackButton = () => {
@@ -35,9 +42,34 @@ const handleBackButton = () => {
     emit('back-button');
 }
 
+function redirectToService() {
+    if (!props.redirect) {
+        console.error('Redirect not allowed');
+        return;
+    }
+    if (!props.title) {
+        console.error('No title found');
+        return;
+    }
+    console.log('Redirecting to service');
+    if (route.path === `/service/${props.title.toLowerCase()}`) {
+        console.log('Scrolling to top');
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        return;
+    }
+    console.log('Redirecting to service:', props.title);
+    window.scrollTo(0, 0);
+    router.push(`/service/${props.title.toLowerCase()}?header=false`);
+    window.scrollTo(0, 0);
+}
+
 const props = defineProps<{
-    logo: string,
-    title: string,
+    logo: string | null,
+    title: string | null,
+    redirect: boolean | true,
 }>();
 </script>
 
@@ -48,16 +80,16 @@ const props = defineProps<{
                 <BackButton color="white" class="hover:cursor-pointer" @click="handleBackButton" />
             </div>
             <div class="flex items-center w-1/3 justify-center gap-2">
-                <Icon :icon="props.logo" class="w-[3rem] h-[3rem] text-white" />
-                <div class="flex flex-col justify-end items-center">
-                    <h1 class="text-white text-[3rem] leading-[2.5rem] font-bold">{{ props.title }}</h1>
+                <Icon :icon="props.logo" class="w-[3rem] h-[3rem] text-white hover:cursor-pointer" @click="redirectToService" v-if="props.logo" />
+                <div class="flex flex-col justify-end items-center" v-if="props.title">
+                    <h1 class="text-white text-[3rem] leading-[2.5rem] font-bold hover:cursor-pointer select-none" @click="redirectToService">{{ props.title }}</h1>
                 </div>
             </div>
             <div class="flex gap-8 w-1/3 justify-end">
                 <NavButton icon="material-symbols:explore-rounded" text="Explore" @redirect="handleExploreRedirect" />
-                <NavButton icon="material-symbols:folder-outline" text="My Areas" @redirect="handleMyAreasRedirect" />
-                <NavButton icon="mdi:bell-outline" text="Updates" @redirect="handleUpdatesRedirect" />
-                <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" />
+                <NavButton icon="material-symbols:folder-outline" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />
+                <NavButton icon="mdi:hammer-screwdriver" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
+                <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" v-if="user" />
             </div>
         </nav>
     </div>

@@ -21,6 +21,7 @@ router.post('/reaction/:uuid', async (req, res) => {
         if (area == null) {
             return res.status(404).send("unknow action-Reaction");
         }
+        console.log("Called area", area);
         const reaction = await prisma.reaction.findUnique({ where: { id: area.reactionId } });
         if (reaction == null || reactions.get(reaction.name) == undefined) {
             return res.status(404).send("unknow Reaction");

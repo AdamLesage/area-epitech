@@ -61,7 +61,8 @@ export type OptionType =
     | 'password'
     | 'number'
     | 'month'
-    | 'week';
+    | 'week'
+    | 'GithubRepository';
 
 export interface Reaction {
     name: string;

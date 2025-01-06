@@ -42,8 +42,6 @@ export interface User {
     phoneNumber: string | null;
     hashedPassword: string;
     authToken: string;
-    googleAccessToken: string | null;
-    githubAccessToken: string | null;
     profilePicture: ProfilePicture | null;
     linkedAccounts: LinkedAccount[];
 }
@@ -55,6 +53,9 @@ export interface ProfilePicture {
 
 export interface LinkedAccount {
     id: number;
-    provider: string;
+    uuid: string;
+    serviceName: string;
     username: string;
+    authToken: string;
+    userId: number;
 }
