@@ -47,10 +47,10 @@ async function dropbox_add_file(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "dropbox");
         const dbx = new Dropbox({ accessToken: accessToken });
-        console.log("Adding new file to Dropbox:", reactionData, actionResponseData);
         const response = await dbx.filesUpload({
             path: `${reactionData.fileName}`,
             contents: reactionData.fileContent || '',
+            mode: { ".tag": reactionData.mode || "add" }
         });
         console.log("File added successfully:", response);
     } catch (error) {
@@ -150,8 +150,13 @@ async function dropbox_delete_file(reactionData, actionResponseData, userUuid) {
  * @param {string} userUuid - The UUID of the user performing the reaction.
 */
 async function github_create_issue(reactionData, actionResponseData, userUuid) {
-    const repoOwner = reactionData.repoOwner || null;
-    const repoName = reactionData.repoName || null;
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
 
     if (!repoOwner || !repoName) {
         console.error("Missing repoOwner or repoName in reaction data");
@@ -194,8 +199,13 @@ async function github_create_issue(reactionData, actionResponseData, userUuid) {
  * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function github_create_milestone(reactionData, actionResponseData, userUuid) {
-    const repoOwner = reactionData.repoOwner || null;
-    const repoName = reactionData.repoName || null;
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
 
     if (!repoOwner || !repoName) {
         console.error("Missing repoOwner or repoName in reaction data");
@@ -239,8 +249,13 @@ async function github_create_milestone(reactionData, actionResponseData, userUui
  * @param {string} userUuid - The UUID of the user performing the reaction.
  */
 async function github_pull_request(reactionData, actionResponseData, userUuid) {
-    const repoOwner = reactionData.repoOwner || null;
-    const repoName = reactionData.repoName || null;
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
 
     if (!repoOwner || !repoName) {
         console.error("Missing repoOwner or repoName in reaction data");
