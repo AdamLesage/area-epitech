@@ -4,12 +4,6 @@
                 <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-5 z-0"></div>
                 <nav class="flex items-center w-full justify-between px-8 py-4 fixed bg-home z-10">
                         <h1 class="w-1/2 text-3xl font-black tracking-wide mb-4 md:mb-0 cursor-pointer text-home-text" @click="navigateTo('/')">AREA</h1>
-                        <div class="w-full flex gap-12 items-center justify-center text-home-text">
-                                <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="navigateTo('/about-us')">About us</h1>
-                                <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="navigateTo('/how-it-works')">How it Works</h1>
-                                <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="navigateTo('/services')">Services</h1>
-                                <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="navigateTo('/reviews')">Reviews</h1>
-                        </div>
                         <div class="w-1/2 flex justify-end gap-8">
                                 <LoginButtonText class="hover:cursor-pointer" color="#4C4CDC" text-color="white" />
                                 <SignUpButtonText class="hover:cursor-pointer" color="white" text-color="#4C4CDC" />
