@@ -5,6 +5,101 @@
         <textarea v-if="type === 'textarea'" :placeholder="props.name" :value="value" class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] max-h-36 min-h-12 w-full"
             @change="handleChange"></textarea>
         <div v-if="!isSupported">"{{ props.type }}" type is not yet supported by CustomInput component</div>
+        <div v-if="type === 'SpotifyPlaylist'" class="text-[#333] rounded-lg max-w-xl mx-auto w-full">
+            <div class="flex gap-4 items-center" v-if="step != 'allDone'">
+                <h2 class="text-lg font-bold text-center">Choose Playlist</h2>
+                <Icon v-if="required" icon="mdi:required" class="text-red-500" />
+            </div>
+
+            <!-- Select Playlist View -->
+            <div v-if="step2 === 'selectPlaylist'" class="flex flex-col gap-2 w-full justify-center">
+                <h3 class="text-md font-semibold my-2 ml-2">1. Select a Playlist</h3>
+                <div class="flex flex-wrap gap-2 w-full justify-center">
+                    <div
+                        v-for="playlist in spotifyPlaylists"
+                        :key="playlist.id"
+                        class="bg-[#24292e] p-2 rounded-md flex items-center gap-2 hover:bg-[#374048] w-full transition justify-start hover:cursor-pointer"
+                        @click="selectPlaylist(playlist)" >
+                        <img :src="playlist.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
+                        <div class="flex flex-col">
+                            <a :href="playlist.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{playlist.name}}</a>
+                            <h4 class="text-white text-xs">{{ playlist.tracks.total }} tracks</h4>
+                        </div>
+                    </div>
+                    <div v-if="spotifyPlaylists.length === 0" class="text-[#777] text-sm text-center"><i>No playlist found.<br/>Verify you are correctly linked to Spotify</i></div>
+                </div>
+            </div>
+            <div v-if="step2 === 'allDone' && selectedPlaylist" class="flex flex-col gap-2 mt-2">
+                <div class="bg-[#24292e] p-2 rounded-md flex items-center gap-2 w-full justify-start">
+                    <img :src="selectedPlaylist.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
+                    <div class="flex flex-col">
+                        <a :href="selectedPlaylist.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{selectedPlaylist.name}}</a>
+                        <h4 class="text-white text-xs">{{ selectedPlaylist.tracks.total }} tracks</h4>
+                    </div>
+                    <button class="rounded-md text-sm text-[#fff] underline transition"
+                        @click="backToPlaylistSelection">
+                        {{ action ? 'Connect' : 'Choose'}} Another Playlist
+                        </button>
+                </div>
+            </div>
+        </div>
+        <div v-if="type === 'SpotifyMusic'" class="text-[#333] rounded-lg max-w-xl mx-auto w-full">
+            <div class="flex gap-4 items-center" v-if="step != 'allDone'">
+                <h2 class="text-lg font-bold text-center">Choose Music</h2>
+                <Icon v-if="required" icon="mdi:required" class="text-red-500" />
+            </div>
+
+            <!-- Select Music View -->
+            <div v-if="step3 === 'selectMusic'" class="flex flex-col gap-2 w-full justify-center">
+                <h3 class="text-md font-semibold my-2 ml-2">1. Select a Music</h3>
+                <div class="flex flex-wrap gap-2 w-full justify-center">
+                    <input
+                        type="text"
+                        v-model="search"
+                        placeholder="Search for music"
+                        class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] w-full"
+                    />
+                    <button
+                        class="p-2 w-full bg-[#1db954] rounded-md text-sm text-white hover:[#38e073] transition"
+                        @click="searchmusic">
+                        Search
+                    </button>
+                    <div
+                        v-for="music in spotifyMusics"
+                        :key="music.id"
+                        class="bg-[#24292e] p-2 rounded-md flex items-center gap-2 hover:bg-[#374048] w-full transition justify-start hover:cursor-pointer"
+                        @click="selectMusic(music)" >
+                        <img :src="music.images[0].url" alt="Music Cover" class="w-8 h-8 rounded-md" />
+                        <div class="flex flex-col">
+                            <a :href="music.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{music.name}}</a>
+                            <h4 class="text-white text-xs">
+                                <span v-for="(artist, index) in music.artists" :key="artist.name">
+                                    {{ artist.name }}<span v-if="index < music.artists.length - 1">, </span>
+                                </span>
+                            </h4>
+                        </div>
+                    </div>
+                    <div v-if="spotifyMusics.length === 0" class="text-[#777] text-sm text-center"><i>No music found.<br/>Verify you are correctly linked to Spotify</i></div>
+                </div>
+            </div>
+            <div v-if="step3 === 'allDone' && selectedMusic" class="flex flex-col gap-2 mt-2">
+                <div class="bg-[#24292e] p-2 rounded-md flex items-center gap-2 w-full justify-start">
+                    <img :src="selectedMusic.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
+                    <div class="flex flex-col">
+                        <a :href="selectedMusic.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{selectedMusic.name}}</a>
+                        <h4 class="text-white text-xs">
+                            <span v-for="(artist, index) in selectedMusic.artists" :key="artist.name">
+                                {{ artist.name }}<span v-if="index < selectedMusic.artists.length - 1">, </span>
+                            </span>
+                        </h4>
+                    </div>
+                    <button class="rounded-md text-sm text-[#fff] underline transition"
+                        @click="backToMusicSelection">
+                        {{ action ? 'Connect' : 'Choose'}} Another Music
+                        </button>
+                </div>
+            </div>
+        </div>
         <div v-if="type === 'GithubRepository'" class="text-[#333] rounded-lg max-w-xl mx-auto w-full">
             <div class="flex gap-4 items-center" v-if="step != 'allDone'">
                 <h2 class="text-lg font-bold text-center">Connect your GitHub Repository</h2>
@@ -113,6 +208,36 @@ interface Repository {
     url: string;
 }
 
+interface Playlist {
+    id: string;
+    name: string;
+    uri: string;
+    external_urls: {
+        spotify: string;
+    };
+    images: {
+        url: string;
+    }[];
+    tracks: {
+        total: number;
+    };
+}
+
+interface Music {
+    id: string;
+    name: string;
+    uri: string;
+    external_urls: {
+        spotify: string;
+    };
+    images: {
+        url: string;
+    }[];
+    artists: {
+        name: string;
+    }[];
+}
+
 interface User {
     id: number;
     name: string;
@@ -147,9 +272,12 @@ const emit = defineEmits(['change']);
 
 const error = ref<string | null>(null);
 const step = ref<'selectUser' | 'selectRepo' | 'addWebhook' | 'allDone'>('selectUser');
+const step2 = ref<'selectPlaylist' | 'allDone'>('selectPlaylist');
+const step3 = ref<'selectMusic' | 'allDone'>('selectMusic');
 const selectedUser = ref<User | null>(null);
 const selectedRepository = ref<Repository | null>(null);
-
+const selectedPlaylist = ref<Playlist | null>(null);
+const selectedMusic = ref<Music | null>(null);
 const filteredRepositories = computed(() =>
     githubRepositories.value.filter(
         (repo) =>
@@ -160,6 +288,18 @@ const filteredRepositories = computed(() =>
 function selectUser(user: User) {
     selectedUser.value = user;
     step.value = 'selectRepo';
+};
+
+function selectPlaylist(playlist: Playlist) {
+    selectedPlaylist.value = playlist;
+    step2.value = 'allDone';
+    emit('change', playlist.uri);
+};
+
+function selectMusic(music: Music) {
+    selectedMusic.value = music;
+    step3.value = 'allDone';
+    emit('change', music.uri);
 };
 
 async function selectRepository(repo: Repository) {
@@ -269,11 +409,27 @@ function backToUserSelection() {
     emit('change', '');
 };
 
+function backToPlaylistSelection() {
+    selectedPlaylist.value = null;
+    step2.value = 'selectPlaylist';
+    emit('change', '');
+};
+
+function backToMusicSelection() {
+    selectedMusic.value = null;
+    step3.value = 'selectMusic';
+    emit('change', '');
+};
+
 const isSupported = ref(false);
 const isDefaultInput = ref(false);
 
 const githubUsers = ref<User[]>([]);
 const githubRepositories = ref<Repository[]>([]);
+
+const spotifyPlaylists = ref<Playlist[]>([]);
+const spotifyMusics = ref<Music[]>([]);
+const search = ref<string>('');
 
 if (props.type == 'text' || props.type == 'number' || props.type == 'email' || props.type == 'password'
     || props.type == 'date' || props.type == 'time' || props.type == 'month' || props.type == 'week'
@@ -288,9 +444,55 @@ if (props.type == 'GithubRepository') {
     isSupported.value = true;
 }
 
+if (props.type == 'SpotifyPlaylist') {
+    isSupported.value = true;
+}
+
+if (props.type == 'SpotifyMusic') {
+    isSupported.value = true;
+}
+
 function handleChange(event: Event) {
     const target = event.target as HTMLInputElement;
     emit('change', target.value);
+}
+
+async function searchmusic() {
+    const user = userStore.user;
+    if (!user) return;
+    const spotifyLinkedAccount = user.linkedAccounts.find(
+            (account) => account.serviceName === 'spotify'
+        );
+        if (!spotifyLinkedAccount) return;
+        const accessToken = spotifyLinkedAccount.authToken;
+        if (!accessToken) return;
+        if (!search.value) return;
+
+        try {
+            const res = await fetch(`https://api.spotify.com/v1/search?q=${search.value}&type=track`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await res.json();
+
+            // store musics
+            spotifyMusics.value = [];
+            for (const music of data.tracks?.items || []) {
+                spotifyMusics.value.push({
+                    id: music.id,
+                    name: music.name,
+                    uri: music.uri,
+                    external_urls: music.external_urls,
+                    images: music.album.images,
+                    artists: music.artists
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching Spotify musics:', error);
+        }
 }
 
 onMounted(async () => {
@@ -345,5 +547,40 @@ onMounted(async () => {
             console.error('Error fetching GitHub repositories:', error);
         }
     }
+
+    if (props.type === 'SpotifyPlaylist') {
+        const spotifyLinkedAccount = user.linkedAccounts.find(
+            (account) => account.serviceName === 'spotify'
+        );
+        if (!spotifyLinkedAccount) return;
+        const accessToken = spotifyLinkedAccount.authToken;
+        if (!accessToken) return;
+        
+        try {
+            const res = await fetch('https://api.spotify.com/v1/me/playlists', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await res.json();
+
+            // store playlists
+            for (const playlist of data.items) {
+                spotifyPlaylists.value.push({
+                    id: playlist.id,
+                    name: playlist.name,
+                    uri: playlist.uri,
+                    external_urls: playlist.external_urls,
+                    images: playlist.images,
+                    tracks: playlist.tracks
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching Spotify playlists:', error);
+        }
+    }
+
 });
 </script>
