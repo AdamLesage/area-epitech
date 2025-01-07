@@ -78,6 +78,10 @@
       {
         "name":"playlist_create",
         "description":"Create a playlist"
+      },
+      {
+        "name":"playlist_add_track",
+        "description":"Add a track to a playlist"
       }
     ]
   },

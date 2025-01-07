@@ -16,6 +16,7 @@ reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
 
 reactions.set('playlist_create', spotify_create_playlist);
+reactions.set('playlist_add_track', spotify_add_to_playlist);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -334,6 +335,33 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         return;
     }
     console.log("Playlist created successfully:", response);   
+}
+
+async function spotify_add_to_playlist(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    const username = await getusername(userUuid, "spotify");
+    console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
+        {
+            "uris": [reactionData.trackUri]
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction add_to_playlist`);
+        return;
+    }
+    console.log("Track added to playlist successfully:", response);
 }
 
 module.exports = reactions;
