@@ -52,7 +52,7 @@
             <div class="flex w-full justify-center items-center px-8">
                 <div class="flex gap-4 items-center w-full justify-center">
                     <Icon icon="material-symbols:mail-outline" class="w-6 h-6 text-home-text-light" />
-                    <p class="text-home-text-light hover:cursor-pointer" @click="copyEmail">contact.area.ownspace@gmail.com</p>
+                    <p class="text-home-text-light hover:cursor-pointer" @click="copyEmail">area.romainlemalin@gmail.com</p>
                 </div>
                 <p class="w-full text-center text-home-text-light">Project made under Epitech © PGE program</p>
                 <h1 class="text-4xl font-black text-home-text text-center w-full hover:cursor-pointer" @click="navigateTo('/')">AREA</h1>
