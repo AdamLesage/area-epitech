@@ -7,6 +7,7 @@ import ServicePage from '@/views/ServicePage.vue';
 import CardPage from '@/views/CardPage.vue';
 import CategoryPage from '@/views/CategoryPage.vue';
 import PrivacyPage from '@/views/PrivacyPage.vue';
+import TermsPage from '@/views/TermsPage.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -112,6 +113,11 @@ const router = createRouter({
       path: '/privacy',
       name: 'privacy',
       component: PrivacyPage,
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: TermsPage,
     },
     {
       // Catch-all route
