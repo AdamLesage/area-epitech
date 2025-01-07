@@ -369,7 +369,7 @@ router.get('/dropbox/callback',
                 serviceName: 'dropbox',
                 authToken: req.user.accessToken,
                 username: req.user.displayName,
-                uuid: req.user.id,
+                uuid: uuidv4(),
                 accountEmail: req.user.accountEmail,
             };
 

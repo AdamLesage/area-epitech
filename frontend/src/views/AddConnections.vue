@@ -1,22 +1,22 @@
 <template>
-    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white font-sans flex justify-center items-center px-4 sm:px-8">
+    <div class="min-h-screen bg-home text-white font-sans flex justify-center items-center px-4 sm:px-8">
         <!-- Main container -->
-        <div class="bg-gray-900 rounded-3xl p-6 sm:p-10 w-full max-w-3xl text-center shadow-2xl relative">
-            <!-- Back button -->
-            <button 
-                @click="goBack" 
-                class="absolute top-4 right-4 p-2 sm:p-3 md:p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all text-sm sm:text-lg md:text-xl focus:outline-none focus:ring-2 focus:ring-gray-500" 
-                aria-label="Back to previous page"
-                role="button">
-                Back
-            </button>
-            <!-- Title -->
-            <h2 class="text-2xl sm:text-4xl font-semibold mb-6 sm:mb-8 tracking-wide">Add a New Connection</h2>
+        <div class="bg-home-div rounded-xl p-6 sm:p-10 w-full max-w-3xl text-center shadow-2xl relative">
+            <div class="flex justify-between items-center mb-6 sm:mb-8">
+                <h2 class="text-2xl sm:text-4xl font-semibold tracking-wide">Add a new account</h2>
+                <button 
+                    @click="goBack" 
+                    class="p-2 sm:p-3 md:p-4 bg-home-text text-white rounded-lg transition-all text-sm sm:text-lg md:text-xl hover:cursor-pointer" 
+                    aria-label="Back to previous page"
+                    role="button">
+                    Back
+                </button>
+            </div>
 
-            <!-- Responsive icons grid -->
-            <div class="grid grid-cols-3 sm:grid-cols-4 gap-4 sm:gap-6">
+            <!-- Responsive icons flexbox -->
+            <div class="flex flex-wrap justify-center gap-4 sm:gap-6">
                 <button
-                    v-for="platform in platforms"
+                    v-for="platform in notConnectedServices"
                     :key="platform.name"
                     :style="{ backgroundColor: platform.color }"
                     @click="selectPlatform(platform.name)"
@@ -26,47 +26,36 @@
                     <Icon :icon="platform.icon" class="text-3xl sm:text-4xl text-white" />
                 </button>
             </div>
+            <div class="flex items-center justify-center gap-4" v-if="notConnectedServices.length == 0">
+                <Icon icon="akar-icons:check" class="text-3xl sm:text-4xl text-green-500" />
+                <h1 class="text-lg sm:text-lg font-semibold tracking-wide">No more platforms to connect to</h1>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { Icon } from "@iconify/vue";
 import { useRouter } from 'vue-router';
 import { useUserStore } from "@/stores/user";
+import { useServiceStore } from "@/stores/service";
+import { Service } from "@/types/services";
+import { LinkedAccount } from "@/types/auth";
 
 const userStore = useUserStore();
+const serviceStore = useServiceStore();
 
 const router = useRouter();
 
 // List of platforms to connect to with their respective icons and colors
-const platforms = ref([
-    { name: "Spotify", icon: "mdi:spotify", color: "#1DB954" },
-    { name: "Google", icon: "mdi:google", color: "#FF0000" },
-    { name: "Twitter", icon: "mdi:twitter", color: "#1DA1F2" },
-    { name: "Facebook", icon: "mdi:facebook", color: "#1877F2" },
-    { name: "Instagram", icon: "mdi:instagram", color: "#E4405F" },
-    { name: "LinkedIn", icon: "mdi:linkedin", color: "#0077B5" },
-    { name: "YouTube", icon: "mdi:youtube", color: "#FF0000" },
-    { name: "Slack", icon: "mdi:slack", color: "#611F69" },
-    { name: "Twitch", icon: "mdi:twitch", color: "#6441A4" },
-    { name: "Discord", icon: "mdi:discord", color: "#5865F2" },
-    { name: "Reddit", icon: "mdi:reddit", color: "#FF4500" },
-    { name: "Pinterest", icon: "mdi:pinterest", color: "#E60023" },
-    { name: "Snapchat", icon: "ri:snapchat-fill", color: "#FFFC00" },
-    { name: "WhatsApp", icon: "mdi:whatsapp", color: "#25D366" },
-    { name: "Telegram", icon: "mdi:telegram", color: "#0088CC" },
-    { name: "Signal", icon: "mdi:signal", color: "#0081FF" },
-    { name: "Skype", icon: "mdi:skype", color: "#00AFF0" },
-    { name: "Microsoft", icon: "mdi:microsoft", color: "#F25022" },
-    { name: "Apple", icon: "mdi:apple", color: "#000000" },
-    { name: "Amazon", icon: "mdi:amazon", color: "#FF9900" },
-    { name: "Netflix", icon: "mdi:netflix", color: "#E50914" },
-    { name: "Hulu", icon: "mdi:hulu", color: "#1CE783" },
-    { name: "GitHub", icon: "mdi:github", color: "#181717" },
-    { name: "Dropbox", icon: "mdi:dropbox", color: "#007EE5" }
-]);
+const services = ref<Service[]>(serviceStore.services);
+const notConnectedServices = computed<Service[]>(() => {
+    const user = userStore.user;
+    if (!user) return [];
+    const linkedAccounts: LinkedAccount[] = user.linkedAccounts;
+    return services.value.filter(service => !linkedAccounts.some(account => account.serviceName === service.name));
+});
 
 // Function to select a platform
 function selectPlatform(platformName: string) {
@@ -77,11 +66,11 @@ function selectPlatform(platformName: string) {
     }
     const email = user.email
     console.log(`Selected platform: ${platformName}`);
-    if (platformName === 'GitHub') {
+    if (platformName === 'github') {
         window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github?email=${user.email}`;
-    } else if (platformName === 'Spotify') {
+    } else if (platformName === 'spotify') {
         window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify?email=${user.email}`;
-    } else if (platformName === 'Dropbox') {
+    } else if (platformName === 'dropbox') {
         window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/dropbox?email=${user.email}`;
     } else {
         console.error(`Platform ${platformName} not yet supported`);
@@ -92,4 +81,10 @@ function selectPlatform(platformName: string) {
 function goBack() {
     router.push('/userinfo');
 }
+
+onMounted(() => {
+    if (!userStore.user) {
+        router.push('/');
+    }
+});
 </script>
