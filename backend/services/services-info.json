@@ -637,7 +637,7 @@
             "description": "Create a new playlist",
             "version": "1.0.0",
             "release_date": "2024-12-21",
-            "updated_date": "2024-12-21",
+            "updated_date": "2025-01-06",
             "options": [
               {
                 "name": "name",
@@ -668,7 +668,7 @@
             "description": "Add a track to a playlist",
             "version": "1.0.0",
             "release_date": "2024-12-21",
-            "updated_date": "2024-12-30",
+            "updated_date": "2025-01-07",
             "options": [
               {
                 "name": "music_uri",
@@ -681,6 +681,23 @@
                 "name": "playlist_uri",
                 "display_name": "Playlist URI",
                 "description": "The URI of the playlist",
+                "type": "SpotifyMusic",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "save_track",
+            "display_name": "Save a track",
+            "description": "Save a track",
+            "version": "1.0.0",
+            "release_date": "2025-01-07",
+            "updated_date": "2025-01-07",
+            "options": [
+              {
+                "name": "music_id",
+                "display_name": "Music id",
+                "description": "The ID of the music",
                 "type": "SpotifyMusic",
                 "required": true
               }

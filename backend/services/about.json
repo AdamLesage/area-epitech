@@ -82,6 +82,10 @@
       {
         "name":"playlist_add_track",
         "description":"Add a track to a playlist"
+      },
+      {
+        "name":"save_track",
+        "description":"Save a track"
       }
     ]
   },
