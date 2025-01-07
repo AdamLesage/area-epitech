@@ -6,6 +6,7 @@ import LoginPage from '@/views/LoginPage.vue'
 import ServicePage from '@/views/ServicePage.vue';
 import CardPage from '@/views/CardPage.vue';
 import CategoryPage from '@/views/CategoryPage.vue';
+import PrivacyPage from '@/views/PrivacyPage.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -106,6 +107,11 @@ const router = createRouter({
       path: '/not-authorized',
       name: 'not-authorized',
       component: () => import('@/views/NotAuthorizedPage.vue'),
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: PrivacyPage,
     },
     {
       // Catch-all route
