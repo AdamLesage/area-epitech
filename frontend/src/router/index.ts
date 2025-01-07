@@ -9,6 +9,8 @@ import CategoryPage from '@/views/CategoryPage.vue';
 import PrivacyPage from '@/views/PrivacyPage.vue';
 import TermsPage from '@/views/TermsPage.vue';
 import MentionsPage from '@/views/MentionsPage.vue';
+import Cook from '@/views/CookPage.vue';
+
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -123,6 +125,12 @@ const router = createRouter({
       path: '/mentions',
       name: 'mentions',
       component: MentionsPage,
+    },
+    {
+      path: '/cookies',
+      name: 'cookies',
+      component: Cook,
+
     },
     {
       // Catch-all route
