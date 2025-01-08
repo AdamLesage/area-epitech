@@ -19,8 +19,10 @@ reactions.set('playlist_create', spotify_create_playlist);
 reactions.set('playlist_add_track', spotify_add_to_playlist);
 reactions.set('save_track', spotify_save_track);
 reactions.set('skip_track', spotify_skip_track);
+reactions.set('previous_track', spotify_previous_track);
 reactions.set('start_resume', spotify_start_resume);
 reactions.set('pause', spotify_pause);
+reactions.set('add_track_to_queue', spotify_add_track_to_queue);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -417,6 +419,30 @@ async function spotify_skip_track(reactionData, actionResponseData, userUuid) {
     }
     console.log("Track skipped successfully:", response);
 }
+
+async function spotify_previous_track(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Playing previous track in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/me/player/previous`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction previous_track`);
+        return;
+    }
+    console.log("Previous track played successfully:", response);
+}
    
 async function spotify_start_resume(reactionData, actionResponseData, userUuid) {
     const accessToken = await getAccessToken(userUuid, "spotify");
@@ -464,6 +490,32 @@ async function spotify_pause(reactionData, actionResponseData, userUuid) {
         return;
     }
     console.log("Playback paused successfully:", response);
+}
+
+async function spotify_add_track_to_queue(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Adding track to queue in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/me/player/queue`,
+        {
+            "uri": reactionData.trackUri
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction add_track_to_queue`);
+        return;
+    }
+    console.log("Track added to queue successfully:", response);
 }
 
 module.exports = reactions;
