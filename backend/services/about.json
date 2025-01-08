@@ -134,7 +134,60 @@
   },
   {
     "name":"discord",
-    "actions": [],
+    "actions": [
+      {
+        "name": "message_create",
+        "description": "Triggered when a new message is created."
+      },
+      {
+        "name": "message_delete",
+        "description": "Triggered when a message is deleted."
+      },
+      {
+        "name": "message_update",
+        "description": "Triggered when a message is updated."
+      },
+      {
+        "name": "channel_create",
+        "description": "Triggered when a new channel is created."
+      },
+      {
+        "name": "channel_delete",
+        "description": "Triggered when a channel is deleted."
+      },
+      {
+        "name": "channel_update",
+        "description": "Triggered when a channel is updated."
+      },
+      {
+        "name": "thread_create",
+        "description": "Triggered when a new thread is created."
+      },
+      {
+        "name": "thread_delete",
+        "description": "Triggered when a thread is deleted."
+      },
+      {
+        "name": "thread_update",
+        "description": "Triggered when a thread is updated."
+      },
+      {
+        "name": "message_reaction_add",
+        "description": "Triggered when a reaction is added to a message."
+      },
+      {
+        "name": "message_reaction_remove",
+        "description": "Triggered when a reaction is removed from a message."
+      },
+      {
+        "name": "message_reaction_remove_emoji",
+        "description": "Triggered when an emoji is removed from reactions."
+      },
+      {
+        "name": "message_reaction_remove_all",
+        "description": "Triggered when all reactions are removed from a message."
+      }
+    ],
     "reactions": []
   }
 ]
