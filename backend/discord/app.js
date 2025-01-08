@@ -149,4 +149,44 @@ client.on(Events.ChannelUpdate, async (oldChannel, newChannel) => {
     }
 });
 
+// Listen for thread create events
+client.on(Events.ThreadCreate, async (thread) => {
+    const threadData = {
+        threadId: thread.id,  // Add thread ID
+        threadName: thread.name,  // Add thread name
+        threadType: thread.type,  // Add thread type
+        serverId: thread.guild.id,  // Add server ID
+        channelId: thread.parentId,  // Add parent channel ID
+        createdAt: thread.createdAt,  // Add creation timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the thread data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, threadData, { httpsAgent: agent });
+        console.log('Thread data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending thread data to webhook:', error);
+    }
+});
+
+// Listen for thread delete events
+client.on(Events.ThreadDelete, async (thread) => {
+    const threadData = {
+        threadId: thread.id,  // Add thread ID
+        threadName: thread.name,  // Add thread name
+        threadType: thread.type,  // Add thread type
+        serverId: thread.guild.id,  // Add server ID
+        channelId: thread.parentId,  // Add parent channel ID
+        deletedAt: new Date(),  // Add deletion timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the deleted thread data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, threadData, { httpsAgent: agent });
+        console.log('Deleted thread data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending deleted thread data to webhook:', error);
+    }
+});
+
 module.exports = { discordClient: client };
