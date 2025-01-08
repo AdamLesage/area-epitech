@@ -188,6 +188,11 @@
         "description": "Triggered when all reactions are removed from a message."
       }
     ],
-    "reactions": []
+    "reactions": [
+      {
+      "name": "discord_send_message_to_a_channel",
+      "description": "Send a message to a specific channel"
+      }
+    ]
   }
 ]

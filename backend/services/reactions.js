@@ -17,6 +17,8 @@ reactions.set('create_pull_request', github_pull_request);
 
 reactions.set('playlist_create', spotify_create_playlist);
 
+reactions.set('send_message', discord_send_message_to_a_channel);
+
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -334,6 +336,22 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         return;
     }
     console.log("Playlist created successfully:", response);   
+}
+
+// Function to send a message to a specific channel
+async function discord_send_message_to_a_channel(channelId, messageContent) {
+    console.log('Sending message content:', messageContent);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            await channel.send(messageContent);
+            console.log('Message sent successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
 }
 
 module.exports = reactions;

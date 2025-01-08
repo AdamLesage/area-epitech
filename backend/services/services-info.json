@@ -380,9 +380,9 @@
     ]
   },
   {
-    "name":"dropbox",
-    "color":"#007ee5",
-    "icon":"ri:dropbox-fill",
+    "name": "dropbox",
+    "color": "#007ee5",
+    "icon": "ri:dropbox-fill",
     "reviews": {
       "rate": 2.5,
       "count": 100
@@ -409,7 +409,14 @@
                 "required": false
               }
             ],
-            "returnData": ["name", "fileContent", "size", "id", "path_display", ".tag"]
+            "returnData": [
+              "name",
+              "fileContent",
+              "size",
+              "id",
+              "path_display",
+              ".tag"
+            ]
           },
           {
             "name": "dropbox_on_file_renamed",
@@ -701,7 +708,32 @@
             "options": []
           }
         ],
-        "reactions": []
+        "reactions": [
+          {
+            "name": "discord_send_message_to_a_channel",
+            "display_name": "Send a message",
+            "description": "Send a message to a channel",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to send the message to",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "message",
+                "display_name": "Message",
+                "description": "The message to send",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "channel",
