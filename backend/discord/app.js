@@ -127,4 +127,26 @@ client.on(Events.ChannelDelete, async (channel) => {
     }
 });
 
+
+// Listen for channel update events
+client.on(Events.ChannelUpdate, async (oldChannel, newChannel) => {
+    const channelData = {
+        oldChannelName: oldChannel.name,  // Add old channel name
+        newChannelName: newChannel.name,  // Add new channel name
+        oldChannelType: oldChannel.type,  // Add old channel type
+        newChannelType: newChannel.type,  // Add new channel type
+        serverId: oldChannel.guild.id,  // Add server ID
+        channelId: oldChannel.id,  // Add channel ID
+        updatedAt: new Date(),  // Add update timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the updated channel data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, channelData, { httpsAgent: agent });
+        console.log('Updated channel data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending updated channel data to webhook:', error);
+    }
+});
+
 module.exports = { discordClient: client };
