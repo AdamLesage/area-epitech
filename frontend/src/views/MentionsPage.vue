@@ -26,7 +26,7 @@
                 </p>
                 <h2 class="text-2xl font-bold mb-2">Hosting Provider</h2>
                 <p class="mb-4">
-                    The website is hosted by Us, located at Nantes.
+                    The website is hosted by AWS, located at Nantes.
                 </p>
                 <h2 class="text-2xl font-bold mb-2">Intellectual Property</h2>
                 <p class="mb-4">
