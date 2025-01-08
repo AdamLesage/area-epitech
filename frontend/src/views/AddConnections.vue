@@ -72,6 +72,8 @@ function selectPlatform(platformName: string) {
         window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify?email=${user.email}`;
     } else if (platformName === 'dropbox') {
         window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/dropbox?email=${user.email}`;
+    } else if (platformName === 'strava') {
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/strava?email=${user.email}`;
     } else {
         console.error(`Platform ${platformName} not yet supported`);
     }

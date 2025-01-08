@@ -293,7 +293,7 @@ router.get('/github/redirect',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -319,13 +319,13 @@ router.get('/github/redirect',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
                         },
                     });
-    
+
                     // Refresh user data to include the new linked account
                     user = await prisma.user.findUnique({
                         where: { email: userParams.email },
@@ -342,14 +342,14 @@ router.get('/github/redirect',
 );
 
 // DropBox auth routes
-router.get('/dropbox', async(req, res) => {
+router.get('/dropbox', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
     await passport.authenticate('dropbox-oauth2')(req, res);
 });
 
-router.get('/dropbox/callback', 
+router.get('/dropbox/callback',
     passport.authenticate('dropbox-oauth2', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
@@ -376,7 +376,7 @@ router.get('/dropbox/callback',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -402,7 +402,7 @@ router.get('/dropbox/callback',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
@@ -426,7 +426,7 @@ router.get('/dropbox/callback',
 );
 
 // Spotify auth routes
-router.get('/spotify', async(req, res) => {
+router.get('/spotify', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
@@ -437,7 +437,7 @@ router.get('/spotify', async(req, res) => {
     })(req, res);
 });
 
-router.get('/spotify/callback', 
+router.get('/spotify/callback',
     passport.authenticate('spotify', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
@@ -468,7 +468,7 @@ router.get('/spotify/callback',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -494,13 +494,13 @@ router.get('/spotify/callback',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
                         },
                     });
-    
+
                     // Refresh user data to include the new linked account
                     user = await prisma.user.findUnique({
                         where: { email: userParams.email },
@@ -516,4 +516,89 @@ router.get('/spotify/callback',
     }
 );
 
+const { Client, Token } = require('strava-oauth2');
+
+// Configuration minimale pour le client Strava
+let config = {
+    client_id: process.env.STRAVA_CLIENT_ID,
+    client_secret: process.env.STRAVA_CLIENT_SECRET,
+    redirect_uri: `${process.env.BACKEND_URL}/auth/strava/callback`,
+};
+
+const client = new Client(config);
+
+// Strava auth routes
+router.get('/strava', (req, res) => {
+    const email = req.query.email;
+    req.session.email = email;
+    console.log("email", email);
+
+    config.redirect_uri = `${process.env.BACKEND_URL}/auth/strava/callback` + `?email=${email}`;
+    const authorizationUri = `https://www.strava.com/oauth/authorize?client_id=${config.client_id}&response_type=code&redirect_uri=${config.redirect_uri}&approval_prompt=auto&scope=read,activity:read_all,activity:write`;
+    console.log(authorizationUri);
+    res.redirect(authorizationUri);
+});
+
+router.get('/strava/callback', async (req, res) => {
+    try {
+        const email = req.query.email;
+        const code = req.query.code;
+        console.log("code", code);
+        console.log("email", email);
+        if (!email) {
+            return res.status(400).json({ error: 'Missing email parameter' });
+        }
+
+        // Find user from email
+        const user = await prisma.user.findUnique({
+            where: { email },
+            include: { linkedAccounts: true },
+        });
+
+        // Request cURL https://www.strava.com/api/v3/oauth/token To get the token
+        const token = await axios.post('https://www.strava.com/api/v3/oauth/token', {
+            client_id: process.env.STRAVA_CLIENT_ID,
+            client_secret: process.env.STRAVA_CLIENT_SECRET,
+            code: code,
+            grant_type: 'authorization_code',
+        });
+        // console.log("token", token);
+        console.log("token", token.data.access_token);
+
+        if (user) {
+            const linkedAccount = user.linkedAccounts.find(
+                account => account.serviceName === 'strava'
+            );
+
+            // If it doesnt exist, create a linked account
+            if (!linkedAccount) {
+                const linkedAccountParams = {
+                    serviceName: 'strava',
+                    authToken: token.data.access_token,
+                    accountEmail: "NoAccountEmailForStrava",
+                    username: user.name + user.surname,
+                    uuid: uuidv4(),
+                };
+
+                await prisma.linkedAccount.create({
+                    data: {
+                        ...linkedAccountParams,
+                        userId: user.id,
+                    },
+                });
+            }
+        } else {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Create a linked account with strava
+        return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+    } catch (error) {
+        console.error(`Error during token retrieval: ${error.message}`);
+        return res.status(500).json({ error: 'Failed to retrieve token' });
+    }
+});
+
 module.exports = router;
+
+// https://localhost:8080/auth/strava

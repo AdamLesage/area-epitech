@@ -658,5 +658,17 @@
         ]
       }
     ]
+  },
+  {
+    "name": "strava",
+    "color": "#fc4c02",
+    "icon": "bi:strava",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": [
+    ]
   }
 ]
