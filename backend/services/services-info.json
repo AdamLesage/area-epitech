@@ -658,5 +658,16 @@
         ]
       }
     ]
+  },
+  {
+    "name": "discord",
+    "color": "#7289da",
+    "icon": "ic:baseline-discord",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": []
   }
 ]

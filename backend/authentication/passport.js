@@ -89,3 +89,32 @@ passport.use(
     }
   )
 );
+
+const DiscordStrategy = require('passport-discord').Strategy;
+
+passport.use(
+    new DiscordStrategy(
+        {
+        clientID: process.env.DISCORD_CLIENT_ID,
+        clientSecret: process.env.DISCORD_CLIENT_SECRET,
+        callbackURL: `${process.env.BACKEND_URL}/auth/discord/callback`,
+        scope: ['identify', 'email']
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            const sessionEmail = passport.session.email;
+            const profileEmail = profile.email || null;
+
+            console.log('session:', sessionEmail, 'profile:', profile);
+            console.log('accessToken:', accessToken);
+            console.log('session:', sessionEmail, 'profile:', profileEmail);
+    
+            const user = { 
+                ...profile,
+                accessToken,
+                sessionEmail: sessionEmail,
+                accountEmail: profileEmail
+            };
+            done(null, user);
+        }
+    )
+);
