@@ -2,6 +2,7 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const axios = require('axios');
 const https = require('https');
+const { channel } = require('diagnostics_channel');
 
 // Create an HTTPS agent that allows self-signed certificates
 const agent = new https.Agent({  
@@ -20,10 +21,13 @@ client.once(Events.ClientReady, readyClient => {
 client.on(Events.MessageCreate, async (message) => {
     if (!message.author.bot) {  // Ignore bot messages
         const messageData = {
-            author: message.author.username,
-            content: message.content,
-            channel: message.channel.name,
-            timestamp: message.createdAt,
+            author: message.author.username, // Add author username
+            content: message.content, // Add message content
+            channel: message.channel.name, // Add channel name
+            timestamp: message.createdAt, // Add timestamp
+            serverId: message.guild.id,  // Add server ID
+            channelId: message.channel.id,  // Add channel ID
+            userId: message.author.id,  // Add user ID
         };
 
         try {
