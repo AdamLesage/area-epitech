@@ -40,4 +40,51 @@ client.on(Events.MessageCreate, async (message) => {
     }
 });
 
+// Listen for message delete events
+client.on(Events.MessageDelete, async (message) => {
+    const messageData = {
+        content: message.content, // Add message content
+        channel: message.channel.name, // Add channel name
+        timestamp: message.createdAt, // Add timestamp
+        deletedAt: new Date(), // Add deletion timestamp
+        serverId: message.guild.id,  // Add server ID
+        channelId: message.channel.id,  // Add channel ID
+        messageId: message.id,  // Add message ID
+    };
+
+    try {
+        // Send a POST request to your webhook route with the deleted message data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, messageData, { httpsAgent: agent });
+        console.log('Deleted message data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending deleted message data to webhook:', error);
+    }
+});
+
+
+// Listen for message update events
+client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
+    if (!oldMessage.author.bot) {  // Ignore bot messages
+        const messageData = {
+            oldContent: oldMessage.content, // Add old message content
+            newContent: newMessage.content, // Add new message content
+            channel: oldMessage.channel.name, // Add channel name
+            timestamp: oldMessage.createdAt, // Add timestamp
+            editedAt: newMessage.editedAt, // Add edit timestamp
+            serverId: oldMessage.guild.id,  // Add server ID
+            channelId: oldMessage.channel.id,  // Add channel ID
+            messageId: oldMessage.id,  // Add message ID
+            userId: oldMessage.author.id,  // Add user ID
+        };
+
+        try {
+            // Send a POST request to your webhook route with the updated message data
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, messageData, { httpsAgent: agent });
+            console.log('Updated message data sent to webhook successfully');
+        } catch (error) {
+            console.error('Error sending updated message data to webhook:', error);
+        }
+    }
+});
+
 module.exports = { discordClient: client };
