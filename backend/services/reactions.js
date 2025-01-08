@@ -18,6 +18,9 @@ reactions.set('create_pull_request', github_pull_request);
 reactions.set('playlist_create', spotify_create_playlist);
 reactions.set('playlist_add_track', spotify_add_to_playlist);
 reactions.set('save_track', spotify_save_track);
+reactions.set('skip_track', spotify_skip_track);
+reactions.set('start_resume', spotify_start_resume);
+reactions.set('pause', spotify_pause);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -389,6 +392,78 @@ async function spotify_save_track(reactionData, actionResponseData, userUuid) {
         return;
     }
     console.log("Track saved successfully:", response);
+}
+
+async function spotify_skip_track(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Skipping track in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/me/player/next`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction skip_track`);
+        return;
+    }
+    console.log("Track skipped successfully:", response);
+}
+   
+async function spotify_start_resume(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Starting or resuming playback in Spotify:", reactionData, actionResponseData);
+    const response = await axios.put(`https://api.spotify.com/v1/me/player/play`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction start_resume`);
+        return;
+    }
+    console.log("Playback started or resumed successfully:", response);
+}
+
+async function spotify_pause(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Pausing playback in Spotify:", reactionData, actionResponseData);
+    const response = await axios.put(`https://api.spotify.com/v1/me/player/pause`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction pause`);
+        return;
+    }
+    console.log("Playback paused successfully:", response);
 }
 
 module.exports = reactions;

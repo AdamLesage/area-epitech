@@ -634,7 +634,7 @@
           {
             "name": "playlist_create",
             "display_name": "Create a new playlist",
-            "description": "Create a new playlist",
+            "description": "Create a new playlist whith the name and description of your choice",
             "version": "1.0.0",
             "release_date": "2024-12-21",
             "updated_date": "2025-01-06",
@@ -665,7 +665,7 @@
           {
             "name": "playlist_add_track",
             "display_name": "Add a track to a playlist",
-            "description": "Add a track to a playlist",
+            "description": "Add a track to a playlist of your choice",
             "version": "1.0.0",
             "release_date": "2024-12-21",
             "updated_date": "2025-01-07",
@@ -685,11 +685,18 @@
                 "required": true
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        "name": "Tracks",
+        "display_name": "Tracks",
+        "actions": [],
+        "reactions": [
           {
             "name": "save_track",
             "display_name": "Save a track",
-            "description": "Save a track",
+            "description": "Save a track in to a playlist",
             "version": "1.0.0",
             "release_date": "2025-01-07",
             "updated_date": "2025-01-07",
@@ -702,6 +709,33 @@
                 "required": true
               }
             ]
+          },
+          {
+            "name": "skip_track",
+            "display_name": "Skip a track",
+            "description": "Skip the track playing to the next",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "start_resume",
+            "display_name": "Start or resume a track",
+            "description": "Start or resume a track or a playlist",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "pause",
+            "display_name": "Pause a track",
+            "description": "Pause the track currently playing",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
           }
         ]
       }
