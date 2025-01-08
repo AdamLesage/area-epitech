@@ -189,4 +189,25 @@ client.on(Events.ThreadDelete, async (thread) => {
     }
 });
 
+// Listen for thread update events
+client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
+    const threadData = {
+        oldThreadName: oldThread.name,  // Add old thread name
+        newThreadName: newThread.name,  // Add new thread name
+        oldThreadType: oldThread.type,  // Add old thread type
+        newThreadType: newThread.type,  // Add new thread type
+        serverId: oldThread.guild.id,  // Add server ID
+        threadId: oldThread.id,  // Add thread ID
+        updatedAt: new Date(),  // Add update timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the updated thread data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, threadData, { httpsAgent: agent });
+        console.log('Updated thread data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending updated thread data to webhook:', error);
+    }
+});
+
 module.exports = { discordClient: client };
