@@ -1,18 +1,29 @@
 // Require the necessary discord.js classes and axios for HTTP requests
-const { Client, Events, GatewayIntentBits } = require('discord.js');
+const { Client, Events, GatewayIntentBits, Partials } = require('discord.js');
 const axios = require('axios');
 const https = require('https');
-const { channel } = require('diagnostics_channel');
+const reactions = require('../services/reactions');
 
 // Create an HTTPS agent that allows self-signed certificates
 const agent = new https.Agent({  
     rejectUnauthorized: false
 });
 
-// Create a new client instance with the necessary intents
+// Create a new client instance with the necessary intents and partials
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions,  GatewayIntentBits.MessageContent],
+    intents: [
+        GatewayIntentBits.Guilds, 
+        GatewayIntentBits.GuildMessages, 
+        GatewayIntentBits.GuildMessageReactions,  
+        GatewayIntentBits.MessageContent
+    ],
+    partials: [
+        Partials.Message, 
+        Partials.Channel, 
+        Partials.Reaction
+    ]
 });
+
 // When the client is ready, run this code (only once).
 client.once(Events.ClientReady, readyClient => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
@@ -62,7 +73,6 @@ client.on(Events.MessageDelete, async (message) => {
     }
 });
 
-
 // Listen for message update events
 client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
     if (!oldMessage.author.bot) {  // Ignore bot messages
@@ -88,7 +98,6 @@ client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
     }
 });
 
-
 // Listen for channel create events
 client.on(Events.ChannelCreate, async (channel) => {
     const channelData = {
@@ -108,7 +117,6 @@ client.on(Events.ChannelCreate, async (channel) => {
     }
 });
 
-
 // Listen for channel delete events
 client.on(Events.ChannelDelete, async (channel) => {
     const channelData = {
@@ -127,7 +135,6 @@ client.on(Events.ChannelDelete, async (channel) => {
         console.error('Error sending deleted channel data to webhook:', error);
     }
 });
-
 
 // Listen for channel update events
 client.on(Events.ChannelUpdate, async (oldChannel, newChannel) => {
@@ -231,6 +238,67 @@ client.on(Events.MessageReactionAdd, async (reaction, user) => {
         } catch (error) {
             console.error('Error sending reaction data to webhook:', error);
         }
+    }
+});
+
+// Listen for message reaction remove events
+client.on(Events.MessageReactionRemove, async (reaction, user) => {
+    console.log('Reaction removed:', reaction.emoji.name);
+    if (!user.bot) {  // Ignore bot reactions
+        const reactionData = {
+            messageId: reaction.message.id,  // Add message ID
+            channelId: reaction.message.channel.id,  // Add channel ID
+            serverId: reaction.message.guild.id,  // Add server ID
+            userId: user.id,  // Add user ID
+            emoji: reaction.emoji.name,  // Add emoji name
+            removedAt: new Date(),  // Add reaction removal timestamp
+        };
+
+        try {
+            // Send a POST request to your webhook route with the reaction removal data
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, reactionData, { httpsAgent: agent });
+            console.log('Reaction removal data sent to webhook successfully');
+        } catch (error) {
+            console.error('Error sending reaction removal data to webhook:', error);
+        }
+    }
+});
+
+// Listen for message reaction remove emoji events
+client.on(Events.MessageReactionRemoveEmoji, async (reaction) => {
+    console.log('Emoji removed from reactions:', reaction.emoji.name);
+    const reactionData = {
+        messageId: reaction.message.id,  // Add message ID
+        channelId: reaction.message.channel.id,  // Add channel ID
+        serverId: reaction.message.guild.id,  // Add server ID
+        emoji: reaction.emoji.name,  // Add emoji name
+        removedAt: new Date(),  // Add emoji removal timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the emoji removal data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, reactionData, { httpsAgent: agent });
+        console.log('Emoji removal data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending emoji removal data to webhook:', error);
+    }
+});
+
+// Listen for message reaction remove all events
+client.on(Events.MessageReactionRemoveAll, async (message) => {
+    const reactionData = {
+        messageId: message.id,  // Add message ID
+        channelId: message.channel.id,  // Add channel ID
+        serverId: message.guild.id,  // Add server ID
+        removedAt: new Date(),  // Add reaction removal timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the reaction removal data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, reactionData, { httpsAgent: agent });
+        console.log('All reactions removed data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending all reactions removed data to webhook:', error);
     }
 });
 
