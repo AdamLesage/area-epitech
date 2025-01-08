@@ -299,7 +299,7 @@ function selectPlaylist(playlist: Playlist) {
 function selectMusic(music: Music) {
     selectedMusic.value = music;
     step3.value = 'allDone';
-    emit('change', music.uri);
+    emit('change', music.id);
 };
 
 async function selectRepository(repo: Repository) {
