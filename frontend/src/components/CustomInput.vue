@@ -238,6 +238,7 @@ async function selectRepository(repo: Repository) {
             config: {
                 url: import.meta.env.VITE_DEPLOYED_URL + '/github/webhook/',
                 content_type: 'json',
+                insecure_ssl: '1',
             },
         }, {
             headers: {

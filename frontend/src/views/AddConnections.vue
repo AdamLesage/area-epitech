@@ -66,12 +66,11 @@ function selectPlatform(platformName: string) {
     }
     const email = user.email
     console.log(`Selected platform: ${platformName}`);
-    if (platformName === 'github') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github?email=${user.email}`;
-    } else if (platformName === 'spotify') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify?email=${user.email}`;
-    } else if (platformName === 'dropbox') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/dropbox?email=${user.email}`;
+    if (platformName == 'github' ||
+        platformName == 'spotify' ||
+        platformName == 'dropbox' ||
+        platformName == 'discord') {
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/${platformName}?email=${email}`;
     } else {
         console.error(`Platform ${platformName} not yet supported`);
     }
