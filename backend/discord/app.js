@@ -87,4 +87,44 @@ client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
     }
 });
 
+
+// Listen for channel create events
+client.on(Events.ChannelCreate, async (channel) => {
+    const channelData = {
+        channelId: channel.id,  // Add channel ID
+        channelName: channel.name,  // Add channel name
+        channelType: channel.type,  // Add channel type
+        serverId: channel.guild.id,  // Add server ID
+        createdAt: channel.createdAt,  // Add creation timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the channel data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, channelData, { httpsAgent: agent });
+        console.log('Channel data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending channel data to webhook:', error);
+    }
+});
+
+
+// Listen for channel delete events
+client.on(Events.ChannelDelete, async (channel) => {
+    const channelData = {
+        channelId: channel.id,  // Add channel ID
+        channelName: channel.name,  // Add channel name
+        channelType: channel.type,  // Add channel type
+        serverId: channel.guild.id,  // Add server ID
+        deletedAt: new Date(),  // Add deletion timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the deleted channel data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, channelData, { httpsAgent: agent });
+        console.log('Deleted channel data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending deleted channel data to webhook:', error);
+    }
+});
+
 module.exports = { discordClient: client };
