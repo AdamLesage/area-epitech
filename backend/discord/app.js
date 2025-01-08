@@ -10,8 +10,9 @@ const agent = new https.Agent({
 });
 
 // Create a new client instance with the necessary intents
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
-
+const client = new Client({
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions,  GatewayIntentBits.MessageContent],
+});
 // When the client is ready, run this code (only once).
 client.once(Events.ClientReady, readyClient => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
@@ -207,6 +208,29 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
         console.log('Updated thread data sent to webhook successfully');
     } catch (error) {
         console.error('Error sending updated thread data to webhook:', error);
+    }
+});
+
+// Listen for message reaction add events
+client.on(Events.MessageReactionAdd, async (reaction, user) => {
+    console.log('Reaction added:', reaction.emoji.name);
+    if (!user.bot) {  // Ignore bot reactions
+        const reactionData = {
+            messageId: reaction.message.id,  // Add message ID
+            channelId: reaction.message.channel.id,  // Add channel ID
+            serverId: reaction.message.guild.id,  // Add server ID
+            userId: user.id,  // Add user ID
+            emoji: reaction.emoji.name,  // Add emoji name
+            addedAt: new Date(),  // Add reaction timestamp
+        };
+
+        try {
+            // Send a POST request to your webhook route with the reaction data
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, reactionData, { httpsAgent: agent });
+            console.log('Reaction data sent to webhook successfully');
+        } catch (error) {
+            console.error('Error sending reaction data to webhook:', error);
+        }
     }
 });
 
