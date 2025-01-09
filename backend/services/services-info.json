@@ -380,9 +380,9 @@
     ]
   },
   {
-    "name":"dropbox",
-    "color":"#007ee5",
-    "icon":"ri:dropbox-fill",
+    "name": "dropbox",
+    "color": "#007ee5",
+    "icon": "ri:dropbox-fill",
     "reviews": {
       "rate": 2.5,
       "count": 100
@@ -409,7 +409,14 @@
                 "required": false
               }
             ],
-            "returnData": ["name", "fileContent", "size", "id", "path_display", ".tag"]
+            "returnData": [
+              "name",
+              "fileContent",
+              "size",
+              "id",
+              "path_display",
+              ".tag"
+            ]
           },
           {
             "name": "dropbox_on_file_renamed",
@@ -688,6 +695,173 @@
                 "description": "The weight of the athlete",
                 "type": "text",
                 "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "activity",
+        "display_name": "Activity",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "create_activity",
+            "display_name": "Create a new activity",
+            "description": "Create a new activity",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "name",
+                "display_name": "Activity Name",
+                "description": "The name of the activity",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "type",
+                "display_name": "Activity Type",
+                "description": "The type of the activity must be one these: AlpineSki, BackcountrySki, Badminton, Canoeing, Crossfit, EBikeRide, Elliptical, EMountainBikeRide, Golf, GravelRide, Handcycle, HighIntensityIntervalTraining, Hike, IceSkate, InlineSkate, Kayaking, Kitesurf, MountainBikeRide, NordicSki, Pickleball, Pilates, Racquetball, Ride, RockClimbing, RollerSki, Rowing, Run, Sail, Skateboard, Snowboard, Snowshoe, Soccer, Squash, StairStepper, StandUpPaddling, Surfing, Swim, TableTennis, Tennis, TrailRun, Velomobile, VirtualRide, VirtualRow, VirtualRun, Walk, WeightTraining, Wheelchair, Windsurf, Workout, Yoga",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "sport_type",
+                "display_name": "Sport Type",
+                "description": "The sport of the activity (run, ride, swim, etc.)",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "start_date_local",
+                "display_name": "Start Date",
+                "description": "The start date of the activity",
+                "type": "datetime",
+                "required": true
+              },
+              {
+                "name": "elapsed_time",
+                "display_name": "Elapsed Time",
+                "description": "The elapsed time of the activity in seconds",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "description",
+                "display_name": "Description",
+                "description": "Description of the activity",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "distance",
+                "display_name": "Distance",
+                "description": "The distance of the activity in meters",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "trainer",
+                "display_name": "Trainer",
+                "description": " Set to 1 to mark as a trainer activity. ",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "commute",
+                "display_name": "Commute",
+                "description": " Set to 1 to mark as commute",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "update_activity",
+            "display_name": "Update an activity",
+            "description": "Update an activity",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "activity_id",
+                "display_name": "Activity ID",
+                "description": "The ID of the activity to update",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "name",
+                "display_name": "Activity Name",
+                "description": "The name of the activity",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "sport_type",
+                "display_name": "Sport Type",
+                "description": "An instance of SportType must be one of the following: AlpineSki, BackcountrySki, Badminton, Canoeing, Crossfit, EBikeRide, Elliptical, EMountainBikeRide, Golf, GravelRide, Handcycle, HighIntensityIntervalTraining, Hike, IceSkate, InlineSkate, Kayaking, Kitesurf, MountainBikeRide, NordicSki, Pickleball, Pilates, Racquetball, Ride, RockClimbing, RollerSki, Rowing, Run, Sail, Skateboard, Snowboard, Snowshoe, Soccer, Squash, StairStepper, StandUpPaddling, Surfing, Swim, TableTennis, Tennis, TrailRun, Velomobile, VirtualRide, VirtualRow, VirtualRun, Walk, WeightTraining, Wheelchair, Windsurf, Workout, Yoga",
+                "type": "SportType",
+                "required": false
+              },
+              {
+                "name": "start_date_local",
+                "display_name": "Start Date",
+                "description": "The start date of the activity",
+                "type": "datetime",
+                "required": false
+              },
+              {
+                "name": "elapsed_time",
+                "display_name": "Elapsed Time",
+                "description": "The elapsed time of the activity in seconds",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "description",
+                "display_name": "Description",
+                "description": "The description of the activity",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "distance",
+                "display_name": "Distance",
+                "description": "The distance of the activity in meters",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "trainer",
+                "display_name": "Trainer",
+                "description": "Whether this activity was recorded on a training machine",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "commute",
+                "display_name": "Commute",
+                "description": "Whether this activity is a commute",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "hide_from_home",
+                "display_name": "Hide from Home",
+                "description": "Whether this activity is muted",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "gear_id",
+                "display_name": "Gear ID",
+                "description": "Identifier for the gear associated with the activity. ‘none’ clears gear from activity",
+                "type": "string",
+                "required": false
               }
             ]
           }
