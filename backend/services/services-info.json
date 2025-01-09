@@ -685,8 +685,8 @@
             "display_name": "Message Created",
             "description": "A message is created",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -694,8 +694,8 @@
             "display_name": "Message Deleted",
             "description": "A message is deleted",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -703,8 +703,8 @@
             "display_name": "Message Updated",
             "description": "A message is updated",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           }
         ],
@@ -714,8 +714,8 @@
             "display_name": "Send a message",
             "description": "Send a message to a channel",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": [
               {
                 "name": "channel",
@@ -732,6 +732,30 @@
                 "required": true
               }
             ]
+          },
+          {
+            "name": "discord_delete_message_from_a_channel",
+            "display_name": "Delete a message",
+            "description": "Delete a message from a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to delete the message from",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "message",
+                "display_name": "Message",
+                "description": "The message to delete",
+                "type": "text",
+                "required": true
+              }
+            ]
           }
         ]
       },
@@ -744,8 +768,8 @@
             "display_name": "Channel Created",
             "description": "A channel is created",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -753,8 +777,8 @@
             "display_name": "Channel Deleted",
             "description": "A channel is deleted",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -762,8 +786,8 @@
             "display_name": "Channel Updated",
             "description": "A channel is updated",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           }
         ],
@@ -778,8 +802,8 @@
             "display_name": "Thread Created",
             "description": "A thread is created",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -787,8 +811,8 @@
             "display_name": "Thread Deleted",
             "description": "A thread is deleted",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -796,8 +820,8 @@
             "display_name": "Thread Updated",
             "description": "A thread is updated",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           }
         ],
@@ -812,8 +836,8 @@
             "display_name": "Reaction Added",
             "description": "A reaction is added",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -821,8 +845,8 @@
             "display_name": "Reaction Removed",
             "description": "A reaction is removed",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -830,8 +854,8 @@
             "display_name": "Reaction Emoji Removed",
             "description": "A reaction emoji is removed",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           },
           {
@@ -839,8 +863,8 @@
             "display_name": "All Reactions Removed",
             "description": "All reactions are removed",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
             "options": []
           }
         ],

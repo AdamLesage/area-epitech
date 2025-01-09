@@ -18,6 +18,7 @@ reactions.set('create_pull_request', github_pull_request);
 reactions.set('playlist_create', spotify_create_playlist);
 
 reactions.set('send_message', discord_send_message_to_a_channel);
+reactions.set('delete_message', discord_delete_message_from_a_channel);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -351,6 +352,26 @@ async function discord_send_message_to_a_channel(channelId, messageContent) {
         }
     } catch (error) {
         console.error('Error sending message:', error);
+    }
+}
+
+async function discord_delete_message_from_a_channel(channelId, messageId) {
+    console.log('Deleting message:', messageId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const message = await channel.messages.fetch(messageId);
+            if (message) {
+                await message.delete();
+                console.log('Message deleted successfully');
+            } else {
+                console.error('Message not found');
+            }
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error deleting message:', error);
     }
 }
 
