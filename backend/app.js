@@ -1,71 +1,71 @@
-  const Prisma = require('@prisma/client');
-  const express = require('express');
-  const session = require('express-session');
-  const passport = require('passport');
-  const https = require('https');
-  const fs = require('fs');
-  require('./authentication/passport');
+const Prisma = require('@prisma/client');
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const https = require('https');
+const fs = require('fs');
+require('./authentication/passport');
 
-  const githubServiceRouter = require('./services/githubService')
-  const dropboxServiceRouter = require('./services/dropboxService')
-  const stravaServiceRouter = require('./services/stravaService')
-  const userRouter = require('./routes/user');
-  const authRouter = require('./routes/authentication');
-  const aboutRouter = require('./routes/about');
-  const actionsRouter = require('./routes/action');
-  const reactionRouter = require('./routes/reaction');
-  const actionReactionRouter = require('./routes/ActionReaction');
+const githubServiceRouter = require('./services/githubService')
+const dropboxServiceRouter = require('./services/dropboxService')
+const stravaServiceRouter = require('./services/stravaService')
+const userRouter = require('./routes/user');
+const authRouter = require('./routes/authentication');
+const aboutRouter = require('./routes/about');
+const actionsRouter = require('./routes/action');
+const reactionRouter = require('./routes/reaction');
+const actionReactionRouter = require('./routes/ActionReaction');
 
-  const cors = require('cors');
-  const { initServices } = require('./utils/initServices');
-  const { initWorkers } = require('./utils/initWorkers');
-  const { migrateDatabase } = require("./utils/migrateDatabase")
-  const { stopWorkingWorkers } = require('./utils/stopWorkingWorker');
+const cors = require('cors');
+const { initServices } = require('./utils/initServices');
+const { initWorkers } = require('./utils/initWorkers');
+const { migrateDatabase } = require("./utils/migrateDatabase")
+const { stopWorkingWorkers } = require('./utils/stopWorkingWorker');
 
-  const app = express();
-  const port = 8080;
+const app = express();
+const port = 8080;
 
-  var key = fs.readFileSync(__dirname + '/selfsigned.key');
-  var cert = fs.readFileSync(__dirname + '/selfsigned.crt');
-  var keyStr = key.toString().split(String.raw`\n`).join('\n');
-  var certStr = cert.toString().split(String.raw`\n`).join('\n');
+var key = fs.readFileSync(__dirname + '/selfsigned.key');
+var cert = fs.readFileSync(__dirname + '/selfsigned.crt');
+var keyStr = key.toString().split(String.raw`\n`).join('\n');
+var certStr = cert.toString().split(String.raw`\n`).join('\n');
 
-  var options = {
-    key: keyStr,
-    cert: certStr
-  };
+var options = {
+  key: keyStr,
+  cert: certStr
+};
 
-  app.use(cors());
-  app.use(express.json());
-  app.use(
-    session({
-      resave: false,
-      saveUninitialized: false,
-      secret: 'session secret',
-    })
-  );
+app.use(cors());
+app.use(express.json());
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'session secret',
+  })
+);
 
-  app.use(passport.initialize());
-  app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
-  app.use('/api', userRouter);
-  app.use('/github', githubServiceRouter);
-  app.use('/dropbox', dropboxServiceRouter);
-  app.use('/strava', stravaServiceRouter);
-  app.use('/api', actionsRouter);
-  app.use('/api', reactionRouter);
-  app.use('/auth', authRouter);
-  app.use('/api', actionReactionRouter);
-  app.use('', aboutRouter);
+app.use('/api', userRouter);
+app.use('/github', githubServiceRouter);
+app.use('/dropbox', dropboxServiceRouter);
+app.use('/strava', stravaServiceRouter);
+app.use('/api', actionsRouter);
+app.use('/api', reactionRouter);
+app.use('/auth', authRouter);
+app.use('/api', actionReactionRouter);
+app.use('', aboutRouter);
 
-  var server = https.createServer(options, app);
+var server = https.createServer(options, app);
 
-  server.listen(port, async () => {
-    await migrateDatabase();
-    initServices();
-    await initWorkers();
-    console.log("server starting on port : " + port)
-  });
+server.listen(port, async () => {
+  await migrateDatabase();
+  initServices();
+  await initWorkers();
+  console.log("server starting on port : " + port)
+});
 
-  process.on('SIGTERM', stopWorkingWorkers);
-  process.on('SIGINT', stopWorkingWorkers);
+process.on('SIGTERM', stopWorkingWorkers);
+process.on('SIGINT', stopWorkingWorkers);

@@ -16,60 +16,41 @@ const redis = new Redis({
     port: 6379
 });
 
-// ACTION
-router.post('/strava', async (req, res) => {
-    try {
-        const { aspect_type, object_type, object_id, updates } = req.body;
+// Verify the webhook
+router.post('/webhook', (req, res) => {
+    console.log("webhook event received!", req.query, req.body);
+    res.status(200).send('EVENT_RECEIVED');
+});
 
-        console.log("Received Strava webhook event", { aspect_type, object_type, object_id });
-
-        // Get active actions for Strava
-        const activeStravaActions = await prisma.actionReaction.findMany({
-            where: {
-                isActive: true,
-                action: {
-                    service: {
-                        name: "strava",
-                    },
-                },
-            },
-        });
-
-        const promises = activeStravaActions.map(async (action) => {
-            // Add each action to the Redis queue
-            console.log("Send to worker", action.uuid);
-            await redis.lpush(action.uuid, JSON.stringify({
-                event: {
-                    aspect_type,
-                    object_type,
-                    object_id,
-                    updates
-                },
-                data: req.body
-            }));
-        });
-
-        await Promise.all(promises);
-
-        // Respond with success
-        return res.status(200).send('Webhook processed successfully');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send(`Error receiving webhook: ${error.message}`);
+// Adds support for GET requests to our webhook
+router.get('/webhook', (req, res) => {
+    // Your verify token. Should be a random string.
+    const VERIFY_TOKEN = "STRAVA";
+    // Parses the query params
+    let mode = req.query['hub.mode'];
+    let token = req.query['hub.verify_token'];
+    let challenge = req.query['hub.challenge'];
+    // Debug print
+    console.log("Received GET webhook request:", req.query);
+    // Checks if a token and mode is in the query string of the request
+    if (mode && token) {
+        console.log('mode:', mode, 'token:', token);
+        // Verifies that the mode and token sent are valid
+        if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+            // Responds with the challenge token from the request
+            console.log('WEBHOOK_VERIFIED');
+            res.json({ "hub.challenge": challenge });
+        } else {
+            // Responds with '403 Forbidden' if verify tokens do not match
+            console.log('WEBHOOK_VERIFICATION_FAILED');
+            res.sendStatus(403);
+        }
+    } else {
+        console.log('INVALID_REQUEST');
+        res.json({ "Message": "Invalid Request" });
     }
 });
 
-// Strava webhook validation
-router.get('/strava', (req, res) => {
-    const { 'hub.challenge': challenge } = req.query;
-    console.log(challenge);
 
-    if (challenge) {
-        console.log("Validating Strava webhook challenge", challenge);
-        return res.status(200).json({ 'hub.challenge': challenge });
-    }
-
-    return res.status(400).send('Missing challenge parameter');
-});
 
 module.exports = router;
