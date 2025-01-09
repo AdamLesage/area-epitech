@@ -98,7 +98,7 @@ passport.use(
         clientID: process.env.DISCORD_CLIENT_ID,
         clientSecret: process.env.DISCORD_CLIENT_SECRET,
         callbackURL: `${process.env.BACKEND_URL}/auth/discord/callback`,
-        scope: ['identify', 'email']
+        scope: ['identify', 'email', 'guilds']
         },
         async (accessToken, refreshToken, profile, done) => {
             const sessionEmail = passport.session.email;
