@@ -791,7 +791,56 @@
             "options": []
           }
         ],
-        "reactions": []
+        "reactions": [
+          {
+            "name": "discord_create_channel",
+            "display_name": "Create a channel",
+            "description": "Create a channel in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to create the channel in",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The name of the channel to create",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_delete_channel",
+            "display_name": "Delete a channel",
+            "description": "Delete a channel from a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to delete the channel from",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The name of the channel to delete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "thread",

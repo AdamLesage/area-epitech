@@ -19,6 +19,8 @@ reactions.set('playlist_create', spotify_create_playlist);
 
 reactions.set('send_message', discord_send_message_to_a_channel);
 reactions.set('delete_message', discord_delete_message_from_a_channel);
+reactions.set('create_channel', discord_create_channel_in_server);
+reactions.set('delete_channel', discord_delete_channel_from_server);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -374,5 +376,49 @@ async function discord_delete_message_from_a_channel(channelId, messageId) {
         console.error('Error deleting message:', error);
     }
 }
+
+
+// Function to create a channel
+async function discord_create_channel_in_server(serverId, channelName, channelType) {
+    console.log('Creating channel:', channelName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            await server.channels.create({
+                name: channelName,
+                type: ChannelType.GuildText // Use ChannelType.GuildText instead of "GUILD_TEXT"
+            });
+            console.log('Channel created successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error creating channel:', error);
+    }
+}
+
+
+//Function to delete a channel
+
+async function discord_delete_channel_from_server(serverId, channelName) {
+    console.log('Deleting channel:', channelName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const channel = server.channels.cache.find(channel => channel.name === channelName);
+            if (channel) {
+                await channel.delete();
+                console.log('Channel deleted successfully');
+            } else {
+                console.error('Channel not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error deleting channel:', error);
+    }
+}
+
 
 module.exports = reactions;
