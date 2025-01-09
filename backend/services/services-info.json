@@ -668,6 +668,152 @@
       "count": 250000
     },
     "saves": 2250000,
-    "categories": []
+    "categories": [
+      {
+        "name": "message",
+        "display_name": "Message",
+        "actions": [
+          {
+            "name": "message.create",
+            "display_name": "Message Created",
+            "description": "A message is created",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "message.delete",
+            "display_name": "Message Deleted",
+            "description": "A message is deleted",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "message.update",
+            "display_name": "Message Updated",
+            "description": "A message is updated",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "channel",
+        "display_name": "Channel",
+        "actions": [
+          {
+            "name": "channel.create",
+            "display_name": "Channel Created",
+            "description": "A channel is created",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "channel.delete",
+            "display_name": "Channel Deleted",
+            "description": "A channel is deleted",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "channel.update",
+            "display_name": "Channel Updated",
+            "description": "A channel is updated",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "thread",
+        "display_name": "Thread",
+        "actions": [
+          {
+            "name": "thread.create",
+            "display_name": "Thread Created",
+            "description": "A thread is created",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "thread.delete",
+            "display_name": "Thread Deleted",
+            "description": "A thread is deleted",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "thread.update",
+            "display_name": "Thread Updated",
+            "description": "A thread is updated",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "reaction",
+        "display_name": "Reaction",
+        "actions": [
+          {
+            "name": "reaction.add",
+            "display_name": "Reaction Added",
+            "description": "A reaction is added",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "reaction.remove",
+            "display_name": "Reaction Removed",
+            "description": "A reaction is removed",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "reaction.remove_emoji",
+            "display_name": "Reaction Emoji Removed",
+            "description": "A reaction emoji is removed",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          },
+          {
+            "name": "reaction.remove_all",
+            "display_name": "All Reactions Removed",
+            "description": "All reactions are removed",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": []
+          }
+        ],
+        "reactions": []
+      }
+    ]
   }
 ]
