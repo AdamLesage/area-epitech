@@ -669,6 +669,30 @@
     },
     "saves": 2250000,
     "categories": [
+      {
+        "name": "athlete",
+        "display_name": "Athlete",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "update_athlete",
+            "display_name": "Update Athlete weight",
+            "description": "Update Athlete weight",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "weight",
+                "display_name": "Weight",
+                "description": "The weight of the athlete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
     ]
   }
 ]
