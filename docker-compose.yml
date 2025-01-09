@@ -73,6 +73,11 @@ services:
       - "8081:8081"
     volumes:
       - shared-volume:/shared
+    environment:
+      - BACKEND_URL=${BACKEND_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - DEPLOYED_URL=${DEPLOYED_URL}
+      - DISCORD_OAUTH_URL=${DISCORD_OAUTH_URL}
     depends_on:
       - server
 

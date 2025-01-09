@@ -63,7 +63,9 @@ export type OptionType =
     | 'month'
     | 'week'
     | 'boolean'
-    | 'GithubRepository';
+    | 'GithubRepository'
+    | 'DiscordGuild'
+    | 'DiscordGuildChannel';
 
 export interface Reaction {
     name: string;
