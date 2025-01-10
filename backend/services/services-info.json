@@ -658,5 +658,24 @@
         ]
       }
     ]
+  },
+  {
+    "name": "gmail",
+    "color": "#EA4335",
+    "icon": "mdi:gmail",
+    "reviews": {
+      "rate": 4.5,
+      "count": 450000
+    },
+    "saves": 9020000,
+    "categories": [
+      {
+        "name": "mail",
+        "display_name": "Mail",
+        "actions": [],
+        "reactions": [
+        ]
+      }
+    ]
   }
 ]
