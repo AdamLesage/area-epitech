@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google-cloud/pubsub": "^4.9.0",
     "@prisma/client": "^5.22.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
