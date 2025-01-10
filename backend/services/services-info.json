@@ -672,7 +672,17 @@
       {
         "name": "mail",
         "display_name": "Mail",
-        "actions": [],
+        "actions": [
+          {
+            "name": "gmail_on_new_mail",
+            "display_name": "Gmail on new mail",
+            "description": "Triggered when a new mail is received in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-10",
+            "updated_date": "2025-01-10",
+            "options": []
+          }
+        ],
         "reactions": [
         ]
       }

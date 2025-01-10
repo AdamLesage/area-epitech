@@ -133,8 +133,12 @@
     ]
   },
   {
-    "name":"google",
+    "name":"gmail",
     "actions": [
+      {
+        "name":"gmail_on_new_mail",
+        "description":"Triggered when a new mail is received in Gmail."
+      }
     ],
     "reactions": [
     ]

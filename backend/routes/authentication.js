@@ -16,6 +16,7 @@ const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
+const { google } = require('googleapis');
 
 // Intern auth routes
 
@@ -524,7 +525,13 @@ router.get('/google', async(req, res) => {
     passport.session.email = email;
 
     await passport.authenticate('google', {
-        scope: ['profile', 'email', 'https://www.googleapis.com/auth/gmail.readonly']
+        scope: ['profile', 'email', 
+            'https://mail.google.com/',
+            'https://www.googleapis.com/auth/gmail.readonly',
+            'https://www.googleapis.com/auth/gmail.modify',
+            'https://www.googleapis.com/auth/gmail.insert',
+            'https://www.googleapis.com/auth/gmail.settings.basic',
+            'https://www.googleapis.com/auth/gmail.metadata']
     })(req, res);
 });
 
@@ -599,11 +606,33 @@ router.get('/google/callback',
                 });
             }
         }
+        await watchGmail(req.user.accessToken)
         return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: error.message });
     }
 });
+
+async function watchGmail(accessToken) {
+    try {
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        const response = await gmail.users.watch({
+            userId: 'me',  // 'me' corresponds to the authenticated user
+            requestBody: {
+                labelIds: ['INBOX'],  // Notifications only for the inbox
+                topicName: 'projects/area-romain-le-malin/topics/gmail-notification',  // Your Pub/Sub topic
+            },
+        });
+
+        console.log('Watch response:', response.data);
+    } catch (error) {
+        console.error('Error setting up Gmail watch:', error);
+    }
+}
 
 module.exports = router;
