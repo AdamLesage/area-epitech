@@ -37,7 +37,6 @@ router.post('/webhook', async (req, res) => {
             },
         });
 
-        console.log(notification, "lenght:", activeGmailActions)
         const promises = activeGmailActions.map(async (action) => {
             // Push each action to the Redis queue
             console.log("send to worker", action.uuid)
