@@ -138,6 +138,18 @@
       {
         "name":"gmail_on_new_mail",
         "description":"Triggered when a new mail is received in Gmail."
+      },
+      {
+        "name": "gmail_on_mail_deleted",
+        "description": "Triggered when a mail is deleted from Gmail."
+      },
+      {
+        "name": "gmail_on_label_added",
+        "description": "Triggered when a label is added to a mail in Gmail."
+      },
+      {
+        "name": "gmail_on_label_removed",
+        "description": "Triggered when a label is removed from a mail in Gmail."
       }
     ],
     "reactions": [

@@ -681,6 +681,57 @@
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
             "options": []
+          },
+          {
+            "name": "gmail_on_mail_deleted",
+            "display_name": "Gmail on new mail",
+            "description": "Triggered when a mail is deleted from Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-11",
+            "updated_date": "2025-01-11",
+            "options": []
+          }
+        ],
+        "reactions": [
+        ]
+      },
+      {
+        "name": "label",
+        "display_name": "Label",
+        "actions": [
+          {
+            "name": "gmail_on_label_added",
+            "display_name": "Gmail on label added",
+            "description": "Triggered when a label is added to a mail in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-11",
+            "updated_date": "2025-01-11",
+            "options": [
+              {
+                "name": "type_label",
+                "display_name": "Type label",
+                "description": "the type of the triggered label",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "gmail_on_label_removed",
+            "display_name": "Gmail on label added",
+            "description": "Triggered when a label is removed from a mail in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-11",
+            "updated_date": "2025-01-11",
+            "options": [
+              {
+                "name": "type_label",
+                "display_name": "Type label",
+                "description": "the type of the triggered label",
+                "type": "text",
+                "required": false
+              }
+            ]
           }
         ],
         "reactions": [
