@@ -24,7 +24,7 @@ reactions.set('delete_channel', discord_delete_channel_from_server);
 reactions.set('clear_all_messages_from_channel', discord_delete_all_messages_from_a_channel);
 reactions.set('Clear_custom_hours_messages_from_channel', discord_delete_custom_hours_messages_from_a_channel);
 reactions.set('Clear_custom_days_messages_from_channel', discord_delete_custom_days_messages_from_a_channel);
-
+reactions.set('send_reaction', discord_send_reaction_to_message);
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -482,6 +482,27 @@ async function discord_delete_custom_days_messages_from_a_channel(channelId, day
         }
     } catch (error) {
         console.error('Error clearing custom days messages:', error);
+    }
+}
+
+
+async function discord_send_reaction_to_message(channelId, messageId, emoji) {
+    console.log('Sending reaction to message:', messageId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const message = await channel.messages.fetch(messageId);
+            if (message) {
+                await message.react(emoji);
+                console.log('Reaction sent successfully');
+            } else {
+                console.error('Message not found');
+            }
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error sending reaction:', error);
     }
 }
 

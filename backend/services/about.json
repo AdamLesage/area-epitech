@@ -215,6 +215,10 @@
       {
         "name": "clear_custom_days_messages_from_a_channel",
         "description": "Clear all messages from a channel"
+      },
+      {
+        "name": "discord_send_reaction_to_message",
+        "description": "Send a reaction to a message"
       }
     ]
   }

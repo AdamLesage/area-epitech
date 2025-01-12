@@ -982,7 +982,39 @@
             "options": []
           }
         ],
-        "reactions": []
+        "reactions": [
+          {
+            "name": "discord_send_reaction_to_message",
+            "display_name": "Send a reaction to a message",
+            "description": "Send a reaction to a message in a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+          "name": "channel",
+          "display_name": "Channel",
+          "description": "The channel containing the message",
+          "type": "text",
+          "required": true
+              },
+              {
+          "name": "message",
+          "display_name": "Message",
+          "description": "The message to react to",
+          "type": "text",
+          "required": true
+              },
+              {
+          "name": "emoji",
+          "display_name": "Emoji",
+          "description": "The emoji to react with",
+          "type": "text",
+          "required": true
+              }
+            ]
+          }
+        ]
       }
     ]
   }
