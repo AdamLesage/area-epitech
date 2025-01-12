@@ -21,6 +21,9 @@ reactions.set('send_message', discord_send_message_to_a_channel);
 reactions.set('delete_message', discord_delete_message_from_a_channel);
 reactions.set('create_channel', discord_create_channel_in_server);
 reactions.set('delete_channel', discord_delete_channel_from_server);
+reactions.set('clear_all_messages_from_channel', discord_delete_all_messages_from_a_channel);
+reactions.set('Clear_custom_hours_messages_from_channel', discord_delete_custom_hours_messages_from_a_channel);
+reactions.set('Clear_custom_days_messages_from_channel', discord_delete_custom_days_messages_from_a_channel);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -417,6 +420,68 @@ async function discord_delete_channel_from_server(serverId, channelName) {
         }
     } catch (error) {
         console.error('Error deleting channel:', error);
+    }
+}
+
+
+async function discord_delete_all_messages_from_a_channel(channelId) {
+    console.log('Clearing all messages from channel:', channelId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            messages.forEach(async message => {
+                await message.delete();
+            });
+            console.log('All messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing all messages:', error);
+    }
+}
+
+
+async function discord_delete_custom_hours_messages_from_a_channel(channelId, hours) {
+    console.log('Clearing custom hours messages from channel:', channelId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            const now = new Date();
+            messages.forEach(async message => {
+                if (now - message.createdAt < hours * 3600000) {
+                    await message.delete();
+                }
+            });
+            console.log('Custom hours messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing custom hours messages:', error);
+    }
+}
+
+async function discord_delete_custom_days_messages_from_a_channel(channelId, days) {
+    console.log('Clearing custom days messages from channel:', channelId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            const now = new Date();
+            messages.forEach(async message => {
+                if (now - message.createdAt < days * 86400000) {
+                    await message.delete();
+                }
+            });
+            console.log('Custom days messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing custom days messages:', error);
     }
 }
 

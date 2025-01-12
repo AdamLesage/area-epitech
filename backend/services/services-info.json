@@ -718,18 +718,18 @@
             "updated_date": "2025-01-08",
             "options": [
               {
-                "name": "channel",
-                "display_name": "Channel",
-                "description": "The channel to send the message to",
-                "type": "text",
-                "required": true
+          "name": "channel",
+          "display_name": "Channel",
+          "description": "The channel to send the message to",
+          "type": "text",
+          "required": true
               },
               {
-                "name": "message",
-                "display_name": "Message",
-                "description": "The message to send",
-                "type": "text",
-                "required": true
+          "name": "message",
+          "display_name": "Message",
+          "description": "The message to send",
+          "type": "text",
+          "required": true
               }
             ]
           },
@@ -742,23 +742,88 @@
             "updated_date": "2025-01-08",
             "options": [
               {
-                "name": "channel",
-                "display_name": "Channel",
-                "description": "The channel to delete the message from",
-                "type": "text",
-                "required": true
+          "name": "channel",
+          "display_name": "Channel",
+          "description": "The channel to delete the message from",
+          "type": "text",
+          "required": true
               },
               {
-                "name": "message",
-                "display_name": "Message",
-                "description": "The message to delete",
-                "type": "text",
-                "required": true
+          "name": "message",
+          "display_name": "Message",
+          "description": "The message to delete",
+          "type": "text",
+          "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_clear_all_messages_from_channel",
+            "display_name": "Clear all messages",
+            "description": "Clear all messages from a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+          "name": "channel",
+          "display_name": "Channel",
+          "description": "The channel to clear messages from",
+          "type": "text",
+          "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_delete_custom_hours_messages_from_channel",
+            "display_name": "Delete messages from custom hours",
+            "description": "Delete messages from a channel within custom hours",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+          "name": "channel",
+          "display_name": "Channel",
+          "description": "The channel to delete messages from",
+          "type": "text",
+          "required": true
+              },
+              {
+          "name": "hours",
+          "display_name": "Hours",
+          "description": "The number of hours to look back for messages to delete",
+          "type": "number",
+          "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_delete_custom_days_messages_from_channel",
+            "display_name": "Delete messages from custom days",
+            "description": "Delete messages from a channel within custom days",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+          "name": "channel",
+          "display_name": "Channel",
+          "description": "The channel to delete messages from",
+          "type": "text",
+          "required": true
+              },
+              {
+          "name": "days",
+          "display_name": "Days",
+          "description": "The number of days to look back for messages to delete",
+          "type": "number",
+          "required": true
               }
             ]
           }
         ]
-      },
+            },
       {
         "name": "channel",
         "display_name": "Channel",
