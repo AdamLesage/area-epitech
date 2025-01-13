@@ -19,7 +19,7 @@
                 <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="scrollToServices">Services</h1>
                 <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="scrollToReviews">Reviews</h1>
             </div>
-            <div class="w-1/2 flex justify-end gap-8">
+            <div class="w-1/2 flex justify-end gap-8" v-if="!user">
                 <LoginButtonText
                     class="hover:cursor-pointer"
                     color="#4C4CDC"
@@ -28,6 +28,12 @@
                     class="hover:cursor-pointer"
                     color="white"
                     text-color="#4C4CDC" />
+            </div>
+            <div class="w-1/2 flex justify-end gap-8" v-else>
+                <DashboardButtonText
+                    class="hover:cursor-pointer"
+                    color="#4C4CDC"
+                    text-color="white" />
             </div>
         </nav>
 
@@ -277,9 +283,11 @@ import ArrowComponent from '@/components/ArrowComponent.vue';
 import TimelineComponent from '@/components/TimelineComponent.vue';
 import RateComponent from '@/components/RateComponent.vue';
 import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
+import DashboardButtonText from '@/components/DashboardButtonText.vue';
 
 import { Service } from '@/types/services';
 import { useServiceStore } from '@/stores/service';
+import { useUserStore } from '@/stores/user';
 
 import UserSvgComponent from '@/components/UserSvgComponent.vue';
 
@@ -289,6 +297,8 @@ const serviceStore = useServiceStore();
 const userReview = ref('');
 const userRate = ref(1);
 const showDetails = ref(false);
+const userStore = useUserStore();
+const user = ref(userStore.user);
 
 function sendReview() {
     console.log('Review:', userReview.value, 'Rate:', userRate.value);
@@ -413,6 +423,9 @@ onMounted(async() => {
         currentStep.value = 0;
     }
     availableServices.value = serviceStore.services;
+    // wait 0.5s to get the user
+    await new Promise(resolve => setTimeout(resolve, 500));
+    user.value = userStore.user;
 })
 </script>
 
