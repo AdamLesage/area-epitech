@@ -1,5 +1,5 @@
 // Require the necessary discord.js classes and axios for HTTP requests
-const { Client, Events, GatewayIntentBits, Partials } = require('discord.js');
+const { Client, Events, GatewayIntentBits, Partials, ChannelType, PermissionsBitField } = require('discord.js');
 const axios = require('axios');
 const https = require('https');
 const reactions = require('../services/reactions');
@@ -15,12 +15,13 @@ const client = new Client({
         GatewayIntentBits.Guilds, 
         GatewayIntentBits.GuildMessages, 
         GatewayIntentBits.GuildMessageReactions,  
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
     ],
     partials: [
         Partials.Message, 
         Partials.Channel, 
-        Partials.Reaction
+        Partials.Reaction,
+        Partials.User,
     ]
 });
 
@@ -278,7 +279,6 @@ client.on(Events.MessageReactionRemoveEmoji, async (reaction) => {
     try {
         // Send a POST request to your webhook route with the emoji removal data
         await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, reactionData, { httpsAgent: agent });
-        console.log('Emoji removal data sent to webhook successfully');
     } catch (error) {
         console.error('Error sending emoji removal data to webhook:', error);
     }
@@ -301,5 +301,375 @@ client.on(Events.MessageReactionRemoveAll, async (message) => {
         console.error('Error sending all reactions removed data to webhook:', error);
     }
 });
+
+
+client.on(Events.GuildRoleCreate, async (role) => {
+    const roleData = {
+        roleId: role.id,  // Add role ID
+        roleName: role.name,  // Add role name
+        serverId: role.guild.id,  // Add server ID
+        createdAt: role.createdAt,  // Add creation timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the role data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, roleData, { httpsAgent: agent });
+        console.log('Role data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending role data to webhook:', error);
+    }
+}
+);
+
+client.on(Events.GuildRoleDelete, async (role) => {
+    const roleData = {
+        roleId: role.id,  // Add role ID
+        roleName: role.name,  // Add role name
+        serverId: role.guild.id,  // Add server ID
+        deletedAt: new Date(),  // Add deletion timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the deleted role data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, roleData, { httpsAgent: agent });
+        console.log('Deleted role data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending deleted role data to webhook:', error);
+    }
+}
+);
+
+
+//    It's function to test it , it ll be remove after the test
+//
+// // Function to send a message to a specific channel
+async function sendMessageToChannel(channelId, messageContent) {
+    console.log('Sending message content:', messageContent);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            await channel.send(messageContent);
+            console.log('Message sent successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+}
+
+// //Function to delete a message from a specific channel
+async function deleteMessageFromChannel(channelId, messageId) {
+    console.log('Deleting message:', messageId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const message = await channel.messages.fetch(messageId);
+            if (message) {
+                await message.delete();
+                console.log('Message deleted successfully');
+            } else {
+                console.error('Message not found');
+            }
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error deleting message:', error);
+    }
+}
+
+
+
+// // Function to create a channel
+async function createChannelInServer(serverId, channelName, channelType) {
+    console.log('Creating channel:', channelName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            await server.channels.create({
+                name: channelName,
+                type: ChannelType.GuildText // Use ChannelType.GuildText instead of "GUILD_TEXT"
+            });
+            console.log('Channel created successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error creating channel:', error);
+    }
+}
+
+
+// //Function to delete a channel
+
+async function deleteChannelFromServer(serverId, channelName) {
+    console.log('Deleting channel:', channelName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const channel = server.channels.cache.find(channel => channel.name === channelName);
+            if (channel) {
+                await channel.delete();
+                console.log('Channel deleted successfully');
+            } else {
+                console.error('Channel not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error deleting channel:', error);
+    }
+}
+
+
+async function clear_all_message_from_channel(channelId) {
+    console.log('Clearing all messages from channel:', channelId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            messages.forEach(async message => {
+                await message.delete();
+            });
+            console.log('All messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing all messages:', error);
+    }
+}
+
+
+async function clear_custom_hours_message_from_channel(channelId, hours) {
+    console.log('Clearing custom hours messages from channel:', channelId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            const now = new Date();
+            messages.forEach(async message => {
+                if (now - message.createdAt < hours * 3600000) {
+                    await message.delete();
+                }
+            });
+            console.log('Custom hours messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing custom hours messages:', error);
+    }
+}
+
+async function clear_custom_days_message_from_channel(channelId, days) {
+    console.log('Clearing custom days messages from channel:', channelId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            const now = new Date();
+            messages.forEach(async message => {
+                if (now - message.createdAt < days * 86400000) {
+                    await message.delete();
+                }
+            });
+            console.log('Custom days messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing custom days messages:', error);
+    }
+}
+
+
+async function sendReactionToMessage(channelId, messageId, emoji) {
+    console.log('Sending reaction to message:', messageId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const message = await channel.messages.fetch(messageId);
+            if (message) {
+                await message.react(emoji);
+                console.log('Reaction sent successfully');
+            } else {
+                console.error('Message not found');
+            }
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error sending reaction:', error);
+    }
+}
+
+
+async function removeReactionFromMessage(channelId, messageId, emoji) {
+    console.log('Removing reaction from message:', messageId);
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (channel) {
+            const message = await channel.messages.fetch(messageId);
+            if (message) {
+                await message.reactions.cache.get(emoji).remove();
+                console.log('Reaction removed successfully');
+            } else {
+                console.error('Message not found');
+            }
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error removing reaction:', error);
+    }
+}
+
+async function removeUserFromServer(serverId, userId) {
+    console.log('Removing user from server:', userId);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const member = await server.members.fetch(userId);
+            if (member) {
+                await member.kick();
+                console.log('User removed successfully');
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error removing user:', error);
+    }
+}
+
+async function banUserFromServer(serverId, userId) {
+    console.log('Banning user from server:', userId);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const member = await server.members.fetch(userId);
+            if (member) {
+                await member.ban();
+                console.log('User banned successfully');
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error banning user:', error);
+    }
+}
+
+async function unbanUserFromServer(serverId, userId) {
+    console.log('Unbanning user from server:', userId);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            await server.members.unban(userId);
+            console.log('User unbanned successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error unbanning user:', error);
+    }
+}
+async function createRoleInServer(serverId, roleName, permissions, color) {
+    console.log('Creating role:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            await server.roles.create({
+                name: roleName,
+                permissions: permissions,
+                color: color
+            });
+            console.log('Role created successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error creating role:', error);
+    }
+}
+
+
+
+async function deleteRoleFromServer(serverId, roleName) {
+    console.log('Deleting role:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const role = server.roles.cache.find(role => role.name === roleName);
+            if (role) {
+                await role.delete();
+                console.log('Role deleted successfully');
+            } else {
+                console.error('Role not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error deleting role:', error);
+    }
+}
+
+async function addRoleToUser(serverId, userId, roleName) {
+    console.log('Adding role to user:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const member = await server.members.fetch(userId);
+            if (member) {
+                const role = server.roles.cache.find(role => role.name === roleName);
+                if (role) {
+                    await member.roles.add(role);
+                    console.log('Role added to user successfully');
+                } else {
+                    console.error('Role not found');
+                }
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error adding role to user:', error);
+    }
+}
+
+async function removeRoleFromUser(serverId, userId, roleName) {
+    console.log('Removing role from user:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const member = await server.members.fetch(userId);
+            if (member) {
+                const role = server.roles.cache.find(role => role.name === roleName);
+                if (role) {
+                    await member.roles.remove(role);
+                    console.log('Role removed from user successfully');
+                } else {
+                    console.error('Role not found');
+                }
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error removing role from user:', error);
+    }
+}
 
 module.exports = { discordClient: client };
