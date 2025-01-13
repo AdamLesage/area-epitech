@@ -17,6 +17,10 @@ reactions.set('create_pull_request', github_pull_request);
 
 reactions.set('playlist_create', spotify_create_playlist);
 
+reactions.set('update_athlete', strava_update_athlete);
+reactions.set('create_activity', strava_create_activity);
+reactions.set('update_activity', strava_update_activity);
+
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -334,6 +338,97 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         return;
     }
     console.log("Playlist created successfully:", response);   
+}
+
+async function strava_update_athlete(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "strava");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.put(`https://www.strava.com/api/v3/athlete`,
+        {
+            "weight": reactionData.weight || 0,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_athlete`);
+        return;
+    }
+    console.log("Athlete updated successfully:", response);
+}
+
+async function strava_create_activity(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "strava");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://www.strava.com/api/v3/activities`,
+        {
+            "name": reactionData.name || "default name",
+            "type": reactionData.type || "Run",
+            "start_date_local": reactionData.start_date_local || new Date().toISOString(),
+            "elapsed_time": reactionData.elapsed_time || 0,
+            "description": reactionData.description || "enter the description here",
+            "distance": reactionData.distance || 0,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+
+    if (response.status > 299) {
+        console.error(`Error calling reaction create_activity`);
+        return;
+    }
+    console.log("Activity created successfully:", response);
+}
+
+async function strava_update_activity(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "strava");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.put(`https://www.strava.com/api/v3/activities/${reactionData.activity_id}`,
+        {
+            "name": reactionData.name || "default name",
+            "type": reactionData.type || "Run",
+            "start_date_local": reactionData.start_date_local || new Date().toISOString(),
+            "elapsed_time": reactionData.elapsed_time || 0,
+            "description": reactionData.description || "enter the description here",
+            "distance": reactionData.distance || 0,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_activity`);
+        return;
+    }
+    console.log("Activity updated successfully:", response);
 }
 
 module.exports = reactions;

@@ -17,9 +17,38 @@ const redis = new Redis({
 });
 
 // Verify the webhook
-router.post('/webhook', (req, res) => {
-    console.log("webhook event received!", req.query, req.body);
-    res.status(200).send('EVENT_RECEIVED');
+router.post('/webhook', async (req, res) => {
+    try {
+        const actionName = `${req.body.object_type}.${req.body.aspect_type}`;
+        // const actionName = `${req.body.aspect_type}.${req.body.object_type}`;
+
+        console.log("receive strava webhook", actionName)
+        // get active strava area
+        const activeStravaActions = await prisma.actionReaction.findMany({
+            where: {
+                isActive: true,
+                action: {
+                    service: {
+                        name: "strava",
+                    },
+                },
+            },
+        });
+
+        const promises = activeStravaActions.map(async (action) => {
+            // Push each action to the Redis queue
+            console.log("send to worker", action.uuid)
+            await redis.lpush(action.uuid, JSON.stringify({event: actionName, data: req.body}));
+        });
+
+        await Promise.all(promises);
+
+        // Send a success response
+        return res.status(200).send('Webhook processed successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(`Error receiving webhook: ${error.message}`);
+    }
 });
 
 // Adds support for GET requests to our webhook

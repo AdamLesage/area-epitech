@@ -217,8 +217,36 @@
   {
     "name":"strava",
     "actions": [
+      {
+        "name":"activity.created",
+        "description":"A new activity is created"
+      },
+      {
+        "name":"activity.updated",
+        "description":"An activity is updated"
+      },
+      {
+        "name":"activity.deleted",
+        "description":"An activity is deleted"
+      },
+      {
+        "name":"athlete.updated",
+        "description":"An athlete is updated"
+      }
     ],
     "reactions": [
+      {
+        "name":"create_activity",
+        "description":"Create an activity"
+      },
+      {
+        "name":"update_activity",
+        "description":"Update an activity"
+      },
+      {
+        "name":"update_athlete",
+        "description":"Update an athlete"
+      }
     ]
   }
 ]

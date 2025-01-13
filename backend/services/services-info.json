@@ -679,7 +679,25 @@
       {
         "name": "athlete",
         "display_name": "Athlete",
-        "actions": [],
+        "actions": [
+          {
+            "name": "athlete.updated",
+            "display_name": "Athlete Updated",
+            "description": "An athlete is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "weight",
+                "display_name": "Weight",
+                "description": "The weight of the athlete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
         "reactions": [
           {
             "name": "update_athlete",
@@ -703,7 +721,43 @@
       {
         "name": "activity",
         "display_name": "Activity",
-        "actions": [],
+        "actions": [
+          {
+            "name": "activity.created",
+            "display_name": "Activity Created",
+            "description": "A new activity is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": []
+          },
+          {
+            "name": "activity.deleted",
+            "display_name": "Activity Deleted",
+            "description": "A new activity is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": []
+          },
+          {
+            "name": "activity.updated",
+            "display_name": "Activity Updated",
+            "description": "An activity is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "activity_id",
+                "display_name": "Activity ID",
+                "description": "The ID of the activity",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
         "reactions": [
           {
             "name": "create_activity",
@@ -738,7 +792,7 @@
                 "name": "start_date_local",
                 "display_name": "Start Date",
                 "description": "The start date of the activity",
-                "type": "datetime",
+                "type": "text",
                 "required": true
               },
               {
