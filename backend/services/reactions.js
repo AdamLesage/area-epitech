@@ -2,6 +2,7 @@ const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { Dropbox } = require('dropbox');
+const { google } = require('googleapis');
 
 // Create a new Map to store reaction handlers
 const reactions = new Map();
@@ -16,6 +17,8 @@ reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
 
 reactions.set('playlist_create', spotify_create_playlist);
+
+reactions.set('gmail_send_email', gmail_send_email);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -334,6 +337,52 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         return;
     }
     console.log("Playlist created successfully:", response);   
+}
+
+/**
+ * Handler function for the 'gmail_send_email' reaction.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_send_email(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!(reactionData.from && reactionData.to && reactionData.subject && reactionData.body)) {
+            throw new Error("Missing required email data");
+        }
+        const emailContent = [
+            `From: ${reactionData.from}`,
+            `To: ${reactionData.to}`,
+            `Subject: ${reactionData.subject}`,
+            '',
+            reactionData.body || ''
+        ].join('\n');
+
+        // Encode email content to base64
+        const rawMessage = Buffer.from(emailContent)
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        // Send the email using the Gmail API
+        const response = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: rawMessage
+            }
+        });
+
+        console.log("Email sent successfully:", response.data);
+    } catch (error) {
+        console.error("Error sending email via Gmail:", error);
+    }
 }
 
 module.exports = reactions;

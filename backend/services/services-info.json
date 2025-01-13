@@ -685,7 +685,7 @@
           },
           {
             "name": "gmail_on_mail_deleted",
-            "display_name": "Gmail on new mail",
+            "display_name": "Gmail on delete mail",
             "description": "Triggered when a mail is deleted from Gmail.",
             "version": "1.0.0",
             "release_date": "2025-01-11",
@@ -695,6 +695,44 @@
           }
         ],
         "reactions": [
+          {
+            "name": "gmail_send_email",
+            "display_name": "Gmail send email",
+            "description": "Send an email via Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-11",
+            "updated_date": "2025-01-11",
+            "options": [
+              {
+                "name": "from",
+                "display_name": "from",
+                "description": "the name of the sender",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "to",
+                "display_name": "to",
+                "description": "the name of the receiver",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "subject",
+                "display_name": "subject",
+                "description": "the subject of the mail",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "body",
+                "description": "the body of the mail",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
         ]
       },
       {
@@ -743,7 +781,7 @@
           },
           {
             "name": "gmail_on_label_removed",
-            "display_name": "Gmail on label added",
+            "display_name": "Gmail on label removed",
             "description": "Triggered when a label is removed from a mail in Gmail.",
             "version": "1.0.0",
             "release_date": "2025-01-11",

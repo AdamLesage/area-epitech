@@ -45,21 +45,19 @@ function useActionReturn(returnAction, reactionData) {
  */
 router.post('/reaction/:uuid', async (req, res) => {
     try {
-        console.log("reicieve form worker", req.body)
-        // console.log(req.body.message.message)
-        // const uuid = req.params.uuid;
-        // const area = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
-        // if (area == null) {
-        //     return res.status(404).send("unknow action-Reaction");
-        // }
-        // console.log("Called area", area);
-        // const reaction = await prisma.reaction.findUnique({ where: { id: area.reactionId } });
-        // if (reaction == null || reactions.get(reaction.name) == undefined) {
-        //     return res.status(404).send("unknow Reaction");
-        // }
-        // console.log(area.reactionData, req.body)
-        // area.reactionData = useActionReturn(req.body, area.reactionData);
-        // await reactions.get(reaction.name)(area.reactionData, req.body, area.userUuid);
+        const uuid = req.params.uuid;
+        const area = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
+        if (area == null) {
+            return res.status(404).send("unknow action-Reaction");
+        }
+        console.log("Called area", area);
+        const reaction = await prisma.reaction.findUnique({ where: { id: area.reactionId } });
+        if (reaction == null || reactions.get(reaction.name) == undefined) {
+            return res.status(404).send("unknow Reaction");
+        }
+        console.log(area.reactionData, req.body)
+        area.reactionData = useActionReturn(req.body, area.reactionData);
+        await reactions.get(reaction.name)(area.reactionData, req.body, area.userUuid);
         res.json({ message: "receive reaction" });
     } catch (e) {
         console.error("Error on receive reaction", e);
