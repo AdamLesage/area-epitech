@@ -30,6 +30,9 @@ reactions.set("delete_role", discord_delete_role_from_server);
 reactions.set("edit_role", discord_edit_role_in_server);
 reactions.set("add_role_to_user", discord_add_role_to_user);
 reactions.set("remove_role_from_user", discord_remove_role_from_user);
+reactions.set("ban_user", discord_ban_user_from_server);
+reactions.set("unban_user", discord_unban_user_from_server);
+
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -650,6 +653,41 @@ async function discord_remove_role_from_user(serverId, userId, roleName) {
         }
     } catch (error) {
         console.error('Error removing role from user:', error);
+    }
+}
+
+async function discord_ban_user_from_server(serverId, userId) {
+    console.log('Banning user from server:', userId);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const member = await server.members.fetch(userId);
+            if (member) {
+                await member.ban();
+                console.log('User banned successfully');
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error banning user:', error);
+    }
+}
+
+async function discord_unban_user_from_server(serverId, userId) {
+    console.log('Unbanning user from server:', userId);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            await server.members.unban(userId);
+            console.log('User unbanned successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error unbanning user:', error);
     }
 }
 

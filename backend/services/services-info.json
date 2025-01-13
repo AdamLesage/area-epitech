@@ -1185,6 +1185,61 @@
           ]
         }
       ]
+    },
+    {
+      "name": "ban",
+      "display_name": "Ban",
+      "actions": [],
+      "reactions": [
+        {
+          "name": "discord_ban_user_from_a_server",
+          "display_name": "Ban a user",
+          "description": "Ban a user from a server",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": [
+            {
+              "name": "server",
+              "display_name": "Server",
+              "description": "The server to ban the user from",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "user",
+              "display_name": "User",
+              "description": "The user to ban",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "discord_unban_user_from_a_server",
+          "display_name": "Unban a user",
+          "description": "Unban a user from a server",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": [
+            {
+              "name": "server",
+              "display_name": "Server",
+              "description": "The server to unban the user from",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "user",
+              "display_name": "User",
+              "description": "The user to unban",
+              "type": "text",
+              "required": true
+            }
+          ]
+        }
+      ]
     }
     ]
   }
