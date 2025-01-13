@@ -680,6 +680,7 @@
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
+            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
             "options": []
           },
           {
@@ -689,6 +690,7 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
+            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
             "options": []
           }
         ],
@@ -706,12 +708,35 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
+            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
             "options": [
               {
                 "name": "type_label",
                 "display_name": "Type label",
                 "description": "the type of the triggered label",
-                "type": "text",
+                "type": "select",
+                "options": [
+                  "INBOX",         
+                  "STARRED",         
+                  "UNREAD",          
+                  "SENT",           
+                  "DRAFT",
+                  "TRASH",     
+                  "SPAM",    
+                  "IMPORTANT",
+                  "CHAT",
+                  "CATEGORY_PERSONAL",
+                  "CATEGORY_SOCIAL",
+                  "CATEGORY_PROMOTIONS",
+                  "CATEGORY_UPDATES",
+                  "CATEGORY_FORUMS",
+                  "CATEGORY_PURCHASES",
+                  "CATEGORY_FINANCE",
+                  "CATEGORY_TRAVEL",
+                  "CATEGORY_SHIPPING",
+                  "CATEGORY_RESERVATIONS",
+                  "CATEGORY_REPORTS"
+                ],
                 "required": false
               }
             ]
@@ -723,12 +748,35 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
+            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
             "options": [
               {
                 "name": "type_label",
                 "display_name": "Type label",
                 "description": "the type of the triggered label",
-                "type": "text",
+                "type": "select",
+                "options": [
+                  "INBOX",         
+                  "STARRED",
+                  "UNREAD",          
+                  "SENT",           
+                  "DRAFT",
+                  "TRASH",
+                  "SPAM",    
+                  "IMPORTANT",
+                  "CHAT",
+                  "CATEGORY_PERSONAL",
+                  "CATEGORY_SOCIAL",
+                  "CATEGORY_PROMOTIONS",
+                  "CATEGORY_UPDATES",
+                  "CATEGORY_FORUMS",
+                  "CATEGORY_PURCHASES",
+                  "CATEGORY_FINANCE",
+                  "CATEGORY_TRAVEL",
+                  "CATEGORY_SHIPPING",
+                  "CATEGORY_RESERVATIONS",
+                  "CATEGORY_REPORTS"
+                ],
                 "required": false
               }
             ]

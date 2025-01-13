@@ -66,27 +66,20 @@ async function getLastHistoryId() {
 function handleEvent(eventType, message) {
     switch (eventType) {
         case 'messageAdded':
-            console.log(`New message added: ${message.message.id}`);
-            send({ event: 'messageAdded', messageId: message.message.id });
+            send(message);
             break;
-
         case 'messageDeleted':
-            console.log(`Message deleted: ${message.message.id}`);
-            send({ event: 'messageDeleted', messageId: message.message.id });
+            send(message);
             break;
         case 'labelsAdded':
-            console.log(`Labels removed from message ${message.message.id}:`, message.labels);
-            send({ event: 'labelsAdded', messageId: message.message.id, labels: message.labels });
+            send(message);
             break;
 
         case 'labelsRemoved':
-            console.log(`Labels removed from message ${message.message.id}:`, message.labels);
-            send({ event: 'labelsRemoved', messageId: message.message.id, labels: message.labels });
+            send(message);
             break;
-
         default:
             console.log(`Unknown event type: ${eventType}`);
-            send({ event: 'unknown', message: message });
     }
 }
 
@@ -109,6 +102,42 @@ async function getLabels(auth) {
     }, {});
 }
 
+function getBodyFromPayload(payload) {
+    let body = '';
+    if (payload.parts) {
+        for (const part of payload.parts) {
+            if (part.mimeType === 'text/plain' && part.body.data) {
+                body += Buffer.from(part.body.data, 'base64').toString('utf-8');
+            }
+        }
+    } else if (payload.body && payload.body.data) {
+        body += Buffer.from(payload.body.data, 'base64').toString('utf-8');
+    }
+    return body;
+}
+
+async function messageInfo(gmail, messageId, labelMap) {
+    response = await gmail.users.messages.get({
+        userId: 'me',
+        id: messageId
+    })
+    const message = response.data;
+    console.log(message);
+    const headers = message.payload.headers;
+    const mailInfo = {
+        id: messageId,
+        threadId: message.threadId,
+        snippet: message.snippet,
+        labels: message.labelIds.map(labelId => labelMap[labelId] || labelId),
+        subject: headers.find(header => header.name === 'Subject')?.value || '',
+        from: headers.find(header => header.name === 'From')?.value || '',
+        to: headers.find(header => header.name === 'To')?.value || '',
+        date: headers.find(header => header.name === 'Date')?.value || '',
+        body: getBodyFromPayload(message.payload)
+    };
+    return mailInfo;
+}
+
 /**
  * @brief Handles a webhook notification by fetching history items and processing events.
  * @param {Object} webhookData - The data from the webhook notification.
@@ -127,33 +156,42 @@ async function handleNotification(webhookData) {
     });
     const labelMap = await getLabels(auth);
 
+    console.log(historyResponse.data)
     if (historyResponse.data.history) {
-        historyResponse.data.history.forEach(event => {
+        for (const event of historyResponse.data.history) {
             if (event.messagesAdded && targetAction === "gmail_on_new_mail") {
-                event.messagesAdded.forEach(message => {
-                    handleEvent('messageAdded', message);
-                });
+                for (const message of event.messagesAdded) {
+                    const mailInfo = await messageInfo(gmail, message.message.id, labelMap);
+                    handleEvent('messageAdded', mailInfo);
+                }
             }
             if (event.messagesDeleted && targetAction === "gmail_on_deleted_mail") {
-                event.messagesDeleted.forEach(message => {
-                    handleEvent('messageDeleted', message);
-                });
+                for (const message of event.messagesDeleted) {
+                    mailInfo = await messageInfo(gmail, message.message.id, labelMap);
+                    handleEvent('messageDeleted', mailInfo);
+                };
             }
             if (event.labelsAdded && targetAction === "gmail_on_label_added") {
-                event.labelsAdded.forEach(message => {
+                for (const message of event.labelsAdded) {
                     const addedLabels = message.labelIds.map(id => labelMap[id] || id);
-                    console.log(`Labels added to message ${message.message.id}:`, addedLabels);
-                    handleEvent('labelsAdded', { message, labels: addedLabels });
-                });
+                    if (actionData.type_label === undefined || actionData.type_label === null || addedLabels.includes(actionData.type_label)) {
+                        console.log("messageId", message.message.id)
+                        mailInfo = await messageInfo(gmail, message.message.id, labelMap);
+                        handleEvent('labelsAdded', mailInfo);
+                    }
+                };
             }
             if (event.labelsRemoved && targetAction === "gmail_on_label_removed") {
-                event.labelsRemoved.forEach(message => {
+                for (const message of event.labelsRemoved) {
                     const removedLabels = message.labelIds.map(id => labelMap[id] || id);
                     console.log(`Labels removed from message ${message.message.id}:`, removedLabels);
-                    handleEvent('labelsRemoved', { message, labels: removedLabels });
-                });
+                    if (actionData.type_label === undefined || actionData.type_label === null || removedLabels.includes(actionData.type_label)) {
+                        mailInfo = await messageInfo(gmail, message.message.id, labelMap);
+                        handleEvent('labelsRemoved', mailInfo);
+                    }
+                };
             }
-        });
+        };
     } else {
         send({ "event": 'not know event'})
         console.log('No history items found for this historyId');

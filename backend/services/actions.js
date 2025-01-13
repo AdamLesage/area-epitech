@@ -29,6 +29,9 @@ actions.set('pull_request.opened', create_github_workers);
 actions.set('pull_request.closed', create_github_workers);
 // Gmail Action
 actions.set('gmail_on_new_mail', create_gmail_workers);
+actions.set('gmail_on_mail_deleted', create_gmail_workers);
+actions.set('gmail_on_label_added', create_gmail_workers);
+actions.set('gmail_on_label_removed', create_gmail_workers);
 
 /**
  * @brief Ensures that a Docker image exists.

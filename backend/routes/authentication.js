@@ -530,8 +530,7 @@ router.get('/google', async(req, res) => {
             'https://www.googleapis.com/auth/gmail.readonly',
             'https://www.googleapis.com/auth/gmail.modify',
             'https://www.googleapis.com/auth/gmail.insert',
-            'https://www.googleapis.com/auth/gmail.settings.basic',
-            'https://www.googleapis.com/auth/gmail.metadata']
+            'https://www.googleapis.com/auth/gmail.settings.basic',]
     })(req, res);
 });
 
