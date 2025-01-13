@@ -512,11 +512,38 @@ async function discord_send_reaction_to_message(channelId, messageId, emoji) {
 }
 
 
-async function discord_create_role_in_server(serverId, roleName, permissions, color) {
+async function discord_create_role_in_server(serverId, roleName, permissionType, color) {
     console.log('Creating role:', roleName);
     try {
         const server = await client.guilds.fetch(serverId);
         if (server) {
+            let permissions;
+            switch (permissionType) {
+                case 'usual':
+                    permissions = [
+                        PermissionsBitField.Flags.ViewChannel,
+                        PermissionsBitField.Flags.SendMessages,
+                        PermissionsBitField.Flags.ReadMessageHistory
+                    ];
+                    break;
+                case 'explorer':
+                    permissions = [
+                        PermissionsBitField.Flags.ViewChannel,
+                        PermissionsBitField.Flags.SendMessages,
+                        PermissionsBitField.Flags.ReadMessageHistory,
+                        PermissionsBitField.Flags.ManageMessages,
+                        PermissionsBitField.Flags.ManageChannels
+                    ];
+                    break;
+                case 'admin':
+                    permissions = [
+                        PermissionsBitField.Flags.Administrator
+                    ];
+                    break;
+                default:
+                    throw new Error('Invalid permission type');
+            }
+
             await server.roles.create({
                 name: roleName,
                 permissions: permissions,
@@ -530,7 +557,6 @@ async function discord_create_role_in_server(serverId, roleName, permissions, co
         console.error('Error creating role:', error);
     }
 }
-
 
 
 async function discord_delete_role_from_server(serverId, roleName) {
