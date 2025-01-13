@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
+const servicesInfo = require('../services/services-info.json');
 
 /**
  * @brief return a list of all actions of the user
@@ -217,6 +218,66 @@ router.get('/areas', async (req, res) => {
         }
 
         const areas = await prisma.actionReaction.findMany({ where: { userUuid: user.uuid } });
+
+        for (const area of areas) {
+            const action = await prisma.action.findUnique({ where: { id: area.actionId } });
+            const reaction = await prisma.reaction.findUnique({ where: { id: area.reactionId } });
+
+            const actionService = await prisma.service.findUnique({ where: { id: action.serviceId } });
+            const reactionService = await prisma.service.findUnique({ where: { id: reaction.serviceId } });
+
+            const actionServiceInfos = servicesInfo.find((service) => service.name === actionService.name);
+            if (!actionServiceInfos) {
+                console.error(`Action service info not found for service: ${actionService.name}`);
+                continue;
+            }
+
+            const actionCategory = actionServiceInfos.categories.find((category) =>
+                category.actions.some((act) => act.name === action.name)
+            );
+
+            if (!actionCategory) {
+                console.error(`Action category not found for action: ${action.name}`);
+                continue;
+            }
+
+            const actionInfos = actionCategory.actions.find((act) => act.name === action.name);
+            if (!actionInfos) {
+                console.error(`Action info not found for action: ${action.name}`);
+                continue;
+            }
+
+            const reactionServiceInfos = servicesInfo.find((service) => service.name === reactionService.name);
+            if (!reactionServiceInfos) {
+                console.error(`Reaction service info not found for service: ${reactionService.name}`);
+                continue;
+            }
+
+            const reactionCategory = reactionServiceInfos.categories.find((category) =>
+                category.reactions.some((react) => react.name === reaction.name)
+            );
+
+            if (!reactionCategory) {
+                console.error(`Reaction category not found for reaction: ${reaction.name}`);
+                continue;
+            }
+
+            const reactionInfos = reactionCategory.reactions.find((react) => react.name === reaction.name);
+            if (!reactionInfos) {
+                console.error(`Reaction info not found for reaction: ${reaction.name}`);
+                continue;
+            }
+
+            area.actionName = actionInfos.display_name;
+            area.actionDescription = actionInfos.description;
+
+            area.reactionName = reactionInfos.display_name;
+            area.reactionDescription = reactionInfos.description;
+
+            area.actionService = actionService.name;
+            area.reactionService = reactionService.name;
+        }        
+
         return res.status(200).json(areas);
     } catch (error) {
         console.error('Error fetching user:', error);
