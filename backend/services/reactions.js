@@ -20,7 +20,8 @@ reactions.set('playlist_create', spotify_create_playlist);
 
 reactions.set('gmail_send_email', gmail_send_email);
 reactions.set('gmail_delete_email', gmail_delete_email);
-
+reactions.set('gmail_add_label', gmail_add_label)
+reactions.set('gmail_remove_label', gmail_remove_label)
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -414,4 +415,70 @@ async function gmail_delete_email(reactionData, actionResponseData, userUuid) {
         console.error("Error sending email via Gmail:", error);
     }
 }
+
+/**
+ * Handler function for adding a label to a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_add_label(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!(reactionData.mail_id) || !(reactionData.label_id)) {
+            throw new Error("Missing required email or label data");
+        }
+
+        const response = await gmail.users.messages.modify({
+            userId: 'me',
+            id: reactionData.mail_id,
+            requestBody: {
+                addLabelIds: [reactionData.label_id]
+            }
+        });
+
+        console.log("Label added successfully to email:", response.data);
+    } catch (error) {
+        console.error("Error adding label via Gmail:", error);
+    }
+}
+
+/**
+ * Handler function for removing a label from a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!(reactionData.mail_id) || !(reactionData.label_id)) {
+            throw new Error("Missing required email or label data");
+        }
+
+        const response = await gmail.users.messages.modify({
+            userId: 'me',
+            id: reactionData.mail_id,
+            requestBody: {
+                removeLabelIds: [reactionData.label_id]
+            }
+        });
+
+        console.log("Label removed successfully from email:", response.data);
+    } catch (error) {
+        console.error("Error removing label via Gmail:", error);
+    }
+}
+
+
 module.exports = reactions;

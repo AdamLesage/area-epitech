@@ -838,6 +838,54 @@
           }
         ],
         "reactions": [
+          {
+            "name": "gmail_add_label",
+            "display_name": "Gmail add label",
+            "description": "add a label from a email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to delete",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "label_id",
+                "display_name": "lable Id",
+                "description": "the label you want to remove",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "gmail_remove_label",
+            "display_name": "Gmail remove label",
+            "description": "remove a label from a email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to delete",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "label_id",
+                "display_name": "lable Id",
+                "description": "the label you want to remove",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
         ]
       }
     ]
