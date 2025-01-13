@@ -78,6 +78,34 @@
       {
         "name":"playlist_create",
         "description":"Create a playlist"
+      },
+      {
+        "name":"playlist_add_track",
+        "description":"Add a track to a playlist"
+      },
+      {
+        "name":"save_track",
+        "description":"Save a track"
+      },
+      {
+        "name":"skip_track",
+        "description":"Skip a track"
+      },
+      {
+        "name":"previous_track",
+        "description":"skip to previous track"
+      },
+      {
+        "name":"start_resume",
+        "description":"Start or resume a track"
+      },
+      {
+        "name": "pause",
+        "description":"Pause a track"
+      },
+      {
+        "name":"add_track_to_queue",
+        "description":"Add the track of your choice to the queue"
       }
     ]
   },

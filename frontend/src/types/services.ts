@@ -63,7 +63,9 @@ export type OptionType =
     | 'month'
     | 'week'
     | 'boolean'
-    | 'GithubRepository';
+    | 'GithubRepository'
+    | 'SpotifyPlaylist'
+    | 'SpotifyMusic';
 
 export interface Reaction {
     name: string;
