@@ -158,16 +158,16 @@
         "description": "Send an email via Gmail."
       },
       {
+        "name": "gmail_delete_email",
+        "description": "Delete an email from Gmail."
+      },
+      {
         "name": "gmail_add_label",
         "description": "Add a label to a mail in Gmail."
       },
       {
         "name": "gmail_remove_label",
         "description": "Remove a label from a mail in Gmail."
-      },
-      {
-        "name": "gmail_delete_email",
-        "description": "Delete an email from Gmail."
       },
       {
         "name": "gmail_reply_to_email",

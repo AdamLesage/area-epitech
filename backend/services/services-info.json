@@ -732,6 +732,23 @@
                 "required": true
               }
             ]
+          },
+          {
+            "name": "gmail_delete_email",
+            "display_name": "Gmail delete email",
+            "description": "delete email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to delete",
+                "type": "text",
+                "required": true
+              }
+            ]
           }
         ]
       },

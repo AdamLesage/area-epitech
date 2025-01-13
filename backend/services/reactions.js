@@ -19,6 +19,7 @@ reactions.set('create_pull_request', github_pull_request);
 reactions.set('playlist_create', spotify_create_playlist);
 
 reactions.set('gmail_send_email', gmail_send_email);
+reactions.set('gmail_delete_email', gmail_delete_email);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -385,4 +386,32 @@ async function gmail_send_email(reactionData, actionResponseData, userUuid) {
     }
 }
 
+/**
+ * Handler function for the 'gmail_delete_email' reaction.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_delete_email(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!(reactionData.mail_id)) {
+            throw new Error("Missing required email data");
+        }
+
+        // Send the email using the Gmail API
+        const response = await gmail.users.messages.delete({
+            userId: 'me',
+            id: reactionData.mail_id
+        });
+        console.log("Email delete successfully:", response.data);
+    } catch (error) {
+        console.error("Error sending email via Gmail:", error);
+    }
+}
 module.exports = reactions;
