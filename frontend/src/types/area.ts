@@ -11,4 +11,10 @@ export interface Area {
     containerUuid: string;
     actionId: number;
     reactionId: number;
+    actionName: string;
+    actionDescription: string;
+    actionService: string;
+    reactionName: string;
+    reactionDescription: string;
+    reactionService: string;
 }
