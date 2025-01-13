@@ -339,6 +339,25 @@ client.on(Events.GuildRoleDelete, async (role) => {
 }
 );
 
+client.on(Events.GuildRoleUpdate, async (oldRole, newRole) => {
+    const roleData = {
+        oldRoleName: oldRole.name,  // Add old role name
+        newRoleName: newRole.name,  // Add new role name
+        serverId: oldRole.guild.id,  // Add server ID
+        roleId: oldRole.id,  // Add role ID
+        updatedAt: new Date(),  // Add update timestamp
+    };
+
+    try {
+        // Send a POST request to your webhook route with the updated role data
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, roleData, { httpsAgent: agent });
+        console.log('Updated role data sent to webhook successfully');
+    } catch (error) {
+        console.error('Error sending updated role data to webhook:', error);
+    }
+}
+);
+
 
 //    It's function to test it , it ll be remove after the test
 //
