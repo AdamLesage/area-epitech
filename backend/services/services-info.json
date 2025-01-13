@@ -1016,6 +1016,176 @@
           }
         ]
       }
+    ,
+    {
+      "name": "role",
+      "display_name": "Role",
+      "actions": [
+        {
+          "name": "role.create",
+          "display_name": "Role Created",
+          "description": "A role is created",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": []
+        },
+        {
+          "name": "role.delete",
+          "display_name": "Role Deleted",
+          "description": "A role is deleted",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": []
+        },
+        {
+          "name": "role.update",
+          "display_name": "Role Updated",
+          "description": "A role is updated",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": []
+        }
+      ],
+      "reactions": [
+        {
+          "name": "discord_create_role_in_a_server",
+          "display_name": "Create a role",
+          "description": "Create a role in a server",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": [
+            {
+              "name": "server",
+              "display_name": "Server",
+              "description": "The server to create the role in",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "role",
+              "display_name": "Role",
+              "description": "The name of the role to create",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "discord_delete_role_in_a_server",
+          "display_name": "Delete a role",
+          "description": "Delete a role in a server",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": [
+            {
+              "name": "server",
+              "display_name": "Server",
+              "description": "The server to delete the role from",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "role",
+              "display_name": "Role",
+              "description": "The name of the role to delete",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "discord_update_role_in_a_server",
+          "display_name": "Update a role",
+          "description": "Update a role in a server",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": [
+            {
+              "name": "server",
+              "display_name": "Server",
+              "description": "The server to update the role in",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "role",
+              "display_name": "Role",
+              "description": "The name of the role to update",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "discord_attribute_role_to_a_user",
+          "display_name": "Attribute a role to a user",
+          "description": "Attribute a role to a user in a server",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": [
+            {
+              "name": "server",
+              "display_name": "Server",
+              "description": "The server to attribute the role in",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "user",
+              "display_name": "User",
+              "description": "The user to attribute the role to",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "role",
+              "display_name": "Role",
+              "description": "The role to attribute",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "discord_remove_role_to_a_user",
+          "display_name": "Remove a role from a user",
+          "description": "Remove a role from a user in a server",
+          "version": "1.0.0",
+          "release_date": "2025-01-08",
+          "updated_date": "2025-01-08",
+          "options": [
+            {
+              "name": "server",
+              "display_name": "Server",
+              "description": "The server to remove the role from",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "user",
+              "display_name": "User",
+              "description": "The user to remove the role from",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "role",
+              "display_name": "Role",
+              "description": "The role to remove",
+              "type": "text",
+              "required": true
+            }
+          ]
+        }
+      ]
+    }
     ]
   }
 ]

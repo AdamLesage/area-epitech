@@ -185,6 +185,18 @@
       {
         "name": "message_reaction_remove_all",
         "description": "Triggered when all reactions are removed from a message."
+      },
+      {
+        "name": "role_create",
+        "description": "Triggered when a new role is created."
+      },
+      {
+        "name": "role_delete",
+        "description": "Triggered when a role is deleted."
+      },
+      {
+        "name": "role_update",
+        "description": "Triggered when a role is updated."
       }
     ],
     "reactions": [
@@ -219,6 +231,26 @@
       {
         "name": "discord_send_reaction_to_message",
         "description": "Send a reaction to a message"
+      },
+      {
+        "name": "discord_create_role_in_a_server",
+        "description": "Create a role in a server"
+      },
+      {
+        "name": "discord_delete_role_in_a_server",
+        "description": "Delete a role in a server"
+      },
+      {
+        "name": "discord_update_role_in_a_server",
+        "description": "Update a role in a server"
+      },
+      {
+        "name": "discord_attribute_role_to_a_user",
+        "description": "Attribute a role to a user"
+      },
+      {
+        "name": "discord_remove_role_to_a_user",
+        "description": "Remove a role to a user"
       }
     ]
   }

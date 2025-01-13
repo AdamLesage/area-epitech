@@ -25,6 +25,11 @@ reactions.set('clear_all_messages_from_channel', discord_delete_all_messages_fro
 reactions.set('Clear_custom_hours_messages_from_channel', discord_delete_custom_hours_messages_from_a_channel);
 reactions.set('Clear_custom_days_messages_from_channel', discord_delete_custom_days_messages_from_a_channel);
 reactions.set('send_reaction', discord_send_reaction_to_message);
+reactions.set("create_role", discord_create_role_in_server);
+reactions.set("delete_role", discord_delete_role_from_server);
+reactions.set("edit_role", discord_edit_role_in_server);
+reactions.set("add_role_to_user", discord_add_role_to_user);
+reactions.set("remove_role_from_user", discord_remove_role_from_user);
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -506,5 +511,120 @@ async function discord_send_reaction_to_message(channelId, messageId, emoji) {
     }
 }
 
+
+async function discord_create_role_in_server(serverId, roleName, permissions, color) {
+    console.log('Creating role:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            await server.roles.create({
+                name: roleName,
+                permissions: permissions,
+                color: color
+            });
+            console.log('Role created successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error creating role:', error);
+    }
+}
+
+
+
+async function discord_delete_role_from_server(serverId, roleName) {
+    console.log('Deleting role:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const role = server.roles.cache.find(role => role.name === roleName);
+            if (role) {
+                await role.delete();
+                console.log('Role deleted successfully');
+            } else {
+                console.error('Role not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error deleting role:', error);
+    }
+}
+
+async function discord_edit_role_in_server(serverId, roleName, newRoleName, newPermissions, newColor) {
+    console.log('Editing role:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const role = server.roles.cache.find(role => role.name === roleName);
+            if (role) {
+                await role.edit({
+                    name: newRoleName,
+                    permissions: newPermissions,
+                    color: newColor
+                });
+                console.log('Role edited successfully');
+            } else {
+                console.error('Role not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error editing role:', error);
+    }
+}
+
+async function discord_add_role_to_user(serverId, userId, roleName) {
+    console.log('Adding role to user:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const member = await server.members.fetch(userId);
+            if (member) {
+                const role = server.roles.cache.find(role => role.name === roleName);
+                if (role) {
+                    await member.roles.add(role);
+                    console.log('Role added to user successfully');
+                } else {
+                    console.error('Role not found');
+                }
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error adding role to user:', error);
+    }
+}
+
+async function discord_remove_role_from_user(serverId, userId, roleName) {
+    console.log('Removing role from user:', roleName);
+    try {
+        const server = await client.guilds.fetch(serverId);
+        if (server) {
+            const member = await server.members.fetch(userId);
+            if (member) {
+                const role = server.roles.cache.find(role => role.name === roleName);
+                if (role) {
+                    await member.roles.remove(role);
+                    console.log('Role removed from user successfully');
+                } else {
+                    console.error('Role not found');
+                }
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error removing role from user:', error);
+    }
+}
 
 module.exports = reactions;
