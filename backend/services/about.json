@@ -159,5 +159,19 @@
         "description":"Create an issue"
       }
     ]
+  },
+  {
+    "name":"timer",
+    "actions": [
+      {
+        "name":"timer.chronometer",
+        "description":"Start a timer"
+      },
+      {
+        "name":"timer.alarm",
+        "description":"Set an alarm"
+      }
+    ],
+    "reactions": []
   }
 ]

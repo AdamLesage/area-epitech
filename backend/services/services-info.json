@@ -766,5 +766,58 @@
         ]
       }
     ]
+  },
+  {
+    "name": "timer",
+    "color": "#24292e",
+    "icon": "mdi-timer",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "timer",
+        "display_name": "Timer",
+        "actions": [
+          {
+            "name": "timer.chronometer",
+            "display_name": "Trigger a reaction after a certain time",
+            "description": "Trigger a reaction after a certain time has passed",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "time",
+                "display_name": "Time",
+                "description": "The time after which the reaction will be triggered",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "timer.alarm",
+            "display_name": "Trigger a reaction at a specific time",
+            "description": "Trigger a reaction at a specific time chosen by the user",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "date_and_time",
+                "display_name": "Date and time",
+                "description": "The date and time at which the reaction will be triggered",
+                "type": "datetime",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      }
+    ]
   }
 ]
