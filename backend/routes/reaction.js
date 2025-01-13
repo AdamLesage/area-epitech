@@ -45,6 +45,7 @@ function useActionReturn(returnAction, reactionData) {
  */
 router.post('/reaction/:uuid', async (req, res) => {
     try {
+        console.log("Called reaction");
         const uuid = req.params.uuid;
         const area = await prisma.actionReaction.findUnique({where: {uuid: uuid}});
         if (area == null) {
