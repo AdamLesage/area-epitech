@@ -347,6 +347,7 @@ async function strava_update_athlete(reactionData, actionResponseData, userUuid)
         console.error("No access token found for user");
         return;
     }
+    console.log("Updating athlete in Strava:", reactionData, actionResponseData);
 
     const response = await axios.put(`https://www.strava.com/api/v3/athlete`,
         {
@@ -368,6 +369,7 @@ async function strava_update_athlete(reactionData, actionResponseData, userUuid)
 }
 
 async function strava_create_activity(reactionData, actionResponseData, userUuid) {
+    console.log("Creating activity in Strava:", reactionData, actionResponseData);
     const accessToken = await getAccessToken(userUuid, "strava");
 
     if (!accessToken) {
@@ -400,6 +402,7 @@ async function strava_create_activity(reactionData, actionResponseData, userUuid
 }
 
 async function strava_update_activity(reactionData, actionResponseData, userUuid) {
+    console.log("Updating activity in Strava:", reactionData, actionResponseData);
     const accessToken = await getAccessToken(userUuid, "strava");
 
     if (!accessToken) {

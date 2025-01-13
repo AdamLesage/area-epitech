@@ -218,15 +218,15 @@
     "name":"strava",
     "actions": [
       {
-        "name":"activity.created",
+        "name":"activity.create",
         "description":"A new activity is created"
       },
       {
-        "name":"activity.updated",
+        "name":"activity.update",
         "description":"An activity is updated"
       },
       {
-        "name":"activity.deleted",
+        "name":"activity.delete",
         "description":"An activity is deleted"
       },
       {

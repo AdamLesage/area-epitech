@@ -723,7 +723,7 @@
         "display_name": "Activity",
         "actions": [
           {
-            "name": "activity.created",
+            "name": "activity.create",
             "display_name": "Activity Created",
             "description": "A new activity is created",
             "version": "1.0.0",
@@ -732,7 +732,7 @@
             "options": []
           },
           {
-            "name": "activity.deleted",
+            "name": "activity.delete",
             "display_name": "Activity Deleted",
             "description": "A new activity is deleted",
             "version": "1.0.0",
@@ -741,7 +741,7 @@
             "options": []
           },
           {
-            "name": "activity.updated",
+            "name": "activity.update",
             "display_name": "Activity Updated",
             "description": "An activity is updated",
             "version": "1.0.0",

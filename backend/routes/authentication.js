@@ -534,7 +534,7 @@ router.get('/strava', (req, res) => {
     console.log("email", email);
 
     config.redirect_uri = `${process.env.BACKEND_URL}/auth/strava/callback` + `?email=${email}`;
-    const authorizationUri = `https://www.strava.com/oauth/authorize?client_id=${config.client_id}&response_type=code&redirect_uri=${config.redirect_uri}&approval_prompt=auto&scope=read,activity:read_all,activity:write`;
+    const authorizationUri = `https://www.strava.com/oauth/authorize?client_id=${config.client_id}&response_type=code&redirect_uri=${config.redirect_uri}&approval_prompt=auto&scope=read,activity:read_all,activity:write,profile:read_all,profile:write`;
     console.log(authorizationUri);
     res.redirect(authorizationUri);
 });
@@ -572,7 +572,7 @@ router.get('/strava/callback', async (req, res) => {
 
             // If it doesnt exist, create a linked account
             if (!linkedAccount) {
-                const linkedAccountParams = {
+                let linkedAccountParams = {
                     serviceName: 'strava',
                     authToken: token.data.access_token,
                     accountEmail: "NoAccountEmailForStrava",

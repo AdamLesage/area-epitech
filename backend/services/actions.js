@@ -28,9 +28,9 @@ actions.set('issues.closed', create_github_workers);
 actions.set('pull_request.opened', create_github_workers);
 actions.set('pull_request.closed', create_github_workers);
 
-actions.set('activity.created', create_strava_workers);
-actions.set('activity.updated', create_strava_workers);
-actions.set('activity.deleted', create_strava_workers);
+actions.set('activity.create', create_strava_workers);
+actions.set('activity.update', create_strava_workers);
+actions.set('activity.delete', create_strava_workers);
 actions.set('athlete.updated', create_strava_workers);
 
 /**
