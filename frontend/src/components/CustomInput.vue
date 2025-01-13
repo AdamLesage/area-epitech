@@ -5,6 +5,26 @@
         <textarea v-if="type === 'textarea'" :placeholder="props.name" :value="value" class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] max-h-36 min-h-12 w-full"
             @change="handleChange"></textarea>
         <div v-if="!isSupported">"{{ props.type }}" type is not yet supported by CustomInput component</div>
+        <div v-if="type === 'select'" class="text-[#333] rounded-lg max-w-xl mx-auto w-full">
+            <label for="actionreaction" class="block mb-2 text-sm font-medium text-gray-700">
+                Select {{ props.name }}
+            </label>
+            <select
+                name="select"
+                id="actionreaction-select"
+                @change="handleChange"
+                class="border-gray-300 text-gray-700 px-3 py-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500"
+            >
+                <option
+                    v-for="option in props.options"
+                    :key="option.charCodeAt(0)"
+                    :value="option"
+                    class="text-gray-900"
+                >
+                    {{ option }}
+                </option>
+            </select>
+        </div>
         <div v-if="type === 'GithubRepository'" class="text-[#333] rounded-lg max-w-xl mx-auto w-full">
             <div class="flex gap-4 items-center" v-if="step != 'allDone'">
                 <h2 class="text-lg font-bold text-center">Connect your GitHub Repository</h2>
@@ -100,10 +120,13 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import { OptionType } from '@/types/services';
 import { useUserStore } from '@/stores/user';
+import { useServiceStore } from '@/stores/service';
 import { Icon } from '@iconify/vue';
 import axios from 'axios';
 
 const userStore = useUserStore();
+const serviceStore = useServiceStore();
+
 
 interface Repository {
     id: number;
@@ -135,7 +158,14 @@ const props = defineProps<{
     value: string | undefined;
     required: boolean;
     action: boolean;
+    options: String [] | undefined;
 }>();
+
+console.log(props.action);
+console.log(props.type);
+console.log(props.value);
+console.log(props.name);
+console.log(props.options)
 
 const value = ref<string>(props.value == undefined ? '' : props.value);
 
@@ -285,6 +315,10 @@ if (props.type == 'textarea') {
     isSupported.value = true;
 }
 if (props.type == 'GithubRepository') {
+    isSupported.value = true;
+}
+
+if (props.type == 'select') {
     isSupported.value = true;
 }
 
