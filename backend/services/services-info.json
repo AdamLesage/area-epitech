@@ -766,5 +766,23 @@
         ]
       }
     ]
+  },
+  {
+    "name": "area",
+    "color": "#19194A",
+    "icon": "simple-icons:bento",
+    "reviews": {
+      "rate": 5,
+      "count": 40000
+    },
+    "saves": 12040000,
+    "categories": [
+      {
+        "name": "Area",
+        "display_name": "Area",
+        "actions": [],
+        "reactions": []
+      }
+    ]
   }
 ]
