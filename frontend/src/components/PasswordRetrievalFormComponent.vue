@@ -31,16 +31,17 @@
                     </div>
                     <ErrorMessage name="code" class="text-red-500 text-sm mt-1 text-center" />
                 </div>
-                <!-- Email Recap Field : disabled -->
+                <!-- Email Recap Field -->
                 <div class="flex flex-col">
                     <label for="email" class="web:text-auth-primary mobile:text-white mb-2">Your email:</label>
                     <Field
                         name="email"
                         type="email"
-                        :value="props.email"
-                        placeholder="No email provided..."
-                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full cursor-not-allowed bg-white"
-                        disabled />
+                        v-model="props.email"
+                        @input="handleChangeEmail"
+                        placeholder="Enter your email here..."
+                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full bg-white"
+                        />
                     <ErrorMessage name="email" class="text-red-500 text-sm mt-1" />
                 </div>
                 <div class="flex flex-col gap-2">
@@ -88,6 +89,12 @@ const initialValues: PasswordRetrievalFormValues = {
     email: props.email,
 };
 
+// Handle change email
+const handleChangeEmail = (event: Event) => {
+    emit('update:email', (event.target as HTMLInputElement).value);
+};
+
+
 // Input focus
 const handleInput = (index: number) => {
     const inputs = document.querySelectorAll('input');
@@ -105,7 +112,7 @@ const handleBackspace = (index: number, event: KeyboardEvent) => {
 };
 
 // Form submission
-const emit = defineEmits(['submit', 'abort', 'send-again']);
+const emit = defineEmits(['submit', 'abort', 'send-again', 'update:email']);
 
 const onSubmit: SubmissionHandler<PasswordRetrievalFormValues, GenericObject, unknown> = (values) => {
     console.log('Form Submitted:', values);
