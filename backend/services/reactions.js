@@ -17,6 +17,13 @@ reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
 
 reactions.set('playlist_create', spotify_create_playlist);
+reactions.set('playlist_add_track', spotify_add_to_playlist);
+reactions.set('save_track', spotify_save_track);
+reactions.set('skip_track', spotify_skip_track);
+reactions.set('previous_track', spotify_previous_track);
+reactions.set('start_resume', spotify_start_resume);
+reactions.set('pause', spotify_pause);
+reactions.set('add_track_to_queue', spotify_add_track_to_queue);
 
 reactions.set('gmail_send_email', gmail_send_email);
 reactions.set('gmail_delete_email', gmail_delete_email);
@@ -338,36 +345,210 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
                 "Content-Type": "application/json"
             }
         });
-    if (response.status > 299) {
-        console.error(`Error calling reaction create_playlist`);
-        return;
+        if (response.status > 299) {
+            console.error(`Error calling reaction create_playlist`);
+            return;
+        }
+        console.log("Playlist created successfully:", response);   
     }
-    console.log("Playlist created successfully:", response);   
-}
-
+    
+    async function spotify_add_to_playlist(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        const username = await getusername(userUuid, "spotify");
+        console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
+        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
+            {
+                "uris": [reactionData.trackUri]
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction add_to_playlist`);
+            return;
+        }
+        console.log("Track added to playlist successfully:", response);
+    }
+    
+    async function spotify_save_track(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Saving track in Spotify:", reactionData, actionResponseData);
+        const response = await axios.put(`https://api.spotify.com/v1/me/tracks`,
+            {
+                "ids": [reactionData.trackId]
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction save_track`);
+            return;
+        }
+        console.log("Track saved successfully:", response);
+    }
+    
+    async function spotify_skip_track(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Skipping track in Spotify:", reactionData, actionResponseData);
+        const response = await axios.post(`https://api.spotify.com/v1/me/player/next`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction skip_track`);
+            return;
+        }
+        console.log("Track skipped successfully:", response);
+    }
+    
+    async function spotify_previous_track(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Playing previous track in Spotify:", reactionData, actionResponseData);
+        const response = await axios.post(`https://api.spotify.com/v1/me/player/previous`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction previous_track`);
+            return;
+        }
+        console.log("Previous track played successfully:", response);
+    }
+       
+    async function spotify_start_resume(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Starting or resuming playback in Spotify:", reactionData, actionResponseData);
+        const response = await axios.put(`https://api.spotify.com/v1/me/player/play`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction start_resume`);
+            return;
+        }
+        console.log("Playback started or resumed successfully:", response);
+    }
+    
+    async function spotify_pause(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Pausing playback in Spotify:", reactionData, actionResponseData);
+        const response = await axios.put(`https://api.spotify.com/v1/me/player/pause`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction pause`);
+            return;
+        }
+        console.log("Playback paused successfully:", response);
+    }
+    
+    async function spotify_add_track_to_queue(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Adding track to queue in Spotify:", reactionData, actionResponseData);
+        const response = await axios.post(`https://api.spotify.com/v1/me/player/queue`,
+            {
+                "uri": reactionData.trackUri
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction add_track_to_queue`);
+            return;
+        }
+        console.log("Track added to queue successfully:", response);
+    }
 /**
  * Handler function for the 'gmail_send_email' reaction.
  * 
  * @param {Object} reactionData Data related to the reaction.
  * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
  * @param {string} userUuid - The UUID of the user performing the reaction.
- */
+*/
 async function gmail_send_email(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
         const auth = new google.auth.OAuth2();
         auth.setCredentials({ access_token: accessToken });
         const gmail = google.gmail({ version: 'v1', auth });
-
+        
         if (!(reactionData.from && reactionData.to && reactionData.subject && reactionData.body)) {
             throw new Error("Missing required email data");
         }
         const emailContent = [
-            `From: ${reactionData.from}`,
-            `To: ${reactionData.to}`,
-            `Subject: ${reactionData.subject}`,
-            '',
-            reactionData.body || ''
+        `From: ${reactionData.from}`,
+        `To: ${reactionData.to}`,
+        `Subject: ${reactionData.subject}`,
+        '',
+        reactionData.body || ''
         ].join('\n');
 
         // Encode email content to base64
@@ -384,7 +565,6 @@ async function gmail_send_email(reactionData, actionResponseData, userUuid) {
                 raw: rawMessage
             }
         });
-
         console.log("Email sent successfully:", response.data);
     } catch (error) {
         console.error("Error sending email via Gmail:", error);
@@ -695,3 +875,5 @@ async function gmail_create_draft(reactionData, actionResponseData, userUuid) {
         console.error('Error creating draft:', error);
     }
 }
+
+module.exports = reactions;
