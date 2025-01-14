@@ -432,7 +432,7 @@ router.get('/spotify', async(req, res) => {
     passport.session.email = email;
 
     await passport.authenticate('spotify', {
-        scope: ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private'],
+        scope: ['user-modify-playback-state', 'user-library-modify', 'user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private'],
         showDialog: true,
     })(req, res);
 });
