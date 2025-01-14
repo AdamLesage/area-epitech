@@ -1,17 +1,17 @@
 <template>
-    <footer class="flex justify-between items-center flex-col !h-64 py-8 mt-24 shrink-0" :style="{ backgroundColor: '#333' }">
+    <footer class="flex justify-between items-center flex-col h-64 half:!h-fit py-8 mt-32 shrink-0" :style="{ backgroundColor: '#333' }">
         <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
-        <div class="flex w-full justify-center items-center px-8">
+        <div class="flex half:flex-col w-full justify-center items-center px-8">
             <div class="flex gap-4 items-center w-full justify-center">
                 <Icon icon="material-symbols:mail-outline" class="w-6 h-6 text-white" />
                 <p class="text-white hover:cursor-pointer" @click="copyEmail">contact.area.ownspace@gmail.com</p>
             </div>
-            <p class="w-full text-center text-white">Project made under Epitech © PGE program</p>
+            <p class="w-full text-center text-white">Project made at Epitech</p>
             <div class="w-full flex justify-center">
-                <h1 class="text-4xl font-black text-white text-center hover:cursor-pointer" @click="scrollToTop">AREA</h1>
+                <h1 class="text-4xl font-black text-white text-center hover:cursor-pointer half:mt-12" @click="scrollToTop">AREA</h1>
             </div>
         </div>
-        <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm">
+        <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm mobile:mb-20">
             <p class="hover:underline hover:cursor-pointer">Mentions</p>
             <p class="hover:underline hover:cursor-pointer">Cookies</p>
             <p class="hover:underline hover:cursor-pointer">Privacy</p>
