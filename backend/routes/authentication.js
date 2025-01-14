@@ -273,6 +273,7 @@ router.get('/github/redirect',
             let user = await getUser(req);
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+            console.log(req.user);
 
             const linkedAccountParams = {
                 uuid: uuidv4(),
@@ -284,8 +285,8 @@ router.get('/github/redirect',
 
             const userParams = {
                 email: userEmail,
-                name: req.user.displayName || '',
-                surname: '',
+                name: req.user.displayName || 'Name not found',
+                surname: req.user.surname || 'Surname not found',
                 uuid: uuidv4(),
                 hashedPassword: req.user.accessToken,
             };
@@ -293,7 +294,7 @@ router.get('/github/redirect',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -319,13 +320,13 @@ router.get('/github/redirect',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
                         },
                     });
-    
+
                     // Refresh user data to include the new linked account
                     user = await prisma.user.findUnique({
                         where: { email: userParams.email },
@@ -342,14 +343,14 @@ router.get('/github/redirect',
 );
 
 // DropBox auth routes
-router.get('/dropbox', async(req, res) => {
+router.get('/dropbox', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
     await passport.authenticate('dropbox-oauth2')(req, res);
 });
 
-router.get('/dropbox/callback', 
+router.get('/dropbox/callback',
     passport.authenticate('dropbox-oauth2', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
@@ -376,7 +377,7 @@ router.get('/dropbox/callback',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -402,7 +403,7 @@ router.get('/dropbox/callback',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
@@ -426,7 +427,7 @@ router.get('/dropbox/callback',
 );
 
 // Spotify auth routes
-router.get('/spotify', async(req, res) => {
+router.get('/spotify', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
@@ -437,7 +438,7 @@ router.get('/spotify', async(req, res) => {
     })(req, res);
 });
 
-router.get('/spotify/callback', 
+router.get('/spotify/callback',
     passport.authenticate('spotify', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
@@ -468,7 +469,7 @@ router.get('/spotify/callback',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -494,13 +495,13 @@ router.get('/spotify/callback',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
                         },
                     });
-    
+
                     // Refresh user data to include the new linked account
                     user = await prisma.user.findUnique({
                         where: { email: userParams.email },
