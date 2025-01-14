@@ -8,6 +8,7 @@ require('./authentication/passport');
 
 const githubServiceRouter = require('./services/githubService')
 const dropboxServiceRouter = require('./services/dropboxService')
+const areaServicesRouter = require('./services/areaService')
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
 const aboutRouter = require('./routes/about');
