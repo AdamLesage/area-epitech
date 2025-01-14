@@ -62,7 +62,6 @@
     </div>
     <!-- Second Page -->
     <div
-        @wheel="handleScrollAttemptSecondPage"
         v-else>
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden fixed bottom-0 z-50"
             :style="{ backgroundColor: color }" />
@@ -616,12 +615,6 @@ function redirectToCard(categoryName: string | null, cardName: string) {
 function handleScrollAttempt(event: WheelEvent) {
     if (event.deltaY > 0) {
         openServicePage();
-    }
-}
-
-function handleScrollAttemptSecondPage(event: WheelEvent) {
-    if (event.deltaY < 0 && scrollY.value === 0) {
-        isHeroVisible.value = true;
     }
 }
 

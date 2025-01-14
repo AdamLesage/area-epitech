@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', {
         user: User | null,
         areas: Area[],
     } => ({
-        user: null, // Initialize as an array
+        user: null,
         areas: [],
     }),
     getters: {

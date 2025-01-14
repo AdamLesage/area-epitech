@@ -380,9 +380,9 @@
     ]
   },
   {
-    "name":"dropbox",
-    "color":"#007ee5",
-    "icon":"ri:dropbox-fill",
+    "name": "dropbox",
+    "color": "#007ee5",
+    "icon": "ri:dropbox-fill",
     "reviews": {
       "rate": 2.5,
       "count": 100
@@ -409,7 +409,14 @@
                 "required": false
               }
             ],
-            "returnData": ["name", "fileContent", "size", "id", "path_display", ".tag"]
+            "returnData": [
+              "name",
+              "fileContent",
+              "size",
+              "id",
+              "path_display",
+              ".tag"
+            ]
           },
           {
             "name": "dropbox_on_file_renamed",
@@ -627,10 +634,10 @@
           {
             "name": "playlist_create",
             "display_name": "Create a new playlist",
-            "description": "Create a new playlist",
+            "description": "Create a new playlist whith the name and description of your choice",
             "version": "1.0.0",
             "release_date": "2024-12-21",
-            "updated_date": "2024-12-21",
+            "updated_date": "2025-01-06",
             "options": [
               {
                 "name": "name",
@@ -648,9 +655,110 @@
               },
               {
                 "name": "public",
-                "display_name": "Playlist status",
+                "display_name": "Playlist status (true/false)",
                 "description": "Choose if the playlist is public or private",
-                "type": "boolean",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "playlist_add_track",
+            "display_name": "Add a track to a playlist",
+            "description": "Add a track to a playlist of your choice",
+            "version": "1.0.0",
+            "release_date": "2024-12-21",
+            "updated_date": "2025-01-07",
+            "options": [
+              {
+                "name": "music_uri",
+                "display_name": "Music URI",
+                "description": "The URI of the music",
+                "type": "SpotifyPlaylist",
+                "required": true
+              },
+              {
+                "name": "playlist_uri",
+                "display_name": "Playlist URI",
+                "description": "The URI of the playlist",
+                "type": "SpotifyMusic",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Tracks",
+        "display_name": "Tracks",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "save_track",
+            "display_name": "Save a track",
+            "description": "Save a track in to a playlist",
+            "version": "1.0.0",
+            "release_date": "2025-01-07",
+            "updated_date": "2025-01-07",
+            "options": [
+              {
+                "name": "music_id",
+                "display_name": "Music id",
+                "description": "The ID of the music",
+                "type": "SpotifyMusic",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "skip_track",
+            "display_name": "Skip a track",
+            "description": "Skip the track playing to the next",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "previous_track",
+            "display_name": "Previous track",
+            "description": "Go back to the previous track",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "start_resume",
+            "display_name": "Start or resume a track",
+            "description": "Start or resume a track or a playlist",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "pause",
+            "display_name": "Pause a track",
+            "description": "Pause the track currently playing",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "add_track_to_queue",
+            "display_name": "Add a track to the queue",
+            "description": "Add the track of your choice to the queue",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "music_uri",
+                "display_name": "Music URI",
+                "description": "The URI of the music",
+                "type": "SpotifyMusic",
                 "required": true
               }
             ]

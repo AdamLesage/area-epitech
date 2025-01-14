@@ -23,9 +23,9 @@ const handleExploreRedirect = () => {
 }
 
 const handleMyAreasRedirect = () => {
-    console.log('Redirecting to my areas');
+    console.log('Redirecting to dashboard');
     window.scrollTo(0, 0);
-    router.push('/areas');
+    router.push('/dashboard');
 }
 
 const handleWorkshopRedirect = () => {
