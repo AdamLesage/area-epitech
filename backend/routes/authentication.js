@@ -184,6 +184,34 @@ router.post('/reset-password-confirm', async (req, res) => {
     }
 });
 
+
+router.put('/change-password', async (req, res) => {
+    const { email, code, password } = req.body;
+
+    if (!email || !code || !password) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    if (resetPasswordCodeAccordingToEmail[email] !== parseInt(code, 10)) {
+        return res.status(400).json({ error: 'Code is incorrect' });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    prisma.user.update({
+        where: {
+            email: email,
+        },
+        data: {
+            hashedPassword: hashedPassword,
+        },
+    }).then(() => {
+        return res.status(200).json({ message: 'Password updated', redirectUrl: '/dashboard' });
+    }).catch((error) => {
+        console.error(error);
+        return res.status(500).json({ error: error.message });
+    });
+});
+
 /**
  * Retrieves user information based on the request object.
  * @param {Object} req - The request object.

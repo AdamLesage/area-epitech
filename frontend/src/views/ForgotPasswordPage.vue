@@ -36,11 +36,6 @@ const tempHide = ref<boolean>(false);
 
 initStores();
 
-watch(email, (newValue) => {
-    console.log('Email changed to:', newValue);
-});
-
-
 // Form submission handler
 function handleSubmit(values: PasswordRetrievalFormValues) {
     const joinedCode = values.code.join('');
