@@ -273,7 +273,6 @@ router.get('/github/redirect',
             let user = await getUser(req);
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
-            console.log(req.user);
 
             const linkedAccountParams = {
                 uuid: uuidv4(),
