@@ -34,6 +34,7 @@ function handleSubmit(values: PasswordChangeFormValues) {
     // Call API GET reset-password-confirm
     const password = values.password;
     const code = route.query.code;
+    const emailQuery = route.query.email;
     console.log('Code:', code);
     fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/change-password`, {
         method: 'PUT',
@@ -41,7 +42,7 @@ function handleSubmit(values: PasswordChangeFormValues) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            email: email.value,
+            email: emailQuery,
             password: password,
             code: route.query.code
         }),

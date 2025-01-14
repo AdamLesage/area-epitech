@@ -178,7 +178,7 @@ router.post('/reset-password-confirm', async (req, res) => {
 
     if (resetPasswordCodeAccordingToEmail[email] === parseInt(code, 10)) {
         // Redirect to the reset password page
-        return res.status(200).json({ message: 'Code is correct', redirectUrl: `/change-password?code=${code}` });
+        return res.status(200).json({ message: 'Code is correct', redirectUrl: `/change-password?code=${code}&email=${email}` });
     } else {
         return res.status(400).json({ error: 'Code is incorrect' });
     }
