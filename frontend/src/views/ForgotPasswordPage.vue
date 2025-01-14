@@ -17,7 +17,7 @@ import LogoComponent from '@/components/LogoComponent.vue';
 import PasswordRetrievalFormComponent from '@/components/PasswordRetrievalFormComponent.vue';
 import { PasswordRetrievalFormValues } from '@/types/auth';
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from './../stores/user';
 import { fetchUser } from '@/logic/user';
 import Cookies from 'js-cookie';
@@ -29,6 +29,7 @@ const email = ref('');
 
 // Stores
 const userStore = useUserStore();
+const router = useRouter();
 const route = useRoute();
 
 const tempHide = ref<boolean>(false);
@@ -42,7 +43,28 @@ watch(email, (newValue) => {
 
 // Form submission handler
 function handleSubmit(values: PasswordRetrievalFormValues) {
-    console.log('Forgot Password Form Received:', values);
+    const joinedCode = values.code.join('');
+    // Call API GET reset-password-confirm
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/reset-password-confirm`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email.value,
+            code: joinedCode,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Response:', data);
+        const redirectUrl = data.redirectUrl;
+        // redirect to redirectUrl page
+        router.push(redirectUrl);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 };
 
 // Abort button handler

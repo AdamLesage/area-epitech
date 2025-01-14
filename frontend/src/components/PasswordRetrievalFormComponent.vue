@@ -38,9 +38,9 @@
                         name="email"
                         type="email"
                         v-model="props.email"
-                        @input="handleChangeEmail"
                         placeholder="Enter your email here..."
                         class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full bg-white"
+                        disabled
                         />
                     <ErrorMessage name="email" class="text-red-500 text-sm mt-1" />
                 </div>

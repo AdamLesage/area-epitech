@@ -17,6 +17,11 @@ const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 
+// Global variable for reset email code
+let resetPasswordCodeAccordingToEmail = {
+    "adamles44@gmail.com": 123456,
+};
+
 // Intern auth routes
 
 router.post('/login', (req, res) => {
@@ -133,12 +138,14 @@ router.post('/reset-password', async (req, res) => {
                 pass: process.env.EMAIL_PASSWORD,
             },
         });
+        // 6 digits code
+        const code = Math.floor(100000 + Math.random() * 900000);
 
         const mailData = {
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'Reset password for Area Romain le malin',
-            text: `Click on the link to reset your password: ${process.env.FRONTEND_URL}/reset-password/${user.uuid}`,
+            text: `Your verification code is ${code}`,
         };
 
         // Send email with reset password link
@@ -147,7 +154,10 @@ router.post('/reset-password', async (req, res) => {
                 console.error(err);
                 return res.status(500).json({ error: err.message });
             }
-        return res.status(200).json({ message: `Email sent to ${email}` });
+            // set the code for the email
+            resetPasswordCodeAccordingToEmail[email] = code;
+
+            return res.status(200).json({ message: `Email sent to ${email}` });
         }).catch((err) => {
             console.error(err);
             return res.status(500).json({ error: err.message });
@@ -159,43 +169,19 @@ router.post('/reset-password', async (req, res) => {
 });
 
 // Method /GET because user will click on the link
-router.get('/reset-password/:uuid', async (req, res) => {
-    const { newPassword } = req.body;
-    const uuid = req.params.uuid;
+router.post('/reset-password-confirm', async (req, res) => {
+    const { email, code } = req.body;
 
-    if (!newPassword) {
+    if (!email || !code) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    prisma.user.findUnique({
-        where: {
-            uuid: uuid,
-        },
-    }).then((user) => {
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: err.message });
-            }
-
-            prisma.user.update({
-                where: {
-                    uuid: uuid,
-                },
-                data: {
-                    hashedPassword,
-                },
-            }).then(() => {
-                return res.status(20).json({ message: 'Password updated' });
-            }).catch((error) => {
-                console.error(error);
-                return res.status(500).json({ error: error.message });
-            });
-        });
-    });
+    if (resetPasswordCodeAccordingToEmail[email] === parseInt(code, 10)) {
+        // Redirect to the reset password page
+        return res.status(200).json({ message: 'Code is correct', redirectUrl: `/change-password?code=${code}` });
+    } else {
+        return res.status(400).json({ error: 'Code is incorrect' });
+    }
 });
 
 /**
@@ -282,7 +268,7 @@ router.get('/github/redirect',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -308,13 +294,13 @@ router.get('/github/redirect',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
                         },
                     });
-    
+
                     // Refresh user data to include the new linked account
                     user = await prisma.user.findUnique({
                         where: { email: userParams.email },
@@ -331,14 +317,14 @@ router.get('/github/redirect',
 );
 
 // DropBox auth routes
-router.get('/dropbox', async(req, res) => {
+router.get('/dropbox', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
     await passport.authenticate('dropbox-oauth2')(req, res);
 });
 
-router.get('/dropbox/callback', 
+router.get('/dropbox/callback',
     passport.authenticate('dropbox-oauth2', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
@@ -365,7 +351,7 @@ router.get('/dropbox/callback',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -391,7 +377,7 @@ router.get('/dropbox/callback',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
@@ -415,7 +401,7 @@ router.get('/dropbox/callback',
 );
 
 // Spotify auth routes
-router.get('/spotify', async(req, res) => {
+router.get('/spotify', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
@@ -426,7 +412,7 @@ router.get('/spotify', async(req, res) => {
     })(req, res);
 });
 
-router.get('/spotify/callback', 
+router.get('/spotify/callback',
     passport.authenticate('spotify', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
@@ -457,7 +443,7 @@ router.get('/spotify/callback',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -483,13 +469,13 @@ router.get('/spotify/callback',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
                         },
                     });
-    
+
                     // Refresh user data to include the new linked account
                     user = await prisma.user.findUnique({
                         where: { email: userParams.email },
