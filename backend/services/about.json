@@ -196,10 +196,6 @@
       {
         "name": "area_stop",
         "description": "Stops a specified area."
-      },
-      {
-        "name": "area_create",
-        "description": "Creates a new area."
       }
     ]
   }

@@ -924,15 +924,6 @@
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
             "options": []
-          },
-          {
-            "name": "area_create",
-            "display_name": "Create Area",
-            "description": "Creates a new area.",
-            "version": "1.0.0",
-            "release_date": "2025-01-14",
-            "updated_date": "2025-01-14",
-            "options": []
           }
         ]
       }
