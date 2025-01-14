@@ -531,11 +531,9 @@ const client = new Client(config);
 router.get('/strava', (req, res) => {
     const email = req.query.email;
     req.session.email = email;
-    console.log("email", email);
 
     config.redirect_uri = `${process.env.BACKEND_URL}/auth/strava/callback` + `?email=${email}`;
     const authorizationUri = `https://www.strava.com/oauth/authorize?client_id=${config.client_id}&response_type=code&redirect_uri=${config.redirect_uri}&approval_prompt=auto&scope=read,activity:read_all,activity:write,profile:read_all,profile:write`;
-    console.log(authorizationUri);
     res.redirect(authorizationUri);
 });
 
@@ -543,8 +541,6 @@ router.get('/strava/callback', async (req, res) => {
     try {
         const email = req.query.email;
         const code = req.query.code;
-        console.log("code", code);
-        console.log("email", email);
         if (!email) {
             return res.status(400).json({ error: 'Missing email parameter' });
         }
@@ -555,40 +551,54 @@ router.get('/strava/callback', async (req, res) => {
             include: { linkedAccounts: true },
         });
 
-        // Request cURL https://www.strava.com/api/v3/oauth/token To get the token
+        // Request to get the token
         const token = await axios.post('https://www.strava.com/api/v3/oauth/token', {
             client_id: process.env.STRAVA_CLIENT_ID,
             client_secret: process.env.STRAVA_CLIENT_SECRET,
             code: code,
             grant_type: 'authorization_code',
         });
-        // console.log("token", token);
-        console.log("token", token.data.access_token);
 
-        if (user) {
-            const linkedAccount = user.linkedAccounts.find(
-                account => account.serviceName === 'strava'
-            );
-
-            // If it doesnt exist, create a linked account
-            if (!linkedAccount) {
-                let linkedAccountParams = {
-                    serviceName: 'strava',
-                    authToken: token.data.access_token,
-                    accountEmail: "NoAccountEmailForStrava",
-                    username: user.name + user.surname,
-                    uuid: uuidv4(),
-                };
-
-                await prisma.linkedAccount.create({
-                    data: {
-                        ...linkedAccountParams,
-                        userId: user.id,
-                    },
-                });
-            }
-        } else {
+        if (!user) {
             return res.status(404).json({ error: 'User not found' });
+        }
+        const linkedAccount = user.linkedAccounts.find(
+            account => account.serviceName === 'strava'
+        );
+
+        // Send request to get a subscription with secured URL
+        try {
+            const response = await axios.post('https://www.strava.com/api/v3/push_subscriptions', null, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                params: {
+                    client_id: process.env.STRAVA_CLIENT_ID,
+                    client_secret: process.env.STRAVA_CLIENT_SECRET,
+                    callback_url: `${process.env.DEPLOYED_BACKEND_URL}/strava/webhook`,
+                    verify_token: 'STRAVA',
+                },
+            });
+        } catch (error) {
+            console.error('Subscription already exists');
+        }
+
+        // If it doesnt exist, create a linked account
+        if (!linkedAccount) {
+            let linkedAccountParams = {
+                serviceName: 'strava',
+                authToken: token.data.access_token,
+                accountEmail: "NoAccountEmailForStrava",
+                username: user.name + user.surname,
+                uuid: uuidv4(),
+            };
+
+            await prisma.linkedAccount.create({
+                data: {
+                    ...linkedAccountParams,
+                    userId: user.id,
+                },
+            });
         }
 
         // Create a linked account with strava
