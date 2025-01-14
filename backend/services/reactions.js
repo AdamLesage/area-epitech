@@ -20,10 +20,12 @@ reactions.set('playlist_create', spotify_create_playlist);
 
 reactions.set('gmail_send_email', gmail_send_email);
 reactions.set('gmail_delete_email', gmail_delete_email);
-reactions.set('gmail_add_label', gmail_add_label)
-reactions.set('gmail_remove_label', gmail_remove_label)
-reactions.set('gmail_reply_to_email', gmail_reply_to_email)
-reactions.set('gmail_forward_email', gmail_forward_email)
+reactions.set('gmail_add_label', gmail_add_label);
+reactions.set('gmail_remove_label', gmail_remove_label);
+reactions.set('gmail_reply_to_email', gmail_reply_to_email);
+reactions.set('gmail_forward_email', gmail_forward_email);
+reactions.set('gmail_create_draft', gmail_create_draft);
+
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -646,5 +648,50 @@ async function gmail_forward_email(reactionData, actionResponseData, userUuid) {
     }
 }
 
+/**
+ * Handler function for create a draft on Gmail.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_create_draft(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
 
-module.exports = reactions;
+        if (!reactionData.to || !reactionData.subject || !reactionData.body) {
+            throw new Error("Missing required fields: 'to', 'subject', or 'body'.");
+        }
+
+        const emailContent = [
+            `To: ${reactionData.to}`,
+            `Subject: ${reactionData.subject}`,
+            `Content-Type: text/plain; charset=utf-8`,
+            ``,
+            `${reactionData.body}`
+        ].join("\r\n");
+
+        const encodedEmail = Buffer.from(emailContent)
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        const response = await gmail.users.drafts.create({
+            userId: 'me',
+            requestBody: {
+                message: {
+                    raw: encodedEmail,
+                },
+            },
+        });
+
+        console.log('Draft created successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating draft:', error);
+    }
+}

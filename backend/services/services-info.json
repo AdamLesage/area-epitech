@@ -684,6 +684,16 @@
             "options": []
           },
           {
+            "name": "gmail_on_mail_send",
+            "display_name": "Gmail on mail send",
+            "description": "Triggered when a new mail is send in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-10",
+            "updated_date": "2025-01-10",
+            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "options": []
+          },
+          {
             "name": "gmail_on_mail_deleted",
             "display_name": "Gmail on delete mail",
             "description": "Triggered when a mail is deleted from Gmail.",
@@ -929,6 +939,55 @@
                 "name": "label_id",
                 "display_name": "lable Id",
                 "description": "the label you want to remove",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "draft",
+        "display_name": "Draft",
+        "actions": [
+          {
+            "name": "gmail_on_draft_create",
+            "display_name": "Gmail on draft created",
+            "description": "Triggered when a new draft is created in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-10",
+            "updated_date": "2025-01-10",
+            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "options": []
+          }
+        ],
+        "reactions" : [
+          {
+            "name": "gmail_create_draft",
+            "display_name": "Gmail create draft",
+            "description": "create draft on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "to",
+                "display_name": "to",
+                "description": "the name of the receiver",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "subject",
+                "display_name": "subject",
+                "description": "the subject of the draft",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "body",
+                "description": "the body of the draft",
                 "type": "text",
                 "required": true
               }
