@@ -102,9 +102,7 @@
                             class="mobile:w-8 mobile:h-8" />
                         <label for="terms" class="mobile:text-auth-secondary mobile:text-sm">
                             I agree to the 
-                            <router-link to="" class="underline hover:cursor-pointer" @click.prevent>Terms</router-link>
-                            and 
-                            <router-link to="" class="underline hover:cursor-pointer" @click.prevent>Conditions</router-link>
+                            <router-link to="/terms" class="underline hover:cursor-pointer" @click.prevent>Terms</router-link>
                         </label>
                     </div>
                     <ErrorMessage name="terms" class="text-red-500 text-sm mt-1" />
