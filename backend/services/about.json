@@ -163,8 +163,44 @@
   {
     "name":"area",
     "actions": [
+      {
+        "name": "on_area_deleted",
+        "description": "Triggered when an area is deleted."
+      },
+      {
+        "name": "on_area_start",
+        "description": "Triggered when an area starts."
+      },
+      {
+        "name": "on_area_stop",
+        "description": "Triggered when an area stops."
+      },
+      {
+        "name": "on_area_created",
+        "description": "Triggered when a new area is created."
+      },
+      {
+        "name": "on_area_activate",
+        "description": "Triggered when an area is activated."
+      }
     ],
     "reactions": [
+      {
+        "name": "area_delete",
+        "description": "Deletes a specified area."
+      },
+      {
+        "name": "area_start",
+        "description": "Starts a specified area."
+      },
+      {
+        "name": "area_stop",
+        "description": "Stops a specified area."
+      },
+      {
+        "name": "area_create",
+        "description": "Creates a new area."
+      }
     ]
   }
 ]

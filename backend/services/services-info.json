@@ -780,8 +780,161 @@
       {
         "name": "Area",
         "display_name": "Area",
-        "actions": [],
-        "reactions": []
+        "actions": [
+          {
+            "name": "on_area_deleted",
+            "display_name": "Area Deleted",
+            "description": "Triggered when an area is deleted.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          },
+          {
+            "name": "on_area_start",
+            "display_name": "Area Start",
+            "description": "Triggered when an area starts.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          },
+          {
+            "name": "on_area_stop",
+            "display_name": "Area Stop",
+            "description": "Triggered when an area stops.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          },
+          {
+            "name": "on_area_created",
+            "display_name": "Area Created",
+            "description": "Triggered when a new area is created.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          },
+          {
+            "name": "on_area_activate",
+            "display_name": "Area Activate",
+            "description": "Triggered when an area is activated.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "area_delete",
+            "display_name": "Delete Area",
+            "description": "Deletes a specified area.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": []
+          },
+          {
+            "name": "area_start",
+            "display_name": "Start Area",
+            "description": "Starts a specified area.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": []
+          },
+          {
+            "name": "area_stop",
+            "display_name": "Stop Area",
+            "description": "Stops a specified area.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": []
+          },
+          {
+            "name": "area_create",
+            "display_name": "Create Area",
+            "description": "Creates a new area.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": []
+          }
+        ]
       }
     ]
   }

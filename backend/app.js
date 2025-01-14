@@ -48,6 +48,7 @@ app.use(passport.session());
 app.use('/api', userRouter);
 app.use('/github', githubServiceRouter);
 app.use('/dropbox', dropboxServiceRouter);
+app.use('/area', areaServicesRouter)
 app.use('/api', actionsRouter);
 app.use('/api', reactionRouter);
 app.use('/auth', authRouter);

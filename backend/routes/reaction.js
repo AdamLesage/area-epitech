@@ -3,6 +3,7 @@ const router = express.Router();
 const Prisma = require('@prisma/client');
 const prisma = new Prisma.PrismaClient;
 const reactions = require("../services/reactions")
+const { areaNotify } = require("../utils/areaNotify");
 
 /**
  * @brief Replace placeholders in reaction data with values from returnAction.
@@ -58,6 +59,7 @@ router.post('/reaction/:uuid', async (req, res) => {
         console.log(area.reactionData, req.body)
         area.reactionData = useActionReturn(req.body, area.reactionData);
         await reactions.get(reaction.name)(area.reactionData, req.body, area.userUuid);
+        areaNotify("on_area_activate", area)
         res.json({ message: "receive reaction" });
     } catch (e) {
         console.error("Error on receive reaction", e);

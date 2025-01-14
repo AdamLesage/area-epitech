@@ -19,8 +19,8 @@ const redis = new Redis({
 
 router.post('/webhook', async (req, res) => {
     try {
-        // Fetch all actionReactions that are active and have the service "dropbox"
-
+        // Fetch all actionReactions that are active and have the service "area"
+        console.log("receive webhook", req.body);
         const activeAreaActions = await prisma.actionReaction.findMany({
             where: {
                 isActive: true,
