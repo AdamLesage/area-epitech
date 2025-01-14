@@ -173,5 +173,15 @@
       }
     ],
     "reactions": []
+  },
+  {
+    "name":"NewsFeed",
+    "actions": [],
+    "reactions": [
+      {
+        "name":"news_alert",
+        "description":"Get a news alert"
+      }
+    ]
   }
 ]

@@ -24,6 +24,8 @@ reactions.set('start_resume', spotify_start_resume);
 reactions.set('pause', spotify_pause);
 reactions.set('add_track_to_queue', spotify_add_track_to_queue);
 
+reactions.set('fetch_news', fetchNews);
+
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -397,6 +399,7 @@ async function spotify_save_track(reactionData, actionResponseData, userUuid) {
 }
 
 async function spotify_skip_track(reactionData, actionResponseData, userUuid) {
+    console.log("Skipping track in Spotify402:", reactionData, actionResponseData);
     const accessToken = await getAccessToken(userUuid, "spotify");
 
     if (!accessToken) {
@@ -517,5 +520,23 @@ async function spotify_add_track_to_queue(reactionData, actionResponseData, user
     }
     console.log("Track added to queue successfully:", response);
 }
+
+async function fetchNews(domain, query) {
+  try {
+    const response = await axios.get(`https://newsapi.org/v2/everything`, {
+      params: {
+        domains: domain,
+        q: query,
+        language: 'en',
+        sortBy: 'publishedAt',
+        apiKey: '6b140d55899b499ca9c96e9d932b3cf2',
+      },
+    });
+    return response.data.articles;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données:', error);
+    return [];
+  }
+};
 
 module.exports = reactions;

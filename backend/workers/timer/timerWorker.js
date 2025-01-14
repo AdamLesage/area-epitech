@@ -1,18 +1,45 @@
+// function startTimer(duration) {
+//     setTimeout(() => {
+//         send("done");
+//     }, duration);
+// }
 
-const Redis = require('ioredis');
-const redis = new Redis({
-    host: 'redis',
-    port: 6379
-});
+// function startAtSpecificDate(targetDate) {
+//     const now = new Date();
+//     const timeUntilTarget = targetDate.getTime() - now.getTime();
+
+//     if (timeUntilTarget > 0) {
+//         console.log(`Timer set for: ${targetDate}`);
+//         setTimeout(async () => {
+//             send("done");
+//             console.log("Specific date reached, start_resume triggered.");
+//         }, timeUntilTarget);
+//     } else {
+//         console.log("The specified date is in the past.");
+//     }
+// };
+
+actionData = JSON.parse(process.env.DATA)
 
 async function processWebhook() {
     while (true) {
-        const data = await redis.rpop(process.env.UUID);
-        if (data) {
-            const webhookData = JSON.parse(data);
-            // Wait for the specified timer duration before sending the data
-            await new Promise(resolve => setTimeout(resolve, process.env.TIMER_DURATION));
-            send(webhookData);
+        const now = new Date();
+        const timeUntilTarget = actionData.target_date.getTime() - now.getTime();
+
+        if ("timer.chronometer" == process.env.TARGET_ACTION) {
+            setTimeout(() => {
+                send("done");
+            }, actionData.duration);
+        } else if ("timer.alarm" == process.env.TARGET_ACTION) {
+            if (timeUntilTarget > 0) {
+                console.log(`Timer set for: ${actionData.target_date}`);
+                setTimeout(async () => {
+                    send("done");
+                    console.log("Specific date reached, start_resume triggered.");
+                }, timeUntilTarget);
+            } else {
+                console.log("The specified date is in the past.");
+            }
         } else {
             // Wait for a while before checking the queue again
             await new Promise(resolve => setTimeout(resolve, 1000));
