@@ -1,17 +1,16 @@
 <template>
     <div class="bg-auth-primary flex web:justify-center items-center mobile:justify-between mobile:flex-col">
-        <LogoComponent color="#80C4E9" class="absolute top-0 left-5 half:hidden" />
-        <button @click="goToHomePage"
-            class="absolute top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 z-20 mobile:static mobile:mt-4">
-            Go to Home Page
-        </button>
+        <LogoComponent color="#80C4E9" class="absolute top-0 left-5 big:hidden hover:cursor-pointer" @click="goToHomePage" />
+        <div class="absolute top-0 w-full justify-center mobile:!hidden web:hidden big:flex">
+            <h1 class="text-[4rem] leading-[3rem] font-black text-auth-secondary my-4 hover:cursor-pointer z-20" @click="goToHomePage">AREA</h1>
+        </div>
         <LoginButton
             class="hover:cursor-pointer absolute top-5 right-5 mobile:hidden"
             :color="hover ? '#eee' : 'white'"
             @mouseover="hover = true"
             @mouseleave="hover = false" />
         <div class="flex flex-col items-center z-10 mobile:justify-between web:justify-center h-full">
-            <h1 class="text-[4rem] leading-[3rem] font-black text-auth-secondary web:hidden my-4">AREA</h1>
+            <h1 class="text-[4rem] leading-[3rem] font-black text-auth-secondary web:hidden my-4 hover:cursor-pointer" @click="goToHomePage">AREA</h1>
             <SignUpFormComponent @submit="handleSubmit" />
         </div>
     </div>
