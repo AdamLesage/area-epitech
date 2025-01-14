@@ -2,7 +2,7 @@ const Prisma = require('@prisma/client');
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const https = require('https');
+const http = require('http');
 const fs = require('fs');
 require('./authentication/passport');
 
@@ -53,7 +53,7 @@ app.use('/auth', authRouter);
 app.use('/api', actionReactionRouter);
 app.use('', aboutRouter);
 
-var server = https.createServer(options, app);
+var server = http.createServer(options, app);
 
 server.listen(port, async () => {
   await migrateDatabase();

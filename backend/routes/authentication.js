@@ -111,23 +111,9 @@ router.get('/logout', (req, res) => {
 
 router.post('/reset-password', async (req, res) => {
     const { email } = req.body;
-    const headers = req.headers;
 
     if (!email) {
         return res.status(400).json({ error: 'Missing required parameters' });
-    }
-
-    // Check if headers given are correct
-    if (headers.authorization) {
-        const user = await prisma.user.findUnique({
-            where: { authToken: headers.authorization },
-        });
-
-        if (user === null) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
-    } else {
-        return res.status(401).json({ error: 'Unauthorized' });
     }
 
     // Check if user exists
@@ -141,9 +127,7 @@ router.post('/reset-password', async (req, res) => {
         }
 
         const transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false,
+            host: 'smtp.gmail.com',
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
@@ -163,9 +147,14 @@ router.post('/reset-password', async (req, res) => {
                 console.error(err);
                 return res.status(500).json({ error: err.message });
             }
-
+        return res.status(200).json({ message: `Email sent to ${email}` });
+        }).catch((err) => {
+            console.error(err);
+            return res.status(500).json({ error: err.message });
         });
-        return res.status(200).json({ message: 'Email sent' });
+    }).catch((error) => {
+        console.error(error);
+        return res.status(500).json({ error: error.message });
     });
 });
 
