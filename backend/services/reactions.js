@@ -22,6 +22,8 @@ reactions.set('gmail_send_email', gmail_send_email);
 reactions.set('gmail_delete_email', gmail_delete_email);
 reactions.set('gmail_add_label', gmail_add_label)
 reactions.set('gmail_remove_label', gmail_remove_label)
+reactions.set('gmail_reply_to_email', gmail_reply_to_email)
+reactions.set('gmail_forward_email', gmail_forward_email)
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -477,6 +479,170 @@ async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
         console.log("Label removed successfully from email:", response.data);
     } catch (error) {
         console.error("Error removing label via Gmail:", error);
+    }
+}
+
+/**
+ * Handler function for removing a label from a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!(reactionData.mail_id) || !(reactionData.label_id)) {
+            throw new Error("Missing required email or label data");
+        }
+
+        const response = await gmail.users.messages.modify({
+            userId: 'me',
+            id: reactionData.mail_id,
+            requestBody: {
+                removeLabelIds: [reactionData.label_id]
+            }
+        });
+
+        console.log("Label removed successfully from email:", response.data);
+    } catch (error) {
+        console.error("Error removing label via Gmail:", error);
+    }
+}
+
+/**
+ * Handler function for replying to a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_reply_to_email(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!(reactionData.mail_id) || !(reactionData.reply_body)) {
+            throw new Error("Missing required email or reply data");
+        }
+
+        const originalMessage = await gmail.users.messages.get({
+            userId: 'me',
+            id: reactionData.mail_id,
+            format: 'full',
+        });
+
+        const threadId = originalMessage.data.threadId;
+        const headers = originalMessage.data.payload.headers;
+        const originalSubject = headers.find(h => h.name === "Subject")?.value || "No Subject";
+        const originalFrom = headers.find(h => h.name === "From")?.value || "";
+
+        const emailMatch = originalFrom.match(/<(.+?)>/);
+        const recipientEmail = emailMatch ? emailMatch[1] : originalFrom;
+
+        if (!recipientEmail) {
+            throw new Error("Failed to extract recipient email address");
+        }
+
+        const rawMessage = [
+            `From: me`,
+            `To: ${recipientEmail}`,
+            `Subject: ${originalSubject}`,
+            `In-Reply-To: ${reactionData.mail_id}`,
+            `References: ${reactionData.mail_id}`,
+            ``,
+            `${reactionData.reply_body}`
+        ].join('\n');
+
+        const encodedMessage = Buffer.from(rawMessage).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
+
+        const response = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: encodedMessage,
+                threadId: threadId,
+            }
+        });
+
+        console.log("Reply sent successfully:", response.data);
+    } catch (error) {
+        console.error("Error replying to email via Gmail:", error);
+    }
+}
+
+/**
+ * Handler function for forwarding a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_forward_email(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!reactionData.mail_id || !reactionData.forward_to) {
+            throw new Error("Missing required email or forwarding address data");
+        }
+
+        // Retrieve the original email
+        const originalMessage = await gmail.users.messages.get({
+            userId: 'me',
+            id: reactionData.mail_id,
+            format: 'full',
+        });
+
+        const headers = originalMessage.data.payload.headers;
+        const essentialHeaders = ['From', 'To', 'Subject', 'Date'];
+        const simplifiedHeaders = headers
+            .filter(header => essentialHeaders.includes(header.name))
+            .map(header => `${header.name}: ${header.value}`)
+            .join("\n");
+
+        let body = "";
+        const parts = originalMessage.data.payload.parts;
+        if (parts) {
+            const textPart = parts.find(part => part.mimeType === "text/plain");
+            if (textPart && textPart.body.data) {
+                body = Buffer.from(textPart.body.data, "base64").toString("utf8");
+            }
+        } else if (originalMessage.data.payload.body && originalMessage.data.payload.body.data) {
+            body = Buffer.from(originalMessage.data.payload.body.data, "base64").toString("utf8");
+        }
+
+        const forwardMessage = [
+            `To: ${reactionData.forward_to}`,
+            `Subject: Fwd: ${simplifiedHeaders.match(/Subject: (.+)/)?.[1] || "No Subject"}`,
+            `\n---------- Forwarded message ----------`,
+            `${simplifiedHeaders}\n`,
+            body.trim()
+        ].join("\r\n");
+
+        const encodedMessage = Buffer.from(forwardMessage)
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        const response = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: encodedMessage,
+            },
+        });
+
+        console.log('Email forwarded successfully:', response.data);
+    } catch (error) {
+        console.error('Error forwarding email via Gmail:', error);
     }
 }
 

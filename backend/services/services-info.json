@@ -749,6 +749,54 @@
                 "required": true
               }
             ]
+          },
+          {
+            "name": "gmail_reply_to_email",
+            "display_name": "Gmail reply to an email",
+            "description": "reply to an email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to reply",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "reply_body",
+                "display_name": "reply body",
+                "description": "the body of the mail you want to reply",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "gmail_forward_email",
+            "display_name": "Gmail forward an email",
+            "description": "forward email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to froward",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "forward_to",
+                "display_name": "forward to",
+                "description": "the email you want to forward",
+                "type": "text",
+                "required": true
+              }
+            ]
           }
         ]
       },
