@@ -59,31 +59,6 @@ async function getLastHistoryId() {
 }
 
 /**
- * @brief Handles an event by determining its type and executing the corresponding action.
- * @param {String} eventType - The type of event (e.g., messageAdded, labelsRemoved).
- * @param {Object} message - The message data associated with the event.
- */
-function handleEvent(eventType, message) {
-    switch (eventType) {
-        case 'messageAdded':
-            send(message);
-            break;
-        case 'messageDeleted':
-            send(message);
-            break;
-        case 'labelsAdded':
-            send(message);
-            break;
-
-        case 'labelsRemoved':
-            send(message);
-            break;
-        default:
-            console.log(`Unknown event type: ${eventType}`);
-    }
-}
-
-/**
  * @brief Retrieves all labels for the authenticated Gmail user and maps their IDs to names.
  * @param {Object} auth - The authentication object for Gmail API.
  * @returns {Object} A mapping of label IDs to label names.
@@ -159,16 +134,22 @@ async function handleNotification(webhookData) {
     console.log(historyResponse.data)
     if (historyResponse.data.history) {
         for (const event of historyResponse.data.history) {
-            if (event.messagesAdded && targetAction === "gmail_on_new_mail") {
+            if (event.messagesAdded && (targetAction === "gmail_on_new_mail" || targetAction === "gmail_on_mail_send" || targetAction === "gmail_on_draft_create")) {
                 for (const message of event.messagesAdded) {
                     const mailInfo = await messageInfo(gmail, message.message.id, labelMap);
-                    handleEvent('messageAdded', mailInfo);
+                    if (mailInfo.labels.includes('DRAFT') && targetAction === "gmail_on_draft_create") {
+                        send(mailInfo);
+                    } else if (mailInfo.labels.includes('SENT') && targetAction === "gmail_on_mail_send") {
+                        send(mailInfo);
+                    } else if (targetAction === "gmail_on_new_mail") {
+                        send(mailInfo);
+                    }
                 }
             }
             if (event.messagesDeleted && targetAction === "gmail_on_deleted_mail") {
                 for (const message of event.messagesDeleted) {
                     mailInfo = await messageInfo(gmail, message.message.id, labelMap);
-                    handleEvent('messageDeleted', mailInfo);
+                    send(mailInfo);
                 };
             }
             if (event.labelsAdded && targetAction === "gmail_on_label_added") {
@@ -177,7 +158,7 @@ async function handleNotification(webhookData) {
                     if (actionData.type_label === undefined || actionData.type_label === null || addedLabels.includes(actionData.type_label)) {
                         console.log("messageId", message.message.id)
                         mailInfo = await messageInfo(gmail, message.message.id, labelMap);
-                        handleEvent('labelsAdded', mailInfo);
+                        send(mailInfo);
                     }
                 };
             }
@@ -187,7 +168,7 @@ async function handleNotification(webhookData) {
                     console.log(`Labels removed from message ${message.message.id}:`, removedLabels);
                     if (actionData.type_label === undefined || actionData.type_label === null || removedLabels.includes(actionData.type_label)) {
                         mailInfo = await messageInfo(gmail, message.message.id, labelMap);
-                        handleEvent('labelsRemoved', mailInfo);
+                        send(mailInfo);
                     }
                 };
             }
