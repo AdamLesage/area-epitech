@@ -12,16 +12,23 @@
             </div>
         </div>
         <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm mobile:mb-20">
-            <p class="hover:underline hover:cursor-pointer">Mentions</p>
-            <p class="hover:underline hover:cursor-pointer">Cookies</p>
-            <p class="hover:underline hover:cursor-pointer">Privacy</p>
-            <p class="hover:underline hover:cursor-pointer">Terms</p>
+            <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/mentions')">Mentions</p>
+            <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/cookies')">Cookies</p>
+            <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/privacy')">Privacy</p>
+            <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/terms')">Terms</p>
         </div>
     </footer>
 </template>
 
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+function navigateTo(path: string) {
+    router.push(path);
+}
 
 function copyEmail() {
     navigator.clipboard.writeText('contact.area.ownspace@gmail.com');

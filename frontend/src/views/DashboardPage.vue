@@ -312,10 +312,10 @@
                 <h1 class="text-4xl font-black text-white text-center w-full hover:cursor-pointer" @click="scrollToTop">AREA</h1>
             </div>
             <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm">
-                <p class="hover:underline hover:cursor-pointer">Mentions</p>
-                <p class="hover:underline hover:cursor-pointer">Cookies</p>
-                <p class="hover:underline hover:cursor-pointer">Privacy</p>
-                <p class="hover:underline hover:cursor-pointer">Terms</p>
+                <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/mentions')">Mentions</p>
+                <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/cookies')">Cookies</p>
+                <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/privacy')">Privacy</p>
+                <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/terms')">Terms</p>
             </div>
         </footer>
     </div>
@@ -368,6 +368,10 @@ watch(() => serviceStore.services, (newServices) => {
 });
 
 // Functions
+function navigateTo(path: string) {
+    router.push(path);
+}
+
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
