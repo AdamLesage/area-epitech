@@ -1,6 +1,6 @@
 <template>
-    <div id="icons" class="flex justify-between w-full relative">
-        <svg width="213" height="282" viewBox="0 0 213 282" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div id="icons" class="flex justify-center w-full relative">
+        <svg width="213" height="282" viewBox="0 0 213 282" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative">
             <rect y="142.96" width="140.377" height="140.377" rx="16" transform="rotate(-9 0 142.96)" fill="#F1EFAE" class="hover:cursor-pointer" @click.prevent="clickExpress" />
             <g clip-path="url(#clip0_303_188)" class="hover:cursor-pointer" @click.prevent="clickExpress" >
                 <path d="M139.046 222.22C137.56 223.067 135.814 223.342 134.139 222.992C132.464 222.642 130.975 221.691 129.952 220.319L110.913 201.195L108.171 198.534L93.9535 226.048C93.4427 227.6 92.3845 228.912 90.9766 229.739C89.5686 230.567 87.9075 230.854 86.3037 230.545L104.692 195.521L78.4898 170.663C79.9625 169.853 81.6693 169.575 83.3229 169.876C84.9765 170.177 86.4758 171.039 87.5685 172.316L107.22 191.617L120.05 167.264C120.57 165.738 121.634 164.456 123.038 163.662C124.442 162.868 126.088 162.618 127.665 162.958L121.008 175.479L111.945 192.15C111.672 192.483 111.473 192.869 111.361 193.285C111.249 193.7 111.226 194.134 111.293 194.559C111.36 194.984 111.517 195.39 111.752 195.75C111.987 196.11 112.295 196.417 112.657 196.649L139.002 222.231L139.046 222.22ZM25.3822 207.683L25.7957 197.989C28.078 178.588 48.1486 167.487 64.6188 176.666C74.2649 182.047 77.9176 191.251 79.2001 202.074L30.8754 209.728C33.1345 229.059 48.8328 238.462 65.6171 229.729C68.3258 228.239 70.6229 226.101 72.3028 223.506C73.9828 220.911 74.9931 217.94 75.2435 214.858C75.703 211.695 77.165 210.934 80.1365 211.355C80.2457 215.107 79.5032 218.835 77.9646 222.259C76.4261 225.683 74.1316 228.714 71.2535 231.124C66.4554 234.831 60.6076 236.926 54.5469 237.108C48.4862 237.29 42.5231 235.551 37.5109 232.139C32.4291 227.965 28.8507 222.245 27.3207 215.85C27.1522 214.786 26.6323 213.847 26.2365 212.931C25.9375 211.186 25.6499 209.438 25.3739 207.689L25.3822 207.683ZM30.2789 205.581L73.9817 198.659C71.5046 184.777 61.1534 176.291 49.4189 178.057C36.3437 179.942 28.5393 191.081 30.2372 205.522L30.2789 205.581Z" fill="#3A4551"/>
@@ -20,17 +20,17 @@
                 </clipPath>
             </defs>
         </svg>
-        <div 
-            v-if="menuToggles[0]" 
-            class="absolute bottom-[-4rem] left-[-1rem] w-[213px] bg-home-div text-white text-sm p-3 rounded-lg shadow-lg">
+        <div
+            v-if="menuToggles[0]"
+            class="absolute bottom-[-3.5rem] left-[-1rem] mobile:left-[25%] w-[213px] bg-home-div text-white text-sm p-3 rounded-lg shadow-lg">
             <p>
                 Our Server uses ExpressJs<br />
                 Version: <span class="text-yellow-200">4.21.1</span>
             </p>
         </div>
-        <div 
-            v-if="menuToggles[1]" 
-            class="absolute top-[15rem] left-[7rem] w-[213px] bg-home-div text-white text-sm p-3 rounded-lg shadow-lg">
+        <div
+            v-if="menuToggles[1]"
+            class="absolute top-[13.5rem] left-[3.5rem] mobile:left-[40%] mobile:top-[10rem] w-[213px] bg-home-div text-white text-sm p-3 rounded-lg shadow-lg">
             <p>
                 Our WebApp is built using VueJs and Vite<br />
                 Version: <span class="text-green-500">3.5.13</span>

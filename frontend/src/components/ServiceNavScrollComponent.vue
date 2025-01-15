@@ -4,6 +4,7 @@ import NavButton from '@/components/NavButton.vue';
 import { Icon } from '@iconify/vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { ref } from 'vue';
 
 const userStore = useUserStore();
 const user = userStore.user;
@@ -42,6 +43,11 @@ const handleBackButton = () => {
     emit('back-button');
 }
 
+function openMenu() {
+    console.log('Toggling menu');
+    showMenu.value = !showMenu.value;
+}
+
 function redirectToService() {
     if (!props.redirect) {
         console.error('Redirect not allowed');
@@ -71,10 +77,13 @@ const props = defineProps<{
     title: string | null,
     redirect: boolean | true,
 }>();
+
+const showMenu = ref<boolean>(false);
 </script>
 
 <template>
-    <div class="w-full p-4">
+    <div class="w-full p-4"
+        :class="{ 'shadow-xl': showMenu }">
         <nav class="flex justify-between items-center w-full">
             <div class="flex justify-start w-1/3">
                 <BackButton color="white" class="hover:cursor-pointer" @click="handleBackButton" />
@@ -82,15 +91,22 @@ const props = defineProps<{
             <div class="flex items-center w-1/3 justify-center gap-2">
                 <Icon :icon="props.logo" class="w-[3rem] h-[3rem] text-white hover:cursor-pointer" @click="redirectToService" v-if="props.logo" />
                 <div class="flex flex-col justify-end items-center" v-if="props.title">
-                    <h1 class="text-white text-[3rem] leading-[2.5rem] font-bold hover:cursor-pointer select-none" @click="redirectToService">{{ props.title }}</h1>
+                    <h1 class="text-white text-[3rem] half:!text-[2rem] leading-[2.5rem] half:!leading-3 font-bold hover:cursor-pointer select-none" @click="redirectToService">{{ props.title }}</h1>
                 </div>
             </div>
             <div class="flex gap-8 w-1/3 justify-end">
-                <NavButton icon="material-symbols:explore-rounded" text="Explore" @redirect="handleExploreRedirect" />
-                <NavButton icon="material-symbols:folder-outline" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />
-                <NavButton icon="mdi:hammer-screwdriver" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
-                <img :src="user?.profilePicture?.url || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full" @click="handleUserProfileRedirect" v-if="user" />
+                <NavButton icon="material-symbols:explore-rounded" class="half:hidden" text="Explore" @redirect="handleExploreRedirect" />
+                <NavButton icon="material-symbols:folder-outline" class="half:hidden" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />
+                <NavButton icon="mdi:hammer-screwdriver" class="half:hidden" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
+                <NavButton icon="mdi:menu" class="hidden half:flex" text="Menu" @redirect="openMenu" />
+                <img :src="user?.profilePictureUrl || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full" @click="handleUserProfileRedirect" v-if="user" />
             </div>
         </nav>
+        <div v-if="showMenu" class="mt-6 text-white text-xl hidden half:flex flex-col items-center bg-black/10 rounded-md py-4 gap-2">
+            <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2 items-center flex gap-2" @click="handleExploreRedirect"><Icon icon="material-symbols:explore-rounded" class="w-5 h-5" />Explore</h1>
+            <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2 items-center flex gap-2" @click="handleMyAreasRedirect"><Icon icon="material-symbols:folder-outline" class="w-5 h-5" />My Area</h1>
+            <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2 items-center flex gap-2" @click="handleWorkshopRedirect"><Icon icon="mdi:hammer-screwdriver" class="w-5 h-5" />Workshop</h1>
+            <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2 items-center flex gap-2" @click="handleUserProfileRedirect"><Icon icon="carbon:user-avatar-filled" class="w-5 h-5" />My Profile</h1>
+        </div>
     </div>
 </template>
