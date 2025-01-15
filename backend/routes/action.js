@@ -144,7 +144,7 @@ router.post('/action', async (req, res) => {
             },
         });
         areaNotify("on_area_created", newAction)
-        res.status(201).json(newAction);
+        return res.status(201).json(newAction);
     } catch (e) {
         console.error("Error on create action ", e);
         return res.status(500).send("error on create action");

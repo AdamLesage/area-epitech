@@ -982,7 +982,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": []
           },
           {
@@ -992,7 +1002,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": []
           },
           {
@@ -1002,7 +1022,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": []
           }
         ],
@@ -1123,7 +1153,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": [
               {
                 "name": "type_label",
@@ -1131,13 +1171,13 @@
                 "description": "the type of the triggered label",
                 "type": "select",
                 "options": [
-                  "INBOX",         
-                  "STARRED",         
-                  "UNREAD",          
-                  "SENT",           
+                  "INBOX",
+                  "STARRED",
+                  "UNREAD",
+                  "SENT",
                   "DRAFT",
-                  "TRASH",     
-                  "SPAM",    
+                  "TRASH",
+                  "SPAM",
                   "IMPORTANT",
                   "CHAT",
                   "CATEGORY_PERSONAL",
@@ -1163,7 +1203,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": [
               {
                 "name": "type_label",
@@ -1171,13 +1221,13 @@
                 "description": "the type of the triggered label",
                 "type": "select",
                 "options": [
-                  "INBOX",         
+                  "INBOX",
                   "STARRED",
-                  "UNREAD",          
-                  "SENT",           
+                  "UNREAD",
+                  "SENT",
                   "DRAFT",
                   "TRASH",
-                  "SPAM",    
+                  "SPAM",
                   "IMPORTANT",
                   "CHAT",
                   "CATEGORY_PERSONAL",
@@ -1259,11 +1309,21 @@
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": []
           }
         ],
-        "reactions" : [
+        "reactions": [
           {
             "name": "gmail_create_draft",
             "display_name": "Gmail create draft",
@@ -1292,6 +1352,315 @@
                 "description": "the body of the draft",
                 "type": "text",
                 "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "strava",
+    "color": "#fc4c02",
+    "icon": "bi:strava",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "athlete",
+        "display_name": "Athlete",
+        "actions": [
+          {
+            "name": "athlete.updated",
+            "display_name": "Athlete Updated",
+            "description": "An athlete is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "weight",
+                "display_name": "Weight",
+                "description": "The weight of the athlete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "update_athlete",
+            "display_name": "Update Athlete weight",
+            "description": "Update Athlete weight",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "weight",
+                "display_name": "Weight",
+                "description": "The weight of the athlete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "activity",
+        "display_name": "Activity",
+        "actions": [
+          {
+            "name": "activity.create",
+            "display_name": "Activity Created",
+            "description": "A new activity is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": []
+          },
+          {
+            "name": "activity.delete",
+            "display_name": "Activity Deleted",
+            "description": "A new activity is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": []
+          },
+          {
+            "name": "activity.update",
+            "display_name": "Activity Updated",
+            "description": "An activity is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "activity_id",
+                "display_name": "Activity ID",
+                "description": "The ID of the activity",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "create_activity",
+            "display_name": "Create a new activity",
+            "description": "Create a new activity",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "name",
+                "display_name": "Activity Name",
+                "description": "The name of the activity",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "type",
+                "display_name": "Activity Type",
+                "description": "The type of the activity",
+                "type": "select",
+                "options": [
+                  "AlpineSki",
+                  "BackcountrySki",
+                  "Badminton",
+                  "Canoeing",
+                  "Crossfit",
+                  "EBikeRide",
+                  "Elliptical",
+                  "EMountainBikeRide",
+                  "Golf",
+                  "GravelRide",
+                  "Handcycle",
+                  "HighIntensityIntervalTraining",
+                  "Hike",
+                  "IceSkate",
+                  "InlineSkate",
+                  "Kayaking",
+                  "Kitesurf",
+                  "MountainBikeRide",
+                  "NordicSki",
+                  "Pickleball",
+                  "Pilates",
+                  "Racquetball",
+                  "Ride",
+                  "RockClimbing",
+                  "RollerSki",
+                  "Rowing",
+                  "Run",
+                  "Sail",
+                  "Skateboard",
+                  "Snowboard",
+                  "Snowshoe",
+                  "Soccer",
+                  "Squash",
+                  "StairStepper",
+                  "StandUpPaddling",
+                  "Surfing",
+                  "Swim",
+                  "TableTennis",
+                  "Tennis",
+                  "TrailRun",
+                  "Velomobile",
+                  "VirtualRide",
+                  "VirtualRow",
+                  "VirtualRun",
+                  "Walk",
+                  "WeightTraining",
+                  "Wheelchair",
+                  "Windsurf",
+                  "Workout",
+                  "Yoga"
+                ],
+                "required": false
+              },
+              {
+                "name": "sport_type",
+                "display_name": "Sport Type",
+                "description": "The sport of the activity (run, ride, swim, etc.)",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "start_date_local",
+                "display_name": "Start Date",
+                "description": "The start date of the activity",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "elapsed_time",
+                "display_name": "Elapsed Time",
+                "description": "The elapsed time of the activity in seconds",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "description",
+                "display_name": "Description",
+                "description": "Description of the activity",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "distance",
+                "display_name": "Distance",
+                "description": "The distance of the activity in meters",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "trainer",
+                "display_name": "Trainer",
+                "description": " Set to 1 to mark as a trainer activity. ",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "commute",
+                "display_name": "Commute",
+                "description": " Set to 1 to mark as commute",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "update_activity",
+            "display_name": "Update an activity",
+            "description": "Update an activity",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "activity_id",
+                "display_name": "Activity ID",
+                "description": "The ID of the activity to update",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "name",
+                "display_name": "Activity Name",
+                "description": "The name of the activity",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "sport_type",
+                "display_name": "Sport Type",
+                "description": "An instance of SportType must be one of the following: AlpineSki, BackcountrySki, Badminton, Canoeing, Crossfit, EBikeRide, Elliptical, EMountainBikeRide, Golf, GravelRide, Handcycle, HighIntensityIntervalTraining, Hike, IceSkate, InlineSkate, Kayaking, Kitesurf, MountainBikeRide, NordicSki, Pickleball, Pilates, Racquetball, Ride, RockClimbing, RollerSki, Rowing, Run, Sail, Skateboard, Snowboard, Snowshoe, Soccer, Squash, StairStepper, StandUpPaddling, Surfing, Swim, TableTennis, Tennis, TrailRun, Velomobile, VirtualRide, VirtualRow, VirtualRun, Walk, WeightTraining, Wheelchair, Windsurf, Workout, Yoga",
+                "type": "SportType",
+                "required": false
+              },
+              {
+                "name": "start_date_local",
+                "display_name": "Start Date",
+                "description": "The start date of the activity",
+                "type": "datetime",
+                "required": false
+              },
+              {
+                "name": "elapsed_time",
+                "display_name": "Elapsed Time",
+                "description": "The elapsed time of the activity in seconds",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "description",
+                "display_name": "Description",
+                "description": "The description of the activity",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "distance",
+                "display_name": "Distance",
+                "description": "The distance of the activity in meters",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "trainer",
+                "display_name": "Trainer",
+                "description": "Whether this activity was recorded on a training machine",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "commute",
+                "display_name": "Commute",
+                "description": "Whether this activity is a commute",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "hide_from_home",
+                "display_name": "Hide from Home",
+                "description": "Whether this activity is muted",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "gear_id",
+                "display_name": "Gear ID",
+                "description": "Identifier for the gear associated with the activity. ‘none’ clears gear from activity",
+                "type": "string",
+                "required": false
               }
             ]
           }

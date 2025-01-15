@@ -9,6 +9,7 @@ require('./authentication/passport');
 const githubServiceRouter = require('./services/githubService')
 const dropboxServiceRouter = require('./services/dropboxService')
 const areaServicesRouter = require('./services/areaService')
+const stravaServiceRouter = require('./services/stravaService')
 const gmailServiceRouter = require('./services/gmailService')
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
@@ -50,6 +51,7 @@ app.use('/github', githubServiceRouter);
 app.use('/dropbox', dropboxServiceRouter);
 app.use('/area', areaServicesRouter)
 app.use('/gmail', gmailServiceRouter)
+app.use('/strava', stravaServiceRouter);
 app.use('/api', actionsRouter);
 app.use('/api', reactionRouter);
 app.use('/auth', authRouter);

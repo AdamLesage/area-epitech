@@ -17,6 +17,11 @@ reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
 
 reactions.set('playlist_create', spotify_create_playlist);
+
+reactions.set('update_athlete', strava_update_athlete);
+reactions.set('create_activity', strava_create_activity);
+reactions.set('update_activity', strava_update_activity);
+
 reactions.set('playlist_add_track', spotify_add_to_playlist);
 reactions.set('save_track', spotify_save_track);
 reactions.set('skip_track', spotify_skip_track);
@@ -960,6 +965,274 @@ async function area_stop(reactionData, actionResponseData, userUuid) {
         console.error(e)
         return;
     }
+}
+async function strava_update_athlete(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "strava");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Updating athlete in Strava:", reactionData, actionResponseData);
+
+    const response = await axios.put(`https://www.strava.com/api/v3/athlete`,
+        {
+            "weight": reactionData.weight || 0,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_athlete`);
+        return;
+    }
+    console.log("Athlete updated successfully:", response);
+}
+
+async function strava_create_activity(reactionData, actionResponseData, userUuid) {
+    console.log("Creating activity in Strava:", reactionData, actionResponseData);
+    const accessToken = await getAccessToken(userUuid, "strava");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://www.strava.com/api/v3/activities`,
+        {
+            "name": reactionData.name || "default name",
+            "type": reactionData.type || "Run",
+            "start_date_local": reactionData.start_date_local || new Date().toISOString(),
+            "elapsed_time": reactionData.elapsed_time || 0,
+            "description": reactionData.description || "enter the description here",
+            "distance": reactionData.distance || 0,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+
+    if (response.status > 299) {
+        console.error(`Error calling reaction create_activity`);
+        return;
+    }
+    console.log("Activity created successfully:", response);
+}
+
+async function strava_update_activity(reactionData, actionResponseData, userUuid) {
+    console.log("Updating activity in Strava:", reactionData, actionResponseData);
+    const accessToken = await getAccessToken(userUuid, "strava");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.put(`https://www.strava.com/api/v3/activities/${reactionData.activity_id}`,
+        {
+            "name": reactionData.name || "default name",
+            "type": reactionData.type || "Run",
+            "start_date_local": reactionData.start_date_local || new Date().toISOString(),
+            "elapsed_time": reactionData.elapsed_time || 0,
+            "description": reactionData.description || "enter the description here",
+            "distance": reactionData.distance || 0,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_activity`);
+        return;
+    }
+    console.log("Activity updated successfully:", response);
+}
+
+async function spotify_add_to_playlist(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    const username = await getusername(userUuid, "spotify");
+    console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
+        {
+            "uris": [reactionData.trackUri]
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction add_to_playlist`);
+        return;
+    }
+    console.log("Track added to playlist successfully:", response);
+}
+
+async function spotify_save_track(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Saving track in Spotify:", reactionData, actionResponseData);
+    const response = await axios.put(`https://api.spotify.com/v1/me/tracks`,
+        {
+            "ids": [reactionData.trackId]
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction save_track`);
+        return;
+    }
+    console.log("Track saved successfully:", response);
+}
+
+async function spotify_skip_track(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Skipping track in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/me/player/next`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction skip_track`);
+        return;
+    }
+    console.log("Track skipped successfully:", response);
+}
+
+async function spotify_previous_track(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Playing previous track in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/me/player/previous`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction previous_track`);
+        return;
+    }
+    console.log("Previous track played successfully:", response);
+}
+   
+async function spotify_start_resume(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Starting or resuming playback in Spotify:", reactionData, actionResponseData);
+    const response = await axios.put(`https://api.spotify.com/v1/me/player/play`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction start_resume`);
+        return;
+    }
+    console.log("Playback started or resumed successfully:", response);
+}
+
+async function spotify_pause(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Pausing playback in Spotify:", reactionData, actionResponseData);
+    const response = await axios.put(`https://api.spotify.com/v1/me/player/pause`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction pause`);
+        return;
+    }
+    console.log("Playback paused successfully:", response);
+}
+
+async function spotify_add_track_to_queue(reactionData, actionResponseData, userUuid) {
+    const accessToken = await getAccessToken(userUuid, "spotify");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+    console.log("Adding track to queue in Spotify:", reactionData, actionResponseData);
+    const response = await axios.post(`https://api.spotify.com/v1/me/player/queue`,
+        {
+            "uri": reactionData.trackUri
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction add_track_to_queue`);
+        return;
+    }
+    console.log("Track added to queue successfully:", response);
 }
 
 module.exports = reactions;
