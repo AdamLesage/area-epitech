@@ -1,6 +1,6 @@
 <template>
     <div class="text-white font-sans h-screen flex flex-col">
-        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="displayedService.color" class="z-50" v-if="displayedService" />
+        <HelpAssistantPopupComponent :bottom="8" :left="8" :color="displayedService.color" class="z-50" v-if="displayedService" />
         <div class="flex flex-col items-center justify-between web:h-1/4 mobile:h-full">
             <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" />
             <div class="flex justify-center items-center p-4 mobile:hidden z-10">
