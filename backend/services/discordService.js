@@ -23,15 +23,47 @@ const guildTokens = new Map();
 // ACTION
 router.post('/webhook', async (req, res) => {
     try {
-        console.log("receive discord webhook")
+        console.log("receive discord webhook");
 
         console.log("Headers:", req.headers);
         console.log("Body:", req.body);
 
+        // Fetch all actionReactions that are active and have the service "discord"
+        const targetuser = await prisma.user.findFirst({
+            where: {
+                linkedAccounts: {
+                    some: {
+                        serviceName: "discord",
+                        uuid: req.body.guild_id
+                    }
+                },
+            }
+        });
+
+        const activeDiscordActions = await prisma.actionReaction.findMany({
+            where: {
+                isActive: true,
+                action: {
+                    service: {
+                        name: "discord",
+                    },
+                },
+                userUuid: targetuser.uuid,
+            },
+        });
+
+        const promises = activeDiscordActions.map(async (action) => {
+            // Push each action to the Redis queue
+            console.log("send to worker", action.uuid);
+            await redis.lpush(action.uuid, JSON.stringify(req.body));
+        });
+
+        await Promise.all(promises);
+
         // Send a success response
-        return res.status(200).send('Webhook processed successfully');
+        res.status(200).send('Webhook processed successfully');
     } catch (error) {
-        console.error(error);
+        console.error('Error processing webhook:', error);
         res.status(500).send(`Error receiving webhook: ${error.message}`);
     }
 });
@@ -101,5 +133,48 @@ router.get('/channels', async (req, res) => {
         return res.status(500).send('Error whilst fetching channels');
     }
 });
+
+router.get('/roles', async (req, res) => {
+    const guildId = req.query.guild_id;
+    console.log("gvhjklmù");
+
+    console.log(req.query);
+
+    try {
+        const response = await axios.get(`https://discord.com/api/guilds/${guildId}/roles`, {
+            headers: {
+                Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+            },
+        });
+
+        console.log('Roles fetched:', response.data);
+        return res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+        return res.status(500).send('Error whilst fetching roles');
+    }
+});
+
+router.get('/users', async (req, res) => {
+    const guildId = req.query.guild_id;
+
+    console.log(req.query);
+
+    try {
+        const response = await axios.get(`https://discord.com/api/guilds/${guildId}/members`, {
+            headers: {
+                Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+            },
+        });
+
+        console.log('Users fetched:', response.data);
+        return res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        return res.status(500).send('Error whilst fetching users');
+    }
+});
+
+router
 
 module.exports = router;
