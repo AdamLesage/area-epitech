@@ -156,6 +156,7 @@ import Cookies from 'js-cookie';
 import ServiceNavComponent from "@/components/ServiceNavComponent.vue";
 import { Icon } from '@iconify/vue';
 import * as yup from 'yup';
+import { profile } from "console";
 
 const userStore = useUserStore();
 const servicesStore = useServiceStore();
@@ -181,7 +182,7 @@ watch(() => userStore.user, (newUser) => {
         bio: newUser?.bio || "",
         birthDate: newUser?.birthDate || "",
         phoneNumber: newUser?.phoneNumber || "",
-        profilePicture: null
+        profilePictureUrl: newUser?.profilePictureUrl,
     };
 });
 
@@ -200,7 +201,6 @@ const editForm = ref({
 });
 
 function selectImage(image: string) {
-    console.log(image);
     editForm.value.profilePictureUrl = image;
     showPopup.value = false;
 }
@@ -231,12 +231,13 @@ function saveProfile() {
             bio: editForm.value.bio,
             birthDate: editForm.value.birthDate,
             phoneNumber: editForm.value.phoneNumber,
+            profilePictureUrl: editForm.value.profilePictureUrl,
         })
     }).then((res) => {
         if (res.ok) {
             res.json().then((data) => {
                 userStore.setUser(data);
-                console.log(data);
+                isEditing.value = false;
             });
         } else {
             res.json().then((error) => {
@@ -246,20 +247,6 @@ function saveProfile() {
     }).catch((error) => {
         console.error('Fetch error:', error);
     });
-}
-
-function handleFileChange(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-        editForm.value.profilePicture = file;
-        if (user.value) {
-            user.value.profilePicture = { id: user.value.profilePicture?.id || 0, url: URL.createObjectURL(file) };
-        }
-    }
-}
-
-function displaySpacedPhoneNumber(phoneNumber: string) {
-    return phoneNumber.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, "+$1 $2 $3 $4 $5");
 }
 
 function handleBackButton() {

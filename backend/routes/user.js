@@ -394,6 +394,7 @@ router.put('/user/:uuid', async (req, res) => {
     if (req.body.bio) data.bio = req.body.bio;
     if (req.body.birthDate) data.birthDate = req.body.birthDate;
     if (req.body.phoneNumber) data.phoneNumber = req.body.phoneNumber;
+    if (req.body.profilePictureUrl) data.profilePictureUrl = req.body.profilePictureUrl;
 
     try {
         const user = await prisma.user.update({
