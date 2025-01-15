@@ -17,7 +17,7 @@ const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 const { google } = require('googleapis');
-
+const { initializeGmailClient } = require('../utils/initGmailClient');
 // Intern auth routes
 
 router.post('/login', (req, res) => {
@@ -531,7 +531,9 @@ router.get('/google', async(req, res) => {
             'https://www.googleapis.com/auth/gmail.compose',
             'https://www.googleapis.com/auth/gmail.modify',
             'https://www.googleapis.com/auth/gmail.insert',
-            'https://www.googleapis.com/auth/gmail.settings.basic',]
+            'https://www.googleapis.com/auth/gmail.settings.basic'],
+        accessType: 'offline',
+        approvalPrompt: 'force'
     })(req, res);
 });
 
@@ -546,11 +548,12 @@ router.get('/google/callback',
         let user = await getUser(req);
 
         const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+        console.log("refreshToken", req.user.refreshToken)
 
         const linkedAccountParams = {
             uuid: uuidv4(),
             serviceName: 'gmail',
-            authToken: req.user.accessToken,
+            authToken: req.user.refreshToken,
             username: req.user.username || 'Username not found',
             accountEmail: req.user.accountEmail,
         };
@@ -560,7 +563,7 @@ router.get('/google/callback',
             name: req.user.displayName || '',
             surname: '',
             uuid: uuidv4(),
-            hashedPassword: req.user.accessToken,
+            hashedPassword: req.user.refreshToken,
         };
 
         if (!user) {
@@ -606,7 +609,7 @@ router.get('/google/callback',
                 });
             }
         }
-        await watchGmail(req.user.accessToken)
+        await watchGmail(req.user.refreshToken)
         return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
     } catch (error) {
         console.error(error);
@@ -614,12 +617,9 @@ router.get('/google/callback',
     }
 });
 
-async function watchGmail(accessToken) {
+async function watchGmail(refreshToken) {
     try {
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(refreshToken)
 
         const response = await gmail.users.watch({
             userId: 'me',  // 'me' corresponds to the authenticated user
