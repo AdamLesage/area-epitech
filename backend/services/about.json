@@ -209,15 +209,15 @@
         "description": "Delete a message from a specific channel"
       },
       {
-        "name": "discord_create_channel",
+        "name": "discord_create_channel_in_server",
         "description": "Create a channel"
       },
       {
-        "name": "discord_delete_channel",
+        "name": "discord_delete_channel_from_server",
         "description": "Delete a channel"
       },
       {
-        "name": "clear_all_messages_from_a_channel",
+        "name": "discord_clear_all_messages_from_channel",
         "description": "Clear all messages from a channel"
       },
       {
@@ -237,11 +237,11 @@
         "description": "Create a role in a server"
       },
       {
-        "name": "discord_delete_role_in_a_server",
+        "name": "discord_delete_role_from_server",
         "description": "Delete a role in a server"
       },
       {
-        "name": "discord_update_role_in_a_server",
+        "name": "discord_edit_role_in_server",
         "description": "Update a role in a server"
       },
       {
