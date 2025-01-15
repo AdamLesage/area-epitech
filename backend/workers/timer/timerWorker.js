@@ -24,7 +24,12 @@ actionData = JSON.parse(process.env.DATA)
 async function processWebhook() {
     while (true) {
         const now = new Date();
-        const timeUntilTarget = actionData.target_date.getTime() - now.getTime();
+        const date = actionData.date;
+        const time = actionData.time;
+        const [year, month, day] = date.split("-");
+        const [hours, minutes] = time.split(":");
+        const targetDate = new Date(year, month - 1, day, hours, minutes);
+        const timeUntilTarget = targetDate.getTime() - now.getTime();
 
         if ("timer.chronometer" == process.env.TARGET_ACTION) {
             setTimeout(() => {
@@ -32,7 +37,7 @@ async function processWebhook() {
             }, actionData.duration);
         } else if ("timer.alarm" == process.env.TARGET_ACTION) {
             if (timeUntilTarget > 0) {
-                console.log(`Timer set for: ${actionData.target_date}`);
+                console.log(`Timer set for: ${actionData.date}`);
                 setTimeout(async () => {
                     send("done");
                     console.log("Specific date reached, start_resume triggered.");
