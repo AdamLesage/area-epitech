@@ -8,7 +8,7 @@
                 <h1 class="w-1/2 mobile:w-full text-3xl font-black tracking-wide cursor-pointer text-home-text"
                     @click="goHome">AREA</h1>
             </div>
-            <div class="w-1/2 mobile:w-full flex justify-end mobile:justify-start gap-4" v-if="!user">
+            <div class="w-1/2 mobile:w-full flex justify-end mobile:justify-start gap-4 -ml-3" v-if="!user">
                 <LoginButtonText
                     class="hover:cursor-pointer"
                     color="#4C4CDC"
@@ -18,7 +18,7 @@
                     color="white"
                     text-color="#4C4CDC" />
             </div>
-            <div class="w-1/2 mobile:w-full flex justify-end mobile:justify-start" v-else>
+            <div class="w-1/2 mobile:w-full flex justify-end mobile:justify-start -ml-3" v-else>
                 <DashboardButtonText
                     class="hover:cursor-pointer"
                     color="#4C4CDC"
