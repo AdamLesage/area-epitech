@@ -43,7 +43,7 @@
                         text-color="white" />
                 </div>
             </div>
-            <div v-if="showMenu" class="mt-6 text-home-text text-xl hidden half:flex flex-col items-center">
+            <div v-if="showMenu" class="mt-6 text-home-text text-xl hidden half:flex flex-col items-center bg-black/10 rounded-md py-4 gap-2 w-full">
                 <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="scrollToAboutUs">About us</h1>
                 <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="scrollToHowItWorks">How</h1>
                 <h1 class="text-xl font-bold tracking-wide mb-4 md:mb-0 cursor-pointer hover:underline decoration-2" @click="scrollToServices">Services</h1>
