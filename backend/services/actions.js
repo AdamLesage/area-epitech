@@ -37,6 +37,7 @@ actions.set('gmail_on_draft_create', create_gmail_workers);
 
 actions.set('timer.chronometer', create_timer_workers);
 actions.set('timer.alarm', create_timer_workers);
+actions.set('timer.interval', create_timer_workers);
 
 /**
  * @brief Ensures that a Docker image exists.

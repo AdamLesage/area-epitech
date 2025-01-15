@@ -55,6 +55,19 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const uuid = uuidv4();
     const authToken = uuidv4();
+    const timerLinkedAccount = await prisma.linkedAccount.findFirst({ where: { accountEmail: email, serviceName: 'timer' } });
+    if (!timerLinkedAccount) {
+        await prisma.linkedAccount.create({
+            data: {
+                serviceName: 'timer',
+                authToken: '',
+                username: name ? name : 'Invalid name',
+                accountEmail: email,
+                uuid: uuidv4(),
+                userId: 0,
+            },
+        });
+    }
 
     prisma.user.create({
         data: {
@@ -70,7 +83,19 @@ router.post('/register', async (req, res) => {
             authToken: authToken,
         },
     }).then((user) => {
-        return res.status(201).json(user);
+        prisma.linkedAccount.update({
+            where: {
+                username: user.name,
+            },
+            data: {
+                userId: user.id,
+            },
+        }).then(() => {
+            return res.status(201).json(user);
+        }).catch((error) => {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        });
     }).catch((error) => {
         console.error(error);
         return res.status(500).json({ error: error.message });
@@ -294,7 +319,7 @@ router.get('/github/redirect',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -320,19 +345,32 @@ router.get('/github/redirect',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
                         },
                     });
-    
+
                     // Refresh user data to include the new linked account
                     user = await prisma.user.findUnique({
                         where: { email: userParams.email },
                         include: { linkedAccounts: true },
                     });
                 }
+            }
+            const timerLinkedAccount = await prisma.linkedAccount.findFirst({ where: { accountEmail: user.email, serviceName: 'timer' } });
+            if (!timerLinkedAccount) {
+                await prisma.linkedAccount.create({
+                    data: {
+                        serviceName: 'timer',
+                        authToken: '',
+                        username: user.name,
+                        accountEmail: user.email,
+                        uuid: uuidv4(),
+                        userId: user.id,
+                    },
+                });
             }
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
         } catch (error) {
@@ -343,14 +381,14 @@ router.get('/github/redirect',
 );
 
 // DropBox auth routes
-router.get('/dropbox', async(req, res) => {
+router.get('/dropbox', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
     await passport.authenticate('dropbox-oauth2')(req, res);
 });
 
-router.get('/dropbox/callback', 
+router.get('/dropbox/callback',
     passport.authenticate('dropbox-oauth2', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
@@ -377,7 +415,7 @@ router.get('/dropbox/callback',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -403,7 +441,7 @@ router.get('/dropbox/callback',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
@@ -417,7 +455,19 @@ router.get('/dropbox/callback',
                     });
                 }
             }
-
+            const timerLinkedAccount = await prisma.linkedAccount.findFirst({ where: { accountEmail: user.email, serviceName: 'timer' } });
+            if (!timerLinkedAccount) {
+                await prisma.linkedAccount.create({
+                    data: {
+                        serviceName: 'timer',
+                        authToken: '',
+                        username: user.name,
+                        accountEmail: user.email,
+                        uuid: uuidv4(),
+                        userId: user.id,
+                    },
+                });
+            }
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
         } catch (error) {
             console.error(error);
@@ -427,7 +477,7 @@ router.get('/dropbox/callback',
 );
 
 // Spotify auth routes
-router.get('/spotify', async(req, res) => {
+router.get('/spotify', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
@@ -438,7 +488,7 @@ router.get('/spotify', async(req, res) => {
     })(req, res);
 });
 
-router.get('/spotify/callback', 
+router.get('/spotify/callback',
     passport.authenticate('spotify', { failureRedirect: '/login' }),
     async (req, res) => {
         try {
@@ -469,7 +519,7 @@ router.get('/spotify/callback',
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
+                user = await prisma.user.create({
                     data: {
                         ...userParams,
                         linkedAccounts: {
@@ -495,19 +545,32 @@ router.get('/spotify/callback',
                 );
 
                 if (!linkedAccount) {
-                    await prisma.linkedAccount.create({ 
+                    await prisma.linkedAccount.create({
                         data: {
                             ...linkedAccountParams,
                             userId: user.id, // Use the numeric ID from Prisma
                         },
                     });
-    
+
                     // Refresh user data to include the new linked account
                     user = await prisma.user.findUnique({
                         where: { email: userParams.email },
                         include: { linkedAccounts: true },
                     });
                 }
+            }
+            const timerLinkedAccount = await prisma.linkedAccount.findFirst({ where: { accountEmail: user.email, serviceName: 'timer' } });
+            if (!timerLinkedAccount) {
+                await prisma.linkedAccount.create({
+                    data: {
+                        serviceName: 'timer',
+                        authToken: '',
+                        username: user.name,
+                        accountEmail: user.email,
+                        uuid: uuidv4(),
+                        userId: user.id,
+                    },
+                });
             }
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
         } catch (error) {
@@ -519,13 +582,13 @@ router.get('/spotify/callback',
 
 
 // Google auth routes
-router.get('/google', async(req, res) => {
+router.get('/google', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
 
     await passport.authenticate('google', {
-        scope: ['profile', 'email', 
+        scope: ['profile', 'email',
             'https://mail.google.com/',
             'https://www.googleapis.com/auth/gmail.readonly',
             'https://www.googleapis.com/auth/gmail.compose',
@@ -535,84 +598,94 @@ router.get('/google', async(req, res) => {
     })(req, res);
 });
 
-router.get('/google/callback', 
-    passport.authenticate('google', {failureRedirect: '/login',}),
-    async(req, res) => {
-    try {
-        if (req.user === undefined) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
+router.get('/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login', }),
+    async (req, res) => {
+        try {
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
 
-        let user = await getUser(req);
+            let user = await getUser(req);
 
-        const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+            const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-        const linkedAccountParams = {
-            uuid: uuidv4(),
-            serviceName: 'gmail',
-            authToken: req.user.accessToken,
-            username: req.user.username || 'Username not found',
-            accountEmail: req.user.accountEmail,
-        };
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'gmail',
+                authToken: req.user.accessToken,
+                username: req.user.username || 'Username not found',
+                accountEmail: req.user.accountEmail,
+            };
 
-        const userParams = {
-            email: userEmail,
-            name: req.user.displayName || '',
-            surname: '',
-            uuid: uuidv4(),
-            hashedPassword: req.user.accessToken,
-        };
+            const userParams = {
+                email: userEmail,
+                name: req.user.displayName || '',
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.accessToken,
+            };
 
-        if (!user) {
-            // Create a new user
-            userParams.authToken = uuidv4(); // Add authentication token
-            user = await prisma.user.create({ 
-                data: {
-                    ...userParams,
-                    linkedAccounts: {
-                        create: [linkedAccountParams],
+            if (!user) {
+                // Create a new user
+                userParams.authToken = uuidv4(); // Add authentication token
+                user = await prisma.user.create({
+                    data: {
+                        ...userParams,
+                        linkedAccounts: {
+                            create: [linkedAccountParams],
+                        },
                     },
-                },
-                include: { linkedAccounts: true },
-            });
-            linkedAccountParams.userId = user.id;
+                    include: { linkedAccounts: true },
+                });
+                linkedAccountParams.userId = user.id;
 
-            await prisma.linkedAccount.update({
-                where: {
-                    uuid: linkedAccountParams.uuid,
-                },
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+            } else {
+                // Check if the account is already linked
+                const linkedAccount = user.linkedAccounts.find(
+                    account => account.serviceName === 'gmail'
+                );
+
+                if (!linkedAccount) {
+                    await prisma.linkedAccount.create({
+                        data: {
+                            ...linkedAccountParams,
+                            userId: user.id, // Use the numeric ID from Prisma
+                        },
+                    });
+
+                    // Refresh user data to include the new linked account
+                    user = await prisma.user.findUnique({
+                        where: { email: userParams.email },
+                        include: { linkedAccounts: true },
+                    });
+                }
+            }
+            await watchGmail(req.user.accessToken)
+            await prisma.linkedAccount.create({
                 data: {
+                    serviceName: 'timer',
+                    authToken: '',
+                    username: user.name,
+                    accountEmail: user.email,
+                    uuid: uuidv4(),
                     userId: user.id,
                 },
             });
-        } else {
-            // Check if the account is already linked
-            const linkedAccount = user.linkedAccounts.find(
-                account => account.serviceName === 'gmail'
-            );
-
-            if (!linkedAccount) {
-                await prisma.linkedAccount.create({ 
-                    data: {
-                        ...linkedAccountParams,
-                        userId: user.id, // Use the numeric ID from Prisma
-                    },
-                });
-
-                // Refresh user data to include the new linked account
-                user = await prisma.user.findUnique({
-                    where: { email: userParams.email },
-                    include: { linkedAccounts: true },
-                });
-            }
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
         }
-        await watchGmail(req.user.accessToken)
-        return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: error.message });
-    }
-});
+    });
 
 async function watchGmail(accessToken) {
     try {

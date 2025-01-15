@@ -1128,8 +1128,8 @@
             "updated_date": "2025-01-13",
             "options": [
               {
-                "name": "time",
-                "display_name": "Time in seconds",
+                "name": "duration",
+                "display_name": "duration",
                 "description": "The time (in seconds) after which the reaction will be triggered",
                 "type": "number",
                 "required": true
@@ -1156,6 +1156,23 @@
                 "display_name": "Time",
                 "description": "The time at which the reaction will be triggered",
                 "type": "time",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "timer.interval",
+            "display_name": "Trigger a reaction at regular intervals",
+            "description": "Trigger a reaction at regular intervals chosen by the user",
+            "version": "1.0.0",
+            "release_date": "2025-01-15",
+            "updated_date": "2025-01-15",
+            "options": [
+              {
+                "name": "interval",
+                "display_name": "Interval",
+                "description": "The interval at which the reaction will be triggered",
+                "type": "text",
                 "required": true
               }
             ]

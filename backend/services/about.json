@@ -170,6 +170,10 @@
       {
         "name":"timer.alarm",
         "description":"Set an alarm"
+      },
+      {
+        "name":"timer.interval",
+        "description":"Start an interval"
       }
     ],
     "reactions": []

@@ -363,9 +363,9 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         }
         const username = await getusername(userUuid, "spotify");
         console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
-        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
+        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlist_uri}/tracks`,
             {
-                "uris": [reactionData.trackUri]
+                "uris": [reactionData.music_uri]
             },
             {
                 headers: {
@@ -391,7 +391,7 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         console.log("Saving track in Spotify:", reactionData, actionResponseData);
         const response = await axios.put(`https://api.spotify.com/v1/me/tracks`,
             {
-                "ids": [reactionData.trackId]
+                "ids": [reactionData.music_id]
             },
             {
                 headers: {
