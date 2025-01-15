@@ -7,7 +7,10 @@
                 v-model:email="email"
                 @submit="handleSubmit"
                 @abort="handleAbort"
-                @send-again="handleSendAgain" />
+                @send-again="handleSendAgain"
+                @update:email="handleChangeEmail"
+                @update:code="handleChangeCode"
+            />
         </div>
     </div>
 </template>
@@ -33,11 +36,11 @@ const router = useRouter();
 const route = useRoute();
 
 const tempHide = ref<boolean>(false);
+const code = ref<string[]>([]);
 
 initStores();
 
-// Form submission handler
-function handleSubmit(values: PasswordRetrievalFormValues) {
+function checkCode(values: PasswordRetrievalFormValues) {
     const joinedCode = values.code.join('');
     // Call API GET reset-password-confirm
     fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/reset-password-confirm`, {
@@ -60,6 +63,11 @@ function handleSubmit(values: PasswordRetrievalFormValues) {
     .catch(error => {
         console.error('Error:', error);
     });
+}
+
+// Form submission handler
+function handleSubmit(values: PasswordRetrievalFormValues) {
+    console.log('Form Submitted:', values);
 };
 
 // Abort button handler
@@ -71,6 +79,21 @@ function handleAbort() {
 function handleSendAgain() {
     console.log('User requested to send email again');
 };
+
+function handleChangeEmail(newEmail: string) {
+    email.value = newEmail;
+    console.log('Email:', email.value);
+}
+
+function handleChangeCode(newCode: string[]) {
+    code.value = newCode;
+    if (code.value.filter(c => c !== '').length === 6) {
+        if (code.value.length === 6 && email.value) {
+            checkCode({ email: email.value, code: code.value as [string, string, string, string, string, string] });
+        }
+        console.log('Code:', code.value);
+    }
+}
 
 // Watches the route for changes and initializes the stores if necessary
 watch(async () => route.fullPath, async (newPath) => {

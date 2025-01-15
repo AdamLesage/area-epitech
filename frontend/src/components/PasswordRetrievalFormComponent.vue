@@ -39,8 +39,8 @@
                         type="email"
                         v-model="props.email"
                         placeholder="Enter your email here..."
+                        @input="handleChangeEmail"
                         class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full bg-white"
-                        disabled
                         />
                     <ErrorMessage name="email" class="text-red-500 text-sm mt-1" />
                 </div>
@@ -50,7 +50,7 @@
                     <button
                         type="submit"
                         class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
-                        Validate
+                        Send email
                     </button>
                     <!-- Abort Button -->
                     <button
@@ -101,6 +101,8 @@ const handleInput = (index: number) => {
     if (index < 5 && code.value[index].length === 1) {
         inputs[index + 1].focus();
     }
+    // Update code value
+    emit('update:code', code.value);
 };
 
 // Backspace focus
@@ -109,10 +111,12 @@ const handleBackspace = (index: number, event: KeyboardEvent) => {
     if (index > 0 && code.value[index].length === 0 && event.key === 'Backspace') {
         inputs[index - 1].focus();
     }
+    // Update code value
+    emit('update:code', code.value);
 };
 
 // Form submission
-const emit = defineEmits(['submit', 'abort', 'send-again', 'update:email']);
+const emit = defineEmits(['submit', 'abort', 'send-again', 'update:email', 'update:code']);
 
 const onSubmit: SubmissionHandler<PasswordRetrievalFormValues, GenericObject, unknown> = (values) => {
     console.log('Form Submitted:', values);

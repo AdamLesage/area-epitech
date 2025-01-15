@@ -44,7 +44,7 @@ function handleSubmit(values: PasswordChangeFormValues) {
         body: JSON.stringify({
             email: emailQuery,
             password: password,
-            code: route.query.code
+            code: code
         }),
     })
     .then(response => response.json())
