@@ -40,7 +40,7 @@
                         :key="playlist.id"
                         class="bg-[#24292e] p-2 rounded-md flex items-center gap-2 hover:bg-[#374048] w-full transition justify-start hover:cursor-pointer"
                         @click="selectPlaylist(playlist)" >
-                        <img :src="playlist.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
+                        <img v-if="playlist.images && playlist.images[0]" :src="playlist.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
                         <div class="flex flex-col">
                             <a :href="playlist.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{playlist.name}}</a>
                             <h4 class="text-white text-xs">{{ playlist.tracks.total }} tracks</h4>

@@ -563,7 +563,7 @@ async function save() {
         return;
     }
 
-    if (linkStatusAction.value === false && action.value.service.name !== 'timer') {
+    if (linkStatusAction.value === false) {
         alert('Please link your account to the action service');
         return;
     }
