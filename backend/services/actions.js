@@ -27,9 +27,6 @@ actions.set('issues.opened', create_github_workers);
 actions.set('issues.closed', create_github_workers);
 actions.set('pull_request.opened', create_github_workers);
 actions.set('pull_request.closed', create_github_workers);
-
-actions.set('timer.chronometer', create_timer_workers);
-actions.set('timer.alarm', create_timer_workers);
 // Gmail Action
 actions.set('gmail_on_new_mail', create_gmail_workers);
 actions.set('gmail_on_mail_deleted', create_gmail_workers);
@@ -37,6 +34,9 @@ actions.set('gmail_on_label_added', create_gmail_workers);
 actions.set('gmail_on_label_removed', create_gmail_workers);
 actions.set('gmail_on_mail_send', create_gmail_workers);
 actions.set('gmail_on_draft_create', create_gmail_workers);
+
+actions.set('timer.chronometer', create_timer_workers);
+actions.set('timer.alarm', create_timer_workers);
 
 /**
  * @brief Ensures that a Docker image exists.
@@ -159,6 +159,57 @@ async function create_github_workers(data, uuid, targetAction) {
     var onNewFileImage = path.resolve(__dirname, '../workers/github'); // Path to the Dockerfile
     var image_name = "github-worker"; // Name of the Docker image
     var workerFileName = "githubWorker.js" // Name of the worker file
+    try {
+        await ensureImageExists(image_name, onNewFileImage, workerFileName);
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
+        await container.start(); // Start the container
+        return container.id; // Return the container ID
+    } catch (e) {
+        console.log(e);
+        return "";
+    }
+}
+
+/**
+ * @brief Creates and starts a worker for Dropbox.
+ * This function ensures the Docker image exists, creates a container,
+ * and starts it to process gmail action.
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * 
+ * @author Romain Chevallier
+ */
+
+async function create_gmail_workers(data, uuid, targetAction) {
+    var onNewFileImage = path.resolve(__dirname, '../workers/gmail'); // Path to the Dockerfile
+    var image_name = "gmail-worker"; // Name of the Docker image
+    var workerFileName = "gmailWorker.js" // Name of the worker file
+    try {
+        await ensureImageExists(image_name, onNewFileImage, workerFileName);
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
+        await container.start(); // Start the container
+        return container.id; // Return the container ID
+    } catch (e) {
+        console.log(e);
+        return "";
+    }
+}
+
+/**
+ * @brief Creates and starts a worker for Timer.
+ * This function ensures the Docker image exists, creates a container,
+ * and starts it to process timer action.
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * 
+ * @author Victor Hristea
+ */
+async function create_timer_workers(data, uuid, targetAction) {
+    var onNewFileImage = path.resolve(__dirname, '../workers/timer'); // Path to the Dockerfile
+    var image_name = "timer-worker"; // Name of the Docker image
+    var workerFileName = "timerWorker.js" // Name of the worker file
     try {
         await ensureImageExists(image_name, onNewFileImage, workerFileName);
         const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
