@@ -25,6 +25,26 @@
                 </option>
             </select>
         </div>
+        <div v-if="type === 'AreaSelect'" class="text-[#333] rounded-lg max-w-xl mx-auto w-full">
+            <label for="actionreactionarea" class="block mb-2 text-sm font-medium text-gray-700">
+                Select {{ props.name }}
+            </label>
+            <select
+                name="select"
+                id="actionreactionarea"
+                @change="handleChange"
+                class="border-gray-300 text-gray-700 px-3 py-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500"
+            >
+                <option
+                    v-for="area in areas"
+                    :key="area.id"
+                    :value="area.uuid"
+                    class="text-gray-900"
+                >
+                    {{ area.title }}
+                </option>
+            </select>
+        </div>
         <div v-if="type === 'SpotifyPlaylist'" class="text-[#333] rounded-lg max-w-xl mx-auto w-full">
             <div class="flex gap-4 items-center" v-if="step != 'allDone'">
                 <h2 class="text-lg font-bold text-center">Choose Playlist</h2>
@@ -218,6 +238,7 @@ import { useUserStore } from '@/stores/user';
 import { useServiceStore } from '@/stores/service';
 import { Icon } from '@iconify/vue';
 import axios from 'axios';
+import { Area } from '@/types/area';
 
 const userStore = useUserStore();
 const serviceStore = useServiceStore();
@@ -285,12 +306,6 @@ const props = defineProps<{
     action: boolean;
     options: String [] | undefined;
 }>();
-
-console.log(props.action);
-console.log(props.type);
-console.log(props.value);
-console.log(props.name);
-console.log(props.options)
 
 const value = ref<string>(props.value == undefined ? '' : props.value);
 
@@ -461,6 +476,8 @@ const spotifyPlaylists = ref<Playlist[]>([]);
 const spotifyMusics = ref<Music[]>([]);
 const search = ref<string>('');
 
+const areas = ref<Area[]>(userStore.areas);
+
 if (props.type == 'text' || props.type == 'number' || props.type == 'email' || props.type == 'password'
     || props.type == 'date' || props.type == 'time' || props.type == 'month' || props.type == 'week'
     || props.type == 'file' || props.type == 'checkbox' || props.type == 'radio' || props.type == 'boolean') {
@@ -483,6 +500,10 @@ if (props.type == 'SpotifyPlaylist') {
 }
 
 if (props.type == 'SpotifyMusic') {
+    isSupported.value = true;
+}
+
+if (props.type == 'AreaSelect') {
     isSupported.value = true;
 }
 
@@ -615,6 +636,8 @@ onMounted(async () => {
             console.error('Error fetching Spotify playlists:', error);
         }
     }
-
+    if (props.type === 'AreaSelect') {
+        
+    }
 });
 </script>

@@ -66,7 +66,8 @@ export type OptionType =
     | 'boolean'
     | 'GithubRepository'
     | 'SpotifyPlaylist'
-    | 'SpotifyMusic';
+    | 'SpotifyMusic'
+    | 'AreaSelect'
 
 export interface Reaction {
     name: string;

@@ -898,7 +898,12 @@ async function area_delete(reactionData, actionResponseData, userUuid) {
         if (!reactionData.areaId) {
            throw new Error("Area UUID is required");
         }
-        const response = await axios.delete(`${process.env.BACKEND_URL}/api/action/${reactionData.areaUuid}`);
+        area = await prisma.actionReaction.findUnique ({
+            where: {
+                uuid: reactionData.areaUuid
+            }
+        });
+        const response = await axios.delete(`${process.env.BACKEND_URL}/api/action/${area.id}`);
         if (response.status > 299) {
             throw new Error(`Error calling area_delete`);
             return;
@@ -952,7 +957,7 @@ async function area_stop(reactionData, actionResponseData, userUuid) {
         if (!reactionData.areaUuid) {
            throw new Error("Area UUID is required");
         }
-        const response = await axios.put(`${process.env.BACKEND_URL}/api/action/${reactionData.areaUuid}`, {
+        const response = await axios.put(`${process.env.BACKEND_URL}/api/action/set_active/${reactionData.areaUuid}`, {
             isActive: false
         });
         if (response.status > 299) {
