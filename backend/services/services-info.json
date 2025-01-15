@@ -768,6 +768,404 @@
     ]
   },
   {
+    "name": "gmail",
+    "color": "#EA4335",
+    "icon": "mdi:gmail",
+    "reviews": {
+      "rate": 4.5,
+      "count": 450000
+    },
+    "saves": 9020000,
+    "categories": [
+      {
+        "name": "mail",
+        "display_name": "Mail",
+        "actions": [
+          {
+            "name": "gmail_on_new_mail",
+            "display_name": "Gmail on new mail",
+            "description": "Triggered when a new mail is received in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-10",
+            "updated_date": "2025-01-10",
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
+            "options": []
+          },
+          {
+            "name": "gmail_on_mail_send",
+            "display_name": "Gmail on mail send",
+            "description": "Triggered when a new mail is send in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-10",
+            "updated_date": "2025-01-10",
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
+            "options": []
+          },
+          {
+            "name": "gmail_on_mail_deleted",
+            "display_name": "Gmail on delete mail",
+            "description": "Triggered when a mail is deleted from Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-11",
+            "updated_date": "2025-01-11",
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "gmail_send_email",
+            "display_name": "Gmail send email",
+            "description": "Send an email via Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-11",
+            "updated_date": "2025-01-11",
+            "options": [
+              {
+                "name": "from",
+                "display_name": "from",
+                "description": "the name of the sender",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "to",
+                "display_name": "to",
+                "description": "the name of the receiver",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "subject",
+                "display_name": "subject",
+                "description": "the subject of the mail",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "body",
+                "description": "the body of the mail",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "gmail_delete_email",
+            "display_name": "Gmail delete email",
+            "description": "delete email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to delete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "gmail_reply_to_email",
+            "display_name": "Gmail reply to an email",
+            "description": "reply to an email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to reply",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "reply_body",
+                "display_name": "reply body",
+                "description": "the body of the mail you want to reply",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "gmail_forward_email",
+            "display_name": "Gmail forward an email",
+            "description": "forward email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to froward",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "forward_to",
+                "display_name": "forward to",
+                "description": "the email you want to forward",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "label",
+        "display_name": "Label",
+        "actions": [
+          {
+            "name": "gmail_on_label_added",
+            "display_name": "Gmail on label added",
+            "description": "Triggered when a label is added to a mail in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-11",
+            "updated_date": "2025-01-11",
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
+            "options": [
+              {
+                "name": "type_label",
+                "display_name": "Type label",
+                "description": "the type of the triggered label",
+                "type": "select",
+                "options": [
+                  "INBOX",
+                  "STARRED",
+                  "UNREAD",
+                  "SENT",
+                  "DRAFT",
+                  "TRASH",
+                  "SPAM",
+                  "IMPORTANT",
+                  "CHAT",
+                  "CATEGORY_PERSONAL",
+                  "CATEGORY_SOCIAL",
+                  "CATEGORY_PROMOTIONS",
+                  "CATEGORY_UPDATES",
+                  "CATEGORY_FORUMS",
+                  "CATEGORY_PURCHASES",
+                  "CATEGORY_FINANCE",
+                  "CATEGORY_TRAVEL",
+                  "CATEGORY_SHIPPING",
+                  "CATEGORY_RESERVATIONS",
+                  "CATEGORY_REPORTS"
+                ],
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "gmail_on_label_removed",
+            "display_name": "Gmail on label removed",
+            "description": "Triggered when a label is removed from a mail in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-11",
+            "updated_date": "2025-01-11",
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
+            "options": [
+              {
+                "name": "type_label",
+                "display_name": "Type label",
+                "description": "the type of the triggered label",
+                "type": "select",
+                "options": [
+                  "INBOX",
+                  "STARRED",
+                  "UNREAD",
+                  "SENT",
+                  "DRAFT",
+                  "TRASH",
+                  "SPAM",
+                  "IMPORTANT",
+                  "CHAT",
+                  "CATEGORY_PERSONAL",
+                  "CATEGORY_SOCIAL",
+                  "CATEGORY_PROMOTIONS",
+                  "CATEGORY_UPDATES",
+                  "CATEGORY_FORUMS",
+                  "CATEGORY_PURCHASES",
+                  "CATEGORY_FINANCE",
+                  "CATEGORY_TRAVEL",
+                  "CATEGORY_SHIPPING",
+                  "CATEGORY_RESERVATIONS",
+                  "CATEGORY_REPORTS"
+                ],
+                "required": false
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "gmail_add_label",
+            "display_name": "Gmail add label",
+            "description": "add a label from a email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to delete",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "label_id",
+                "display_name": "lable Id",
+                "description": "the label you want to remove",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "gmail_remove_label",
+            "display_name": "Gmail remove label",
+            "description": "remove a label from a email on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "mail_id",
+                "display_name": "mail Id",
+                "description": "the Id of the mail you want to delete",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "label_id",
+                "display_name": "lable Id",
+                "description": "the label you want to remove",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "draft",
+        "display_name": "Draft",
+        "actions": [
+          {
+            "name": "gmail_on_draft_create",
+            "display_name": "Gmail on draft created",
+            "description": "Triggered when a new draft is created in Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-10",
+            "updated_date": "2025-01-10",
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "gmail_create_draft",
+            "display_name": "Gmail create draft",
+            "description": "create draft on Gmail.",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "to",
+                "display_name": "to",
+                "description": "the name of the receiver",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "subject",
+                "display_name": "subject",
+                "description": "the subject of the draft",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "body",
+                "description": "the body of the draft",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "strava",
     "color": "#fc4c02",
     "icon": "bi:strava",
@@ -878,8 +1276,60 @@
               {
                 "name": "type",
                 "display_name": "Activity Type",
-                "description": "The type of the activity must be one these: AlpineSki, BackcountrySki, Badminton, Canoeing, Crossfit, EBikeRide, Elliptical, EMountainBikeRide, Golf, GravelRide, Handcycle, HighIntensityIntervalTraining, Hike, IceSkate, InlineSkate, Kayaking, Kitesurf, MountainBikeRide, NordicSki, Pickleball, Pilates, Racquetball, Ride, RockClimbing, RollerSki, Rowing, Run, Sail, Skateboard, Snowboard, Snowshoe, Soccer, Squash, StairStepper, StandUpPaddling, Surfing, Swim, TableTennis, Tennis, TrailRun, Velomobile, VirtualRide, VirtualRow, VirtualRun, Walk, WeightTraining, Wheelchair, Windsurf, Workout, Yoga",
-                "type": "text",
+                "description": "The type of the activity",
+                "type": "select",
+                "options": [
+                  "AlpineSki",
+                  "BackcountrySki",
+                  "Badminton",
+                  "Canoeing",
+                  "Crossfit",
+                  "EBikeRide",
+                  "Elliptical",
+                  "EMountainBikeRide",
+                  "Golf",
+                  "GravelRide",
+                  "Handcycle",
+                  "HighIntensityIntervalTraining",
+                  "Hike",
+                  "IceSkate",
+                  "InlineSkate",
+                  "Kayaking",
+                  "Kitesurf",
+                  "MountainBikeRide",
+                  "NordicSki",
+                  "Pickleball",
+                  "Pilates",
+                  "Racquetball",
+                  "Ride",
+                  "RockClimbing",
+                  "RollerSki",
+                  "Rowing",
+                  "Run",
+                  "Sail",
+                  "Skateboard",
+                  "Snowboard",
+                  "Snowshoe",
+                  "Soccer",
+                  "Squash",
+                  "StairStepper",
+                  "StandUpPaddling",
+                  "Surfing",
+                  "Swim",
+                  "TableTennis",
+                  "Tennis",
+                  "TrailRun",
+                  "Velomobile",
+                  "VirtualRide",
+                  "VirtualRow",
+                  "VirtualRun",
+                  "Walk",
+                  "WeightTraining",
+                  "Wheelchair",
+                  "Windsurf",
+                  "Workout",
+                  "Yoga"
+                ],
                 "required": false
               },
               {

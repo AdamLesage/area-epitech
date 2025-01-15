@@ -304,5 +304,64 @@
         "description":"Update an athlete"
       }
     ]
+  },
+  {
+    "name":"gmail",
+    "actions": [
+      {
+        "name":"gmail_on_new_mail",
+        "description":"Triggered when a new mail is received in Gmail."
+      },
+      {
+        "name":"gmail_on_mail_send",
+        "description":"Triggered when a new mail is received in Gmail."
+      },
+      {
+        "name":"gmail_on_draft_create",
+        "description":"Triggered when a new mail is received in Gmail."
+      },
+      {
+        "name": "gmail_on_mail_deleted",
+        "description": "Triggered when a mail is deleted from Gmail."
+      },
+      {
+        "name": "gmail_on_label_added",
+        "description": "Triggered when a label is added to a mail in Gmail."
+      },
+      {
+        "name": "gmail_on_label_removed",
+        "description": "Triggered when a label is removed from a mail in Gmail."
+      }
+    ],
+    "reactions": [
+      {
+        "name": "gmail_send_email",
+        "description": "Send an email via Gmail."
+      },
+      {
+        "name": "gmail_delete_email",
+        "description": "Delete an email from Gmail."
+      },
+      {
+        "name": "gmail_add_label",
+        "description": "Add a label to a mail in Gmail."
+      },
+      {
+        "name": "gmail_remove_label",
+        "description": "Remove a label from a mail in Gmail."
+      },
+      {
+        "name": "gmail_reply_to_email",
+        "description": "Reply to a specific email in Gmail."
+      },
+      {
+        "name": "gmail_forward_email",
+        "description": "Forward a specific email to another recipient in Gmail."
+      },
+      {
+        "name": "gmail_create_draft",
+        "description": "Create a draft email in Gmail."
+      }
+    ]
   }
 ]

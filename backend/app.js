@@ -9,6 +9,7 @@ require('./authentication/passport');
 const githubServiceRouter = require('./services/githubService')
 const dropboxServiceRouter = require('./services/dropboxService')
 const stravaServiceRouter = require('./services/stravaService')
+const gmailServiceRouter = require('./services/gmailService')
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
 const aboutRouter = require('./routes/about');
@@ -25,15 +26,11 @@ const { stopWorkingWorkers } = require('./utils/stopWorkingWorker');
 const app = express();
 const port = 8080;
 
-var key = fs.readFileSync(__dirname + '/selfsigned.key');
-var cert = fs.readFileSync(__dirname + '/selfsigned.crt');
-var keyStr = key.toString().split(String.raw`\n`).join('\n');
-var certStr = cert.toString().split(String.raw`\n`).join('\n');
-
-var options = {
-  key: keyStr,
-  cert: certStr
-};
+// var cert = fs.readFileSync(__dirname + '/selfsigned.crt');
+// var options = {
+//   key: fs.readFileSync(__dirname + '/selfsigned.key'),
+//   cert: cert
+// };
 
 app.use(cors());
 app.use(express.json());
@@ -51,6 +48,7 @@ app.use(passport.session());
 app.use('/api', userRouter);
 app.use('/github', githubServiceRouter);
 app.use('/dropbox', dropboxServiceRouter);
+app.use('/gmail', gmailServiceRouter)
 app.use('/strava', stravaServiceRouter);
 app.use('/api', actionsRouter);
 app.use('/api', reactionRouter);
@@ -60,7 +58,7 @@ app.use('', aboutRouter);
 
 var server = http.createServer(app);
 
-server.listen(port, async () => {
+app.listen(port, async () => {
   await migrateDatabase();
   initServices();
   await initWorkers();

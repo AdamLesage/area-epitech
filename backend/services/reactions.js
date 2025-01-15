@@ -2,6 +2,7 @@ const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { Dropbox } = require('dropbox');
+const { google } = require('googleapis');
 
 // Create a new Map to store reaction handlers
 const reactions = new Map();
@@ -28,6 +29,14 @@ reactions.set('previous_track', spotify_previous_track);
 reactions.set('start_resume', spotify_start_resume);
 reactions.set('pause', spotify_pause);
 reactions.set('add_track_to_queue', spotify_add_track_to_queue);
+
+reactions.set('gmail_send_email', gmail_send_email);
+reactions.set('gmail_delete_email', gmail_delete_email);
+reactions.set('gmail_add_label', gmail_add_label);
+reactions.set('gmail_remove_label', gmail_remove_label);
+reactions.set('gmail_reply_to_email', gmail_reply_to_email);
+reactions.set('gmail_forward_email', gmail_forward_email);
+reactions.set('gmail_create_draft', gmail_create_draft);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -341,186 +350,535 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
                 "Content-Type": "application/json"
             }
         });
-    if (response.status > 299) {
-        console.error(`Error calling reaction create_playlist`);
-        return;
+        if (response.status > 299) {
+            console.error(`Error calling reaction create_playlist`);
+            return;
+        }
+        console.log("Playlist created successfully:", response);   
     }
-    console.log("Playlist created successfully:", response);   
-}
-
-async function spotify_add_to_playlist(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
-
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
+    
+    async function spotify_add_to_playlist(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        const username = await getusername(userUuid, "spotify");
+        console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
+        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
+            {
+                "uris": [reactionData.trackUri]
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction add_to_playlist`);
+            return;
+        }
+        console.log("Track added to playlist successfully:", response);
     }
-    const username = await getusername(userUuid, "spotify");
-    console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
-    const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
-        {
-            "uris": [reactionData.trackUri]
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
+    
+    async function spotify_save_track(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Saving track in Spotify:", reactionData, actionResponseData);
+        const response = await axios.put(`https://api.spotify.com/v1/me/tracks`,
+            {
+                "ids": [reactionData.trackId]
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction save_track`);
+            return;
+        }
+        console.log("Track saved successfully:", response);
+    }
+    
+    async function spotify_skip_track(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Skipping track in Spotify:", reactionData, actionResponseData);
+        const response = await axios.post(`https://api.spotify.com/v1/me/player/next`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction skip_track`);
+            return;
+        }
+        console.log("Track skipped successfully:", response);
+    }
+    
+    async function spotify_previous_track(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Playing previous track in Spotify:", reactionData, actionResponseData);
+        const response = await axios.post(`https://api.spotify.com/v1/me/player/previous`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction previous_track`);
+            return;
+        }
+        console.log("Previous track played successfully:", response);
+    }
+       
+    async function spotify_start_resume(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Starting or resuming playback in Spotify:", reactionData, actionResponseData);
+        const response = await axios.put(`https://api.spotify.com/v1/me/player/play`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction start_resume`);
+            return;
+        }
+        console.log("Playback started or resumed successfully:", response);
+    }
+    
+    async function spotify_pause(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Pausing playback in Spotify:", reactionData, actionResponseData);
+        const response = await axios.put(`https://api.spotify.com/v1/me/player/pause`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction pause`);
+            return;
+        }
+        console.log("Playback paused successfully:", response);
+    }
+    
+    async function spotify_add_track_to_queue(reactionData, actionResponseData, userUuid) {
+        const accessToken = await getAccessToken(userUuid, "spotify");
+    
+        if (!accessToken) {
+            console.error("No access token found for user");
+            return;
+        }
+        console.log("Adding track to queue in Spotify:", reactionData, actionResponseData);
+        const response = await axios.post(`https://api.spotify.com/v1/me/player/queue`,
+            {
+                "uri": reactionData.trackUri
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+        if (response.status > 299) {
+            console.error(`Error calling reaction add_track_to_queue`);
+            return;
+        }
+        console.log("Track added to queue successfully:", response);
+    }
+/**
+ * Handler function for the 'gmail_send_email' reaction.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+*/
+async function gmail_send_email(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+        
+        if (!(reactionData.from && reactionData.to && reactionData.subject && reactionData.body)) {
+            throw new Error("Missing required email data");
+        }
+        const emailContent = [
+        `From: ${reactionData.from}`,
+        `To: ${reactionData.to}`,
+        `Subject: ${reactionData.subject}`,
+        '',
+        reactionData.body || ''
+        ].join('\n');
+
+        // Encode email content to base64
+        const rawMessage = Buffer.from(emailContent)
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        // Send the email using the Gmail API
+        const response = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: rawMessage
             }
         });
-    if (response.status > 299) {
-        console.error(`Error calling reaction add_to_playlist`);
-        return;
+        console.log("Email sent successfully:", response.data);
+    } catch (error) {
+        console.error("Error sending email via Gmail:", error);
     }
-    console.log("Track added to playlist successfully:", response);
 }
 
-async function spotify_save_track(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
+/**
+ * Handler function for the 'gmail_delete_email' reaction.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_delete_email(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
 
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Saving track in Spotify:", reactionData, actionResponseData);
-    const response = await axios.put(`https://api.spotify.com/v1/me/tracks`,
-        {
-            "ids": [reactionData.trackId]
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
+        if (!(reactionData.mail_id)) {
+            throw new Error("Missing required email data");
+        }
+
+        // Send the email using the Gmail API
+        const response = await gmail.users.messages.delete({
+            userId: 'me',
+            id: reactionData.mail_id
         });
-    if (response.status > 299) {
-        console.error(`Error calling reaction save_track`);
-        return;
+        console.log("Email delete successfully:", response.data);
+    } catch (error) {
+        console.error("Error sending email via Gmail:", error);
     }
-    console.log("Track saved successfully:", response);
 }
 
-async function spotify_skip_track(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
+/**
+ * Handler function for adding a label to a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_add_label(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
 
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Skipping track in Spotify:", reactionData, actionResponseData);
-    const response = await axios.post(`https://api.spotify.com/v1/me/player/next`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
+        if (!(reactionData.mail_id) || !(reactionData.label_id)) {
+            throw new Error("Missing required email or label data");
+        }
+
+        const response = await gmail.users.messages.modify({
+            userId: 'me',
+            id: reactionData.mail_id,
+            requestBody: {
+                addLabelIds: [reactionData.label_id]
             }
         });
-    if (response.status > 299) {
-        console.error(`Error calling reaction skip_track`);
-        return;
+
+        console.log("Label added successfully to email:", response.data);
+    } catch (error) {
+        console.error("Error adding label via Gmail:", error);
     }
-    console.log("Track skipped successfully:", response);
 }
 
-async function spotify_previous_track(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
+/**
+ * Handler function for removing a label from a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
 
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Playing previous track in Spotify:", reactionData, actionResponseData);
-    const response = await axios.post(`https://api.spotify.com/v1/me/player/previous`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
+        if (!(reactionData.mail_id) || !(reactionData.label_id)) {
+            throw new Error("Missing required email or label data");
+        }
+
+        const response = await gmail.users.messages.modify({
+            userId: 'me',
+            id: reactionData.mail_id,
+            requestBody: {
+                removeLabelIds: [reactionData.label_id]
             }
         });
-    if (response.status > 299) {
-        console.error(`Error calling reaction previous_track`);
-        return;
-    }
-    console.log("Previous track played successfully:", response);
-}
-   
-async function spotify_start_resume(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
 
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
+        console.log("Label removed successfully from email:", response.data);
+    } catch (error) {
+        console.error("Error removing label via Gmail:", error);
     }
-    console.log("Starting or resuming playback in Spotify:", reactionData, actionResponseData);
-    const response = await axios.put(`https://api.spotify.com/v1/me/player/play`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
-        });
-    if (response.status > 299) {
-        console.error(`Error calling reaction start_resume`);
-        return;
-    }
-    console.log("Playback started or resumed successfully:", response);
 }
 
-async function spotify_pause(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
+/**
+ * Handler function for removing a label from a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
 
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Pausing playback in Spotify:", reactionData, actionResponseData);
-    const response = await axios.put(`https://api.spotify.com/v1/me/player/pause`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
+        if (!(reactionData.mail_id) || !(reactionData.label_id)) {
+            throw new Error("Missing required email or label data");
+        }
+
+        const response = await gmail.users.messages.modify({
+            userId: 'me',
+            id: reactionData.mail_id,
+            requestBody: {
+                removeLabelIds: [reactionData.label_id]
             }
         });
-    if (response.status > 299) {
-        console.error(`Error calling reaction pause`);
-        return;
+
+        console.log("Label removed successfully from email:", response.data);
+    } catch (error) {
+        console.error("Error removing label via Gmail:", error);
     }
-    console.log("Playback paused successfully:", response);
 }
 
-async function spotify_add_track_to_queue(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
+/**
+ * Handler function for replying to a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_reply_to_email(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
 
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Adding track to queue in Spotify:", reactionData, actionResponseData);
-    const response = await axios.post(`https://api.spotify.com/v1/me/player/queue`,
-        {
-            "uri": reactionData.trackUri
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
+        if (!(reactionData.mail_id) || !(reactionData.reply_body)) {
+            throw new Error("Missing required email or reply data");
+        }
+
+        const originalMessage = await gmail.users.messages.get({
+            userId: 'me',
+            id: reactionData.mail_id,
+            format: 'full',
+        });
+
+        const threadId = originalMessage.data.threadId;
+        const headers = originalMessage.data.payload.headers;
+        const originalSubject = headers.find(h => h.name === "Subject")?.value || "No Subject";
+        const originalFrom = headers.find(h => h.name === "From")?.value || "";
+
+        const emailMatch = originalFrom.match(/<(.+?)>/);
+        const recipientEmail = emailMatch ? emailMatch[1] : originalFrom;
+
+        if (!recipientEmail) {
+            throw new Error("Failed to extract recipient email address");
+        }
+
+        const rawMessage = [
+            `From: me`,
+            `To: ${recipientEmail}`,
+            `Subject: ${originalSubject}`,
+            `In-Reply-To: ${reactionData.mail_id}`,
+            `References: ${reactionData.mail_id}`,
+            ``,
+            `${reactionData.reply_body}`
+        ].join('\n');
+
+        const encodedMessage = Buffer.from(rawMessage).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
+
+        const response = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: encodedMessage,
+                threadId: threadId,
             }
         });
-    if (response.status > 299) {
-        console.error(`Error calling reaction add_track_to_queue`);
-        return;
+
+        console.log("Reply sent successfully:", response.data);
+    } catch (error) {
+        console.error("Error replying to email via Gmail:", error);
     }
-    console.log("Track added to queue successfully:", response);
+}
+
+/**
+ * Handler function for forwarding a Gmail email.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_forward_email(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!reactionData.mail_id || !reactionData.forward_to) {
+            throw new Error("Missing required email or forwarding address data");
+        }
+
+        // Retrieve the original email
+        const originalMessage = await gmail.users.messages.get({
+            userId: 'me',
+            id: reactionData.mail_id,
+            format: 'full',
+        });
+
+        const headers = originalMessage.data.payload.headers;
+        const essentialHeaders = ['From', 'To', 'Subject', 'Date'];
+        const simplifiedHeaders = headers
+            .filter(header => essentialHeaders.includes(header.name))
+            .map(header => `${header.name}: ${header.value}`)
+            .join("\n");
+
+        let body = "";
+        const parts = originalMessage.data.payload.parts;
+        if (parts) {
+            const textPart = parts.find(part => part.mimeType === "text/plain");
+            if (textPart && textPart.body.data) {
+                body = Buffer.from(textPart.body.data, "base64").toString("utf8");
+            }
+        } else if (originalMessage.data.payload.body && originalMessage.data.payload.body.data) {
+            body = Buffer.from(originalMessage.data.payload.body.data, "base64").toString("utf8");
+        }
+
+        const forwardMessage = [
+            `To: ${reactionData.forward_to}`,
+            `Subject: Fwd: ${simplifiedHeaders.match(/Subject: (.+)/)?.[1] || "No Subject"}`,
+            `\n---------- Forwarded message ----------`,
+            `${simplifiedHeaders}\n`,
+            body.trim()
+        ].join("\r\n");
+
+        const encodedMessage = Buffer.from(forwardMessage)
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        const response = await gmail.users.messages.send({
+            userId: 'me',
+            requestBody: {
+                raw: encodedMessage,
+            },
+        });
+
+        console.log('Email forwarded successfully:', response.data);
+    } catch (error) {
+        console.error('Error forwarding email via Gmail:', error);
+    }
+}
+
+/**
+ * Handler function for create a draft on Gmail.
+ * 
+ * @param {Object} reactionData Data related to the reaction.
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ */
+async function gmail_create_draft(reactionData, actionResponseData, userUuid) {
+    try {
+        const accessToken = await getAccessToken(userUuid, "gmail");
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const gmail = google.gmail({ version: 'v1', auth });
+
+        if (!reactionData.to || !reactionData.subject || !reactionData.body) {
+            throw new Error("Missing required fields: 'to', 'subject', or 'body'.");
+        }
+
+        const emailContent = [
+            `To: ${reactionData.to}`,
+            `Subject: ${reactionData.subject}`,
+            `Content-Type: text/plain; charset=utf-8`,
+            ``,
+            `${reactionData.body}`
+        ].join("\r\n");
+
+        const encodedEmail = Buffer.from(emailContent)
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+
+        const response = await gmail.users.drafts.create({
+            userId: 'me',
+            requestBody: {
+                message: {
+                    raw: encodedEmail,
+                },
+            },
+        });
+
+        console.log('Draft created successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating draft:', error);
+    }
 }
 
 async function strava_update_athlete(reactionData, actionResponseData, userUuid) {

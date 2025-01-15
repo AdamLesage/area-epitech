@@ -23,7 +23,7 @@
             <ArrowComponent direction="bottom" color="white" class="mobile:hidden hover:cursor-pointer" :animate="true" />
         </div>
     </div>
-    <div @wheel="handleScrollAttemptSecondPage" v-else>
+    <div v-else>
         <HelpAssistantPopupComponent :bottom="16" :left="16" color="#333" class="z-50" />
         <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full before:bg-[url('@/assets/svg/Grid12.svg')] before:absolute before:rotate-[12deg] before:w-[200%] before:h-[200%] before:top-[-50%] before:left-[-50%] overflow-hidden relative before:z-0"
             :style="{ backgroundColor: '#333' }">
@@ -120,6 +120,7 @@
                                     :required="option.required"
                                     :value="actionOptions[option.name]"
                                     :action="true"
+                                    :options="option.options"
                                     @change="(newValue) => handleChange(option.name, newValue, true)" />
                             </div>
                         </div>
@@ -241,6 +242,7 @@
                                     :required="option.required"
                                     :value="reactionOptions[option.name]"
                                     :action="false"
+                                    :options="option.options"
                                     @change="(newValue) => handleChange(option.name, newValue, false)" />
                             </div>
                         </div>
@@ -381,6 +383,7 @@ import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vu
 import ArrowComponent from '@/components/ArrowComponent.vue';
 import ServiceNavComponent from '@/components/ServiceNavComponent.vue';
 import HelpAssistantPopupComponent from '@/components/HelpAssistantPopupComponent.vue';
+import { fetchUserAreas } from '@/logic/user';
 
 const store = usePopupStore();
 const serviceStore = useServiceStore();
@@ -446,12 +449,6 @@ function handleChange(optionName: string, newValue: string, action: boolean) {
 function handleScrollAttempt(event: WheelEvent) {
     if (event.deltaY > 0) {
         workshopVisible.value = true;
-    }
-}
-
-function handleScrollAttemptSecondPage(event: WheelEvent) {
-    if (event.deltaY < 0 && scrollY.value === 0) {
-        workshopVisible.value = false;
     }
 }
 
@@ -644,6 +641,18 @@ async function save() {
         return;
     }
     alert('AREA successfully created!');
+    userStore.areas = [];
+    const areas = await fetchUserAreas(token);
+    for (const area of areas) {
+        userStore.addArea(area);
+    }
+    store.action = null;
+    store.reaction = null;
+    store.title = '';
+    store.actionData = {};
+    store.reactionData = {};
+    store.view = 'Normal';
+    store.display = false;
 }
 
 function cancelSetup() {
