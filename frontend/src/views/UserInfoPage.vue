@@ -72,7 +72,7 @@
                     <div class="flex flex-col items-center space-y-4">
                         <!-- Avatar Section -->
                         <div class="relative">
-                            <img :src="user?.profilePictureUrl" alt="Profile Picture"
+                            <img :src="editForm.profilePictureUrl" alt="Profile Picture"
                                 class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-300 shadow-lg" />
 
                             <!-- Upload Button -->
@@ -196,14 +196,12 @@ const editForm = ref({
     bio: user.value?.bio || "",
     birthDate: user.value?.birthDate || "",
     phoneNumber: user.value?.phoneNumber || "",
-    profilePicture: null as File | null
+    profilePictureUrl: user.value?.profilePictureUrl,
 });
 
 function selectImage(image: string) {
-    editForm.value.profilePicture = null;
-    if (user.value) {
-        user.value.profilePicture = { id: user.value.profilePicture?.id || 0, url: image };
-    }
+    console.log(image);
+    editForm.value.profilePictureUrl = image;
     showPopup.value = false;
 }
 
