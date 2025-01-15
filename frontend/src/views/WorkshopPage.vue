@@ -18,7 +18,6 @@
                     </h2>
                 </div>
             </div>
-
         </div>
         <div class="flex justify-center items-center p-4 mobile:hidden z-10">
             <ArrowComponent direction="bottom" color="white" class="mobile:hidden hover:cursor-pointer" :animate="true" />
@@ -657,11 +656,8 @@ async function save() {
         return;
     }
     alert('AREA successfully created!');
+
     userStore.areas = [];
-    const areas = await fetchUserAreas(token);
-    for (const area of areas) {
-        userStore.addArea(area);
-    }
     store.action = null;
     store.reaction = null;
     store.title = '';
@@ -669,6 +665,11 @@ async function save() {
     store.reactionData = {};
     store.view = 'Normal';
     store.display = false;
+
+    const areas = await fetchUserAreas(token);
+    for (const area of areas) {
+        userStore.addArea(area);
+    }
 }
 
 function cancelSetup() {
@@ -724,6 +725,8 @@ function redirectToReaction() {
 
 onMounted(() => {
     const user = userStore.user;
+    scrollY.value = window.scrollY;
+
     if (!user) {
         console.error('User is not logged in.');
         return;
