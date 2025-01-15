@@ -65,6 +65,8 @@ export type OptionType =
     | 'boolean'
     | 'GithubRepository'
     | 'DiscordGuild'
+    | 'DiscordRole'
+    | 'DiscordRoleName'
     | 'DiscordGuildChannel';
 
 export interface Reaction {
