@@ -17,6 +17,7 @@ const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 
+
 // Global variable for reset email code
 let resetPasswordCodeAccordingToEmail = {
 };
@@ -121,17 +122,19 @@ router.post('/reset-password', async (req, res) => {
     }
 
     try {
-        // Check if user exists
+        // Check if the user exists
         const user = await prisma.user.findUnique({
-            where: {
-                email: email,
-            },
+            where: { email: email },
         });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        // Generate a random verification code
+        const code = Math.floor(100000 + Math.random() * 900000);
+
+        // Configure Nodemailer
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             auth: {
@@ -140,43 +143,42 @@ router.post('/reset-password', async (req, res) => {
             },
         });
 
-        // 6-digit code
-        const code = Math.floor(100000 + Math.random() * 900000);
-
+        // Create the email data
         const mailData = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: 'Reset password for Area Romain le malin',
-            text: `Your verification code is ${code}`,
+            subject: 'Password Reset',
+            html: `
+                <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+                    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #007bff;">Réinitialisation de votre mot de passe</h2>
+                        <p>Bonjour,</p>
+                        <p>Nous avons reçu une demande de réinitialisation de votre mot de passe. Veuillez utiliser le code de
+                        vérification ci-dessous :</p>
+                        <div style="text-align: center; font-size: 24px; font-weight: bold; color: #007bff; margin: 20px 0;">
+                        ${code}
+                        </div>
+                        <p>Si vous n'avez pas fait cette demande, vous pouvez ignorer cet e-mail.</p>
+                        <p style="color: #666; font-size: 12px;">Merci,</p>
+                        <p style="color: #666; font-size: 12px;">L'équipe de support Area Romain le malin</p>
+                    </div>
+                </div>
+            `
         };
 
-        // Wrap sendMail in a Promise
-        const sendMailAsync = (mailData) => {
-            return new Promise((resolve, reject) => {
-                transporter.sendMail(mailData, (err, info) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(info);
-                    }
-                });
-            });
-        };
+        // Send the email
+        const info = await transporter.sendMail(mailData);
 
-        // Send email
-        await sendMailAsync(mailData);
-
-        // Set the code for the email
+        // Store the verification code for this email
         resetPasswordCodeAccordingToEmail[email] = code;
 
-        return res.status(200).json({ message: `Email sent to ${email}` });
+        return res.status(200).json({ message: `Email sent to ${email}`, info });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: error.message });
     }
 });
 
-// Method /GET because user will click on the link
 router.post('/reset-password-confirm', async (req, res) => {
     const { email, code } = req.body;
 
@@ -213,7 +215,7 @@ router.put('/change-password', async (req, res) => {
             hashedPassword: hashedPassword,
         },
     }).then(() => {
-        return res.status(200).json({ message: 'Password updated', redirectUrl: '/dashboard' });
+        return res.status(200).json({ message: 'Password updated', redirectUrl: '/login' });
     }).catch((error) => {
         console.error(error);
         return res.status(500).json({ error: error.message });

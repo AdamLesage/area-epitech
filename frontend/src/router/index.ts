@@ -33,7 +33,6 @@ const router = createRouter({
       path: '/email-verification',
       name: 'email-verification',
       component: () => import('@/views/EmailVerificationPage.vue'),
-      beforeEnter: auth,
     },
     {
       path: '/forgot-password',
@@ -44,7 +43,6 @@ const router = createRouter({
       path: '/change-password',
       name: 'change-password',
       component: () => import('@/views/ChangePasswordPage.vue'),
-      beforeEnter: auth,
     },
     {
       path: '/',

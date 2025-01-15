@@ -55,10 +55,13 @@ function checkCode(values: PasswordRetrievalFormValues) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Response:', data);
-        const redirectUrl = data.redirectUrl;
-        // redirect to redirectUrl page
-        router.push(redirectUrl);
+        if (data.redirectUrl) {
+            const redirectUrl = data.redirectUrl;
+            // redirect to redirectUrl page
+            router.push(redirectUrl);
+        } else {
+            console.error('Redirect URL is undefined');
+        }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -67,7 +70,6 @@ function checkCode(values: PasswordRetrievalFormValues) {
 
 // Form submission handler
 function handleSubmit(values: PasswordRetrievalFormValues) {
-    console.log('Form Submitted:', values);
     // Call API route /reset-password
     fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/reset-password`, {
         method: 'POST',
@@ -82,12 +84,12 @@ function handleSubmit(values: PasswordRetrievalFormValues) {
 
 // Abort button handler
 function handleAbort() {
-    console.log('User Aborted Forgot Password Verification');
+    // Redirect to login page
+    router.push('/login');
 };
 
 // Send again button handler
 function handleSendAgain() {
-    console.log('User Requested to Send Code Again');
     // Call API route /reset-password
     fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/reset-password`, {
         method: 'POST',
@@ -110,7 +112,6 @@ function handleChangeCode(newCode: string[]) {
         if (code.value.length === 6 && email.value) {
             checkCode({ email: email.value, code: code.value as [string, string, string, string, string, string] });
         }
-        console.log('Code:', code.value);
     }
 }
 
@@ -133,12 +134,10 @@ watch(async () => route.fullPath, async (newPath) => {
  */
  async function initStores(): Promise<void> {
     const token = Cookies.get('token');
-    console.log('Token:', token);
 
     if (!userStore.user) {
         const user = await fetchUser(token);
         if (!user) {
-            console.log('No user found');
         } else {
             userStore.setUser(user);
             userStore.areas = [];
