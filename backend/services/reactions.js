@@ -24,6 +24,10 @@ reactions.set('start_resume', spotify_start_resume);
 reactions.set('pause', spotify_pause);
 reactions.set('add_track_to_queue', spotify_add_track_to_queue);
 
+reactions.set('area_delete', area_delete);
+reactions.set('area_start', area_start);
+reactions.set('area_stop', area_stop);
+
 /**
  * @brief Retrieve the access token for a user's linked service account.
  * 
@@ -516,6 +520,88 @@ async function spotify_add_track_to_queue(reactionData, actionResponseData, user
         return;
     }
     console.log("Track added to queue successfully:", response);
+}
+
+/**
+ * Handler function for the 'area_delete' reaction.
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ * 
+ * @author Romain Chevallier
+ */
+async function area_delete(reactionData, actionResponseData, userUuid) {
+    try {
+        if (!reactionData.areaId) {
+           throw new Error("Area UUID is required");
+        }
+        const response = await axios.delete(`${process.env.BACKEND_URL}/api/action/${reactionData.areaUuid}`);
+        if (response.status > 299) {
+            throw new Error(`Error calling area_delete`);
+            return;
+        } else {
+            console.log("Area deleted successfully:", response);
+        }
+    } catch (e) {
+        console.error(e)
+        return;
+    }
+}
+
+/**
+ * Handler function for the 'area_start' reaction.
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ * 
+ * @author Romain Chevallier
+ */
+async function area_start(reactionData, actionResponseData, userUuid) {
+    try {
+        if (!reactionData.areaUuid) {
+           throw new Error("Area UUID is required");
+        }
+        const response = await axios.put(`${process.env.BACKEND_URL}/api/action/set_active/${reactionData.areaUuid}`, {
+            isActive: true
+        });
+        if (response.status > 299) {
+            throw new Error(`Error calling area_start`);
+            return;
+        } else {
+            console.log("Area started successfully:", response);
+        }
+    } catch (e) {
+        console.error(e)
+        return;
+    }
+}
+
+/**
+ * Handler function for the 'area_stop' reaction.
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ * 
+ * @author Romain Chevallier
+ */
+async function area_stop(reactionData, actionResponseData, userUuid) {
+    try {
+        if (!reactionData.areaUuid) {
+           throw new Error("Area UUID is required");
+        }
+        const response = await axios.put(`${process.env.BACKEND_URL}/api/action/${reactionData.areaUuid}`, {
+            isActive: false
+        });
+        if (response.status > 299) {
+            throw new Error(`Error calling area_stop`);
+            return;
+        } else {
+            console.log("Area stopped successfully:", response);
+        }
+    } catch (e) {
+        console.error(e)
+        return;
+    }
 }
 
 module.exports = reactions;

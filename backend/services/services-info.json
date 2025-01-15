@@ -880,7 +880,15 @@
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
-            "options": [],
+            "options": [
+              {
+                "name": "areaUuid",
+                "display_name": "Area Uuid",
+                "description": "The area you want to delete.",
+                "type": "AreaSelect",
+                "required": false
+              }
+            ],
             "returnData": [
               "id",
               "uuid",
@@ -905,7 +913,15 @@
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
-            "options": []
+            "options": [
+              {
+                "name": "areaUuid",
+                "display_name": "Area Uuid",
+                "description": "The area you want to delete.",
+                "type": "AreaSelect",
+                "required": true
+              }
+            ]
           },
           {
             "name": "area_start",
@@ -914,7 +930,15 @@
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
-            "options": []
+            "options": [
+              {
+                "name": "areaUuid",
+                "display_name": "Area Uuid",
+                "description": "The area you want to start.",
+                "type": "AreaSelect",
+                "required": true
+              }
+            ]
           },
           {
             "name": "area_stop",
@@ -923,7 +947,15 @@
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
-            "options": []
+            "options": [
+              {
+                "name": "areaUuid",
+                "display_name": "Area Uuid",
+                "description": "The area you want to start.",
+                "type": "AreaSelect",
+                "required": true
+              }
+            ]
           }
         ]
       }
