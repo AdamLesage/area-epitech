@@ -15,8 +15,7 @@
             </button>
 
             <!-- PFP -->
-            <img :src="user.profilePictureUrl"
-                alt="Profile Picture"
+            <img :src="user.profilePictureUrl" alt="Profile Picture"
                 class="w-48 h-48 mini:w-24 mini:h-24 rounded-full mb-6 border-4 mobile:border-2 border-white/70 mx-auto shadow-lg" />
 
             <!-- Username and creation date -->
@@ -24,36 +23,38 @@
             <p class="mobile:text-xs text-sm text-gray-400 font-light">{{ user.bio }}</p>
 
             <!-- Actions -->
-            <div class="flex flex-row justify-center items-center mt-8 mobile:mt-6 gap-8 mobile:gap-4 text-center text-gray-300">
+            <div
+                class="flex flex-row justify-center items-center mt-8 mobile:mt-6 gap-8 mobile:gap-4 text-center text-gray-300">
                 <div class="hover:text-white w-[10rem] mobile:w-[7rem]">
                     <h3 class="mobile:text-2xl text-5xl font-extrabold">{{ userStore.areas.length }}</h3>
                     <p class="mobile:text-xs text-base font-light">Actions Created</p>
                 </div>
                 <div class="hover:text-white w-[10rem] mobile:w-[7rem]">
-                    <h3 class="mobile:text-2xl text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == true).length }}</h3>
+                    <h3 class="mobile:text-2xl text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive ==
+                        true).length }}</h3>
                     <p class="mobile:text-xs text-base font-light">Actions <span class="text-green-500">On</span></p>
                 </div>
                 <div class="hover:text-white w-[10rem] mobile:w-[7rem]">
-                    <h3 class="mobile:text-2xl text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == false).length }}</h3>
+                    <h3 class="mobile:text-2xl text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive ==
+                        false).length }}</h3>
                     <p class="mobile:text-xs text-base font-light">Actions <span class="text-red-500">Off</span></p>
                 </div>
             </div>
 
             <!-- Connected Platforms -->
             <div class="mobile:!mt-6 mt-12">
-                <h3 class="mobile:!text-base text-2xl font-semibold mobile:mb-4 mb-6 tracking-wide">Connected Platforms</h3>
+                <h3 class="mobile:!text-base text-2xl font-semibold mobile:mb-4 mb-6 tracking-wide">Connected Platforms
+                </h3>
                 <ConnectedApiIcons :platforms="detailedPlatforms ?? []" @socialClick="handleSocialClick" />
             </div>
 
             <!-- Buttons -->
             <div class="flex gap-4 justify-center items-center w-full">
-                <button
-                    @click="goToAddConnections"
+                <button @click="goToAddConnections"
                     class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg mobile:text-sm text-white font-bold tracking-wide">
                     Add Connections
                 </button>
-                <button
-                    @click="logout"
+                <button @click="logout"
                     class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-red-600 hover:bg-red-700 rounded-full shadow-lg mobile:text-sm text-white font-bold tracking-wide">
                     Logout
                 </button>
@@ -66,78 +67,79 @@
             <h2 class="text-2xl md:text-4xl font-semibold tracking-wide mb-6 mobile:text-xl">Edit Profile</h2>
 
             <form @submit.prevent="saveProfile" class="space-y-6" :validation-schema="schema">
-            <div class="flex flex-col items-center space-y-4">
-                <!-- Avatar Section -->
                 <div class="flex flex-col items-center space-y-4">
-                <!-- Avatar Section -->
-                <div class="relative">
-                    <img :src="editForm.profilePictureUrl" alt="Profile Picture"
-                    class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-300 shadow-lg mobile:w-20 mobile:h-20" />
+                    <!-- Avatar Section -->
+                    <div class="flex flex-col items-center space-y-4">
+                        <!-- Avatar Section -->
+                        <div class="relative">
+                            <img :src="editForm.profilePictureUrl" alt="Profile Picture"
+                                class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-300 shadow-lg mobile:w-20 mobile:h-20" />
 
-                    <!-- Upload Button -->
-                    <button type="button" :onclick="openPopup"
-                    class="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-blue-700 transition mobile:w-6 mobile:h-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="white" class="w-4 h-4 mobile:w-3 mobile:h-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
+                            <!-- Upload Button -->
+                            <button type="button" :onclick="openPopup"
+                                class="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-blue-700 transition mobile:w-6 mobile:h-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="white" class="w-4 h-4 mobile:w-3 mobile:h-3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Popup for Image Selection -->
+                        <div v-if="showPopup"
+                            class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+                            <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Choose an Image</h3>
+                                <div class="grid grid-cols-3 gap-4 justify-center">
+                                    <img v-for="(image, index) in images" :key="index" :src="image"
+                                        :alt="'Option ' + (index + 1)"
+                                        class="cursor-pointer border-2 border-transparent hover:border-blue-500 rounded-md w-32 h-32 object-cover mobile:w-24 mobile:h-24"
+                                        @click="selectImage(image)" />
+                                </div>
+                                <button @click="closePopup"
+                                    class="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Form Fields -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-left mb-1 font-semibold mobile:text-sm">Profile Name</label>
+                        <input type="text" v-model="editForm.name"
+                            class="w-full p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1" />
+                    </div>
+                    <div>
+                        <label class="block text-left mb-1 font-semibold mobile:text-sm">Birth Date</label>
+                        <input ref="birthDateInput" type="date" :value="editForm.birthDate ? new Date(editForm.birthDate).toISOString().split('T')[0] : ''"
+                            @input="editForm.birthDate = new Date(($event?.target as HTMLInputElement)?.value).toISOString()"
+                            class="w-full p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1" />
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-left mb-1 font-semibold mobile:text-sm">Phone Number</label>
+                    <input type="tel" v-model="editForm.phoneNumber" placeholder="🇫🇷  +33"
+                        class="w-full p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1"
+                        @input="editForm.phoneNumber = editForm.phoneNumber.replace(/[^0-9]/g, '')" />
+                </div>
+                <div>
+                    <label class="block text-left mb-1 font-semibold mobile:text-sm">Bio</label>
+                    <textarea v-model="editForm.bio" rows="3"
+                        class="w-full p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1"></textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-4 justify-center items-center w-full">
+                    <button type="submit"
+                        class="mt-6 px-4 py-3 bg-green-600 hover:bg-green-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all mobile:mt-4 mobile:px-3 mobile:py-2">
+                        Save Changes
+                    </button>
+                    <button @click="toggleEdit"
+                        class="mt-6 px-4 py-3 bg-gray-600 hover:bg-gray-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all mobile:mt-4 mobile:px-3 mobile:py-2">
+                        Cancel
                     </button>
                 </div>
-
-                <!-- Popup for Image Selection -->
-                <div v-if="showPopup"
-                    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-                    <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Choose an Image</h3>
-                    <div class="grid grid-cols-3 gap-4 justify-center">
-                        <img v-for="(image, index) in images" :key="index" :src="image"
-                        :alt="'Option ' + (index + 1)"
-                        class="cursor-pointer border-2 border-transparent hover:border-blue-500 rounded-md w-32 h-32 object-cover mobile:w-24 mobile:h-24"
-                        @click="selectImage(image)" />
-                    </div>
-                    <button @click="closePopup"
-                        class="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition">Cancel</button>
-                    </div>
-                </div>
-                </div>
-            </div>
-
-            <!-- Other Form Fields -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                <label class="block text-left mb-1 font-semibold mobile:text-sm">Profile Name</label>
-                <input type="text" v-model="editForm.name"
-                    class="w-full p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1" />
-                </div>
-                <div>
-                <label class="block text-left mb-1 font-semibold mobile:text-sm">Birth Date</label>
-                <input ref="birthDateInput" type="date" v-model="editForm.birthDate"
-                    class="w-full p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1" />
-                </div>
-            </div>
-            <div>
-                <label class="block text-left mb-1 font-semibold mobile:text-sm">Phone Number</label>
-                <input type="tel" v-model="editForm.phoneNumber" placeholder="🇫🇷  +33"
-                class="w-full p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1"
-                @input="editForm.phoneNumber = editForm.phoneNumber.replace(/[^0-9]/g, '')" />
-            </div>
-            <div>
-                <label class="block text-left mb-1 font-semibold mobile:text-sm">Bio</label>
-                <textarea v-model="editForm.bio" rows="3"
-                class="w-full p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1"></textarea>
-            </div>
-
-            <!-- Buttons -->
-            <div class="flex gap-4 justify-center items-center w-full">
-                <button type="submit"
-                class="mt-6 px-4 py-3 bg-green-600 hover:bg-green-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all mobile:mt-4 mobile:px-3 mobile:py-2">
-                Save Changes
-                </button>
-                <button @click="toggleEdit"
-                class="mt-6 px-4 py-3 bg-gray-600 hover:bg-gray-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all mobile:mt-4 mobile:px-3 mobile:py-2">
-                Cancel
-                </button>
-            </div>
             </form>
         </div>
     </div>
@@ -179,7 +181,7 @@ watch(() => userStore.user, (newUser) => {
     editForm.value = {
         name: newUser?.name || "",
         bio: newUser?.bio || "",
-        birthDate: newUser?.birthDate || "",
+        birthDate: newUser?.birthDate ? new Date(newUser.birthDate).toISOString().split('T')[0] : "",
         phoneNumber: newUser?.phoneNumber || "",
         profilePictureUrl: newUser?.profilePictureUrl,
     };
@@ -194,7 +196,7 @@ console.log(user.value);
 const editForm = ref({
     name: user.value?.name || "",
     bio: user.value?.bio || "",
-    birthDate: user.value?.birthDate || "",
+    birthDate: user.value?.birthDate ? new Date(user.value.birthDate).toISOString().split('T')[0] : "",
     phoneNumber: user.value?.phoneNumber || "",
     profilePictureUrl: user.value?.profilePictureUrl,
 });
