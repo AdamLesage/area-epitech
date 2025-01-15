@@ -7,9 +7,10 @@
 
             <!-- Edit Profile Button -->
             <button @click="toggleEdit"
-                class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 hover:border-white border-2 border-transparent text-white font-bold px-6 py-2 rounded-full shadow-lg transition-all flex items-center justify-center gap-2">
-                <Icon icon="bi:pencil-fill" class="w-4 h-4" />
-                <span>Edit Profile</span>
+                class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 hover:border-white border-2 border-transparent text-white font-bold px-4 py-2 md:px-6 md:py-2 rounded-full shadow-lg transition-all flex items-center justify-center gap-2"
+                aria-label="Edit Profile">
+                <Icon icon="bi:pencil-fill" class="w-4 h-4 md:w-5 md:h-5" />
+                <span class="hidden md:inline">Edit Profile</span>
             </button>
 
             <!-- PFP -->
@@ -48,11 +49,13 @@
             <!-- Buttons -->
             <div class="flex gap-4 justify-center items-center w-full">
                 <button @click="goToAddConnections"
-                    class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+                    class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all"
+                    aria-label="Add Connections">
                     Add Connections
                 </button>
                 <button @click="logout"
-                    class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-red-600 hover:bg-red-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+                    class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-red-600 hover:bg-red-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all"
+                    aria-label="Logout">
                     Logout
                 </button>
             </div>
@@ -111,11 +114,13 @@
                 <!-- Buttons -->
                 <div class="flex gap-4 justify-center items-center w-full">
                     <button type="submit"
-                        class="mt-6 px-4 py-3 bg-green-600 hover:bg-green-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+                        class="mt-6 px-4 py-3 bg-green-600 hover:bg-green-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all"
+                        aria-label="Save Changes">
                         Save Changes
                     </button>
                     <button @click="toggleEdit"
-                        class="mt-6 px-4 py-3 bg-gray-600 hover:bg-gray-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+                        class="mt-6 px-4 py-3 bg-gray-600 hover:bg-gray-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all"
+                        aria-label="Cancel">
                         Cancel
                     </button>
                 </div>
