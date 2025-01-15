@@ -28,6 +28,23 @@ actions.set('issues.closed', create_github_workers);
 actions.set('pull_request.opened', create_github_workers);
 actions.set('pull_request.closed', create_github_workers);
 
+actions.set('message_create', create_discord_workers);
+actions.set('message_delete', create_discord_workers);
+actions.set('message_update', create_discord_workers);
+actions.set('channel_create', create_discord_workers);
+actions.set('channel_delete', create_discord_workers);
+actions.set('channel_update', create_discord_workers);
+actions.set('thread_create', create_discord_workers);
+actions.set('thread_delete', create_discord_workers);
+actions.set('thread_update', create_discord_workers);
+actions.set('message_reaction_add', create_discord_workers);
+actions.set('message_reaction_remove', create_discord_workers);
+actions.set('message_reaction_remove_emoji', create_discord_workers);
+actions.set('message_reaction_remove_all', create_discord_workers);
+actions.set('role_create', create_discord_workers);
+actions.set('role_delete', create_discord_workers);
+actions.set('role_update', create_discord_workers);
+
 /**
  * @brief Ensures that a Docker image exists.
  * If the image exists, it is deleted and rebuilt.
@@ -159,5 +176,22 @@ async function create_github_workers(data, uuid, targetAction) {
         return "";
     }
 }
+
+async function create_discord_workers(data, uuid, targetAction) {
+    console.log("create_discord_workers");
+    var onNewFileImage = path.resolve(__dirname, '../workers/discord'); // Path to the Dockerfile
+    var image_name = "discord-worker"; // Name of the Docker image
+    var workerFileName = "discordWorker.js" // Name of the worker file
+    try {
+        await ensureImageExists(image_name, onNewFileImage, workerFileName);
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
+        await container.start(); // Start the container
+        return container.id; // Return the container ID
+    } catch (e) {
+        console.log(e);
+        return "";
+    }
+}
+
 
 module.exports = actions;
