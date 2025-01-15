@@ -2,6 +2,7 @@ const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { Dropbox } = require('dropbox');
+const { Client,GatewayIntentBits, Partials, ChannelType, PermissionsBitField } = require('discord.js');
 
 // Create a new Map to store reaction handlers
 const reactions = new Map();
@@ -17,21 +18,21 @@ reactions.set('create_pull_request', github_pull_request);
 
 reactions.set('playlist_create', spotify_create_playlist);
 
-reactions.set('send_message', discord_send_message_to_a_channel);
-reactions.set('delete_message', discord_delete_message_from_a_channel);
-reactions.set('create_channel', discord_create_channel_in_server);
-reactions.set('delete_channel', discord_delete_channel_from_server);
-reactions.set('clear_all_messages_from_channel', discord_delete_all_messages_from_a_channel);
-reactions.set('Clear_custom_hours_messages_from_channel', discord_delete_custom_hours_messages_from_a_channel);
-reactions.set('Clear_custom_days_messages_from_channel', discord_delete_custom_days_messages_from_a_channel);
-reactions.set('send_reaction', discord_send_reaction_to_message);
-reactions.set("create_role", discord_create_role_in_server);
-reactions.set("delete_role", discord_delete_role_from_server);
-reactions.set("edit_role", discord_edit_role_in_server);
-reactions.set("add_role_to_user", discord_add_role_to_user);
-reactions.set("remove_role_from_user", discord_remove_role_from_user);
-reactions.set("ban_user", discord_ban_user_from_server);
-reactions.set("unban_user", discord_unban_user_from_server);
+reactions.set('discord_send_message_to_a_channel', discord_send_message_to_a_channel);
+reactions.set('discord_delete_message_from_a_channel', discord_delete_message_from_a_channel);
+reactions.set('discord_create_channel_in_server', discord_create_channel_in_server);
+reactions.set('discord_delete_channel_from_server', discord_delete_channel_from_server);
+reactions.set('discord_clear_all_messages_from_channel', discord_clear_all_messages_from_channel);
+reactions.set('clear_custom_hours_messages_from_a_channel', clear_custom_hours_messages_from_a_channel);
+reactions.set('clear_custom_days_messages_from_a_channel', clear_custom_days_messages_from_a_channel);
+reactions.set('discord_send_reaction_to_message', discord_send_reaction_to_message);
+reactions.set("discord_create_role_in_a_server", discord_create_role_in_a_server);
+reactions.set("discord_delete_role_from_server", discord_delete_role_from_server);
+reactions.set("discord_edit_role_in_server", discord_edit_role_in_server);
+reactions.set("discord_attribute_role_to_a_user", discord_attribute_role_to_a_user);
+reactions.set("discord_remove_role_to_a_user", discord_remove_role_to_a_user);
+reactions.set("discord_ban_user_from_a_server", discord_ban_user_from_a_server);
+reactions.set("discord_unban_user_from_a_server", discord_unban_user_from_a_server);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
@@ -353,12 +354,31 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
 }
 
 // Function to send a message to a specific channel
-async function discord_send_message_to_a_channel(channelId, messageContent) {
-    console.log('Sending message content:', messageContent);
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds, 
+        GatewayIntentBits.GuildMessages, 
+        GatewayIntentBits.GuildMessageReactions,  
+        GatewayIntentBits.MessageContent,
+    ],
+    partials: [
+        Partials.Message, 
+        Partials.Channel, 
+        Partials.Reaction,
+        Partials.User,
+    ]
+});
+client.login(process.env.DISCORD_BOT_TOKEN); 
+
+async function discord_send_message_to_a_channel(channelId) {
+    console.log('Sending message to channel:', channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realmessage = String(channelId.message);
+    realmessage
     try {
-        const channel = await client.channels.fetch(channelId);
+        const channel = await client.channels.fetch(realchannelId);
         if (channel) {
-            await channel.send(messageContent);
+            await channel.send(realmessage);
             console.log('Message sent successfully');
         } else {
             console.error('Channel not found');
@@ -368,12 +388,14 @@ async function discord_send_message_to_a_channel(channelId, messageContent) {
     }
 }
 
-async function discord_delete_message_from_a_channel(channelId, messageId) {
-    console.log('Deleting message:', messageId);
+async function discord_delete_message_from_a_channel(channelId) {
+    console.log('Deleting message:', channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realmessageId = String(channelId.message);
     try {
-        const channel = await client.channels.fetch(channelId);
+        const channel = await client.channels.fetch(realchannelId);
         if (channel) {
-            const message = await channel.messages.fetch(messageId);
+            const message = await channel.messages.fetch(realmessageId);
             if (message) {
                 await message.delete();
                 console.log('Message deleted successfully');
@@ -390,13 +412,16 @@ async function discord_delete_message_from_a_channel(channelId, messageId) {
 
 
 // Function to create a channel
-async function discord_create_channel_in_server(serverId, channelName, channelType) {
-    console.log('Creating channel:', channelName);
+async function discord_create_channel_in_server(ChannelId) {
+    console.log('Creating channel:', ChannelId.channelName);
+    console.log('Server:', ChannelId.channel);
+    const realserverId = String(ChannelId.server).split('/')[0];
+    const realchannelName = String(ChannelId.channel);
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
             await server.channels.create({
-                name: channelName,
+                name: realchannelName,
                 type: ChannelType.GuildText // Use ChannelType.GuildText instead of "GUILD_TEXT"
             });
             console.log('Channel created successfully');
@@ -411,12 +436,14 @@ async function discord_create_channel_in_server(serverId, channelName, channelTy
 
 //Function to delete a channel
 
-async function discord_delete_channel_from_server(serverId, channelName) {
-    console.log('Deleting channel:', channelName);
+async function discord_delete_channel_from_server(ChannelId) {
+    console.log('Deleting channel:', ChannelId);
+    const realserverId = String(ChannelId.server).split('/')[0];
+    const realchannelId = String(ChannelId.channel).split('/')[1];
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
-            const channel = server.channels.cache.find(channel => channel.name === channelName);
+            const channel = server.channels.cache.get(realchannelId);
             if (channel) {
                 await channel.delete();
                 console.log('Channel deleted successfully');
@@ -432,10 +459,12 @@ async function discord_delete_channel_from_server(serverId, channelName) {
 }
 
 
-async function discord_delete_all_messages_from_a_channel(channelId) {
-    console.log('Clearing all messages from channel:', channelId);
+async function discord_clear_all_messages_from_channel(channelId) {
+    console.log('Clearing all messages from channel:', channelId.channel);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    console.log('realchannelId:', realchannelId);
     try {
-        const channel = await client.channels.fetch(channelId);
+        const channel = await client.channels.fetch(realchannelId);
         if (channel) {
             const messages = await channel.messages.fetch();
             messages.forEach(async message => {
@@ -451,15 +480,19 @@ async function discord_delete_all_messages_from_a_channel(channelId) {
 }
 
 
-async function discord_delete_custom_hours_messages_from_a_channel(channelId, hours) {
-    console.log('Clearing custom hours messages from channel:', channelId);
+async function clear_custom_hours_messages_from_a_channel(channelId) {
+    console.log('Clearing custom hours messages from channel:',channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realhours = String(channelId.hours);
+    console.log('realchannelId:', realchannelId);
+    console.log('realhours:', realhours);
     try {
-        const channel = await client.channels.fetch(channelId);
+        const channel = await client.channels.fetch(realchannelId);
         if (channel) {
             const messages = await channel.messages.fetch();
             const now = new Date();
             messages.forEach(async message => {
-                if (now - message.createdAt < hours * 3600000) {
+                if (now - message.createdAt < realhours * 3600000) {
                     await message.delete();
                 }
             });
@@ -472,15 +505,20 @@ async function discord_delete_custom_hours_messages_from_a_channel(channelId, ho
     }
 }
 
-async function discord_delete_custom_days_messages_from_a_channel(channelId, days) {
+async function clear_custom_days_messages_from_a_channel(channelId) {
     console.log('Clearing custom days messages from channel:', channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realdays = String(channelId.days);
+    console.log('realchannelId:', realchannelId);
+    console.log('realdays:', realdays);
+
     try {
-        const channel = await client.channels.fetch(channelId);
+        const channel = await client.channels.fetch(realchannelId);
         if (channel) {
             const messages = await channel.messages.fetch();
             const now = new Date();
             messages.forEach(async message => {
-                if (now - message.createdAt < days * 86400000) {
+                if (now - message.createdAt < realdays * 86400000) {
                     await message.delete();
                 }
             });
@@ -494,14 +532,17 @@ async function discord_delete_custom_days_messages_from_a_channel(channelId, day
 }
 
 
-async function discord_send_reaction_to_message(channelId, messageId, emoji) {
-    console.log('Sending reaction to message:', messageId);
+async function discord_send_reaction_to_message(channelId) {
+    console.log('Sending reaction to message:', channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realmessageId = String(channelId.message);
+    const realemoji = String(channelId.emoji);
     try {
-        const channel = await client.channels.fetch(channelId);
+        const channel = await client.channels.fetch(realchannelId);
         if (channel) {
-            const message = await channel.messages.fetch(messageId);
+            const message = await channel.messages.fetch(realmessageId);
             if (message) {
-                await message.react(emoji);
+                await message.react(realemoji);
                 console.log('Reaction sent successfully');
             } else {
                 console.error('Message not found');
@@ -515,13 +556,17 @@ async function discord_send_reaction_to_message(channelId, messageId, emoji) {
 }
 
 
-async function discord_create_role_in_server(serverId, roleName, permissionType, color) {
-    console.log('Creating role:', roleName);
+async function discord_create_role_in_a_server(serverId) {
+    console.log('Creating role:', serverId);
+    const realserverId = String(serverId.server);
+    const realroleName = String(serverId.role);
+    const realpermissionType = String(serverId.color.type);
+    const realcolor = String(serverId.color.color);
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
             let permissions;
-            switch (permissionType) {
+            switch (realpermissionType) {
                 case 'usual':
                     permissions = [
                         PermissionsBitField.Flags.ViewChannel,
@@ -548,9 +593,9 @@ async function discord_create_role_in_server(serverId, roleName, permissionType,
             }
 
             await server.roles.create({
-                name: roleName,
+                name: realroleName,
                 permissions: permissions,
-                color: color
+                color: realcolor
             });
             console.log('Role created successfully');
         } else {
@@ -561,13 +606,16 @@ async function discord_create_role_in_server(serverId, roleName, permissionType,
     }
 }
 
-
-async function discord_delete_role_from_server(serverId, roleName) {
-    console.log('Deleting role:', roleName);
+async function discord_delete_role_from_server(serverId) {
+    console.log('Deleting role:', serverId);
+    const realserverId = String(serverId.role).split('/')[0];
+    const realroleid = String(serverId.role).split('/')[1];
+    console.log('realserverId:', realserverId);
+    console.log('realroleName:', realroleid);
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
-            const role = server.roles.cache.find(role => role.name === roleName);
+            const role = server.roles.cache.get(realroleid);
             if (role) {
                 await role.delete();
                 console.log('Role deleted successfully');
@@ -581,18 +629,54 @@ async function discord_delete_role_from_server(serverId, roleName) {
         console.error('Error deleting role:', error);
     }
 }
-
-async function discord_edit_role_in_server(serverId, roleName, newRoleName, newPermissions, newColor) {
-    console.log('Editing role:', roleName);
+async function discord_edit_role_in_server(serverId) {
+    console.log('Editing role:', serverId);
+    const realserverId = String(serverId.role).split('/')[0];
+    const realroleid = String(serverId.role).split('/')[1];
+    const realnewrolename = String(serverId.Newrolename);
+    const realnewpermissionType = String(serverId.colorandpermission.type);
+    const realnewcolor = String(serverId.colorandpermission.color);
+    console.log('realserverId:', realserverId);
+    console.log('realroleName:', realroleid);
+    console.log('realnewrolename:', realnewrolename);
+    console.log('realnewpermissionType:', realnewpermissionType);
+    console.log('realnewcolor:', realnewcolor);
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
-            const role = server.roles.cache.find(role => role.name === roleName);
+            const role = server.roles.cache.get(realroleid);
             if (role) {
+                let newPermissions;
+                switch (realnewpermissionType) {
+                    case 'usual':
+                        newPermissions = [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                            PermissionsBitField.Flags.ReadMessageHistory
+                        ];
+                        break;
+                    case 'explorer':
+                        newPermissions = [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                            PermissionsBitField.Flags.ReadMessageHistory,
+                            PermissionsBitField.Flags.ManageMessages,
+                            PermissionsBitField.Flags.ManageChannels
+                        ];
+                        break;
+                    case 'admin':
+                        newPermissions = [
+                            PermissionsBitField.Flags.Administrator
+                        ];
+                        break;
+                    default:
+                        throw new Error('Invalid permission type');
+                }
+
                 await role.edit({
-                    name: newRoleName,
+                    name: realnewrolename,
                     permissions: newPermissions,
-                    color: newColor
+                    color: realnewcolor
                 });
                 console.log('Role edited successfully');
             } else {
@@ -606,14 +690,17 @@ async function discord_edit_role_in_server(serverId, roleName, newRoleName, newP
     }
 }
 
-async function discord_add_role_to_user(serverId, userId, roleName) {
-    console.log('Adding role to user:', roleName);
+async function discord_attribute_role_to_a_user(serverId, userId, roleName) {
+    console.log('Adding role to user:', serverId);
+    const realuserId = String(serverId.user);
+    const realserverId = String(serverId.roleserver).split('/')[0];
+    const realroleId = String(serverId.roleserver).split('/')[1];
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
-            const member = await server.members.fetch(userId);
+            const member = await server.members.fetch(realuserId);
             if (member) {
-                const role = server.roles.cache.find(role => role.name === roleName);
+                const role = server.roles.cache.get(realroleId);
                 if (role) {
                     await member.roles.add(role);
                     console.log('Role added to user successfully');
@@ -631,14 +718,17 @@ async function discord_add_role_to_user(serverId, userId, roleName) {
     }
 }
 
-async function discord_remove_role_from_user(serverId, userId, roleName) {
-    console.log('Removing role from user:', roleName);
+async function discord_remove_role_to_a_user(serverId, userId, roleName) {
+    console.log('Removing role from user:', serverId);
+    const realuserId = String(serverId.user);
+    const realserverId = String(serverId.roleserver).split('/')[0];
+    const realroleId = String(serverId.roleserver).split('/')[1];
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
-            const member = await server.members.fetch(userId);
+            const member = await server.members.fetch(realuserId);
             if (member) {
-                const role = server.roles.cache.find(role => role.name === roleName);
+                const role = server.roles.cache.get(realroleId);
                 if (role) {
                     await member.roles.remove(role);
                     console.log('Role removed from user successfully');
@@ -656,12 +746,14 @@ async function discord_remove_role_from_user(serverId, userId, roleName) {
     }
 }
 
-async function discord_ban_user_from_server(serverId, userId) {
-    console.log('Banning user from server:', userId);
+async function discord_ban_user_from_a_server(serverId, userId) {
+    console.log('Banning user from server:', serverId);
+    const realuserId = String(serverId.user);
+    const realserverId = String(serverId.server);
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
-            const member = await server.members.fetch(userId);
+            const member = await server.members.fetch(realuserId);
             if (member) {
                 await member.ban();
                 console.log('User banned successfully');
@@ -676,12 +768,14 @@ async function discord_ban_user_from_server(serverId, userId) {
     }
 }
 
-async function discord_unban_user_from_server(serverId, userId) {
-    console.log('Unbanning user from server:', userId);
+async function discord_unban_user_from_a_server(serverId, userId) {
+    console.log('Unbanning user from server:', serverId);
+    const realserverId = String(serverId.server);
+    const realuserId = String(serverId.user);
     try {
-        const server = await client.guilds.fetch(serverId);
+        const server = await client.guilds.fetch(realserverId);
         if (server) {
-            await server.members.unban(userId);
+            await server.members.unban(realuserId);
             console.log('User unbanned successfully');
         } else {
             console.error('Server not found');
