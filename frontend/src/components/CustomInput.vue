@@ -129,6 +129,138 @@
                 </div>
             </div>
         </div>
+        
+        <div v-if="type === 'DiscordRoleName'" class="w-full">
+            <div class="flex items-center gap-2 mb-2" v-if="!selectedGuild">
+                <h3 class="text-md font-semibold ml-2 text-[#333]">Connect a Guild</h3>
+                <Icon v-if="required" icon="mdi:required" class="text-red-500" />
+            </div>
+            <div class="flex w-full justify-center relative flex-col">
+                <div class="w-full flex h-12 bg-[#7289da] items-center justify-center rounded-md hover:cursor-pointer gap-2 relative"
+                    @click="showSelect = !showSelect"
+                    v-if="!selectedGuild">
+                    <Icon icon="ic:baseline-discord" class="text-white w-6 h-6" />
+                    <h2 class="text-white font-bold">Your Guilds</h2>
+                </div>
+                <div v-if="showSelect" class="w-full">
+                    <div v-if="!selectedGuild">
+                        <div class="max-h-64 w-full overflow-y-scroll rounded-md" v-if="discordGuilds.length != 0">
+                            <div
+                                v-for="guild in discordGuilds"
+                                :key="guild.id"
+                                class="bg-blue-50 p-2 pl-3 flex items-center hover:cursor-pointer hover:bg-blue-100"
+                                @click="selectGuild(guild)">
+                                <div class="flex gap-4 items-center w-full justify-center">
+                                    <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                    <p class="overflow-hidden break-words text-ellipsis w-full text-[#333]">{{ guild.name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="text-[#777] text-sm text-center mt-4">
+                            <i>No Guilds found.<br/>Verify you are correctly linked to Github</i>
+                        </div>
+                        <button
+                            @click="fetchGuilds"
+                            class="w-full h-12 mt-4 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
+                            <Icon icon="mdi:reload" class="text-white w-6 h-6" />
+                            <p class="text-white">Refetch</p>
+                        </button>
+                    </div>
+                    <div v-else>
+                        <div class="bg-blue-50 p-2 pl-3 flex rounded-md justify-between items-center transition hover:cursor-pointer hover:bg-blue-100">
+                            <div class="flex gap-2 items-center">
+                                <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                <p class="text-[#333] hover:text-blue-500 hover:underline"
+                                    @click="redirectToGuildOnDiscord(selectedGuild.id)">
+                                    {{ selectedGuild.name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center px-2 mt-2">
+                            <div class="flex gap-2 items-center">
+                                <h3 class="text-md font-semibold text-[#333]">Guild Connected</h3>
+                                <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
+                            </div>
+                            <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                                @click="backToGuildSelection">
+                                Choose Another Guild
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="selectedGuild" class="w-full">
+                    <div class="flex items-center gap-2 mb-2 mt-6" v-if="!selectedRole">
+                        <h3 class="text-md font-semibold ml-2 text-[#333]">Choose a Role</h3>
+                        <Icon v-if="required" icon="mdi:required" class="text-red-500" />
+                    </div>
+                    <div class="w-full flex h-12 bg-[#7289da] items-center justify-center rounded-md hover:cursor-pointer gap-2 relative"
+                        @click="showSelect2 = !showSelect2"
+                        v-if="!selectedRole">
+                        <Icon icon="ic:baseline-discord" class="text-white w-6 h-6" />
+                        <h2 class="text-white font-bold">Guild Roles</h2>
+                    </div>
+                    <div v-if="showSelect2 && !selectedRole" class="w-full">
+                        <div class="max-h-64 w-full overflow-y-scroll rounded-md" v-if="selectedGuildRoles.length != 0">
+                            <div
+                                v-for="role in selectedGuildRoles"
+                                :key="role.id"
+                                class="bg-blue-50 p-2 pl-3 flex items-center hover:cursor-pointer hover:bg-blue-100"
+                                @click="selectRole(role)">
+                                <div class="flex gap-4 items-center w-full justify-center">
+                                    <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                    <p class="overflow-hidden break-words text-ellipsis w-full text-[#333]">{{ role.name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="text-[#777] text-sm text-center mt-4">
+                            <i>No Roles found.<br/>Verify you are correctly linked to Discord</i>
+                        </div>
+                        <button
+                            @click="fetchRoles(selectedGuild.id)"
+                            class="w-full h-12 mt-4 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
+                            <Icon icon="mdi:reload" class="text-white w-6 h-6" />
+                            <p class="text-white">Refetch</p>
+                        </button>
+                    </div>
+                    <div v-else-if="selectedRole" class="mt-6">
+                        <div class="bg-blue-50 p-2 pl-3 flex rounded-md justify-between items-center transition hover:cursor-pointer hover:bg-blue-100">
+                            <div class="flex gap-2 items-center">
+                                <Icon icon="mdi:hashtag" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                <p class="text-[#333] hover:text-blue-500 hover:underline">
+                                    {{ selectedRole.name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center px-2 mt-2">
+                            <div class="flex gap-2 items-center">
+                                <h3 class="text-md font-semibold text-[#333]">Role Selected</h3>
+                                <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
+                            </div>
+                            <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                                @click="backToRoleSelection">
+                                Choose Another Role
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discord Role Color and Type Selection -->
+        <div v-if="type === 'DiscordRole'" class="w-full">
+            <div class="mb-4">
+                <label class="block text-[#333] font-semibold mb-2">Role Color</label>
+                <select v-model="selectedColor" class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] w-full" @change="handleRoleChange">
+                    <option v-for="color in roleColors" :key="color.name" :value="color.name">{{ color.display_name }}</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-[#333] font-semibold mb-2">Role Type</label>
+                <select v-model="selectedType" class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] w-full" @change="handleRoleChange">
+                    <option v-for="type in roleTypes" :key="type.name" :value="type.name">{{ type.display_name }}</option>
+                </select>
+            </div>
+        </div>
 
         <div v-if="type === 'GithubRepository'" class="text-[#333] rounded-lg max-w-xl mx-auto w-full">
             <div class="flex gap-4 items-center" v-if="step != 'allDone'">
@@ -260,6 +392,11 @@ interface DiscordGuild {
     name: string;
 }
 
+interface DiscordRole {
+    id: number;
+    name: string;
+}
+
 interface DiscordChannel {
     id: number;
     name: string;
@@ -272,6 +409,8 @@ const props = defineProps<{
     required: boolean;
     action: boolean;
 }>();
+
+
 
 const value = ref<string>(props.value == undefined ? '' : props.value);
 
@@ -291,8 +430,10 @@ const selectedRepository = ref<Repository | null>(null);
 // Discord
 const discordGuilds = ref<DiscordGuild[]>([]);
 const selectedGuild = ref<DiscordGuild | null>(null);
+const selectedGuildRoles = ref<DiscordRole[]>([]);
 const selectedGuildChannels = ref<DiscordChannel[]>([]);
 const selectedChannel = ref<DiscordChannel | null>(null);
+const selectedRole = ref<DiscordRole | null>(null);
 const showSelect = ref<boolean>(false);
 const showSelect2 = ref<boolean>(false);
 
@@ -350,6 +491,42 @@ async function fetchChannels(guildId: number): Promise<boolean> {
     }
     return true;
 }
+
+async function fetchRoles(guildId: number): Promise<void> {
+    const user = userStore.user;
+    if (!user) return;
+    const linkedAccount = user.linkedAccounts.find((account) => account.serviceName === 'discord');
+    if (!linkedAccount) return;
+    if (!guildId) return;
+
+    try {
+        const res: { status: number, data: { id: number, name: string }[] } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/discord/roles?guild_id=${guildId}`, {
+            headers: {
+                Authorization: `Bearer ${linkedAccount.authToken}`,
+            },
+        });
+
+        if (res.status !== 200) {
+            console.error('Failed to fetch Discord roles:', res.data);
+            selectedGuildRoles.value = [];
+            return;
+        }
+
+        selectedGuildRoles.value = res.data.map((role: { id: number, name: string }) => ({
+            id: role.id,
+            name: role.name,
+        }));
+    } catch (errorMsg) {
+        console.error('Error fetching roles:', errorMsg);
+    }
+}
+
+async function selectRole(role: DiscordRole) {
+    selectedRole.value = role;
+    if (!selectedGuild.value) return;
+    emit('change', selectedGuild.value.id + '/' + role.id);
+}
+
 
 async function selectChannel(channel: DiscordChannel) {
     selectedChannel.value = channel;
@@ -500,6 +677,8 @@ const isDefaultInput = ref(false);
 const githubUsers = ref<GithubUser[]>([]);
 const githubRepositories = ref<Repository[]>([]);
 
+
+
 if (props.type == 'text' || props.type == 'number' || props.type == 'email' || props.type == 'password'
     || props.type == 'date' || props.type == 'time' || props.type == 'month' || props.type == 'week'
     || props.type == 'file' || props.type == 'checkbox' || props.type == 'radio' || props.type == 'boolean') {
@@ -509,8 +688,16 @@ if (props.type == 'text' || props.type == 'number' || props.type == 'email' || p
 if (props.type == 'GithubRepository' ||
     props.type == 'DiscordGuild' ||
     props.type == 'DiscordGuildChannel' ||
+    props.type == 'DiscordRole' ||
+    props.type == 'DiscordRoleName' ||
     props.type == 'textarea') {
     isSupported.value = true;
+}
+
+function backToRoleSelection() {
+    selectedRole.value = null;
+    showSelect2.value = true;
+    emit('change', '');
 }
 
 function handleChange(event: Event) {
@@ -609,6 +796,32 @@ async function handleDiscordGuildInput(user: User): Promise<void> {
     }
 }
 
+
+const roleColors = ref([
+{ name: '#7289da', display_name: 'Blue' },
+    { name: '#ff0000', display_name: 'Red' },
+    { name: '#00ff00', display_name: 'Green' },
+    { name: '#ffffff', display_name: 'White' },
+    { name: '#000000', display_name: 'Black' },
+    { name: '#ffff00', display_name: 'Yellow' },
+    { name: '#ffa500', display_name: 'Orange' },
+    { name: '#800080', display_name: 'Purple' }
+]);
+const roleTypes = ref([
+    { name: 'explorer', display_name: 'Explorer' },
+    { name: 'usual', display_name: 'Usual' },
+    { name: 'admin', display_name: 'Admin' }
+]);
+
+const selectedColor = ref<string>(roleColors.value[0].name);
+const selectedType = ref<string>(roleTypes.value[0].name);
+
+function handleRoleChange() {
+    emit('change', { color: selectedColor.value, type: selectedType.value });
+}
+
+
+
 onMounted(async () => {
     const user = userStore.user;
     if (!user) return;
@@ -616,6 +829,12 @@ onMounted(async () => {
     if (props.type === 'GithubRepository') {
         await handleGithubRepositoryInput(user);
     } else if (props.type === 'DiscordGuild' || props.type === 'DiscordGuildChannel') {
+        await handleDiscordGuildInput(user);
+    }
+    if (props.type === 'DiscordRole') {
+        handleRoleChange();
+    }
+    if (props.type === 'DiscordRoleName') {
         await handleDiscordGuildInput(user);
     }
 });
