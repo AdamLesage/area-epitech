@@ -316,6 +316,7 @@ router.post('/user', async (req, res) => {
                 phoneNumber: phoneNumber,
                 hashedPassword: hashedPassword,
                 authToken: uuidv4(),
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             },
         });
         res.json(user);

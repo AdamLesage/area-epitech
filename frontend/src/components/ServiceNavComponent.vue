@@ -7,6 +7,7 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const user = ref(userStore.user);
+console.log('User:', user.value);
 
 watch(() => userStore.user, (newUser) => {
     user.value = newUser;
@@ -54,7 +55,7 @@ const handleBackButton = () => {
                 <NavButton icon="material-symbols:explore-rounded" text="Explore" @redirect="handleExploreRedirect" />
                 <NavButton icon="material-symbols:folder-outline" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />
                 <NavButton icon="mdi:hammer-screwdriver" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
-                <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" v-if="user" />
+                <img :src="user?.profilePictureUrl || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full hover:opacity-90 hover:cursor-pointer border-white border-2" @click="handleUserProfileRedirect" v-if="user" />
             </div>
         </nav>
     </div>

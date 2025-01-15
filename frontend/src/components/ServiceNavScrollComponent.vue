@@ -89,7 +89,7 @@ const props = defineProps<{
                 <NavButton icon="material-symbols:explore-rounded" text="Explore" @redirect="handleExploreRedirect" />
                 <NavButton icon="material-symbols:folder-outline" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />
                 <NavButton icon="mdi:hammer-screwdriver" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
-                <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" v-if="user" />
+                <img :src="user?.profilePicture?.url || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full" @click="handleUserProfileRedirect" v-if="user" />
             </div>
         </nav>
     </div>
