@@ -5,8 +5,8 @@
             :key="platform.name"
             :style="{ backgroundColor: platform.color }"
             @click="handleClick(platform.name)"
-            class="social-btn text-white rounded-full flex items-center justify-center shadow-md transition-transform transform hover:scale-105 w-16 h-16">
-            <Icon :icon="platform.icon" class="text-xl w-[3.5rem] h-[3.5rem] text-white" />
+            class="social-btn text-white rounded-full flex items-center justify-center shadow-md transition-transform transform hover:scale-105 w-16 mobile:w-[3rem] h-16 mobile:h-[3rem]">
+            <Icon :icon="platform.icon" class="text-xl w-[3.5rem] mobile:w-[2.5rem] h-[3.5rem] mobile:h-[2.5rem] text-white" />
         </button>
     </div>
 </template>

@@ -124,7 +124,6 @@ const router = createRouter({
       path: '/cookies',
       name: 'cookies',
       component: Cook,
-
     },
     {
       // Catch-all route
