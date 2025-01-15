@@ -83,12 +83,6 @@ const router = createRouter({
       beforeEnter: auth,
     },
     {
-      path: '/areas',
-      name: 'areas',
-      component: () => import('@/views/MyAreaPage.vue'),
-      beforeEnter: auth,
-    },
-    {
       path: '/auth-callback',
       name: 'auth-callback',
       component: () => import('@/views/AuthCallbackPage.vue'),

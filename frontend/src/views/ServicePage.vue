@@ -62,7 +62,6 @@
     </div>
     <!-- Second Page -->
     <div
-        @wheel="handleScrollAttemptSecondPage"
         v-else>
         <HelpAssistantPopupComponent :bottom="16" :left="16" :color="color" />
         <div class="flex flex-col items-center justify-between web:h-1/2 mobile:h-full"
@@ -652,12 +651,6 @@ function redirectToCard(categoryName: string | null, cardName: string) {
 function handleScrollAttempt(event: WheelEvent) {
     if (event.deltaY > 0) {
         openServicePage();
-    }
-}
-
-function handleScrollAttemptSecondPage(event: WheelEvent) {
-    if (event.deltaY < 0 && scrollY.value === 0) {
-        isHeroVisible.value = true;
     }
 }
 

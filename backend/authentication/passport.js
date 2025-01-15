@@ -89,3 +89,25 @@ passport.use(
     }
   )
 );
+
+// Google strategy
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${process.env.BACKEND_URL}/auth/google/callback`,
+}, (accessToken, refreshToken, profile, done) => {
+    console.log(profile)
+    const sessionEmail = passport.session.email;
+    const profileEmail = profile.emails?.[0]?.value || null;
+
+    console.log('session:', sessionEmail, 'profile:', profileEmail);
+    const user = { 
+        ...profile,
+        accessToken,
+        sessionEmail: sessionEmail,
+        accountEmail: profileEmail
+    };
+    return done(null, user);
+}));
