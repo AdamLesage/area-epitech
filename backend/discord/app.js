@@ -41,13 +41,13 @@ client.on(Events.MessageCreate, async (message) => {
             serverId: message.guild.id,  // Add server ID
             channelId: message.channel.id,  // Add channel ID
             userId: message.author.id,  // Add user ID
+            Event: "message_create",
         };
 
         try {
             // Send a POST request to your webhook route with the message data
             await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, messageData, { httpsAgent: agent });
             console.log('Message data sent to webhook successfully');
-            //test
         } catch (error) {
             console.error('Error sending message data to webhook:', error);
         }
@@ -64,6 +64,7 @@ client.on(Events.MessageDelete, async (message) => {
         serverId: message.guild.id,  // Add server ID
         channelId: message.channel.id,  // Add channel ID
         messageId: message.id,  // Add message ID
+        Event: "message_delete",
     };
 
     try {
@@ -88,6 +89,7 @@ client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
             channelId: oldMessage.channel.id,  // Add channel ID
             messageId: oldMessage.id,  // Add message ID
             userId: oldMessage.author.id,  // Add user ID
+            Event: "message_update",
         };
 
         try {
@@ -108,6 +110,7 @@ client.on(Events.ChannelCreate, async (channel) => {
         channelType: channel.type,  // Add channel type
         serverId: channel.guild.id,  // Add server ID
         createdAt: channel.createdAt,  // Add creation timestamp
+        Event: "channel_create",
     };
 
     try {
@@ -127,6 +130,7 @@ client.on(Events.ChannelDelete, async (channel) => {
         channelType: channel.type,  // Add channel type
         serverId: channel.guild.id,  // Add server ID
         deletedAt: new Date(),  // Add deletion timestamp
+        Event: "channel_delete",
     };
 
     try {
@@ -148,6 +152,7 @@ client.on(Events.ChannelUpdate, async (oldChannel, newChannel) => {
         serverId: oldChannel.guild.id,  // Add server ID
         channelId: oldChannel.id,  // Add channel ID
         updatedAt: new Date(),  // Add update timestamp
+        Event: "channel_update",
     };
 
     try {
@@ -168,6 +173,7 @@ client.on(Events.ThreadCreate, async (thread) => {
         serverId: thread.guild.id,  // Add server ID
         channelId: thread.parentId,  // Add parent channel ID
         createdAt: thread.createdAt,  // Add creation timestamp
+        Event: "thread_create",
     };
 
     try {
@@ -188,6 +194,7 @@ client.on(Events.ThreadDelete, async (thread) => {
         serverId: thread.guild.id,  // Add server ID
         channelId: thread.parentId,  // Add parent channel ID
         deletedAt: new Date(),  // Add deletion timestamp
+        Event: "thread_delete",
     };
 
     try {
@@ -209,6 +216,7 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
         serverId: oldThread.guild.id,  // Add server ID
         threadId: oldThread.id,  // Add thread ID
         updatedAt: new Date(),  // Add update timestamp
+        Event: "thread_update",
     };
 
     try {
@@ -231,6 +239,7 @@ client.on(Events.MessageReactionAdd, async (reaction, user) => {
             userId: user.id,  // Add user ID
             emoji: reaction.emoji.name,  // Add emoji name
             addedAt: new Date(),  // Add reaction timestamp
+            Event: "message_reaction_add",
         };
 
         try {
@@ -254,6 +263,7 @@ client.on(Events.MessageReactionRemove, async (reaction, user) => {
             userId: user.id,  // Add user ID
             emoji: reaction.emoji.name,  // Add emoji name
             removedAt: new Date(),  // Add reaction removal timestamp
+            Event: "message_reaction_remove",
         };
 
         try {
@@ -275,6 +285,7 @@ client.on(Events.MessageReactionRemoveEmoji, async (reaction) => {
         serverId: reaction.message.guild.id,  // Add server ID
         emoji: reaction.emoji.name,  // Add emoji name
         removedAt: new Date(),  // Add emoji removal timestamp
+        Event: "message_reaction_remove_emoji",
     };
 
     try {
@@ -292,6 +303,7 @@ client.on(Events.MessageReactionRemoveAll, async (message) => {
         channelId: message.channel.id,  // Add channel ID
         serverId: message.guild.id,  // Add server ID
         removedAt: new Date(),  // Add reaction removal timestamp
+        Event: "message_reaction_remove_all",
     };
 
     try {
@@ -310,6 +322,7 @@ client.on(Events.GuildRoleCreate, async (role) => {
         roleName: role.name,  // Add role name
         serverId: role.guild.id,  // Add server ID
         createdAt: role.createdAt,  // Add creation timestamp
+        Event: "role_create",
     };
 
     try {
@@ -328,6 +341,7 @@ client.on(Events.GuildRoleDelete, async (role) => {
         roleName: role.name,  // Add role name
         serverId: role.guild.id,  // Add server ID
         deletedAt: new Date(),  // Add deletion timestamp
+        Event: "role_delete",
     };
 
     try {
@@ -347,6 +361,7 @@ client.on(Events.GuildRoleUpdate, async (oldRole, newRole) => {
         serverId: oldRole.guild.id,  // Add server ID
         roleId: oldRole.id,  // Add role ID
         updatedAt: new Date(),  // Add update timestamp
+        Event: "role_update",
     };
 
     try {
