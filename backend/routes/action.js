@@ -73,10 +73,10 @@ router.post('/action', async (req, res) => {
     }
     // check valide action and reaction type
     if (actions.get(typeAction) === undefined) {
-        res.status(404).send("action not found");
+        return res.status(404).send("action not found");
     }
     if (reactions.get(typeReaction) === undefined) {
-        res.status(404).send("reaction not found");
+        return res.status(404).send("reaction not found");
     }
     if (typeof actionData !== 'object' || actionData === null) {
         return res.status(400).json({ error: 'Invalid actionData, must be an object' });

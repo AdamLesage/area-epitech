@@ -120,6 +120,7 @@
                                     :required="option.required"
                                     :value="actionOptions[option.name]"
                                     :action="true"
+                                    :options="option.options"
                                     @change="(newValue) => handleChange(option.name, newValue, true)" />
                             </div>
                         </div>
@@ -241,6 +242,7 @@
                                     :required="option.required"
                                     :value="reactionOptions[option.name]"
                                     :action="false"
+                                    :options="option.options"
                                     @change="(newValue) => handleChange(option.name, newValue, false)" />
                             </div>
                         </div>
