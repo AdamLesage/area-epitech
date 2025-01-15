@@ -122,18 +122,11 @@
                     </footer>
                 </div>
             </div>
-            <FooterComponent class="mt-0 half:hidden" />
+            <FooterComponent class="!mt-0 half:hidden" />
         </div>
     </div>
 </template>
-<!-- <div class="flex height-adjusted items-center absolute right-0 z-30 w-[5.5%] flex-col justify-center mobile:hidden">
-                        <ArrowComponent direction="right" :animate="false" color="white" class="w-8 h-8 text-white p-1 rounded-full hover:bg-black/20"
-                            @click.stop="nextSlide"/>
-                    </div>
-                    <div class="flex height-adjusted items-center absolute left-0 z-30 w-[5.5%] flex-col justify-center mobile:hidden">
-                        <ArrowComponent direction="left" :animate="false" color="white" class="w-8 h-8 text-white p-1 rounded-full hover:bg-black/20"
-                            @click.stop="prevSlide"/>
-                    </div> -->
+
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
