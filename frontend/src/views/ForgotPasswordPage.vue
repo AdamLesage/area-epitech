@@ -68,6 +68,16 @@ function checkCode(values: PasswordRetrievalFormValues) {
 // Form submission handler
 function handleSubmit(values: PasswordRetrievalFormValues) {
     console.log('Form Submitted:', values);
+    // Call API route /reset-password
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: values.email,
+        }),
+    })
 };
 
 // Abort button handler
@@ -77,12 +87,21 @@ function handleAbort() {
 
 // Send again button handler
 function handleSendAgain() {
-    console.log('User requested to send email again');
+    console.log('User Requested to Send Code Again');
+    // Call API route /reset-password
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email.value,
+        }),
+    })
 };
 
 function handleChangeEmail(newEmail: string) {
     email.value = newEmail;
-    console.log('Email:', email.value);
 }
 
 function handleChangeCode(newCode: string[]) {

@@ -9,7 +9,8 @@
                 class="flex flex-col px-4 h-5/6 justify-between gap-4"
                 :validation-schema="schema"
                 @submit="onSubmit"
-                :initial-values="initialValues">
+                :initial-values="initialValues"
+                mode="all">
                 <!-- Code Field -->
                 <div class="flex flex-col justify-center items-center space-x-2">
                     <div class="flex justify-between">
@@ -79,7 +80,7 @@ const code = ref<[string, string, string, string, string, string]>(['', '', '', 
 
 // Form validation schema
 const schema = yup.object({
-  code: yup.array().required('Code is required').of(yup.string().length(1, 'Code must be 6 digits').matches(/^\d+$/, 'Code must contain only digits')),
+//   code: yup.array().required('Code is required').of(yup.string().length(1, 'Code must be 6 digits').matches(/^\d+$/, 'Code must contain only digits')),
   email: yup.string().required('Email is required').email(),
 });
 

@@ -19,7 +19,6 @@ const axios = require('axios');
 
 // Global variable for reset email code
 let resetPasswordCodeAccordingToEmail = {
-    "adamles44@gmail.com": 123456,
 };
 
 // Intern auth routes
@@ -121,12 +120,14 @@ router.post('/reset-password', async (req, res) => {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    // Check if user exists
-    prisma.user.findUnique({
-        where: {
-            email: email,
-        },
-    }).then((user) => {
+    try {
+        // Check if user exists
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -138,7 +139,8 @@ router.post('/reset-password', async (req, res) => {
                 pass: process.env.EMAIL_PASSWORD,
             },
         });
-        // 6 digits code
+
+        // 6-digit code
         const code = Math.floor(100000 + Math.random() * 900000);
 
         const mailData = {
@@ -148,24 +150,30 @@ router.post('/reset-password', async (req, res) => {
             text: `Your verification code is ${code}`,
         };
 
-        // Send email with reset password link
-        transporter.sendMail(mailData, (err, info) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: err.message });
-            }
-            // set the code for the email
-            resetPasswordCodeAccordingToEmail[email] = code;
+        // Wrap sendMail in a Promise
+        const sendMailAsync = (mailData) => {
+            return new Promise((resolve, reject) => {
+                transporter.sendMail(mailData, (err, info) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(info);
+                    }
+                });
+            });
+        };
 
-            return res.status(200).json({ message: `Email sent to ${email}` });
-        }).catch((err) => {
-            console.error(err);
-            return res.status(500).json({ error: err.message });
-        });
-    }).catch((error) => {
+        // Send email
+        await sendMailAsync(mailData);
+
+        // Set the code for the email
+        resetPasswordCodeAccordingToEmail[email] = code;
+
+        return res.status(200).json({ message: `Email sent to ${email}` });
+    } catch (error) {
         console.error(error);
         return res.status(500).json({ error: error.message });
-    });
+    }
 });
 
 // Method /GET because user will click on the link
