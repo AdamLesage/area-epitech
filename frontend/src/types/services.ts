@@ -45,6 +45,7 @@ export interface Option {
     description: string;
     type: OptionType;
     required: boolean;
+    options: String[] | undefined;
 }
 
 export type OptionType = 

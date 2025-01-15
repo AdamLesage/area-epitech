@@ -211,7 +211,10 @@ const onSubmit: SubmissionHandler<SignUpFormValues, GenericObject, unknown> = (v
 };
 
 // Social authentication functions
-const authWithGoogle: () => void = () => console.log('Authenticating with Google...');
+const authWithGoogle: () => void = async () => {
+    console.log('Authenticating with Google...');
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google`;
+}
 const authWithGithub: () => void = async () => {
     console.log('Authenticating with Github...');
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github`;
