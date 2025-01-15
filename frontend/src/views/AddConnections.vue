@@ -1,17 +1,11 @@
 <template>
     <div class="min-h-screen bg-home text-white font-sans flex justify-center items-center px-4 sm:px-8">
+        <ServiceNavComponent @back-button="goBack" class="mobile:hidden z-10 absolute top-0" />
         <MobileServiceNavComponent @back-button="goBack" class="web:hidden fixed bottom-0 z-40" />
         <!-- Main container -->
         <div class="bg-home-div mobile:bg-transparent mobile:shadow-none rounded-xl p-6 sm:p-10 w-2/3 mobile:w-full max-w-[66.75rem] text-center shadow-2xl relative mobile:px-0">
-            <div class="flex justify-between mobile:justify-center items-center mb-6 sm:mb-8">
+            <div class="flex justify-center items-center mb-6 sm:mb-8">
                 <h2 class="half:text-2xl text-4xl font-semibold tracking-wide">Add a new account</h2>
-                <button 
-                    @click="goBack" 
-                    class="mobile:hidden half:p-2 p-3 md:p-4 bg-home-text text-white rounded-lg mobile:text-base text-lg hover:cursor-pointer" 
-                    aria-label="Back to previous page"
-                    role="button">
-                    Back
-                </button>
             </div>
 
             <!-- Responsive icons flexbox -->
@@ -45,6 +39,7 @@ import { Service } from "@/types/services";
 import { LinkedAccount } from "@/types/auth";
 
 import MobileServiceNavComponent from "@/components/MobileServiceNavComponent.vue";
+import ServiceNavComponent from "@/components/ServiceNavComponent.vue";
 
 const userStore = useUserStore();
 const serviceStore = useServiceStore();
