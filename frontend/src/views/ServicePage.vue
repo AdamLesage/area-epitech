@@ -130,17 +130,18 @@
         <!-- Categories -->
         <div class="flex flex-wrap justify-center w-full items-center flex-col mt-12"
             v-if="service && view === 'categories'">
-            <div class="flex flex-col justify-center items-center w-[90vw] p-6 rounded-lg shadow-md gap-4"
+            <div class="flex flex-col justify-center items-center w-[90vw] max-w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: '#333' }">
                 <h1 class="text-3xl mobile:text-xl text-center font-extrabold text-white mb-2 hover:underline decoration-2 hover:cursor-pointer" @click="redirectToCategory(categorySelected!.name)">Category: {{ categorySelected?.display_name }}</h1>
             </div>
 
-            <div class="relative w-[90vw] h-[30rem] overflow-hidden rounded-lg mt-6">
-                <div class="flex transition-transform duration-500 ease-in-out relative"
-                    :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, width: `${service.categories.length * 90}vw` }">
+            <div class="relative w-[90vw] max-w-[66.75rem] h-[30rem] overflow-hidden rounded-lg mt-6">
+                <div class="flex transition-transform duration-500 ease-in-out relative !w-[--service-length]"
+                    v-if="innerWidth"
+                    :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, '--service-length': `${innerWidth <= 1200 ? service.categories.length * 90 : service.categories.length * 66.75}${innerWidth <= 1200 ? 'vw' : 'rem'}`}">
                     <div v-for="(category) in service.categories"
                         :key="category.name"
-                        class="flex justify-center flex-col h-[30rem] items-center w-[90vw] hover:cursor-pointer"
+                        class="flex justify-center flex-col h-[30rem] items-center w-[90vw] max-w-[66.75rem] hover:cursor-pointer"
                         :style="{ backgroundColor: service!.color }"
                         @click="redirectToCategory(category.name)">
                         <div class="flex items-center justify-center gap-2 z-10">
@@ -175,7 +176,7 @@
                 </button>
             </div>
 
-            <div class="flex justify-center w-[90vw] gap-6 mt-12" v-if="categorySelected">
+            <div class="flex justify-center w-[90vw] max-w-[66.75rem] gap-6 mt-12" v-if="categorySelected">
                 <div class="flex items-center gap-6" v-if="allItemsCategorySelected.length != 0">
                     <div class="flex flex-wrap gap-6 mobile:gap-4 justify-center">
                         <AREAInfoComponent
@@ -193,7 +194,7 @@
         <!-- Actions -->
         <div class="flex flex-wrap justify-center w-full items-center flex-col mt-12"
             v-if="service && view === 'actions'">
-            <div class="flex flex-col justify-center items-center w-[90vw] p-6 rounded-lg shadow-md gap-4"
+            <div class="flex flex-col justify-center items-center w-[90vw] max-w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
                 <Icon :icon="service.icon" class="w-24 mobile:w-16 h-24 mobile:h-16 text-white hover:cursor-pointer" @click="switchView('overview')"/>
                 <h1 class="text-3xl mobile:text-xl font-extrabold text-white mb-2 mobile:mb-0">Actions: {{ nbActions }}</h1>
@@ -203,7 +204,7 @@
                 </p>
             </div>
             <div v-for="(category) in service.categories" :key="category.name"
-                class="flex justify-center w-[90vw]">
+                class="flex justify-center w-[90vw] max-w-[66.75rem]">
                 <div class="flex flex-col items-center w-full gap-4 mt-6" v-if="category.actions.length != 0">
                     <h1 class="text-2xl mobile:text-lg font-black w-full rounded-lg pl-1 text-center" :style="{ color: '#333' }">{{ category.display_name }}</h1>
                     <div class="flex flex-wrap gap-6 mobile:gap-4 w-full justify-center">
@@ -222,7 +223,7 @@
         <!-- Reactions -->
         <div class="flex flex-wrap justify-center w-full items-center flex-col mt-12"
             v-if="service && view === 'reactions'">
-            <div class="flex flex-col justify-center items-center w-[90vw] p-6 rounded-lg shadow-md gap-4"
+            <div class="flex flex-col justify-center items-center w-[90vw] max-w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
                 <Icon :icon="service.icon" class="w-24 mobile:w-16 h-24 mobile:h-16 text-white hover:cursor-pointer" @click="switchView('overview')"/>
                 <h1 class="text-3xl mobile:text-xl font-extrabold text-white mb-2 mobile:mb-0">Reactions: {{ nbReactions }}</h1>
@@ -232,7 +233,7 @@
                 </p>
             </div>
             <div v-for="(category) in service.categories" :key="category.name"
-                class="flex justify-center w-[90vw]">
+                class="flex justify-center w-[90vw] max-w-[66.75rem]">
                 <div class="flex flex-col items-center w-full gap-4 mt-6" v-if="category.reactions.length != 0">
                     <h1 class="text-2xl mobile:text-lg font-black text-center w-full rounded-lg pl-1" :style="{ color: '#333' }">{{ category.display_name }}</h1>
                     <div class="flex flex-wrap gap-6 mobile:gap-4 w-full justify-center">
@@ -251,7 +252,7 @@
         <!-- Overview -->
         <div class="flex justify-center w-full items-center flex-col mt-12 mobile:mt-8"
             v-if="service && view === 'overview'">
-            <div class="flex flex-col justify-center items-center w-[90vw] p-6 rounded-lg shadow-md gap-4"
+            <div class="flex flex-col justify-center items-center w-[90vw] max-w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
                 <Icon :icon="service.icon" class="w-24 mobile:w-16 h-24 mobile:h-16 text-white hover:cursor-pointer" @click="switchView('overview')"/>
                 <h1 class="text-3xl mobile:text-xl font-extrabold text-white mb-2">Overview: {{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }}</h1>
@@ -260,7 +261,7 @@
                 </p>
             </div>
 
-            <div class="flex justify-between w-[90vw] my-12">
+            <div class="flex justify-between w-[90vw] max-w-[66.75rem] my-12">
                 <RateComponent :rate="service.reviews.rate" :reviews="service.reviews.count" :color="service.color" textcolor="#6b7280" class="w-full mobile:hidden"/>
                 <div class="flex w-full items-center justify-center">
                     <div
@@ -284,16 +285,16 @@
                 <SaveComponent :saves="service.saves" :color="service.color" textcolor="#6b7280" class="w-full flex justify-end mobile:hidden"/>
             </div>
 
-            <div class="flex flex-col justify-center items-center w-[90vw] p-6 rounded-lg shadow-md gap-4 mt-12 mobile:mt-0"
+            <div class="flex flex-col justify-center items-center w-[90vw] max-w-[66.75rem] p-6 rounded-lg shadow-md gap-4 mt-12 mobile:mt-0"
                 :style="{ backgroundColor: '#333' }">
                 <h1 id="categories" class="text-3xl font-extrabold text-white mb-2"><span class="text-white/75 hover:cursor-pointer" @click="switchView('categories')">#</span> Categories</h1>
             </div>
-            <div class="relative w-[90vw] h-[30rem] mobile:h-[20rem] overflow-hidden rounded-lg mt-6">
-                <div class="flex transition-transform duration-500 ease-in-out"
-                    :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, width: `${service.categories.length * 90}vw` }">
+            <div class="relative w-[90vw] max-w-[66.75rem] h-[30rem] mobile:h-[20rem] overflow-hidden rounded-lg mt-6">
+                <div class="flex transition-transform duration-500 ease-in-out !w-[--service-length]"
+                    :style="{ transform: `translateX(-${currentSlide * 100 / service.categories.length}%)`, '--service-length': `${innerWidth <= 1200 ? service.categories.length * 90 : service.categories.length * 66.75}${innerWidth <= 1200 ? 'vw' : 'rem'}`}">
                     <div v-for="(category) in service.categories"
                         :key="category.name"
-                        class="flex justify-center flex-col h-[30rem] mobile:h-[20rem] items-center w-[90vw] hover:cursor-pointer"
+                        class="flex justify-center flex-col h-[30rem] mobile:h-[20rem] items-center w-[90vw] max-w-[66.75rem] hover:cursor-pointer"
                         :style="{ backgroundColor: service!.color }"
                         @click="redirectToCategory(category.name)">
                         <div class="flex items-center justify-center gap-2 z-10">
@@ -327,7 +328,7 @@
                         class="w-1/3" />
                 </button>
             </div>
-            <div class="flex justify-center w-[90vw] gap-6 mt-12" v-if="categorySelected">
+            <div class="flex justify-center w-[90vw] max-w-[66.75rem] gap-6 mt-12" v-if="categorySelected">
                 <div class="flex items-center gap-6" v-if="allItemsCategorySelected.length != 0">
                     <div class="flex flex-wrap gap-6 mobile:gap-4 justify-center">
                         <AREAInfoComponent
@@ -341,11 +342,11 @@
                 </div>
             </div>
 
-            <div class="flex flex-col justify-center items-center w-[90vw] p-6 rounded-lg shadow-md gap-4 mt-24"
+            <div class="flex flex-col justify-center items-center w-[90vw] max-w-[66.75rem] p-6 rounded-lg shadow-md gap-4 mt-24"
                 :style="{ backgroundColor: '#333' }">
                 <h1 id="all-aps" class="text-3xl font-extrabold text-white mb-2">All apps</h1>
             </div>
-            <div class="flex justify-between w-[90vw] mt-6 relative">
+            <div class="flex justify-between w-[90vw] max-w-[66.75rem] mt-6 relative">
                 <div class="flex gap-2 mobile:justify-center w-full">
                     <button class="p-2 rounded-full px-4"
                         :style="{ backgroundColor: modeSelected == 'Actions' ? service!.color : '#fff',
@@ -370,12 +371,12 @@
                 <input type="search" v-model="search" class="border-2 border-[#999] pl-4 pr-10 rounded-md mr-[2px] mobile:hidden" placeholder="Search . . .">
                 <Icon class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 mobile:hidden" icon="akar-icons:search" />
             </div>
-            <div class="flex w-[90vw] relative mt-6 web:hidden px-3">
+            <div class="flex w-[90vw] max-w-[66.75rem] relative mt-6 web:hidden px-3">
                 <input type="search" v-model="search" class="border-2 border-[#999] pl-4 pr-10 rounded-md w-full h-10" placeholder="Search . . .">
                 <Icon class="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6" icon="akar-icons:search" />
             </div>
             <div
-                class="flex justify-center w-[90vw] gap-6 mt-6 items-center">
+                class="flex justify-center w-[90vw] max-w-[66.75rem] gap-6 mt-6 items-center">
                 <div class="flex items-center gap-4 mt-6 justify-center w-full">
                     <div class="flex flex-wrap gap-6 mobile:gap-4 w-fit justify-center" v-if="sortedCategories.length > 0">
                         <AREAInfoComponent
@@ -397,7 +398,7 @@
         <!-- Details -->
         <div class="flex flex-wrap justify-center w-full items-center flex-col mt-12"
             v-if="service && view === 'details'">
-            <div class="flex flex-col justify-center items-center w-[90vw] p-6 rounded-lg shadow-md gap-4"
+            <div class="flex flex-col justify-center items-center w-[90vw] max-w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
                 <Icon :icon="service.icon" class="w-24 mobile:w-16 h-24 mobile:h-16 text-white hover:cursor-pointer" @click="switchView('overview')"/>
                 <h1 class="text-3xl mobile:text-xl font-extrabold text-white">{{ nameCapitalized }}</h1>
@@ -405,7 +406,7 @@
                     color: {{ service.color }}
                 </p>
             </div>
-            <div class="flex flex-col justify-center items-start w-[90vw] p-6 mobile:py-4 mobile:px-2 gap-4">
+            <div class="flex flex-col justify-center items-start w-[90vw] max-w-[66.75rem] p-6 mobile:py-4 mobile:px-2 gap-4">
                 <div class="flex justify-between w-full mobile:flex-col gap-2">
                     <RateComponent :rate="service.reviews.rate" :reviews="service.reviews.count" :color="service.color" textcolor="#6b7280"/>
                     <SaveComponent :saves="service.saves" :color="service.color" textcolor="#6b7280"/>
@@ -465,6 +466,8 @@ const user = ref(userStore.user);
 
 const route = useRoute();
 const router = useRouter();
+const innerWidth = ref(window.innerWidth);
+console.log(innerWidth);
 
 const serviceId: string = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 const noHeader: boolean = route.query.header === 'false';

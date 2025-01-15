@@ -10,17 +10,17 @@
                 :logo="logo" :title="nameCapitalized"
                 :redirect="true" />
         </div>
-        <div class="flex justify-center items-center p-4 z-10 web:hidden" v-if="scrollY == 0"
+        <div class="flex justify-center items-center p-6 z-10 web:hidden" v-if="scrollY == 0"
             :style="{ backgroundColor: color }">
             <Icon :icon="logo" class="w-36 h-36 mobile:w-16 mobile:h-16 text-white" />
             <div class="flex flex-col justify-end items-center p-4">
-                <h1 class="text-white text-[6rem] leading-[5rem] font-bold mobile:!text-[2.5rem] mobile:!leading-3">{{ nameCapitalized }}</h1>
+                <h1 class="text-white text-[6rem] leading-[5rem] font-bold mobile:!text-[2.5rem] mobile:!leading-3" @click="redirectToService">{{ nameCapitalized }}</h1>
             </div>
         </div>
 
         <div class="flex flex-wrap justify-center w-full items-center flex-col mt-36 mobile:mt-10"
             v-if="service">
-            <div class="flex flex-col justify-center items-center w-[90vw] p-6 rounded-lg shadow-md gap-4"
+            <div class="flex flex-col justify-center items-center w-[90vw] max-w-[66.75rem] p-6 rounded-lg shadow-md gap-4"
                 :style="{ backgroundColor: service.color }">
                 <Icon :icon="service.icon" class="w-24 mobile:w-16 h-24 mobile:h-16 text-white hover:cursor-pointer" @click="redirectToService"/>
                 <h1 class="text-3xl mobile:text-xl text-center font-extrabold text-white mb-2">{{ category.display_name }}: {{ card.display_name }}</h1>
@@ -30,13 +30,13 @@
                 </p>
             </div>
             <div class="w-full flex justify-center mt-12">
-                <button @click="selectCard" class="bg-[#333] p-4 w-[90vw] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
+                <button @click="selectCard" class="bg-[#333] p-4 w-[90vw] max-w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
                     v-if="user">
                     Use this {{ isAction ? 'Action' : 'Reaction' }}
                     <Icon icon="fluent:cursor-click-24-filled" class="w-8 h-8 text-white" />
                 </button>
             </div>
-            <div class="flex w-[90vw] flex-col mt-12">
+            <div class="flex w-[90vw] max-w-[66.75rem] flex-col mt-12">
                 <div class="flex flex-col gap-1">
                     <h1 class="text-2xl mobile:text-xl font-extrabold text-[#333] mb-2">Details:</h1>
                     <p class="text-lg mobile:text-base text-[#333] mb-4">This {{ isAction ? 'action' : 'reaction' }} is named "{{ card.display_name }}" and is part of the {{ category.display_name }} category on the {{ service.name.charAt(0).toUpperCase() + service.name.slice(1) }} service</p>
@@ -103,7 +103,7 @@
             </div>
         </div>
         <div class="w-full flex justify-center mt-12">
-            <button @click="selectCard" class="bg-[#333] p-4 w-[90vw] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
+            <button @click="selectCard" class="bg-[#333] p-4 w-[90vw] max-w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
                 v-if="user">
                 Use this {{ isAction ? 'Action' : 'Reaction' }}
                 <Icon icon="fluent:cursor-click-24-filled" class="w-8 h-8 text-white" />
