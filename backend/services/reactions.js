@@ -28,13 +28,6 @@ reactions.set('previous_track', spotify_previous_track);
 reactions.set('start_resume', spotify_start_resume);
 reactions.set('pause', spotify_pause);
 reactions.set('add_track_to_queue', spotify_add_track_to_queue);
-reactions.set('playlist_add_track', spotify_add_to_playlist);
-reactions.set('save_track', spotify_save_track);
-reactions.set('skip_track', spotify_skip_track);
-reactions.set('previous_track', spotify_previous_track);
-reactions.set('start_resume', spotify_start_resume);
-reactions.set('pause', spotify_pause);
-reactions.set('add_track_to_queue', spotify_add_track_to_queue);
 
 /**
  * @brief Retrieve the access token for a user's linked service account.
