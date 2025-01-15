@@ -145,6 +145,13 @@ const profilePictureURL = ref('/images/temppfp.jpeg');
 
 watch(() => userStore.user, (newUser) => {
     user.value = newUser;
+    editForm.value = {
+        name: newUser?.name || "",
+        bio: newUser?.bio || "",
+        birthDate: newUser?.birthDate || "",
+        phoneNumber: newUser?.phoneNumber || "",
+        profilePicture: null
+    };
 });
 
 const isEditing = ref(false);
@@ -162,12 +169,34 @@ function toggleEdit() {
 }
 
 function saveProfile() {
-    // Update user data logic here
-    // userStore.setUser({
-    //     ...user.value,
-    //     ...editForm.value,
-    // });
-    toggleEdit();
+    // Fetch API to update user details
+    const URL = `${import.meta.env.VITE_BACKEND_URL}/api/user/${user.value?.uuid}`;
+    fetch(URL, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${user.value?.authToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: editForm.value.name,
+            bio: editForm.value.bio,
+            birthDate: editForm.value.birthDate,
+            phoneNumber: editForm.value.phoneNumber,
+        })
+    }).then((res) => {
+        if (res.ok) {
+            res.json().then((data) => {
+                userStore.setUser(data);
+                console.log(data);
+            });
+        } else {
+            res.json().then((error) => {
+                console.error('Error:', error);
+            });
+        }
+    }).catch((error) => {
+        console.error('Fetch error:', error);
+    });
 }
 
 function handleFileChange(event: Event) {

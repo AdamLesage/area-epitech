@@ -389,9 +389,7 @@ router.put('/user/:uuid', async (req, res) => {
 
     const data = {};
     if (req.body.email) data.email = req.body.email;
-    if (req.body.password) data.hashedPassword = bcrypt.hashSync(req.body.password, 10);
     if (req.body.name) data.name = req.body.name;
-    if (req.body.surname) data.surname = req.body.surname;
     if (req.body.bio) data.bio = req.body.bio;
     if (req.body.birthDate) data.birthDate = req.body.birthDate;
     if (req.body.phoneNumber) data.phoneNumber = req.body.phoneNumber;
