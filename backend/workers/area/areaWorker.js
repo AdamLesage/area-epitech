@@ -27,10 +27,13 @@ async function send(data2) {
 }
 
 async function selecteData(webhookData) {
-    if (webhookData.event === targetAction) {
-        if (webhookData.data.uuid != process.env.UUID) {
-            send(webhookData.data)
+    if (webhookData.event === targetAction && webhookData.data.uuid != process.env.UUID) {
+        if (webhookData.event === "on_area_activate") {
+            if (actionData.areaUuid && actionData.areaUuid != webhookData.data.uuid) {
+                return;
+            }
         }
+        send(webhookData.data)
     }
 }
 
