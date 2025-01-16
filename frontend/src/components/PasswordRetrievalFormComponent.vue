@@ -11,6 +11,19 @@
                 @submit="onSubmit"
                 :initial-values="initialValues"
                 mode="all">
+                <!-- Email Recap Field -->
+                <div class="flex flex-col">
+                    <label for="email" class="web:text-auth-primary mobile:text-white mb-2">Your email:</label>
+                    <Field
+                        name="email"
+                        type="email"
+                        :value="props.email"
+                        placeholder="Enter your email here..."
+                        @input="handleChangeEmail"
+                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full bg-white"
+                    />
+                    <ErrorMessage name="email" class="text-red-500 text-sm mt-1" />
+                </div>
                 <!-- Code Field -->
                 <div class="flex flex-col justify-center items-center space-x-2">
                     <div class="flex justify-between">
@@ -31,19 +44,6 @@
                         </Field>
                     </div>
                     <ErrorMessage name="code" class="text-red-500 text-sm mt-1 text-center" />
-                </div>
-                <!-- Email Recap Field -->
-                <div class="flex flex-col">
-                    <label for="email" class="web:text-auth-primary mobile:text-white mb-2">Your email:</label>
-                    <Field
-                        name="email"
-                        type="email"
-                        v-model="props.email"
-                        placeholder="Enter your email here..."
-                        @input="handleChangeEmail"
-                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full bg-white"
-                        />
-                    <ErrorMessage name="email" class="text-red-500 text-sm mt-1" />
                 </div>
                 <div class="flex flex-col gap-2">
                     <!-- Validate Button -->

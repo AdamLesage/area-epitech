@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "cypress": "^13.16.1"
+  },
+  "dependencies": {
+    "passport-strava-oauth2": "^0.1.3"
   }
 }

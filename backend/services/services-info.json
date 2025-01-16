@@ -56,14 +56,8 @@
                 "description": "The state of the milestone",
                 "type": "select",
                 "options": [
-                  {
-                    "name": "open",
-                    "display_name": "Open"
-                  },
-                  {
-                    "name": "closed",
-                    "display_name": "Closed"
-                  }
+                  "open",
+                  "closed"
                 ],
                 "required": false
               }
@@ -788,7 +782,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": []
           },
           {
@@ -798,7 +802,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": []
           },
           {
@@ -808,7 +822,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": []
           }
         ],
@@ -929,7 +953,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": [
               {
                 "name": "type_label",
@@ -937,13 +971,13 @@
                 "description": "the type of the triggered label",
                 "type": "select",
                 "options": [
-                  "INBOX",         
-                  "STARRED",         
-                  "UNREAD",          
-                  "SENT",           
+                  "INBOX",
+                  "STARRED",
+                  "UNREAD",
+                  "SENT",
                   "DRAFT",
-                  "TRASH",     
-                  "SPAM",    
+                  "TRASH",
+                  "SPAM",
                   "IMPORTANT",
                   "CHAT",
                   "CATEGORY_PERSONAL",
@@ -969,7 +1003,17 @@
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": [
               {
                 "name": "type_label",
@@ -977,13 +1021,13 @@
                 "description": "the type of the triggered label",
                 "type": "select",
                 "options": [
-                  "INBOX",         
+                  "INBOX",
                   "STARRED",
-                  "UNREAD",          
-                  "SENT",           
+                  "UNREAD",
+                  "SENT",
                   "DRAFT",
                   "TRASH",
-                  "SPAM",    
+                  "SPAM",
                   "IMPORTANT",
                   "CHAT",
                   "CATEGORY_PERSONAL",
@@ -1021,7 +1065,7 @@
               },
               {
                 "name": "label_id",
-                "display_name": "lable Id",
+                "display_name": "label Id",
                 "description": "the label you want to remove",
                 "type": "text",
                 "required": true
@@ -1045,7 +1089,7 @@
               },
               {
                 "name": "label_id",
-                "display_name": "lable Id",
+                "display_name": "label Id",
                 "description": "the label you want to remove",
                 "type": "text",
                 "required": true
@@ -1065,11 +1109,21 @@
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
-            "returnData": ["id", "threadId", "snippet", "labels", "subject", "from", "to", "date", "body"],
+            "returnData": [
+              "id",
+              "threadId",
+              "snippet",
+              "labels",
+              "subject",
+              "from",
+              "to",
+              "date",
+              "body"
+            ],
             "options": []
           }
         ],
-        "reactions" : [
+        "reactions": [
           {
             "name": "gmail_create_draft",
             "display_name": "Gmail create draft",
@@ -1096,6 +1150,918 @@
                 "name": "body",
                 "display_name": "body",
                 "description": "the body of the draft",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "strava",
+    "color": "#fc4c02",
+    "icon": "bi:strava",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "athlete",
+        "display_name": "Athlete",
+        "actions": [
+          {
+            "name": "athlete.updated",
+            "display_name": "Athlete Updated",
+            "description": "An athlete is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "weight",
+                "display_name": "Weight",
+                "description": "The weight of the athlete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "update_athlete",
+            "display_name": "Update Athlete weight",
+            "description": "Update Athlete weight",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "weight",
+                "display_name": "Weight",
+                "description": "The weight of the athlete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "activity",
+        "display_name": "Activity",
+        "actions": [
+          {
+            "name": "activity.create",
+            "display_name": "Activity Created",
+            "description": "A new activity is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": []
+          },
+          {
+            "name": "activity.delete",
+            "display_name": "Activity Deleted",
+            "description": "A new activity is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": []
+          },
+          {
+            "name": "activity.update",
+            "display_name": "Activity Updated",
+            "description": "An activity is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "activity_id",
+                "display_name": "Activity ID",
+                "description": "The ID of the activity",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "create_activity",
+            "display_name": "Create a new activity",
+            "description": "Create a new activity",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "name",
+                "display_name": "Activity Name",
+                "description": "The name of the activity",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "type",
+                "display_name": "Activity Type",
+                "description": "The type of the activity",
+                "type": "select",
+                "options": [
+                  "AlpineSki",
+                  "BackcountrySki",
+                  "Badminton",
+                  "Canoeing",
+                  "Crossfit",
+                  "EBikeRide",
+                  "Elliptical",
+                  "EMountainBikeRide",
+                  "Golf",
+                  "GravelRide",
+                  "Handcycle",
+                  "HighIntensityIntervalTraining",
+                  "Hike",
+                  "IceSkate",
+                  "InlineSkate",
+                  "Kayaking",
+                  "Kitesurf",
+                  "MountainBikeRide",
+                  "NordicSki",
+                  "Pickleball",
+                  "Pilates",
+                  "Racquetball",
+                  "Ride",
+                  "RockClimbing",
+                  "RollerSki",
+                  "Rowing",
+                  "Run",
+                  "Sail",
+                  "Skateboard",
+                  "Snowboard",
+                  "Snowshoe",
+                  "Soccer",
+                  "Squash",
+                  "StairStepper",
+                  "StandUpPaddling",
+                  "Surfing",
+                  "Swim",
+                  "TableTennis",
+                  "Tennis",
+                  "TrailRun",
+                  "Velomobile",
+                  "VirtualRide",
+                  "VirtualRow",
+                  "VirtualRun",
+                  "Walk",
+                  "WeightTraining",
+                  "Wheelchair",
+                  "Windsurf",
+                  "Workout",
+                  "Yoga"
+                ],
+                "required": false
+              },
+              {
+                "name": "sport_type",
+                "display_name": "Sport Type",
+                "description": "The sport of the activity (run, ride, swim, etc.)",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "start_date_local",
+                "display_name": "Start Date",
+                "description": "The start date of the activity",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "elapsed_time",
+                "display_name": "Elapsed Time",
+                "description": "The elapsed time of the activity in seconds",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "description",
+                "display_name": "Description",
+                "description": "Description of the activity",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "distance",
+                "display_name": "Distance",
+                "description": "The distance of the activity in meters",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "trainer",
+                "display_name": "Trainer",
+                "description": " Set to 1 to mark as a trainer activity. ",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "commute",
+                "display_name": "Commute",
+                "description": " Set to 1 to mark as commute",
+                "type": "text",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "update_activity",
+            "display_name": "Update an activity",
+            "description": "Update an activity",
+            "version": "1.0.0",
+            "release_date": "2025-01-09",
+            "updated_date": "2025-01-09",
+            "options": [
+              {
+                "name": "activity_id",
+                "display_name": "Activity ID",
+                "description": "The ID of the activity to update",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "name",
+                "display_name": "Activity Name",
+                "description": "The name of the activity",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "sport_type",
+                "display_name": "Sport Type",
+                "description": "An instance of SportType must be one of the following: AlpineSki, BackcountrySki, Badminton, Canoeing, Crossfit, EBikeRide, Elliptical, EMountainBikeRide, Golf, GravelRide, Handcycle, HighIntensityIntervalTraining, Hike, IceSkate, InlineSkate, Kayaking, Kitesurf, MountainBikeRide, NordicSki, Pickleball, Pilates, Racquetball, Ride, RockClimbing, RollerSki, Rowing, Run, Sail, Skateboard, Snowboard, Snowshoe, Soccer, Squash, StairStepper, StandUpPaddling, Surfing, Swim, TableTennis, Tennis, TrailRun, Velomobile, VirtualRide, VirtualRow, VirtualRun, Walk, WeightTraining, Wheelchair, Windsurf, Workout, Yoga",
+                "type": "SportType",
+                "required": false
+              },
+              {
+                "name": "start_date_local",
+                "display_name": "Start Date",
+                "description": "The start date of the activity",
+                "type": "datetime",
+                "required": false
+              },
+              {
+                "name": "elapsed_time",
+                "display_name": "Elapsed Time",
+                "description": "The elapsed time of the activity in seconds",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "description",
+                "display_name": "Description",
+                "description": "The description of the activity",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "distance",
+                "display_name": "Distance",
+                "description": "The distance of the activity in meters",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "trainer",
+                "display_name": "Trainer",
+                "description": "Whether this activity was recorded on a training machine",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "commute",
+                "display_name": "Commute",
+                "description": "Whether this activity is a commute",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "hide_from_home",
+                "display_name": "Hide from Home",
+                "description": "Whether this activity is muted",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "gear_id",
+                "display_name": "Gear ID",
+                "description": "Identifier for the gear associated with the activity. ‘none’ clears gear from activity",
+                "type": "string",
+                "required": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "discord",
+    "color": "#7289da",
+    "icon": "ic:baseline-discord",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "message",
+        "display_name": "Message",
+        "actions": [
+          {
+            "name": "message_create",
+            "display_name": "Message Created",
+            "description": "A message is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "message_delete",
+            "display_name": "Message Deleted",
+            "description": "A message is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "message_update",
+            "display_name": "Message Updated",
+            "description": "A message is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "discord_send_message_to_a_channel",
+            "display_name": "Send a message",
+            "description": "Send a message to a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to send the message to",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "message",
+                "display_name": "Message",
+                "description": "The message to send",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_delete_message_from_a_channel",
+            "display_name": "Delete a message",
+            "description": "Delete a message from a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to delete the message from",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "message",
+                "display_name": "Message",
+                "description": "The message to delete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_clear_all_messages_from_channel",
+            "display_name": "Clear all messages",
+            "description": "Clear all messages from a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to clear messages from",
+                "type": "DiscordGuildChannel",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "clear_custom_hours_messages_from_a_channel",
+            "display_name": "Delete messages from custom hours",
+            "description": "Delete messages from a channel within custom hours",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to delete messages from",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "hours",
+                "display_name": "Hours",
+                "description": "The number of hours to look back for messages to delete",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "clear_custom_days_messages_from_a_channel",
+            "display_name": "Delete messages from custom days",
+            "description": "Delete messages from a channel within custom days",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to delete messages from",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "days",
+                "display_name": "Days",
+                "description": "The number of days to look back for messages to delete",
+                "type": "number",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "channel",
+        "display_name": "Channel",
+        "actions": [
+          {
+            "name": "channel_create",
+            "display_name": "Channel Created",
+            "description": "A channel is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "channel_delete",
+            "display_name": "Channel Deleted",
+            "description": "A channel is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "channel_update",
+            "display_name": "Channel Updated",
+            "description": "A channel is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "discord_create_channel_in_server",
+            "display_name": "Create a channel",
+            "description": "Create a channel in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to create the channel in",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The name of the channel to create",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_delete_channel_from_server",
+            "display_name": "Delete a channel",
+            "description": "Delete a channel from a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to delete the channel from",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The name of the channel to delete",
+                "type": "DiscordGuildChannel",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "thread",
+        "display_name": "Thread",
+        "actions": [
+          {
+            "name": "thread_create",
+            "display_name": "Thread Created",
+            "description": "A thread is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "thread_delete",
+            "display_name": "Thread Deleted",
+            "description": "A thread is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "thread_update",
+            "display_name": "Thread Updated",
+            "description": "A thread is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "reaction",
+        "display_name": "Reaction",
+        "actions": [
+          {
+            "name": "message_reaction_add",
+            "display_name": "Reaction Added",
+            "description": "A reaction is added",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "reaction_remove",
+            "display_name": "Reaction Removed",
+            "description": "A reaction is removed",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "reaction_remove_emoji",
+            "display_name": "Reaction Emoji Removed",
+            "description": "A reaction emoji is removed",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "reaction_remove_all",
+            "display_name": "All Reactions Removed",
+            "description": "All reactions are removed",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "discord_send_reaction_to_message",
+            "display_name": "Send a reaction to a message",
+            "description": "Send a reaction to a message in a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel containing the message",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "message",
+                "display_name": "Message",
+                "description": "The message to react to",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "emoji",
+                "display_name": "Emoji",
+                "description": "The emoji to react with",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "role",
+        "display_name": "Role",
+        "actions": [
+          {
+            "name": "role_create",
+            "display_name": "Role Created",
+            "description": "A role is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "role_delete",
+            "display_name": "Role Deleted",
+            "description": "A role is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "role_update",
+            "display_name": "Role Updated",
+            "description": "A role is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "discord_create_role_in_a_server",
+            "display_name": "Create a role",
+            "description": "Create a role in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to create the role in",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "role",
+                "display_name": "Role",
+                "description": "The name of the role to create",
+                "type": "text",
+                "required": true
+              },
+                {
+                "name": "color",
+                "display_name": "Color",
+                "description": "The color of the role",
+                "type": "DiscordRole",
+                "options": [
+                  {
+                  "name": "blue",
+                  "display_name": "Blue"
+                  },
+                  {
+                  "name": "red",
+                  "display_name": "Red"
+                  },
+                  {
+                  "name": "green",
+                  "display_name": "Green"
+                  },
+                  {
+                  "name": "white",
+                  "display_name": "White"
+                  },
+                  {
+                  "name": "black",
+                  "display_name": "Black"
+                  },
+                  {
+                  "name": "yellow",
+                  "display_name": "Yellow"
+                  },
+                  {
+                  "name": "orange",
+                  "display_name": "Orange"
+                  },
+                  {
+                  "name": "purple",
+                  "display_name": "Purple"
+                  }
+                ],
+                "required": false
+                }
+            ]
+          },
+          {
+            "name": "discord_delete_role_from_server",
+            "display_name": "Delete a role",
+            "description": "Delete a role in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "role",
+                "display_name": "Role",
+                "description": "The name of the role to delete",
+                "type": "DiscordRoleName",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_edit_role_in_server",
+            "display_name": "Update a role",
+            "description": "Update a role in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "role",
+                "display_name": "Role",
+                "description": "The name of the role to delete",
+                "type": "DiscordRoleName",
+                "required": true
+              },
+              {
+                "name": "Newrolename",
+                "display_name": "New Role Name",
+                "description": "The name of the new role",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "colorandpermission",
+                "display_name": "color and permission",
+                "description": "The server color and permission to update",
+                "type": "DiscordRole",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_attribute_role_to_a_user",
+            "display_name": "Attribute a role to a user",
+            "description": "Attribute a role to a user in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "roleserver",
+                "display_name": "Server",
+                "description": "The server to attribute the role in",
+                "type": "DiscordRoleName",
+                "required": true
+              },
+              {
+                "name": "user",
+                "display_name": "User",
+                "description": "The user to attribute the role to",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_remove_role_to_a_user",
+            "display_name": "Remove a role from a user",
+            "description": "Remove a role from a user in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "roleserver",
+                "display_name": "Server",
+                "description": "The server to attribute the role in",
+                "type": "DiscordRoleName",
+                "required": true
+              },
+              {
+                "name": "user",
+                "display_name": "User",
+                "description": "The user to attribute the role to",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ban",
+        "display_name": "Ban",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "discord_ban_user_from_a_server",
+            "display_name": "Ban a user",
+            "description": "Ban a user from a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to ban the user from",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "user",
+                "display_name": "User",
+                "description": "The user to ban",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_unban_user_from_a_server",
+            "display_name": "Unban a user",
+            "description": "Unban a user from a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to unban the user from",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "user",
+                "display_name": "User",
+                "description": "The user to unban",
                 "type": "text",
                 "required": true
               }

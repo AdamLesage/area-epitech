@@ -1,0 +1,76 @@
+
+const Redis = require('ioredis');
+const redis = new Redis({
+    host: 'redis',
+    port: 6379
+});
+
+/**
+ * @brief Processes the webhook data from Redis and sends it to the callback URL.
+ * 
+ * This function will continuously check the Redis queue for new data. If new data is found, it will
+ * check if the event matches the target action. If it does, it will send the data to the callback URL.
+ * If no data is found, it will wait for a while before checking the queue again.
+ * 
+ * @returns {Promise<void>}
+  */
+ 
+async function processWebhook() {
+    console.log("Starting processWebhook for discord...");
+    while (true) {
+        console.log("Waiting for data from Redis...");
+        const data = await redis.rpop(process.env.UUID);
+        if (data) {
+            console.log("Data received from Redis:", data);
+            const webhookData = JSON.parse(data);
+            console.log("Parsed webhook data:", webhookData);
+            // Check if the event is the one we are looking for, if so, send the data
+            if (webhookData.Event == process.env.TARGET_ACTION) {
+                console.log("Target action matched. Sending data...");
+                send(webhookData);
+            } else {
+                console.log("Event does not match target action.");
+            }
+        } else {
+            console.log("No data received. Waiting before checking again...");
+            // Wait for a while before checking the queue again
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+    }
+}
+
+processWebhook().catch(console.error);
+
+async function send(data2) {
+    console.log("Starting send function");
+    try {
+        console.log("Sending data to callback URL:", process.env.CALL_BACK);
+        const response = await fetch(process.env.CALL_BACK, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data2)
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log("Data sent successfully");
+        // const data = await response.json();
+        // console.log(data);
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}
+
+// const sleepNow = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
+// async function repeatedGreetingsLoop() {
+//   while (1) {
+//     await sleepNow(1000)
+//     await send();
+//   }
+// }
+
+// repeatedGreetingsLoop()

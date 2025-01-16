@@ -1,7 +1,7 @@
 <template>
     <!-- In the style of gmail create Mail popup -->
      <!-- Minimal view -->
-    <div class="fixed w-[30rem] h-[2.5rem] bottom-4 right-4 rounded-xl shadow-2xl z-[10000]" v-if="popupView == 'Minimal'">
+    <div class="fixed w-adjusted-mini max-w-[30rem] h-[2.5rem] bottom-4 mobile:bottom-28 right-4 rounded-xl shadow-2xl z-[10000]" v-if="popupView == 'Minimal'">
         <header class="bg-gray-300 rounded-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="normalView">
             <h1 class="text-[#333] font-black">New AREA</h1>
             <div class="flex justify-end items-center gap-1">
@@ -15,7 +15,7 @@
         </header>
     </div>
     <!-- Normal view -->
-    <div class="fixed w-[30rem] h-[29.5rem] bottom-4 right-4 rounded-xl shadow-2xl z-[10000]" v-if="popupView == 'Normal'">
+    <div class="fixed w-adjusted max-w-[30rem] h-[29.5rem] bottom-4 mobile:bottom-44 right-4 rounded-xl shadow-2xl z-[10000]" v-if="popupView == 'Normal'">
         <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="minimalView">
             <h1 class="text-[#333] font-black">New AREA</h1>
             <div class="flex justify-end items-center gap-1">
@@ -73,7 +73,7 @@
     </div>
     <!-- Extended view -->
     <div class="fixed w-full h-full top-0 bg-black/30 flex justify-center items-center z-[10000]" v-if="popupView == 'Extended'" @click="normalView">
-        <div class="w-[60rem] h-[40rem] m-auto rounded-xl shadow-2xl relative flex flex-col items-center bg-gray-100 " @click.stop>
+        <div class="w-adjusted max-w-[60rem] h-[40rem] m-auto rounded-xl shadow-2xl relative flex flex-col items-center bg-gray-100 " @click.stop>
             <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer w-full" @click="normalView">
                 <h1 class="text-[#333] font-black">New AREA</h1>
                 <div class="flex justify-end items-center gap-1">
@@ -86,7 +86,7 @@
                 </div>
             </header>
             <input type="text" class="w-full py-2 px-4 text-[#333]" placeholder="Enter title" v-model="areaTitle">
-            <div class="bg-gray-100 h-full my-1 flex justify-center flex-col w-[30rem] relative">
+            <div class="bg-gray-100 h-full my-1 flex justify-center flex-col w-adjusted max-w-[60rem] relative">
                 <Icon icon="mdi:arrow" class="w-36 h-36 text-[#111] absolute rotate-90 right-0" />
                 <section id="action" class="h-[176px] w-full flex items-center justify-center">
                     <div v-if="actionSelected" class="w-[75%] h-32 rounded-xl flex items-center justify-center gap-4 hover:cursor-pointer"
@@ -239,3 +239,12 @@ function create() {
     emit('create');
 }
 </script>
+
+<style scoped>
+.w-adjusted-mini {
+    width: calc(100% - 5.5rem);
+}
+.w-adjusted {
+    width: calc(100% - 2rem);
+}
+</style>

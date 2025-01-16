@@ -72,6 +72,7 @@ router.post('/register', async (req, res) => {
             birthDate: birthDate ? new Date(birthDate) : null,
             phoneNumber,
             profilePicture: profilePicture ? { create: profilePicture } : undefined,
+            profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s',
             authToken: authToken,
         },
     }).then((user) => {
@@ -113,7 +114,6 @@ router.get('/logout', (req, res) => {
         });
     });
 });
-
 
 router.post('/reset-password', async (req, res) => {
     const { email } = req.body;
@@ -299,9 +299,10 @@ router.get('/github/redirect',
             const userParams = {
                 email: userEmail,
                 name: req.user.displayName || '',
-                surname: '',
+                surname: req.user.surname || '',
                 uuid: uuidv4(),
                 hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             };
 
             if (!user) {
@@ -355,6 +356,94 @@ router.get('/github/redirect',
     }
 );
 
+// Discord auth routes
+router.get('/discord', async (req, res) => {
+    const email = req.query.email;
+
+    passport.session.email = email;
+    passport.authenticate('discord')(req, res);
+});
+
+router.get('/discord/callback',
+    passport.authenticate('discord', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+
+            let user = await getUser(req);
+
+            const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'discord',
+                authToken: req.user.accessToken,
+                username: req.user.username || 'Username not found',
+                accountEmail: req.user.accountEmail,
+            };
+
+            const userParams = {
+                email: userEmail,
+                name: req.user.displayName || '',
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
+            };
+
+            if (!user) {
+                // Create a new user
+                userParams.authToken = uuidv4(); // Add authentication token
+                user = await prisma.user.create({
+                    data: {
+                        ...userParams,
+                        linkedAccounts: {
+                            create: [linkedAccountParams],
+                        },
+                    },
+                    include: { linkedAccounts: true },
+                });
+                linkedAccountParams.userId = user.id;
+
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+            } else {
+                // Check if the account is already linked
+                const linkedAccount = user.linkedAccounts.find(
+                    account => account.serviceName === 'discord'
+                );
+
+                if (!linkedAccount) {
+                    await prisma.linkedAccount.create({
+                        data: {
+                            ...linkedAccountParams,
+                            userId: user.id, // Use the numeric ID from Prisma
+                        },
+                    });
+
+                    // Refresh user data to include the new linked account
+                    user = await prisma.user.findUnique({
+                        where: { email: userParams.email },
+                        include: { linkedAccounts: true },
+                    });
+                }
+            }
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        }
+    }
+);
+
 // DropBox auth routes
 router.get('/dropbox', async (req, res) => {
     const email = req.query.email;
@@ -377,6 +466,7 @@ router.get('/dropbox/callback',
                 surname: '',
                 uuid: uuidv4(),
                 hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             };
 
             const linkedAccountParams = {
@@ -384,7 +474,7 @@ router.get('/dropbox/callback',
                 authToken: req.user.accessToken,
                 username: req.user.displayName,
                 uuid: uuidv4(),
-                accountEmail: req.user.accountEmail,
+                accountEmail: req.user.accountEmail
             };
 
             if (!user) {
@@ -477,6 +567,7 @@ router.get('/spotify/callback',
                 surname: '',
                 uuid: uuidv4(),
                 hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             };
 
             if (!user) {
@@ -532,13 +623,13 @@ router.get('/spotify/callback',
 
 
 // Google auth routes
-router.get('/google', async(req, res) => {
+router.get('/google', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
 
     await passport.authenticate('google', {
-        scope: ['profile', 'email', 
+        scope: ['profile', 'email',
             'https://mail.google.com/',
             'https://www.googleapis.com/auth/gmail.readonly',
             'https://www.googleapis.com/auth/gmail.compose',
@@ -548,84 +639,85 @@ router.get('/google', async(req, res) => {
     })(req, res);
 });
 
-router.get('/google/callback', 
-    passport.authenticate('google', {failureRedirect: '/login',}),
-    async(req, res) => {
-    try {
-        if (req.user === undefined) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
+router.get('/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login', }),
+    async (req, res) => {
+        try {
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
 
-        let user = await getUser(req);
+            let user = await getUser(req);
 
-        const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+            const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-        const linkedAccountParams = {
-            uuid: uuidv4(),
-            serviceName: 'gmail',
-            authToken: req.user.accessToken,
-            username: req.user.username || 'Username not found',
-            accountEmail: req.user.accountEmail,
-        };
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'gmail',
+                authToken: req.user.accessToken,
+                username: req.user.username || 'Username not found',
+                accountEmail: req.user.accountEmail,
+            };
 
-        const userParams = {
-            email: userEmail,
-            name: req.user.displayName || '',
-            surname: '',
-            uuid: uuidv4(),
-            hashedPassword: req.user.accessToken,
-        };
+            const userParams = {
+                email: userEmail,
+                name: req.user.displayName || '',
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
+            };
 
-        if (!user) {
-            // Create a new user
-            userParams.authToken = uuidv4(); // Add authentication token
-            user = await prisma.user.create({ 
-                data: {
-                    ...userParams,
-                    linkedAccounts: {
-                        create: [linkedAccountParams],
-                    },
-                },
-                include: { linkedAccounts: true },
-            });
-            linkedAccountParams.userId = user.id;
-
-            await prisma.linkedAccount.update({
-                where: {
-                    uuid: linkedAccountParams.uuid,
-                },
-                data: {
-                    userId: user.id,
-                },
-            });
-        } else {
-            // Check if the account is already linked
-            const linkedAccount = user.linkedAccounts.find(
-                account => account.serviceName === 'gmail'
-            );
-
-            if (!linkedAccount) {
-                await prisma.linkedAccount.create({ 
+            if (!user) {
+                // Create a new user
+                userParams.authToken = uuidv4(); // Add authentication token
+                user = await prisma.user.create({
                     data: {
-                        ...linkedAccountParams,
-                        userId: user.id, // Use the numeric ID from Prisma
+                        ...userParams,
+                        linkedAccounts: {
+                            create: [linkedAccountParams],
+                        },
                     },
-                });
-
-                // Refresh user data to include the new linked account
-                user = await prisma.user.findUnique({
-                    where: { email: userParams.email },
                     include: { linkedAccounts: true },
                 });
+                linkedAccountParams.userId = user.id;
+
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+            } else {
+                // Check if the account is already linked
+                const linkedAccount = user.linkedAccounts.find(
+                    account => account.serviceName === 'gmail'
+                );
+
+                if (!linkedAccount) {
+                    await prisma.linkedAccount.create({
+                        data: {
+                            ...linkedAccountParams,
+                            userId: user.id, // Use the numeric ID from Prisma
+                        },
+                    });
+
+                    // Refresh user data to include the new linked account
+                    user = await prisma.user.findUnique({
+                        where: { email: userParams.email },
+                        include: { linkedAccounts: true },
+                    });
+                }
             }
+            await watchGmail(req.user.accessToken)
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
         }
-        await watchGmail(req.user.accessToken)
-        return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: error.message });
-    }
-});
+    });
 
 async function watchGmail(accessToken) {
     try {
@@ -647,5 +739,98 @@ async function watchGmail(accessToken) {
         console.error('Error setting up Gmail watch:', error);
     }
 }
+
+const { Client, Token } = require('strava-oauth2');
+
+// Configuration minimale pour le client Strava
+let config = {
+    client_id: process.env.STRAVA_CLIENT_ID,
+    client_secret: process.env.STRAVA_CLIENT_SECRET,
+    redirect_uri: `${process.env.BACKEND_URL}/auth/strava/callback`,
+};
+
+const client = new Client(config);
+
+// Strava auth routes
+router.get('/strava', (req, res) => {
+    const email = req.query.email;
+    req.session.email = email;
+
+    config.redirect_uri = `${process.env.BACKEND_URL}/auth/strava/callback` + `?email=${email}`;
+    const authorizationUri = `https://www.strava.com/oauth/authorize?client_id=${config.client_id}&response_type=code&redirect_uri=${config.redirect_uri}&approval_prompt=auto&scope=read,activity:read_all,activity:write,profile:read_all,profile:write`;
+    res.redirect(authorizationUri);
+});
+
+router.get('/strava/callback', async (req, res) => {
+    try {
+        const email = req.query.email;
+        const code = req.query.code;
+        if (!email) {
+            return res.status(400).json({ error: 'Missing email parameter' });
+        }
+
+        // Find user from email
+        const user = await prisma.user.findUnique({
+            where: { email },
+            include: { linkedAccounts: true },
+        });
+
+        // Request to get the token
+        const token = await axios.post('https://www.strava.com/api/v3/oauth/token', {
+            client_id: process.env.STRAVA_CLIENT_ID,
+            client_secret: process.env.STRAVA_CLIENT_SECRET,
+            code: code,
+            grant_type: 'authorization_code',
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const linkedAccount = user.linkedAccounts.find(
+            account => account.serviceName === 'strava'
+        );
+
+        // Send request to get a subscription with secured URL
+        try {
+            const response = await axios.post('https://www.strava.com/api/v3/push_subscriptions', null, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                params: {
+                    client_id: process.env.STRAVA_CLIENT_ID,
+                    client_secret: process.env.STRAVA_CLIENT_SECRET,
+                    callback_url: `${process.env.DEPLOYED_BACKEND_URL}/strava/webhook`,
+                    verify_token: 'STRAVA',
+                },
+            });
+        } catch (error) {
+            console.error('Subscription already exists');
+        }
+
+        // If it doesnt exist, create a linked account
+        if (!linkedAccount) {
+            let linkedAccountParams = {
+                serviceName: 'strava',
+                authToken: token.data.access_token,
+                accountEmail: "NoAccountEmailForStrava",
+                username: user.name + user.surname,
+                uuid: uuidv4(),
+            };
+
+            await prisma.linkedAccount.create({
+                data: {
+                    ...linkedAccountParams,
+                    userId: user.id,
+                },
+            });
+        }
+
+        // Create a linked account with strava
+        return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+    } catch (error) {
+        console.error(`Error during token retrieval: ${error.message}`);
+        return res.status(500).json({ error: 'Failed to retrieve token' });
+    }
+});
 
 module.exports = router;

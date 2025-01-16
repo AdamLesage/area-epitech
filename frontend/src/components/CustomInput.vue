@@ -17,7 +17,7 @@
             >
                 <option
                     v-for="option in props.options"
-                    :key="option.charCodeAt(0)"
+                    :key="option + '-option'"
                     :value="option"
                     class="text-gray-900"
                 >
@@ -208,6 +208,263 @@
 
             <p v-if="error" class="text-red-500 text-sm ml-2">{{ error }}</p>
         </div>
+
+        <div v-if="type === 'DiscordGuild' || type === 'DiscordGuildChannel'" class="w-full">
+            <div class="flex items-center gap-2 mb-2" v-if="!selectedGuild">
+                <h3 class="text-md font-semibold ml-2 text-[#333]">Connect a Guild</h3>
+                <Icon v-if="required" icon="mdi:required" class="text-red-500" />
+            </div>
+            <div class="flex w-full justify-center relative flex-col">
+                <div class="w-full flex h-12 bg-[#7289da] items-center justify-center rounded-md hover:cursor-pointer gap-2 relative"
+                    @click="showSelect = !showSelect"
+                    v-if="!selectedGuild">
+                    <Icon icon="ic:baseline-discord" class="text-white w-6 h-6" />
+                    <h2 class="text-white font-bold">Your Guilds</h2>
+                </div>
+                <div
+                    v-if="showSelect" class="w-full">
+                    <div v-if="!selectedGuild">
+                        <div class="max-h-64 w-full overflow-y-scroll rounded-md" v-if="discordGuilds.length != 0">
+                            <div
+                                v-for="guild in discordGuilds"
+                                :key="guild.id"
+                                class="bg-blue-50 p-2 pl-3 flex items-center hover:cursor-pointer hover:bg-blue-100"
+                                @click="selectGuild(guild)">
+                                <div class="flex gap-4 items-center w-full justify-center">
+                                    <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                    <p class="overflow-hidden break-words text-ellipsis w-full text-[#333]">{{ guild.name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="text-[#777] text-sm text-center mt-4">
+                            <i>No Guilds found.<br/>Verify you are correctly linked to Discord</i>
+                        </div>
+                        <button
+                            @click="fetchGuilds"
+                            class="w-full h-12 mt-4 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
+                            <Icon icon="mdi:reload" class="text-white w-6 h-6" />
+                            <p class="text-white">Refetch</p>
+                        </button>
+                    </div>
+                    <div v-else>
+                        <div class="bg-blue-50 p-2 pl-3 flex rounded-md justify-between items-center transition hover:cursor-pointer hover:bg-blue-100">
+                            <div class="flex gap-2 items-center">
+                                <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                <p class="text-[#333] hover:text-blue-500 hover:underline"
+                                    @click="redirectToGuildOnDiscord(selectedGuild.id)">
+                                    {{ selectedGuild.name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center px-2 mt-2">
+                            <div class="flex gap-2 items-center">
+                                <h3 class="text-md font-semibold text-[#333]">Guild Connected</h3>
+                                <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
+                            </div>
+                            <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                                @click="backToGuildSelection">
+                                Choose Another Guild
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="type == 'DiscordGuildChannel'" class="w-full">
+                    <div class="flex items-center gap-2 mb-2 mt-6" v-if="!selectedChannel && selectedGuild">
+                        <h3 class="text-md font-semibold ml-2 text-[#333]">Choose the Channel</h3>
+                        <Icon v-if="required" icon="mdi:required" class="text-red-500" />
+                    </div>
+                    <div class="w-full flex h-12 bg-[#7289da] items-center justify-center rounded-md hover:cursor-pointer gap-2 relative"
+                        @click="showSelect2 = !showSelect2"
+                        v-if="!selectedChannel && selectedGuild">
+                        <Icon icon="ic:baseline-discord" class="text-white w-6 h-6" />
+                        <h2 class="text-white font-bold">Guild Channel</h2>
+                    </div>
+                    <div
+                        v-if="showSelect2" class="w-full">
+                        <div class="w-full" v-if="!selectedGuild && !selectedChannel">
+                            <div class="text-[#777] text-sm text-center mt-4 flex flex-col gap-4">
+                                <p>
+                                    <i>No Channels found.<br/>Please select a Guild first</i>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="w-full" v-else-if="!selectedChannel && selectedGuild">
+                            <div class="max-h-64 w-full overflow-y-scroll rounded-md" v-if="selectedGuild && selectedGuildChannels.length > 0">
+                                <div
+                                    v-for="channel in selectedGuildChannels"
+                                    :key="channel.id"
+                                    class="bg-blue-50 p-2 pl-3 flex items-center hover:cursor-pointer hover:bg-blue-100"
+                                    @click="selectChannel(channel)">
+                                    <div class="flex gap-4 items-center w-full justify-center">
+                                        <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                        <p class="overflow-hidden break-words text-ellipsis w-full text-[#333]">{{ channel.name }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                @click="fetchChannels(selectedGuild.id)"
+                                class="w-full h-12 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
+                                <Icon icon="mdi:reload" class="text-white w-6 h-6" />
+                                <p class="text-white">Refetch</p>
+                            </button>
+                        </div>
+                        <div v-else-if="selectedGuild && selectedChannel" class="mt-6">
+                            <div class="bg-blue-50 p-2 pl-3 flex rounded-md justify-between items-center transition hover:cursor-pointer hover:bg-blue-100">
+                                <div class="flex gap-2 items-center">
+                                    <Icon icon="mdi:hashtag" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                    <p class="text-[#333] hover:text-blue-500 hover:underline"
+                                        @click="redirectToChannelOnDiscord(selectedGuild.id, selectedChannel.id)">
+                                        {{ selectedChannel.name }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center px-2 mt-2">
+                                <div class="flex gap-2 items-center">
+                                    <h3 class="text-md font-semibold text-[#333]">Channel is Correct</h3>
+                                    <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
+                                </div>
+                                <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                                    @click="backToChannelSelection">
+                                    Choose Another Channel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div v-if="type === 'DiscordRoleName'" class="w-full">
+            <div class="flex items-center gap-2 mb-2" v-if="!selectedGuild">
+                <h3 class="text-md font-semibold ml-2 text-[#333]">Connect a Guild</h3>
+                <Icon v-if="required" icon="mdi:required" class="text-red-500" />
+            </div>
+            <div class="flex w-full justify-center relative flex-col">
+                <div class="w-full flex h-12 bg-[#7289da] items-center justify-center rounded-md hover:cursor-pointer gap-2 relative"
+                    @click="showSelect = !showSelect"
+                    v-if="!selectedGuild">
+                    <Icon icon="ic:baseline-discord" class="text-white w-6 h-6" />
+                    <h2 class="text-white font-bold">Your Guilds</h2>
+                </div>
+                <div v-if="showSelect" class="w-full">
+                    <div v-if="!selectedGuild">
+                        <div class="max-h-64 w-full overflow-y-scroll rounded-md" v-if="discordGuilds.length != 0">
+                            <div
+                                v-for="guild in discordGuilds"
+                                :key="guild.id"
+                                class="bg-blue-50 p-2 pl-3 flex items-center hover:cursor-pointer hover:bg-blue-100"
+                                @click="selectGuild(guild)">
+                                <div class="flex gap-4 items-center w-full justify-center">
+                                    <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                    <p class="overflow-hidden break-words text-ellipsis w-full text-[#333]">{{ guild.name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="text-[#777] text-sm text-center mt-4">
+                            <i>No Guilds found.<br/>Verify you are correctly linked to Discord</i>
+                        </div>
+                        <button
+                            @click="fetchGuilds"
+                            class="w-full h-12 mt-4 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
+                            <Icon icon="mdi:reload" class="text-white w-6 h-6" />
+                            <p class="text-white">Refetch</p>
+                        </button>
+                    </div>
+                    <div v-else>
+                        <div class="bg-blue-50 p-2 pl-3 flex rounded-md justify-between items-center transition hover:cursor-pointer hover:bg-blue-100">
+                            <div class="flex gap-2 items-center">
+                                <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                <p class="text-[#333] hover:text-blue-500 hover:underline"
+                                    @click="redirectToGuildOnDiscord(selectedGuild.id)">
+                                    {{ selectedGuild.name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center px-2 mt-2">
+                            <div class="flex gap-2 items-center">
+                                <h3 class="text-md font-semibold text-[#333]">Guild Connected</h3>
+                                <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
+                            </div>
+                            <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                                @click="backToGuildSelection">
+                                Choose Another Guild
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="selectedGuild" class="w-full">
+                    <div class="flex items-center gap-2 mb-2 mt-6" v-if="!selectedRole">
+                        <h3 class="text-md font-semibold ml-2 text-[#333]">Choose a Role</h3>
+                        <Icon v-if="required" icon="mdi:required" class="text-red-500" />
+                    </div>
+                    <div class="w-full flex h-12 bg-[#7289da] items-center justify-center rounded-md hover:cursor-pointer gap-2 relative"
+                        @click="showSelect2 = !showSelect2"
+                        v-if="!selectedRole">
+                        <Icon icon="ic:baseline-discord" class="text-white w-6 h-6" />
+                        <h2 class="text-white font-bold">Guild Roles</h2>
+                    </div>
+                    <div v-if="showSelect2 && !selectedRole" class="w-full">
+                        <div class="max-h-64 w-full overflow-y-scroll rounded-md" v-if="selectedGuildRoles.length != 0">
+                            <div
+                                v-for="role in selectedGuildRoles"
+                                :key="role.id"
+                                class="bg-blue-50 p-2 pl-3 flex items-center hover:cursor-pointer hover:bg-blue-100"
+                                @click="selectRole(role)">
+                                <div class="flex gap-4 items-center w-full justify-center">
+                                    <Icon icon="ic:baseline-discord" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                    <p class="overflow-hidden break-words text-ellipsis w-full text-[#333]">{{ role.name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="text-[#777] text-sm text-center mt-4">
+                            <i>No Roles found.<br/>Verify you are correctly linked to Discord</i>
+                        </div>
+                        <button
+                            @click="fetchRoles(selectedGuild.id)"
+                            class="w-full h-12 mt-4 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
+                            <Icon icon="mdi:reload" class="text-white w-6 h-6" />
+                            <p class="text-white">Refetch</p>
+                        </button>
+                    </div>
+                    <div v-else-if="selectedRole" class="mt-6">
+                        <div class="bg-blue-50 p-2 pl-3 flex rounded-md justify-between items-center transition hover:cursor-pointer hover:bg-blue-100">
+                            <div class="flex gap-2 items-center">
+                                <Icon icon="mdi:hashtag" class="text-[#7289da] w-6 h-6 flex-shrink-0" />
+                                <p class="text-[#333] hover:text-blue-500 hover:underline">
+                                    {{ selectedRole.name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center px-2 mt-2">
+                            <div class="flex gap-2 items-center">
+                                <h3 class="text-md font-semibold text-[#333]">Role Selected</h3>
+                                <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
+                            </div>
+                            <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                                @click="backToRoleSelection">
+                                Choose Another Role
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discord Role Color and Type Selection -->
+        <div v-if="type === 'DiscordRole'" class="w-full">
+            <div class="mb-4">
+                <label class="block text-[#333] font-semibold mb-2">Role Color</label>
+                <select v-model="selectedColor" class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] w-full" @change="handleRoleChange">
+                    <option v-for="color in roleColors" :key="color.name" :value="color.name">{{ color.display_name }}</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-[#333] font-semibold mb-2">Role Type</label>
+                <select v-model="selectedType" class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] w-full" @change="handleRoleChange">
+                    <option v-for="type in roleTypes" :key="type.name" :value="type.name">{{ type.display_name }}</option>
+                </select>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -218,10 +475,10 @@ import { useUserStore } from '@/stores/user';
 import { useServiceStore } from '@/stores/service';
 import { Icon } from '@iconify/vue';
 import axios from 'axios';
+import { User } from '@/types/auth';
 
 const userStore = useUserStore();
 const serviceStore = useServiceStore();
-
 
 interface Repository {
     id: number;
@@ -246,6 +503,11 @@ interface Playlist {
     };
 }
 
+interface GithubUser {
+    id: number;
+    name: string;
+}
+
 interface Music {
     id: string;
     name: string;
@@ -261,11 +523,6 @@ interface Music {
     }[];
 }
 
-interface User {
-    id: number;
-    name: string;
-}
-
 interface Hook {
     id: number;
     name: string;
@@ -275,6 +532,21 @@ interface Hook {
         url: string;
         content_type: string;
     };
+}
+
+interface DiscordGuild {
+    id: number;
+    name: string;
+}
+
+interface DiscordRole {
+    id: number;
+    name: string;
+}
+
+interface DiscordChannel {
+    id: number;
+    name: string;
 }
 
 const props = defineProps<{
@@ -304,7 +576,7 @@ const error = ref<string | null>(null);
 const step = ref<'selectUser' | 'selectRepo' | 'addWebhook' | 'allDone'>('selectUser');
 const step2 = ref<'selectPlaylist' | 'allDone'>('selectPlaylist');
 const step3 = ref<'selectMusic' | 'allDone'>('selectMusic');
-const selectedUser = ref<User | null>(null);
+const selectedUser = ref<GithubUser | null>(null);
 const selectedRepository = ref<Repository | null>(null);
 const selectedPlaylist = ref<Playlist | null>(null);
 const selectedMusic = ref<Music | null>(null);
@@ -315,7 +587,199 @@ const filteredRepositories = computed(() =>
     )
 );
 
-function selectUser(user: User) {
+const discordGuilds = ref<DiscordGuild[]>([]);
+const selectedGuild = ref<DiscordGuild | null>(null);
+const selectedGuildRoles = ref<DiscordRole[]>([]);
+const selectedGuildChannels = ref<DiscordChannel[]>([]);
+const selectedChannel = ref<DiscordChannel | null>(null);
+const selectedRole = ref<DiscordRole | null>(null);
+const showSelect = ref<boolean>(false);
+const showSelect2 = ref<boolean>(false);
+
+function backToRoleSelection() {
+    selectedRole.value = null;
+    showSelect2.value = true;
+    emit('change', '');
+}
+
+async function fetchGuilds() {
+    const user = userStore.user;
+    if (!user) return;
+
+    if (props.type === 'DiscordGuild' || props.type === 'DiscordGuildChannel') {
+        await handleDiscordGuildInput(user);
+    }
+}
+
+async function handleDiscordGuildInput(user: User): Promise<void> {
+    // Ask the user to select a discord server for our app
+    // Set the redirect url to the backend
+    // The backend will handle the OAuth2 flow
+    const linkedAccount = user.linkedAccounts.find((account) => account.serviceName === 'discord');
+    if (!linkedAccount) return;
+    console.log('Discord Linked Account:', linkedAccount);
+    
+    try {
+        const res: { status: number, data: { id: number, name: string, owner: boolean }[] } = await axios.get('https://discord.com/api/users/@me/guilds', {
+            headers: {
+                Authorization: `Bearer ${linkedAccount.authToken}`,
+            },
+        });
+
+        console.log('Discord Guilds:', res);
+
+        if (res.status !== 200) {
+            console.error('Failed to fetch Discord guilds:', res.data);
+            return;
+        }
+
+        // Only take thoses where owner: true
+        discordGuilds.value = res.data.filter(guild => guild.owner).map(guild => ({
+            id: guild.id,
+            name: guild.name
+        }));
+
+    } catch (error) {
+        console.error('Error fetching Discord guilds:', error);
+    }
+}
+
+const roleColors = ref([
+{ name: '#7289da', display_name: 'Blue' },
+    { name: '#ff0000', display_name: 'Red' },
+    { name: '#00ff00', display_name: 'Green' },
+    { name: '#ffffff', display_name: 'White' },
+    { name: '#000000', display_name: 'Black' },
+    { name: '#ffff00', display_name: 'Yellow' },
+    { name: '#ffa500', display_name: 'Orange' },
+    { name: '#800080', display_name: 'Purple' }
+]);
+const roleTypes = ref([
+    { name: 'explorer', display_name: 'Explorer' },
+    { name: 'usual', display_name: 'Usual' },
+    { name: 'admin', display_name: 'Admin' }
+]);
+
+const selectedColor = ref<string>(roleColors.value[0].name);
+const selectedType = ref<string>(roleTypes.value[0].name);
+
+function handleRoleChange() {
+    emit('change', { color: selectedColor.value, type: selectedType.value });
+}
+
+function backToGuildSelection() {
+    selectedGuild.value = null;
+    selectedChannel.value = null;
+    showSelect.value = true;
+    showSelect2.value = false;
+    emit('change', '');
+}
+
+function backToChannelSelection() {
+    selectedChannel.value = null;
+    showSelect2.value = true;
+    emit('change', '');
+}
+
+async function selectGuild(guild: DiscordGuild) {
+    selectedGuildChannels.value = [];
+
+    // Check if the bot is already inside the guild
+    const isAlreadyInGuild = await fetchChannels(guild.id);
+
+    if (!isAlreadyInGuild) {
+        const redirectUri = 'http://localhost:8080/discord/redirect'
+        window.open(`https://discord.com/oauth2/authorize?client_id=1326285888266829884&scope=bot%20guilds&permissions=8&guild_id=${guild.id}&redirect_uri=${redirectUri}&response_type=code`, '_blank');
+    }
+    selectedGuild.value = guild;
+    if (props.type == 'DiscordGuild') {
+        emit('change', guild.id.toString());
+    }
+}
+
+async function fetchChannels(guildId: number): Promise<boolean> {
+    const user = userStore.user;
+    if (!user) return false;
+    const linkedAccount = user.linkedAccounts.find((account) => account.serviceName === 'discord');
+    if (!linkedAccount) return false;
+    if (!guildId) return false;
+
+    try {
+        const res: { status: number, data: { id: number, name: string, type: number }[] } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/discord/channels?guild_id=${guildId}`, {
+        });
+
+        console.log(res);
+        if (res.status !== 200) {
+            console.error('Failed to fetch Discord guilds:', res.data);
+            selectedGuildChannels.value = [];
+            return false;
+        }
+
+        selectedGuildChannels.value = res.data.map((channel: { id: number, name: string, type: number }) => {
+            if (channel.type !== 0) return null;
+            return {
+                id: channel.id,
+                name: channel.name
+            };
+        }).filter((channel: DiscordChannel | null) => channel !== null) as DiscordChannel[];
+    } catch (errorMsg) {
+        console.error('Error fetching channels:', errorMsg);
+        return false;
+    }
+    return true;
+}
+
+async function fetchRoles(guildId: number): Promise<void> {
+    const user = userStore.user;
+    if (!user) return;
+    const linkedAccount = user.linkedAccounts.find((account) => account.serviceName === 'discord');
+    if (!linkedAccount) return;
+    if (!guildId) return;
+
+    try {
+        const res: { status: number, data: { id: number, name: string }[] } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/discord/roles?guild_id=${guildId}`, {
+            headers: {
+                Authorization: `Bearer ${linkedAccount.authToken}`,
+            },
+        });
+
+        if (res.status !== 200) {
+            console.error('Failed to fetch Discord roles:', res.data);
+            selectedGuildRoles.value = [];
+            return;
+        }
+
+        selectedGuildRoles.value = res.data.map((role: { id: number, name: string }) => ({
+            id: role.id,
+            name: role.name,
+        }));
+    } catch (errorMsg) {
+        console.error('Error fetching roles:', errorMsg);
+    }
+}
+
+async function selectRole(role: DiscordRole) {
+    selectedRole.value = role;
+    if (!selectedGuild.value) return;
+    emit('change', selectedGuild.value.id + '/' + role.id);
+}
+
+
+async function selectChannel(channel: DiscordChannel) {
+    selectedChannel.value = channel;
+    if (!selectedGuild.value) return;
+    emit('change', selectedGuild.value.id + '/' + channel.id);
+}
+
+async function redirectToGuildOnDiscord(guildId: number) {
+    window.open(`https://discord.com/channels/${guildId}`, '_blank');
+}
+
+async function redirectToChannelOnDiscord(guildId: number, channelId: number) {
+    window.open(`https://discord.com/channels/${guildId}/${channelId}`, '_blank');
+}
+
+function selectUser(user: GithubUser) {
     selectedUser.value = user;
     step.value = 'selectRepo';
 };
@@ -454,7 +918,7 @@ function backToMusicSelection() {
 const isSupported = ref(false);
 const isDefaultInput = ref(false);
 
-const githubUsers = ref<User[]>([]);
+const githubUsers = ref<GithubUser[]>([]);
 const githubRepositories = ref<Repository[]>([]);
 
 const spotifyPlaylists = ref<Playlist[]>([]);
@@ -467,22 +931,16 @@ if (props.type == 'text' || props.type == 'number' || props.type == 'email' || p
     isSupported.value = true;
     isDefaultInput.value = true;
 }
-if (props.type == 'textarea') {
-    isSupported.value = true;
-}
-if (props.type == 'GithubRepository') {
-    isSupported.value = true;
-}
 
-if (props.type == 'select') {
-    isSupported.value = true;
-}
-
-if (props.type == 'SpotifyPlaylist') {
-    isSupported.value = true;
-}
-
-if (props.type == 'SpotifyMusic') {
+if (props.type == 'GithubRepository' ||
+    props.type == 'DiscordGuild' ||
+    props.type == 'DiscordGuildChannel' ||
+    props.type == 'DiscordRole' ||
+    props.type == 'DiscordRoleName' ||
+    props.type == 'textarea' ||
+    props.type == 'select' ||
+    props.type == 'SpotifyPlaylist' ||
+    props.type == 'SpotifyMusic') {
     isSupported.value = true;
 }
 
@@ -529,92 +987,106 @@ async function searchmusic() {
         }
 }
 
+async function handleGithubRepositoryInput(user: User): Promise<void> {
+    const githubLinkedAccount = user.linkedAccounts.find(
+        (account) => account.serviceName === 'github'
+    );
+    if (!githubLinkedAccount) return;
+
+    const accessToken = githubLinkedAccount.authToken;
+    if (!accessToken) return;
+
+    try {
+        // Fetch the repositories
+        const res: { status: number, data: {
+            id: number,
+            name: string,
+            owner: {
+                login: string,
+            },
+            visibility: string,
+            html_url: string
+        }[] }  = await axios.get('https://api.github.com/user/repos', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (res.status !== 200) {
+            console.error('Failed to fetch GitHub repositories:', res.data);
+            return;
+        }
+
+        const repositories = res.data;
+
+        // Store repositories
+        for (const repo of repositories) {
+            githubRepositories.value.push({
+                id: repo.id,
+                name: repo.name,
+                owner: repo.owner.login,
+                visibility: repo.visibility,
+                url: repo.html_url,
+            });
+            if (githubUsers.value.find((user) => user.name === repo.owner.login)) continue;
+            githubUsers.value.push({ id: githubUsers.value.length, name: repo.owner.login });
+        }
+    } catch (error) {
+        console.error('Error fetching GitHub repositories:', error);
+    }
+}
+
+async function handleSpotifyInput(user: User): Promise<void> {
+    const spotifyLinkedAccount = user.linkedAccounts.find(
+        (account) => account.serviceName === 'spotify'
+    );
+    if (!spotifyLinkedAccount) return;
+    const accessToken = spotifyLinkedAccount.authToken;
+    if (!accessToken) return;
+    
+    try {
+        const res = await fetch('https://api.spotify.com/v1/me/playlists', {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await res.json();
+
+        // store playlists
+        for (const playlist of data.items) {
+            spotifyPlaylists.value.push({
+                id: playlist.id,
+                name: playlist.name,
+                uri: playlist.uri,
+                external_urls: playlist.external_urls,
+                images: playlist.images,
+                tracks: playlist.tracks
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching Spotify playlists:', error);
+    }
+}
+
 onMounted(async () => {
     const user = userStore.user;
     if (!user) return;
 
     if (props.type === 'GithubRepository') {
-        const githubLinkedAccount = user.linkedAccounts.find(
-            (account) => account.serviceName === 'github'
-        );
-        if (!githubLinkedAccount) return;
-
-        const accessToken = githubLinkedAccount.authToken;
-        if (!accessToken) return;
-
-        try {
-            // Fetch the repositories
-            const res: { status: number, data: {
-                id: number,
-                name: string,
-                owner: {
-                    login: string,
-                },
-                visibility: string,
-                html_url: string
-            }[] }  = await axios.get('https://api.github.com/user/repos', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-
-            if (res.status !== 200) {
-                console.error('Failed to fetch GitHub repositories:', res.data);
-                return;
-            }
-
-            const repositories = res.data;
-
-            // Store repositories
-            for (const repo of repositories) {
-                githubRepositories.value.push({
-                    id: repo.id,
-                    name: repo.name,
-                    owner: repo.owner.login,
-                    visibility: repo.visibility,
-                    url: repo.html_url,
-                });
-                if (githubUsers.value.find((user) => user.name === repo.owner.login)) continue;
-                githubUsers.value.push({ id: githubUsers.value.length, name: repo.owner.login });
-            }
-        } catch (error) {
-            console.error('Error fetching GitHub repositories:', error);
-        }
+        await handleGithubRepositoryInput(user);
+    } else if (props.type === 'DiscordGuild' || props.type === 'DiscordGuildChannel') {
+        await handleDiscordGuildInput(user);
     }
-
+    if (props.type === 'DiscordRole') {
+        handleRoleChange();
+    }
+    if (props.type === 'DiscordRoleName') {
+        await handleDiscordGuildInput(user);
+    }
     if (props.type === 'SpotifyPlaylist') {
-        const spotifyLinkedAccount = user.linkedAccounts.find(
-            (account) => account.serviceName === 'spotify'
-        );
-        if (!spotifyLinkedAccount) return;
-        const accessToken = spotifyLinkedAccount.authToken;
-        if (!accessToken) return;
-        
-        try {
-            const res = await fetch('https://api.spotify.com/v1/me/playlists', {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            const data = await res.json();
-
-            // store playlists
-            for (const playlist of data.items) {
-                spotifyPlaylists.value.push({
-                    id: playlist.id,
-                    name: playlist.name,
-                    uri: playlist.uri,
-                    external_urls: playlist.external_urls,
-                    images: playlist.images,
-                    tracks: playlist.tracks
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching Spotify playlists:', error);
-        }
+        await handleSpotifyInput(user);
     }
-
 });
 </script>
