@@ -35,6 +35,11 @@ actions.set('gmail_on_label_removed', create_gmail_workers);
 actions.set('gmail_on_mail_send', create_gmail_workers);
 actions.set('gmail_on_draft_create', create_gmail_workers);
 
+actions.set('on_area_deleted', create_area_workers);
+actions.set('on_area_start', create_area_workers);
+actions.set('on_area_stop', create_area_workers);
+actions.set('on_area_created', create_area_workers);
+actions.set('on_area_activate', create_area_workers);
 actions.set('activity.create', create_strava_workers);
 actions.set('activity.update', create_strava_workers);
 actions.set('activity.delete', create_strava_workers);
@@ -190,7 +195,29 @@ async function create_github_workers(data, uuid, targetAction) {
 }
 
 /**
- * @brief Creates and starts a worker for Dropbox.
+ * @brief Creates and starts a worker for area.
+ * This function ensures the Docker image exists, creates a container,
+ * and starts it to process area action.
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ */
+async function create_area_workers(data, uuid, targetAction) {
+    var onNewFileImage = path.resolve(__dirname, '../workers/area'); // Path to the Dockerfile
+    var image_name = "area-worker"; // Name of the Docker image
+    var workerFileName = "areaWorker.js" // Name of the worker file
+    try {
+        await ensureImageExists(image_name, onNewFileImage, workerFileName);
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
+        await container.start(); // Start the container
+        return container.id; // Return the container ID
+    } catch (e) {
+        console.log(e);
+        return "";
+    }
+}
+/**
+ * @brief Creates and starts a worker for gmail.
  * This function ensures the Docker image exists, creates a container,
  * and starts it to process gmail action.
  * @param data The data to be processed by the worker.

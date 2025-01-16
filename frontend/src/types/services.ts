@@ -70,7 +70,8 @@ export type OptionType =
     | 'DiscordRoleName'
     | 'DiscordGuildChannel'
     | 'SpotifyPlaylist'
-    | 'SpotifyMusic';
+    | 'SpotifyMusic'
+    | 'AreaSelect'
 
 export interface Reaction {
     name: string;

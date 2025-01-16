@@ -19,6 +19,7 @@ const redis = new Redis({
     host: 'redis',
     port: 6379
 });
+const { areaNotify } = require("../utils/areaNotify");
 
 /**
  * @brief return a list of all actions of the user
@@ -142,6 +143,7 @@ router.post('/action', async (req, res) => {
                 },
             },
         });
+        areaNotify("on_area_created", newAction)
         return res.status(201).json(newAction);
     } catch (e) {
         console.error("Error on create action ", e);
@@ -168,6 +170,7 @@ router.delete('/action/:id', async (req, res) => {
         await prisma.actionReaction.delete({
             where: { id: id },
         });
+        areaNotify("on_area_deleted", action)
         res.json({ message: "action deleted" });
     } catch (e) {
         console.error(e);
@@ -192,9 +195,11 @@ router.put('/action/set_active/:uuid', async (req, res) => {
             return res.status(404).send("action not find"); 
         }
         if (isActive === false && action.isActive === true) {
-            docker.getContainer(action.containerUuid).stop();
+            await docker.getContainer(action.containerUuid).stop();
+            areaNotify("on_area_stop", action)
         } else if (isActive === true && action.isActive === false) {
-            docker.getContainer(action.containerUuid).start();
+            await docker.getContainer(action.containerUuid).start();
+            areaNotify("on_area_start", action)
         }
         const updatedActionReaction = await prisma.actionReaction.update({
             where: { uuid: uuid },

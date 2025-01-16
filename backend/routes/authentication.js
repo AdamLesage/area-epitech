@@ -6,8 +6,6 @@
 */
 
 const express = require('express');
-// const { PrismaClient } = require('@prisma/client');
-// const prisma = new PrismaClient();
 const router = express.Router();
 const passport = require('passport');
 const { PrismaClient } = require('@prisma/client');
@@ -296,6 +294,14 @@ router.get('/github/redirect',
                 accountEmail: req.user.accountEmail,
             };
 
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(), // Use existing token or generate a new one
+                username: req.user.areaUsername || 'Area username not found',
+                accountEmail: req.user.areaAccountEmail || 'Area email not found',
+            };
+
             const userParams = {
                 email: userEmail,
                 name: req.user.displayName || '',
@@ -312,7 +318,7 @@ router.get('/github/redirect',
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams],
                         },
                     },
                     include: { linkedAccounts: true },
@@ -322,6 +328,16 @@ router.get('/github/redirect',
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
@@ -384,6 +400,14 @@ router.get('/discord/callback',
                 accountEmail: req.user.accountEmail,
             };
 
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(), // Use existing token or generate a new one
+                username: req.user.areaUsername || 'Area username not found',
+                accountEmail: req.user.areaAccountEmail || 'Area email not found',
+            };
+
             const userParams = {
                 email: userEmail,
                 name: req.user.displayName || '',
@@ -400,7 +424,7 @@ router.get('/discord/callback',
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams],
                         },
                     },
                     include: { linkedAccounts: true },
@@ -410,6 +434,16 @@ router.get('/discord/callback',
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
@@ -477,6 +511,14 @@ router.get('/dropbox/callback',
                 accountEmail: req.user.accountEmail
             };
 
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(), // Use existing token or generate a new one
+                username: req.user.areaUsername || 'Area username not found',
+                accountEmail: req.user.areaAccountEmail || 'Area email not found',
+            };
+
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
@@ -484,7 +526,7 @@ router.get('/dropbox/callback',
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams],
                         },
                     },
                     include: { linkedAccounts: true },
@@ -494,6 +536,15 @@ router.get('/dropbox/callback',
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
@@ -570,6 +621,14 @@ router.get('/spotify/callback',
                 profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             };
 
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(), // Use existing token or generate a new one
+                username: req.user.areaUsername || 'Area username not found',
+                accountEmail: req.user.areaAccountEmail || 'Area email not found',
+            };
+
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
@@ -577,7 +636,7 @@ router.get('/spotify/callback',
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams],
                         },
                     },
                     include: { linkedAccounts: true },
@@ -587,6 +646,16 @@ router.get('/spotify/callback',
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
@@ -668,15 +737,24 @@ router.get('/google/callback',
                 profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             };
 
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(), // Use existing token or generate a new one
+                username: req.user.areaUsername || 'Area username not found',
+                accountEmail: req.user.areaAccountEmail || 'Area email not found',
+            };
+
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
+                user = await prisma.user.create({ 
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams],
                         },
+                        profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
                     },
                     include: { linkedAccounts: true },
                 });
@@ -685,6 +763,16 @@ router.get('/google/callback',
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
