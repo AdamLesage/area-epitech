@@ -42,6 +42,7 @@ export interface User {
     phoneNumber: string | null;
     hashedPassword: string;
     authToken: string;
+    profilePictureUrl: string;
     profilePicture: ProfilePicture | null;
     linkedAccounts: LinkedAccount[];
 }

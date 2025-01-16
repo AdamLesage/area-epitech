@@ -276,7 +276,7 @@ router.get('/areas', async (req, res) => {
 
             area.actionService = actionService.name;
             area.reactionService = reactionService.name;
-        }        
+        }
 
         return res.status(200).json(areas);
     } catch (error) {
@@ -304,6 +304,8 @@ router.post('/user', async (req, res) => {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
     const uuid = uuidv4();
+
+    const birthDateIsoFormat = new Date(req.body.birthDate).toISOString();
     try {
         const user = await prisma.user.create({
             data: {
@@ -311,11 +313,12 @@ router.post('/user', async (req, res) => {
                 name: name,
                 surname: surname,
                 bio: bio,
-                birthDate: birthDate,
+                birthDate: birthDateIsoFormat,
                 email: email,
                 phoneNumber: phoneNumber,
                 hashedPassword: hashedPassword,
                 authToken: uuidv4(),
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             },
         });
         res.json(user);
@@ -386,15 +389,16 @@ router.put('/user/:uuid', async (req, res) => {
     } else {
         return res.status(401).json({ error: 'Unauthorized' });
     }
+    const birthDateIsoFormat = new Date(req.body.birthDate).toISOString();
+
 
     const data = {};
     if (req.body.email) data.email = req.body.email;
-    if (req.body.password) data.hashedPassword = bcrypt.hashSync(req.body.password, 10);
     if (req.body.name) data.name = req.body.name;
-    if (req.body.surname) data.surname = req.body.surname;
     if (req.body.bio) data.bio = req.body.bio;
-    if (req.body.birthDate) data.birthDate = req.body.birthDate;
+    if (req.body.birthDate) data.birthDate = birthDateIsoFormat;
     if (req.body.phoneNumber) data.phoneNumber = req.body.phoneNumber;
+    if (req.body.profilePictureUrl) data.profilePictureUrl = req.body.profilePictureUrl;
 
     try {
         const user = await prisma.user.update({
@@ -403,7 +407,7 @@ router.put('/user/:uuid', async (req, res) => {
         });
         res.json(user);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: `Error: ${error}` });
     }
 });
 
