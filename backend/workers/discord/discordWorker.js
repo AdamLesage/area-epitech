@@ -4,8 +4,19 @@ const redis = new Redis({
     host: 'redis',
     port: 6379
 });
+
+/**
+ * @brief Processes the webhook data from Redis and sends it to the callback URL.
+ * 
+ * This function will continuously check the Redis queue for new data. If new data is found, it will
+ * check if the event matches the target action. If it does, it will send the data to the callback URL.
+ * If no data is found, it will wait for a while before checking the queue again.
+ * 
+ * @returns {Promise<void>}
+  */
+ 
 async function processWebhook() {
-    console.log("Starting processWebhookrdftgyhujiko");
+    console.log("Starting processWebhook for discord...");
     while (true) {
         console.log("Waiting for data from Redis...");
         const data = await redis.rpop(process.env.UUID);
