@@ -7,18 +7,30 @@ const { google } = require('googleapis');
 
 // Create a new Map to store reaction handlers
 const reactions = new Map();
+
+// Dropbox Reactions
 reactions.set('dropbox_add_file', dropbox_add_file);
 reactions.set('dropbox_share_file', dropbox_share_file);
 reactions.set('dropbox_unshare_file', dropbox_unshare_file);
 reactions.set('dropbox_add_folder', dropbox_add_folder);
 reactions.set('dropbox_delete_file', dropbox_delete_file);
 
+// Github Reactions
 reactions.set('create_issue', github_create_issue);
 reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
 
+// Spotify Reactions
 reactions.set('playlist_create', spotify_create_playlist);
+reactions.set('playlist_add_track', spotify_add_to_playlist);
+reactions.set('save_track', spotify_save_track);
+reactions.set('skip_track', spotify_skip_track);
+reactions.set('previous_track', spotify_previous_track);
+reactions.set('start_resume', spotify_start_resume);
+reactions.set('pause', spotify_pause);
+reactions.set('add_track_to_queue', spotify_add_track_to_queue);
 
+// Discord Reactions
 reactions.set('discord_send_message_to_a_channel', discord_send_message_to_a_channel);
 reactions.set('discord_delete_message_from_a_channel', discord_delete_message_from_a_channel);
 reactions.set('discord_create_channel_in_server', discord_create_channel_in_server);
@@ -35,22 +47,20 @@ reactions.set('discord_remove_role_to_a_user', discord_remove_role_to_a_user);
 reactions.set('discord_ban_user_from_a_server', discord_ban_user_from_a_server);
 reactions.set('discord_unban_user_from_a_server', discord_unban_user_from_a_server);
 
+// Strava Reactions
 reactions.set('update_athlete', strava_update_athlete);
 reactions.set('create_activity', strava_create_activity);
 reactions.set('update_activity', strava_update_activity);
 
-reactions.set('playlist_add_track', spotify_add_to_playlist);
-reactions.set('save_track', spotify_save_track);
-reactions.set('skip_track', spotify_skip_track);
-reactions.set('previous_track', spotify_previous_track);
-reactions.set('start_resume', spotify_start_resume);
-reactions.set('pause', spotify_pause);
-reactions.set('add_track_to_queue', spotify_add_track_to_queue);
+// News Reactions
+reactions.set('fetch_news', fetchNews);
 
+// Area Reactions
 reactions.set('area_delete', area_delete);
 reactions.set('area_start', area_start);
 reactions.set('area_stop', area_stop);
 
+// Gmail Reactions
 reactions.set('gmail_send_email', gmail_send_email);
 reactions.set('gmail_delete_email', gmail_delete_email);
 reactions.set('gmail_add_label', gmail_add_label);
@@ -387,9 +397,9 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         }
         const username = await getusername(userUuid, "spotify");
         console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
-        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
+        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlist_uri}/tracks`,
             {
-                "uris": [reactionData.trackUri]
+                "uris": [reactionData.music_uri]
             },
             {
                 headers: {
@@ -415,7 +425,7 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         console.log("Saving track in Spotify:", reactionData, actionResponseData);
         const response = await axios.put(`https://api.spotify.com/v1/me/tracks`,
             {
-                "ids": [reactionData.trackId]
+                "ids": [reactionData.music_id]
             },
             {
                 headers: {
@@ -901,6 +911,24 @@ async function gmail_create_draft(reactionData, actionResponseData, userUuid) {
         console.error('Error creating draft:', error);
     }
 }
+
+async function fetchNews(domain, query) {
+    try {
+        const response = await axios.get(`https://newsapi.org/v2/everything`, {
+        params: {
+            domains: domain,
+            q: query,
+            language: 'en',
+            sortBy: 'publishedAt',
+            apiKey: '6b140d55899b499ca9c96e9d932b3cf2',
+        },
+        });
+        return response.data.articles;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données:', error);
+        return [];
+    }
+};
 
 /**
  * Handler function for the 'area_delete' reaction.

@@ -7,6 +7,8 @@ var docker = new Docker();
 
 // Create a map to hold creation of action worker
 const actions = new Map();
+
+// Dropbox Actions
 actions.set('dropbox_on_new_file', create_dropbox_workers);
 actions.set('dropbox_on_file_renamed', create_dropbox_workers);
 actions.set('dropbox_on_file_modified', create_dropbox_workers);
@@ -14,6 +16,7 @@ actions.set('dropbox_on_new_folder', create_dropbox_workers);
 actions.set('dropbox_on_folder_renamed', create_dropbox_workers);
 actions.set('dropbox_on_deleted', create_dropbox_workers);
 
+// Github Actions
 actions.set('pull_request_review.submitted', create_github_workers);
 actions.set('pull_request.labeled', create_github_workers);
 actions.set('pull_request.unlabeled', create_github_workers);
@@ -27,6 +30,7 @@ actions.set('issues.opened', create_github_workers);
 actions.set('issues.closed', create_github_workers);
 actions.set('pull_request.opened', create_github_workers);
 actions.set('pull_request.closed', create_github_workers);
+
 // Gmail Action
 actions.set('gmail_on_new_mail', create_gmail_workers);
 actions.set('gmail_on_mail_deleted', create_gmail_workers);
@@ -35,16 +39,25 @@ actions.set('gmail_on_label_removed', create_gmail_workers);
 actions.set('gmail_on_mail_send', create_gmail_workers);
 actions.set('gmail_on_draft_create', create_gmail_workers);
 
+// Timer Actions
+actions.set('timer.chronometer', create_timer_workers);
+actions.set('timer.alarm', create_timer_workers);
+actions.set('timer.interval', create_timer_workers);
+
+// Area Actions
 actions.set('on_area_deleted', create_area_workers);
 actions.set('on_area_start', create_area_workers);
 actions.set('on_area_stop', create_area_workers);
 actions.set('on_area_created', create_area_workers);
 actions.set('on_area_activate', create_area_workers);
+
+// Strava Actions
 actions.set('activity.create', create_strava_workers);
 actions.set('activity.update', create_strava_workers);
 actions.set('activity.delete', create_strava_workers);
 actions.set('athlete.updated', create_strava_workers);
 
+// Discord Actions
 actions.set('message_create', create_discord_workers);
 actions.set('message_delete', create_discord_workers);
 actions.set('message_update', create_discord_workers);
@@ -247,6 +260,31 @@ async function create_discord_workers(data, uuid, targetAction) {
     var onNewFileImage = path.resolve(__dirname, '../workers/discord'); // Path to the Dockerfile
     var image_name = "discord-worker"; // Name of the Docker image
     var workerFileName = "discordWorker.js" // Name of the worker file
+    try {
+        await ensureImageExists(image_name, onNewFileImage, workerFileName);
+        const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
+        await container.start(); // Start the container
+        return container.id; // Return the container ID
+    } catch (e) {
+        console.log(e);
+        return "";
+    }
+}
+
+/**
+ * @brief Creates and starts a worker for Timer.
+ * This function ensures the Docker image exists, creates a container,
+ * and starts it to process timer action.
+ * @param data The data to be processed by the worker.
+ * @param uuid The unique identifier for the operation.
+ * @return The ID of the started container or an empty string on failure.
+ * 
+ * @author Victor Hristea
+ */
+async function create_timer_workers(data, uuid, targetAction) {
+    var onNewFileImage = path.resolve(__dirname, '../workers/timer'); // Path to the Dockerfile
+    var image_name = "timer-worker"; // Name of the Docker image
+    var workerFileName = "timerWorker.js" // Name of the worker file
     try {
         await ensureImageExists(image_name, onNewFileImage, workerFileName);
         const container = await create_container(data, uuid, image_name, workerFileName, targetAction);
