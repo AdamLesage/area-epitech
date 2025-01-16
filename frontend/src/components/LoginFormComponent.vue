@@ -92,14 +92,6 @@ import { Icon } from '@iconify/vue';
 import AuthButton from '@/components/AuthButton.vue';
 import * as yup from 'yup';
 import { LoginFormValues } from '@/types/auth';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useUserStore } from '@/stores/user';
-import { User } from '@/types/auth';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-const store = useUserStore();
 
 // Form state
 const email = ref<string>('');
