@@ -389,8 +389,10 @@ router.put('/user/:uuid', async (req, res) => {
     } else {
         return res.status(401).json({ error: 'Unauthorized' });
     }
-    const birthDateIsoFormat = new Date(req.body.birthDate).toISOString();
 
+    let birthDateIsoFormat = Date.now();
+    if (req.body.birthDate)
+        birthDateIsoFormat = new Date(req.body.birthDate).toISOString();
 
     const data = {};
     if (req.body.email) data.email = req.body.email;

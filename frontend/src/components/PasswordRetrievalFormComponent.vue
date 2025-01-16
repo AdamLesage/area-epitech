@@ -9,17 +9,19 @@
                 class="flex flex-col px-4 h-5/6 justify-between gap-4"
                 :validation-schema="schema"
                 @submit="onSubmit"
-                :initial-values="initialValues">
-                <!-- Email Recap Field : disabled -->
+                :initial-values="initialValues"
+                mode="all">
+                <!-- Email Recap Field -->
                 <div class="flex flex-col">
                     <label for="email" class="web:text-auth-primary mobile:text-white mb-2">Your email:</label>
                     <Field
                         name="email"
                         type="email"
                         :value="props.email"
-                        placeholder="No email provided..."
-                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full cursor-not-allowed bg-white"
-                        disabled />
+                        placeholder="Enter your email here..."
+                        @input="handleChangeEmail"
+                        class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full bg-white"
+                    />
                     <ErrorMessage name="email" class="text-red-500 text-sm mt-1" />
                 </div>
                 <!-- Code Field -->
@@ -49,7 +51,7 @@
                     <button
                         type="submit"
                         class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
-                        Validate
+                        Send email
                     </button>
                     <!-- Abort Button -->
                     <button
@@ -78,7 +80,7 @@ const code = ref<[string, string, string, string, string, string]>(['', '', '', 
 
 // Form validation schema
 const schema = yup.object({
-  code: yup.array().required('Code is required').of(yup.string().length(1, 'Code must be 6 digits').matches(/^\d+$/, 'Code must contain only digits')),
+//   code: yup.array().required('Code is required').of(yup.string().length(1, 'Code must be 6 digits').matches(/^\d+$/, 'Code must contain only digits')),
   email: yup.string().required('Email is required').email(),
 });
 
@@ -88,12 +90,20 @@ const initialValues: PasswordRetrievalFormValues = {
     email: props.email,
 };
 
+// Handle change email
+const handleChangeEmail = (event: Event) => {
+    emit('update:email', (event.target as HTMLInputElement).value);
+};
+
+
 // Input focus
 const handleInput = (index: number) => {
     const inputs = document.querySelectorAll('input');
     if (index < 5 && code.value[index].length === 1) {
         inputs[index + 1].focus();
     }
+    // Update code value
+    emit('update:code', code.value);
 };
 
 // Backspace focus
@@ -102,10 +112,12 @@ const handleBackspace = (index: number, event: KeyboardEvent) => {
     if (index > 0 && code.value[index].length === 0 && event.key === 'Backspace') {
         inputs[index - 1].focus();
     }
+    // Update code value
+    emit('update:code', code.value);
 };
 
 // Form submission
-const emit = defineEmits(['submit', 'abort', 'send-again']);
+const emit = defineEmits(['submit', 'abort', 'send-again', 'update:email', 'update:code']);
 
 const onSubmit: SubmissionHandler<PasswordRetrievalFormValues, GenericObject, unknown> = (values) => {
     console.log('Form Submitted:', values);

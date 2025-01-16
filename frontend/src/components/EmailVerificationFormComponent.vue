@@ -10,16 +10,17 @@
                 :validation-schema="schema"
                 @submit="onSubmit"
                 :initial-values="initialValues">
-                <!-- Email Recap Field : disabled -->
+                <!-- Email Recap Field -->
                 <div class="flex flex-col">
                     <label for="email" class="web:text-auth-primary mobile:text-white mb-2">Your email:</label>
                     <Field
                         name="email"
                         type="email"
                         :value="props.email"
-                        placeholder="No email provided..."
+                        placeholder="Enter your email here..."
                         class="p-2 border-2 border-auth-neutral placeholder:text-auth-neutral text-auth-neutral rounded-lg w-full cursor-not-allowed bg-white"
-                        disabled />
+                        @input="handleChangeEmail"
+                        />
                     <ErrorMessage name="email" class="text-red-500 text-sm mt-1" />
                 </div>
                 <!-- Code Field -->
@@ -94,6 +95,11 @@ const handleInput = (index: number) => {
     if (index < 5 && code.value[index].length === 1) {
         inputs[index + 1].focus();
     }
+};
+
+// Handle change email
+const handleChangeEmail = (event: Event) => {
+    initialValues.email = (event.target as HTMLInputElement).value;
 };
 
 // Backspace focus

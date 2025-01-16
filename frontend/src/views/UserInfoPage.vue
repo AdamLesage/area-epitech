@@ -4,7 +4,7 @@
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden fixed bottom-0 z-40 bg-home" />
 
         <div v-if="!isEditing && user"
-            class="bg-home-div mobile:bg-transparent rounded-xl mobile:p-4 p-10 mobile:w-full w-2/3 max-w-[66.75rem] text-center shadow-2xl mobile:shadow-none mt-20 mobile:mt-0">
+            class="bg-home-div mobile:bg-transparent rounded-xl mobile:p-4 p-10 mobile:w-full w-2/3 max-w-[66.75rem] text-center shadow-2xl mobile:shadow-none mt-20 mobile:mt-0 relative">
 
             <!-- Edit Profile Button -->
             <button @click="toggleEdit"
@@ -157,7 +157,6 @@ import ServiceNavComponent from "@/components/ServiceNavComponent.vue";
 import MobileServiceNavComponent from "@/components/MobileServiceNavComponent.vue";
 import { Icon } from '@iconify/vue';
 import * as yup from 'yup';
-import { profile } from "console";
 
 const userStore = useUserStore();
 const servicesStore = useServiceStore();
@@ -218,10 +217,12 @@ function toggleEdit() {
     isEditing.value = !isEditing.value;
 }
 
-function saveProfile() {
+async function saveProfile() {
     // Fetch API to update user details
+    console.log(editForm.value);
     const URL = `${import.meta.env.VITE_BACKEND_URL}/api/user/${user.value?.uuid}`;
-    fetch(URL, {
+    console.log(URL);
+    await fetch(URL, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${user.value?.authToken}`,

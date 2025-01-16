@@ -7,7 +7,7 @@
         <div class="flex flex-col items-center z-10 mobile:justify-between web:justify-center h-full">
             <h1 class="text-[4rem] leading-[3rem] font-black text-auth-secondary web:hidden my-4">AREA</h1>
             <EmailVerificationFormComponent
-                email="test@gmail.com"
+                email=""
                 @submit="handleSubmit"
                 @abort="handleAbort"
                 @send-again="handleSendAgain" />
@@ -43,4 +43,5 @@ function handleAbort() {
 function handleSendAgain() {
     console.log('User requested to send email again');
 };
+
 </script>
