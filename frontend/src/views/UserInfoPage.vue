@@ -193,7 +193,10 @@ const images = [
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcuxHZa3v-lXfJ7pht9asToYn0T2iaDZYC-Q&s',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRj99Q4V5JK8HyiS1pB8vdl9YAVkMMNd0izw&s',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX4NAMWyVaJNETPVYdp3cxMy2GZVbEcPqL1Q&s'
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX4NAMWyVaJNETPVYdp3cxMy2GZVbEcPqL1Q&s',
+    'https://lesminis.fr/blog/wp-content/uploads/2023/11/5-3.jpg.webp',
+    'https://media.istockphoto.com/id/473012660/fr/photo/%C3%A9cureuil-gris-b%C3%A2iller.jpg?s=612x612&w=0&k=20&c=8R3bKQCmoFvktQ5q0QsrxcR20HLJNDFKuxsIBLoDzeU=',
+    'https://www.zoologiste.com/images/main/cochon.jpg',
 ];
 
 watch(() => userStore.user, (newUser) => {
