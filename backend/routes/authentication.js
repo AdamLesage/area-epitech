@@ -18,11 +18,9 @@ const { google } = require('googleapis');
 
 
 // Global variable for reset email code
-let resetPasswordCodeAccordingToEmail = {
-};
+let resetPasswordCodeAccordingToEmail = {};
 
 // Intern auth routes
-
 router.post('/login', (req, res) => {
     const { password, email } = req.body;
 
@@ -316,6 +314,122 @@ async function getUser(req) {
     return null;
 }
 
+/**
+ * Handles the user authentication in the Database.
+ * 
+ * @param {string} username - The username of the user.
+ * @param {string} accountEmail - The email associated with the account.
+ * @param {string} userEmail - The email of the user.
+ * @param {string} displayName - The display name of the user.
+ * @param {string} surname - The surname of the user.
+ * @param {string} authToken - The authentication token.
+ * @param {string} serviceName - The name of the service.
+ * @param {object} user - The user object.
+ * @returns {string} - The authentication token of the user.
+ */
+async function auth(username, accountEmail, userEmail, displayName, surname, authToken, serviceName, user) {
+    const linkedAccountParams = {
+        uuid: uuidv4(),
+        serviceName: serviceName,
+        authToken: authToken,
+        username: username || '',
+        accountEmail: accountEmail,
+    };
+
+    const areaServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'area',
+        authToken: uuidv4(),
+        username: username || '',
+        accountEmail: accountEmail || '',
+    };
+
+    const timerServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'timer',
+        authToken: uuidv4(),
+        username: username || '',
+        accountEmail: accountEmail || '',
+    };
+
+    const userParams = {
+        email: userEmail,
+        name: displayName || '',
+        surname: surname || '',
+        uuid: uuidv4(),
+        hashedPassword: authToken,
+        profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
+    };
+
+    if (!user) {
+        // Create the new user
+        userParams.authToken = uuidv4(); // Add authentication token
+        user = await prisma.user.create({
+            data: {
+                ...userParams,
+                linkedAccounts: {
+                    create: [linkedAccountParams, areaServiceParams, timerServiceParams],
+                },
+            },
+            include: { linkedAccounts: true },
+        });
+
+        // Create the linkedAccount
+        linkedAccountParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: linkedAccountParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        // Create the area service linked account
+        areaServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: areaServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        // Create the timer service linked account
+        timerServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: timerServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+    } else {
+        // Check if the account is already linked
+        const linkedAccount = await user.linkedAccounts.find(
+            account => account.serviceName === serviceName
+        );
+
+        if (!linkedAccount) {
+            await prisma.linkedAccount.create({
+                data: {
+                    ...linkedAccountParams,
+                    userId: user.id, // Use the numeric ID from Prisma
+                },
+            });
+
+            // Refresh user data to include the new linked account
+            user = await prisma.user.findUnique({
+                where: { email: userParams.email }
+            });
+        }
+    }
+
+    return user.authToken;
+}
+
 // Github auth routes
 router.get('/github', async (req, res) => {
     const email = req.query.email;
@@ -336,104 +450,17 @@ router.get('/github/redirect',
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-            const linkedAccountParams = {
-                uuid: uuidv4(),
-                serviceName: 'github',
-                authToken: req.user.accessToken,
-                username: req.user.username || 'Username not found',
-                accountEmail: req.user.accountEmail,
-            };
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'github',
+                user);
 
-            const areaServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'area',
-                authToken: uuidv4(),
-                username: req.user.areaUsername || '',
-                accountEmail: req.user.areaAccountEmail || '',
-            };
-
-            const timerServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'timer',
-                authToken: uuidv4(),
-                username: req.user.username || '',
-                accountEmail: req.user.accountEmail || '',
-            };
-
-            const userParams = {
-                email: userEmail,
-                name: req.user.displayName || '',
-                surname: req.user.surname || '',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
-            };
-
-            if (!user) {
-                // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
-                    data: {
-                        ...userParams,
-                        linkedAccounts: {
-                            create: [linkedAccountParams, areaServiceParams, timerServiceParams],
-                        },
-                    },
-                    include: { linkedAccounts: true },
-                });
-
-                linkedAccountParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: linkedAccountParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                areaServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: areaServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                timerServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: timerServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-            } else {
-                // Check if the account is already linked
-                const linkedAccount = user.linkedAccounts.find(
-                    account => account.serviceName === 'github'
-                );
-
-                if (!linkedAccount) {
-                    await prisma.linkedAccount.create({
-                        data: {
-                            ...linkedAccountParams,
-                            userId: user.id, // Use the numeric ID from Prisma
-                        },
-                    });
-
-                    // Refresh user data to include the new linked account
-                    user = await prisma.user.findUnique({
-                        where: { email: userParams.email },
-                        include: { linkedAccounts: true },
-                    });
-                }
-            }
-
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -461,104 +488,17 @@ router.get('/discord/callback',
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-            const linkedAccountParams = {
-                uuid: uuidv4(),
-                serviceName: 'discord',
-                authToken: req.user.accessToken,
-                username: req.user.username || 'Username not found',
-                accountEmail: req.user.accountEmail,
-            };
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'discord',
+                user);
 
-            const areaServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'area',
-                authToken: uuidv4(),
-                username: req.user.areaUsername || '',
-                accountEmail: req.user.areaAccountEmail || '',
-            };
-
-            const timerServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'timer',
-                authToken: uuidv4(),
-                username: req.user.username || '',
-                accountEmail: req.user.accountEmail || '',
-            };
-
-            const userParams = {
-                email: userEmail,
-                name: req.user.displayName || '',
-                surname: '',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
-            };
-
-            if (!user) {
-                // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
-                    data: {
-                        ...userParams,
-                        linkedAccounts: {
-                            create: [linkedAccountParams, areaServiceParams, timerServiceParams],
-                        },
-                    },
-                    include: { linkedAccounts: true },
-                });
-
-                linkedAccountParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: linkedAccountParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                areaServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: areaServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                timerServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: timerServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-            } else {
-                // Check if the account is already linked
-                const linkedAccount = user.linkedAccounts.find(
-                    account => account.serviceName === 'discord'
-                );
-
-                if (!linkedAccount) {
-                    await prisma.linkedAccount.create({
-                        data: {
-                            ...linkedAccountParams,
-                            userId: user.id, // Use the numeric ID from Prisma
-                        },
-                    });
-
-                    // Refresh user data to include the new linked account
-                    user = await prisma.user.findUnique({
-                        where: { email: userParams.email },
-                        include: { linkedAccounts: true },
-                    });
-                }
-            }
-
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -582,104 +522,17 @@ router.get('/dropbox/callback',
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-            const userParams = {
-                email: userEmail,
-                name: req.user.displayName || '',
-                surname: '',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
-            };
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'dropbox',
+                user);
 
-            const linkedAccountParams = {
-                serviceName: 'dropbox',
-                authToken: req.user.accessToken,
-                username: req.user.displayName,
-                uuid: uuidv4(),
-                accountEmail: req.user.accountEmail
-            };
-
-            const areaServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'area',
-                authToken: uuidv4(),
-                username: req.user.areaUsername || '',
-                accountEmail: req.user.areaAccountEmail || '',
-            };
-
-            const timerServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'timer',
-                authToken: uuidv4(),
-                username: req.user.username || '',
-                accountEmail: req.user.accountEmail || '',
-            };
-
-            if (!user) {
-                // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
-                    data: {
-                        ...userParams,
-                        linkedAccounts: {
-                            create: [linkedAccountParams, areaServiceParams, timerServiceParams],
-                        },
-                    },
-                    include: { linkedAccounts: true },
-                });
-
-                linkedAccountParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: linkedAccountParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                areaServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: areaServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                timerServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: timerServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-            } else {
-                // Check if the account is already linked
-                const linkedAccount = user.linkedAccounts.find(
-                    account => account.serviceName === 'dropbox'
-                );
-
-                if (!linkedAccount) {
-                    await prisma.linkedAccount.create({
-                        data: {
-                            ...linkedAccountParams,
-                            userId: user.id, // Use the numeric ID from Prisma
-                        },
-                    });
-
-                    // Refresh user data to include the new linked account
-                    user = await prisma.user.findUnique({
-                        where: { email: userParams.email },
-                        include: { linkedAccounts: true },
-                    });
-                }
-            }
-
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -711,104 +564,17 @@ router.get('/spotify/callback',
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-            const linkedAccountParams = {
-                uuid: uuidv4(),
-                serviceName: 'spotify',
-                authToken: req.user.accessToken,
-                username: req.user.username || 'Username not found',
-                accountEmail: req.user.accountEmail,
-            };
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'spotify',
+                user);
 
-            const userParams = {
-                email: userEmail,
-                name: req.user.displayName || '',
-                surname: '',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
-            };
-
-            const areaServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'area',
-                authToken: uuidv4(),
-                username: req.user.areaUsername || '',
-                accountEmail: req.user.areaAccountEmail || '',
-            };
-
-            const timerServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'timer',
-                authToken: uuidv4(),
-                username: req.user.username || '',
-                accountEmail: req.user.accountEmail || '',
-            };
-
-            if (!user) {
-                // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
-                    data: {
-                        ...userParams,
-                        linkedAccounts: {
-                            create: [linkedAccountParams, areaServiceParams],
-                        },
-                    },
-                    include: { linkedAccounts: true },
-                });
-
-                linkedAccountParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: linkedAccountParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                areaServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: areaServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                timerServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: timerServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-            } else {
-                // Check if the account is already linked
-                const linkedAccount = user.linkedAccounts.find(
-                    account => account.serviceName === 'spotify'
-                );
-
-                if (!linkedAccount) {
-                    await prisma.linkedAccount.create({
-                        data: {
-                            ...linkedAccountParams,
-                            userId: user.id, // Use the numeric ID from Prisma
-                        },
-                    });
-
-                    // Refresh user data to include the new linked account
-                    user = await prisma.user.findUnique({
-                        where: { email: userParams.email },
-                        include: { linkedAccounts: true },
-                    });
-                }
-            }
-
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -845,106 +611,18 @@ router.get('/google/callback',
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-            const linkedAccountParams = {
-                uuid: uuidv4(),
-                serviceName: 'gmail',
-                authToken: req.user.accessToken,
-                username: req.user.username || 'Username not found',
-                accountEmail: req.user.accountEmail,
-            };
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'gmail',
+                user);
 
-            const userParams = {
-                email: userEmail,
-                name: req.user.displayName || '',
-                surname: '',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
-            };
-
-            const areaServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'area',
-                authToken: uuidv4(),
-                username: req.user.areaUsername || '',
-                accountEmail: req.user.areaAccountEmail || '',
-            };
-
-            const timerServiceParams = {
-                uuid: uuidv4(),
-                serviceName: 'timer',
-                authToken: uuidv4(),
-                username: req.user.username || '',
-                accountEmail: req.user.accountEmail || '',
-            };
-
-            if (!user) {
-                // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({ 
-                    data: {
-                        ...userParams,
-                        linkedAccounts: {
-                            create: [linkedAccountParams, areaServiceParams],
-                        },
-                        profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
-                    },
-                    include: { linkedAccounts: true },
-                });
-
-                linkedAccountParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: linkedAccountParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                areaServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: areaServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-
-                timerServiceParams.userId = user.id;
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: timerServiceParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-            } else {
-                // Check if the account is already linked
-                const linkedAccount = user.linkedAccounts.find(
-                    account => account.serviceName === 'gmail'
-                );
-
-                if (!linkedAccount) {
-                    await prisma.linkedAccount.create({
-                        data: {
-                            ...linkedAccountParams,
-                            userId: user.id, // Use the numeric ID from Prisma
-                        },
-                    });
-
-                    // Refresh user data to include the new linked account
-                    user = await prisma.user.findUnique({
-                        where: { email: userParams.email },
-                        include: { linkedAccounts: true },
-                    });
-                }
-            }
-            await watchGmail(req.user.accessToken)
-
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+            await watchGmail(req.user.accessToken);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
