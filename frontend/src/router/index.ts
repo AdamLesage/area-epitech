@@ -2,15 +2,24 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 
 App.addListener('appUrlOpen', function (event: URLOpenListenerEvent) {
-  // Example url: https://beerswift.app/tabs/tabs2
-  // slug = /tabs/tabs2
-  const slug = event.url.split('.app').pop();
+  const url = new URL(event.url);
 
-  // We only push to the route if there is a slug present
-  if (slug) {
-      router.push({
-      path: slug,
-      });
+  const hash = url.hash;
+
+  if (hash) {
+    // Remove the leading "/#" from the hash
+    const slug = hash.slice(2);
+
+    // Separate the path and query string (if exists)
+    const [path, queryString] = slug.split('?');
+
+    // Parse query parameters
+    const queryParams = new URLSearchParams(queryString || '');
+
+    router.push({
+      path: path,  // Navigate to the route part (e.g., "/auth-callback")
+      query: Object.fromEntries(queryParams.entries()),  // Convert query params to an object
+    });
   }
 });
 
