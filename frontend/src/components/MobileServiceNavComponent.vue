@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import BackButton from '@/components/BackButton.vue';
+import { ref } from 'vue';
 import NavButton from '@/components/NavButton.vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
+const user = ref(userStore.user);
 
 const router = useRouter();
 
@@ -35,7 +40,7 @@ const handleBackButton = () => {
             <NavButton icon="ion:chevron-back-circle-sharp" text="" @click="handleBackButton" />
             <NavButton icon="material-symbols:explore-rounded" text="" @redirect="handleExploreRedirect" />
             <NavButton icon="mdi:hammer-screwdriver" text="" @redirect="handleWorkshopRedirect" />
-            <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" />
+            <img :src="user?.profilePictureUrl || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full" @click="handleUserProfileRedirect" v-if="user" />
         </nav>
     </div>
 </template>

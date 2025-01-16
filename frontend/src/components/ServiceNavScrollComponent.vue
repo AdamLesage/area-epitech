@@ -99,7 +99,7 @@ const showMenu = ref<boolean>(false);
                 <NavButton icon="material-symbols:folder-outline" class="half:hidden" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />
                 <NavButton icon="mdi:hammer-screwdriver" class="half:hidden" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
                 <NavButton icon="mdi:menu" class="hidden half:flex" text="Menu" @redirect="openMenu" />
-                <NavButton icon="carbon:user-avatar-filled" text="" @redirect="handleUserProfileRedirect" v-if="user" />
+                <img :src="user?.profilePictureUrl || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full" @click="handleUserProfileRedirect" v-if="user" />
             </div>
         </nav>
         <div v-if="showMenu" class="mt-6 text-white text-xl hidden half:flex flex-col items-center bg-black/10 rounded-md py-4 gap-2">
