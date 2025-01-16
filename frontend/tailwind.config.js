@@ -64,6 +64,8 @@ export default {
           mobile: { max: '768px' },
           web: { min: '769px' },
           half: { max: '1024px' },
+          big: { max: '1440px' },
+          mini: { max: '500px' },
       },
     },
   },

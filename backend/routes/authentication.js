@@ -6,8 +6,6 @@
 */
 
 const express = require('express');
-// const { PrismaClient } = require('@prisma/client');
-// const prisma = new PrismaClient();
 const router = express.Router();
 const passport = require('passport');
 const { PrismaClient } = require('@prisma/client');
@@ -17,6 +15,11 @@ const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 const { google } = require('googleapis');
+
+
+// Global variable for reset email code
+let resetPasswordCodeAccordingToEmail = {
+};
 
 // Intern auth routes
 
@@ -80,6 +83,7 @@ router.post('/register', async (req, res) => {
             birthDate: birthDate ? new Date(birthDate) : null,
             phoneNumber,
             profilePicture: profilePicture ? { create: profilePicture } : undefined,
+            profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s',
             authToken: authToken,
         },
     }).then((user) => {
@@ -134,104 +138,111 @@ router.get('/logout', (req, res) => {
     });
 });
 
-
 router.post('/reset-password', async (req, res) => {
     const { email } = req.body;
-    const headers = req.headers;
 
     if (!email) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    // Check if headers given are correct
-    if (headers.authorization) {
+    try {
+        // Check if the user exists
         const user = await prisma.user.findUnique({
-            where: { authToken: headers.authorization },
+            where: { email: email },
         });
 
-        if (user === null) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
-    } else {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    // Check if user exists
-    prisma.user.findUnique({
-        where: {
-            email: email,
-        },
-    }).then((user) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        // Generate a random verification code
+        const code = Math.floor(100000 + Math.random() * 900000);
+
+        // Configure Nodemailer
         const transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false,
+            host: 'smtp.gmail.com',
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
             },
         });
 
+        // Create the email data
         const mailData = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: 'Reset password for Area Romain le malin',
-            text: `Click on the link to reset your password: ${process.env.FRONTEND_URL}/reset-password/${user.uuid}`,
+            subject: 'Password Reset',
+            html: `
+                <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+                    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #007bff;">Réinitialisation de votre mot de passe</h2>
+                        <p>Bonjour,</p>
+                        <p>Nous avons reçu une demande de réinitialisation de votre mot de passe. Veuillez utiliser le code de
+                        vérification ci-dessous :</p>
+                        <div style="text-align: center; font-size: 24px; font-weight: bold; color: #007bff; margin: 20px 0;">
+                        ${code}
+                        </div>
+                        <p>Si vous n'avez pas fait cette demande, vous pouvez ignorer cet e-mail.</p>
+                        <p style="color: #666; font-size: 12px;">Merci,</p>
+                        <p style="color: #666; font-size: 12px;">L'équipe de support Area Romain le malin</p>
+                    </div>
+                </div>
+            `
         };
 
-        // Send email with reset password link
-        transporter.sendMail(mailData, (err, info) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: err.message });
-            }
+        // Send the email
+        const info = await transporter.sendMail(mailData);
 
-        });
-        return res.status(200).json({ message: 'Email sent' });
-    });
+        // Store the verification code for this email
+        resetPasswordCodeAccordingToEmail[email] = code;
+
+        return res.status(200).json({ message: `Email sent to ${email}`, info });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: error.message });
+    }
 });
 
-// Method /GET because user will click on the link
-router.get('/reset-password/:uuid', async (req, res) => {
-    const { newPassword } = req.body;
-    const uuid = req.params.uuid;
+router.post('/reset-password-confirm', async (req, res) => {
+    const { email, code } = req.body;
 
-    if (!newPassword) {
+    if (!email || !code) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    prisma.user.findUnique({
-        where: {
-            uuid: uuid,
-        },
-    }).then((user) => {
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: err.message });
-            }
+    if (resetPasswordCodeAccordingToEmail[email] === parseInt(code, 10)) {
+        // Redirect to the reset password page
+        return res.status(200).json({ message: 'Code is correct', redirectUrl: `/change-password?code=${code}&email=${email}` });
+    } else {
+        return res.status(400).json({ error: 'Code is incorrect' });
+    }
+});
 
-            prisma.user.update({
-                where: {
-                    uuid: uuid,
-                },
-                data: {
-                    hashedPassword,
-                },
-            }).then(() => {
-                return res.status(20).json({ message: 'Password updated' });
-            }).catch((error) => {
-                console.error(error);
-                return res.status(500).json({ error: error.message });
-            });
-        });
+
+router.put('/change-password', async (req, res) => {
+    const { email, code, password } = req.body;
+
+    if (!email || !code || !password) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    if (resetPasswordCodeAccordingToEmail[email] !== parseInt(code, 10)) {
+        return res.status(400).json({ error: 'Code is incorrect' });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    prisma.user.update({
+        where: {
+            email: email,
+        },
+        data: {
+            hashedPassword: hashedPassword,
+        },
+    }).then(() => {
+        return res.status(200).json({ message: 'Password updated', redirectUrl: '/login' });
+    }).catch((error) => {
+        console.error(error);
+        return res.status(500).json({ error: error.message });
     });
 });
 
@@ -308,12 +319,29 @@ router.get('/github/redirect',
                 accountEmail: req.user.accountEmail,
             };
 
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(),
+                username: req.user.areaUsername || '',
+                accountEmail: req.user.areaAccountEmail || '',
+            };
+
+            const timerServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'timer',
+                authToken: uuidv4(),
+                username: req.user.username || '',
+                accountEmail: req.user.accountEmail || '',
+            };
+
             const userParams = {
                 email: userEmail,
                 name: req.user.displayName || '',
-                surname: '',
+                surname: req.user.surname || '',
                 uuid: uuidv4(),
                 hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             };
 
             if (!user) {
@@ -323,16 +351,36 @@ router.get('/github/redirect',
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams, timerServiceParams],
                         },
                     },
                     include: { linkedAccounts: true },
                 });
-                linkedAccountParams.userId = user.id;
 
+                linkedAccountParams.userId = user.id;
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                timerServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: timerServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
@@ -359,19 +407,132 @@ router.get('/github/redirect',
                     });
                 }
             }
-            const timerLinkedAccount = await prisma.linkedAccount.findFirst({ where: { accountEmail: user.email, serviceName: 'timer' } });
-            if (!timerLinkedAccount) {
-                await prisma.linkedAccount.create({
+
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        }
+    }
+);
+
+// Discord auth routes
+router.get('/discord', async (req, res) => {
+    const email = req.query.email;
+
+    passport.session.email = email;
+    passport.authenticate('discord')(req, res);
+});
+
+router.get('/discord/callback',
+    passport.authenticate('discord', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+
+            let user = await getUser(req);
+
+            const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'discord',
+                authToken: req.user.accessToken,
+                username: req.user.username || 'Username not found',
+                accountEmail: req.user.accountEmail,
+            };
+
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(),
+                username: req.user.areaUsername || '',
+                accountEmail: req.user.areaAccountEmail || '',
+            };
+
+            const timerServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'timer',
+                authToken: uuidv4(),
+                username: req.user.username || '',
+                accountEmail: req.user.accountEmail || '',
+            };
+
+            const userParams = {
+                email: userEmail,
+                name: req.user.displayName || '',
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
+            };
+
+            if (!user) {
+                // Create a new user
+                userParams.authToken = uuidv4(); // Add authentication token
+                user = await prisma.user.create({
                     data: {
-                        serviceName: 'timer',
-                        authToken: '',
-                        username: user.name,
-                        accountEmail: user.email,
-                        uuid: uuidv4(),
+                        ...userParams,
+                        linkedAccounts: {
+                            create: [linkedAccountParams, areaServiceParams, timerServiceParams],
+                        },
+                    },
+                    include: { linkedAccounts: true },
+                });
+
+                linkedAccountParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
                         userId: user.id,
                     },
                 });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                timerServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: timerServiceParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+            } else {
+                // Check if the account is already linked
+                const linkedAccount = user.linkedAccounts.find(
+                    account => account.serviceName === 'discord'
+                );
+
+                if (!linkedAccount) {
+                    await prisma.linkedAccount.create({
+                        data: {
+                            ...linkedAccountParams,
+                            userId: user.id, // Use the numeric ID from Prisma
+                        },
+                    });
+
+                    // Refresh user data to include the new linked account
+                    user = await prisma.user.findUnique({
+                        where: { email: userParams.email },
+                        include: { linkedAccounts: true },
+                    });
+                }
             }
+
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
         } catch (error) {
             console.error(error);
@@ -402,6 +563,7 @@ router.get('/dropbox/callback',
                 surname: '',
                 uuid: uuidv4(),
                 hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
             };
 
             const linkedAccountParams = {
@@ -409,7 +571,23 @@ router.get('/dropbox/callback',
                 authToken: req.user.accessToken,
                 username: req.user.displayName,
                 uuid: uuidv4(),
-                accountEmail: req.user.accountEmail,
+                accountEmail: req.user.accountEmail
+            };
+
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(),
+                username: req.user.areaUsername || '',
+                accountEmail: req.user.areaAccountEmail || '',
+            };
+
+            const timerServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'timer',
+                authToken: uuidv4(),
+                username: req.user.username || '',
+                accountEmail: req.user.accountEmail || '',
             };
 
             if (!user) {
@@ -419,16 +597,36 @@ router.get('/dropbox/callback',
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams, timerServiceParams],
                         },
                     },
                     include: { linkedAccounts: true },
                 });
-                linkedAccountParams.userId = user.id;
 
+                linkedAccountParams.userId = user.id;
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                timerServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: timerServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
@@ -455,19 +653,7 @@ router.get('/dropbox/callback',
                     });
                 }
             }
-            const timerLinkedAccount = await prisma.linkedAccount.findFirst({ where: { accountEmail: user.email, serviceName: 'timer' } });
-            if (!timerLinkedAccount) {
-                await prisma.linkedAccount.create({
-                    data: {
-                        serviceName: 'timer',
-                        authToken: '',
-                        username: user.name,
-                        accountEmail: user.email,
-                        uuid: uuidv4(),
-                        userId: user.id,
-                    },
-                });
-            }
+
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
         } catch (error) {
             console.error(error);
@@ -514,6 +700,23 @@ router.get('/spotify/callback',
                 surname: '',
                 uuid: uuidv4(),
                 hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
+            };
+
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(),
+                username: req.user.areaUsername || '',
+                accountEmail: req.user.areaAccountEmail || '',
+            };
+
+            const timerServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'timer',
+                authToken: uuidv4(),
+                username: req.user.username || '',
+                accountEmail: req.user.accountEmail || '',
             };
 
             if (!user) {
@@ -523,16 +726,36 @@ router.get('/spotify/callback',
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams],
                         },
                     },
                     include: { linkedAccounts: true },
                 });
-                linkedAccountParams.userId = user.id;
 
+                linkedAccountParams.userId = user.id;
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                timerServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: timerServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
@@ -559,19 +782,7 @@ router.get('/spotify/callback',
                     });
                 }
             }
-            const timerLinkedAccount = await prisma.linkedAccount.findFirst({ where: { accountEmail: user.email, serviceName: 'timer' } });
-            if (!timerLinkedAccount) {
-                await prisma.linkedAccount.create({
-                    data: {
-                        serviceName: 'timer',
-                        authToken: '',
-                        username: user.name,
-                        accountEmail: user.email,
-                        uuid: uuidv4(),
-                        userId: user.id,
-                    },
-                });
-            }
+
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
         } catch (error) {
             console.error(error);
@@ -579,7 +790,6 @@ router.get('/spotify/callback',
         }
     }
 );
-
 
 // Google auth routes
 router.get('/google', async (req, res) => {
@@ -624,25 +834,63 @@ router.get('/google/callback',
                 surname: '',
                 uuid: uuidv4(),
                 hashedPassword: req.user.accessToken,
+                profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
+            };
+
+            const areaServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'area',
+                authToken: uuidv4(),
+                username: req.user.areaUsername || '',
+                accountEmail: req.user.areaAccountEmail || '',
+            };
+
+            const timerServiceParams = {
+                uuid: uuidv4(),
+                serviceName: 'timer',
+                authToken: uuidv4(),
+                username: req.user.username || '',
+                accountEmail: req.user.accountEmail || '',
             };
 
             if (!user) {
                 // Create a new user
                 userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
+                user = await prisma.user.create({ 
                     data: {
                         ...userParams,
                         linkedAccounts: {
-                            create: [linkedAccountParams],
+                            create: [linkedAccountParams, areaServiceParams],
                         },
+                        profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
                     },
                     include: { linkedAccounts: true },
                 });
-                linkedAccountParams.userId = user.id;
 
+                linkedAccountParams.userId = user.id;
                 await prisma.linkedAccount.update({
                     where: {
                         uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                areaServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: areaServiceParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+
+                timerServiceParams.userId = user.id;
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: timerServiceParams.uuid,
                     },
                     data: {
                         userId: user.id,
@@ -670,22 +918,14 @@ router.get('/google/callback',
                 }
             }
             await watchGmail(req.user.accessToken)
-            await prisma.linkedAccount.create({
-                data: {
-                    serviceName: 'timer',
-                    authToken: '',
-                    username: user.name,
-                    accountEmail: user.email,
-                    uuid: uuidv4(),
-                    userId: user.id,
-                },
-            });
+
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
         }
-    });
+    }
+);
 
 async function watchGmail(accessToken) {
     try {
@@ -707,5 +947,98 @@ async function watchGmail(accessToken) {
         console.error('Error setting up Gmail watch:', error);
     }
 }
+
+const { Client, Token } = require('strava-oauth2');
+
+// Configuration minimale pour le client Strava
+let config = {
+    client_id: process.env.STRAVA_CLIENT_ID,
+    client_secret: process.env.STRAVA_CLIENT_SECRET,
+    redirect_uri: `${process.env.BACKEND_URL}/auth/strava/callback`,
+};
+
+const client = new Client(config);
+
+// Strava auth routes
+router.get('/strava', (req, res) => {
+    const email = req.query.email;
+    req.session.email = email;
+
+    config.redirect_uri = `${process.env.BACKEND_URL}/auth/strava/callback` + `?email=${email}`;
+    const authorizationUri = `https://www.strava.com/oauth/authorize?client_id=${config.client_id}&response_type=code&redirect_uri=${config.redirect_uri}&approval_prompt=auto&scope=read,activity:read_all,activity:write,profile:read_all,profile:write`;
+    res.redirect(authorizationUri);
+});
+
+router.get('/strava/callback', async (req, res) => {
+    try {
+        const email = req.query.email;
+        const code = req.query.code;
+        if (!email) {
+            return res.status(400).json({ error: 'Missing email parameter' });
+        }
+
+        // Find user from email
+        const user = await prisma.user.findUnique({
+            where: { email },
+            include: { linkedAccounts: true },
+        });
+
+        // Request to get the token
+        const token = await axios.post('https://www.strava.com/api/v3/oauth/token', {
+            client_id: process.env.STRAVA_CLIENT_ID,
+            client_secret: process.env.STRAVA_CLIENT_SECRET,
+            code: code,
+            grant_type: 'authorization_code',
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const linkedAccount = user.linkedAccounts.find(
+            account => account.serviceName === 'strava'
+        );
+
+        // Send request to get a subscription with secured URL
+        try {
+            const response = await axios.post('https://www.strava.com/api/v3/push_subscriptions', null, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                params: {
+                    client_id: process.env.STRAVA_CLIENT_ID,
+                    client_secret: process.env.STRAVA_CLIENT_SECRET,
+                    callback_url: `${process.env.DEPLOYED_BACKEND_URL}/strava/webhook`,
+                    verify_token: 'STRAVA',
+                },
+            });
+        } catch (error) {
+            console.error('Subscription already exists');
+        }
+
+        // If it doesnt exist, create a linked account
+        if (!linkedAccount) {
+            let linkedAccountParams = {
+                serviceName: 'strava',
+                authToken: token.data.access_token,
+                accountEmail: "NoAccountEmailForStrava",
+                username: user.name + user.surname,
+                uuid: uuidv4(),
+            };
+
+            await prisma.linkedAccount.create({
+                data: {
+                    ...linkedAccountParams,
+                    userId: user.id,
+                },
+            });
+        }
+
+        // Create a linked account with strava
+        return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+    } catch (error) {
+        console.error(`Error during token retrieval: ${error.message}`);
+        return res.status(500).json({ error: 'Failed to retrieve token' });
+    }
+});
 
 module.exports = router;

@@ -3,9 +3,9 @@
         <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-5 z-0"></div>
 
         <!-- Processing Content -->
-        <div class="flex flex-col items-center justify-center h-[100vh] z-[2]">
-            <h1 class="text-5xl font-extrabold text-white mb-4">Processing Authentication</h1>
-            <p class="text-xl text-home-text-light text-center mb-2 bg-home">
+        <div class="flex flex-col items-center justify-center h-[100vh] z-[2] px-4">
+            <h1 class="text-5xl mobile:text-2xl font-extrabold text-white mb-4">Processing Authentication</h1>
+            <p class="text-xl mobile:text-lg text-home-text-light text-center mb-2 bg-home">
                 You are currently under authentication process, please wait...
             </p>
             <p class="text-sm text-home-text-light mb-6 text-center">

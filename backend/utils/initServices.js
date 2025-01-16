@@ -12,7 +12,7 @@ const { v4: uuidv4 } = require('uuid');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const service = require('../services/about.json');
+const services = require('../services/about.json');
 
 function attributeEndpointToReactionGithub(name) {
     const nameDict = {
@@ -25,9 +25,9 @@ function attributeEndpointToReactionGithub(name) {
     return nameDict[name];
 }
 
-function initServices() {
-    // Create new services if the do not exist
-    service.forEach(async (service) => {
+async function initServices() {
+    // Create new services if they do not exist
+    for (const service of services) {
         const { name } = service;
         const existingService = await prisma.service.findUnique({
             where: {
@@ -35,17 +35,17 @@ function initServices() {
             },
         });
 
-        if (existingService === null) {
+        if (!existingService) {
             await prisma.service.create({
                 data: {
                     name,
                 },
             });
         }
-    });
+    }
 
-    // Create actions
-    service.forEach(async (service) => {
+    // Create actions and reactions
+    for (const service of services) {
         const { actions, reactions } = service;
         const serviceDB = await prisma.service.findUnique({
             where: {
@@ -54,40 +54,37 @@ function initServices() {
         });
 
         if (!serviceDB) {
-            return;
+            continue;
         }
 
-        actions.forEach(async (action) => {
-            // Check if action already exists
-            const existingAction = await prisma.action.findUnique({
+        for (const action of actions) {
+            const existingAction = await prisma.action.findFirst({
                 where: {
                     name: action.name,
                 },
             });
 
-            if (existingAction === null) {
+            if (!existingAction) {
                 await prisma.action.create({
                     data: {
                         name: action.name,
                         description: action.description,
                         service: {
                             connect: { id: serviceDB.id },
-                        }
+                        },
                     },
                 });
             }
-        });
+        }
 
-        // Create reactions
-        reactions.forEach(async (reaction) => {
-            // Check if reaction already exists
-            const existingReaction = await prisma.reaction.findUnique({
+        for (const reaction of reactions) {
+            const existingReaction = await prisma.action.findFirst({
                 where: {
                     name: reaction.name,
                 },
             });
 
-            if (existingReaction === null) {
+            if (!existingReaction) {
                 await prisma.reaction.create({
                     data: {
                         name: reaction.name,
@@ -95,12 +92,13 @@ function initServices() {
                         endpoint: attributeEndpointToReactionGithub(reaction.name) || '',
                         service: {
                             connect: { id: serviceDB.id },
-                        }
+                        },
                     },
                 });
             }
-        });
-    });
+        }
+    }
 }
+
 
 module.exports = { initServices };

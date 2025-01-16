@@ -65,8 +65,13 @@ export type OptionType =
     | 'week'
     | 'boolean'
     | 'GithubRepository'
+    | 'DiscordGuild'
+    | 'DiscordRole'
+    | 'DiscordRoleName'
+    | 'DiscordGuildChannel'
     | 'SpotifyPlaylist'
-    | 'SpotifyMusic';
+    | 'SpotifyMusic'
+    | 'AreaSelect'
 
 export interface Reaction {
     name: string;
