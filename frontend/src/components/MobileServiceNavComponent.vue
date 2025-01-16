@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BackButton from '@/components/BackButton.vue';
 import { ref } from 'vue';
 import NavButton from '@/components/NavButton.vue';
 import { useRouter } from 'vue-router';
@@ -7,6 +6,14 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const user = ref(userStore.user);
+
+// Interval for fetching user profilePicture
+setInterval(() => {
+    if (!userStore.user) return;
+    if (!userStore.user.profilePictureUrl) return;
+    if (user.value)
+        user.value.profilePictureUrl = userStore.user?.profilePictureUrl;
+}, 2500);
 
 const router = useRouter();
 
