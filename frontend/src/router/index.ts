@@ -1,4 +1,19 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { App, URLOpenListenerEvent } from '@capacitor/app';
+
+App.addListener('appUrlOpen', function (event: URLOpenListenerEvent) {
+  // Example url: https://beerswift.app/tabs/tabs2
+  // slug = /tabs/tabs2
+  const slug = event.url.split('.app').pop();
+
+  // We only push to the route if there is a slug present
+  if (slug) {
+      router.push({
+      path: slug,
+      });
+  }
+});
+
 import auth from '@/middleware/auth';
 
 import HomePage from '@/views/HomePage.vue'

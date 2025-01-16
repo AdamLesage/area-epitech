@@ -83,6 +83,7 @@
                             <CustomInput
                                 v-for="(option, index) in card.options"
                                 :key="option.name"
+                                :options="option.options"
                                 :type="option.type"
                                 :name="option.display_name"
                                 :action="isAction"

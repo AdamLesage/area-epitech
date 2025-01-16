@@ -18,11 +18,13 @@
   },
   "dependencies": {
     "@capacitor/android": "^6.2.0",
+    "@capacitor/app": "^6.0.2",
     "@capacitor/core": "^6.2.0",
     "@capacitor/ios": "^6.2.0",
     "@vee-validate/rules": "^4.14.7",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
     "js-cookie": "^3.0.5",
     "pinia": "^2.2.6",
     "vee-validate": "^4.14.7",
