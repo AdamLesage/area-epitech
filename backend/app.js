@@ -8,8 +8,10 @@ require('./authentication/passport');
 
 const githubServiceRouter = require('./services/githubService')
 const dropboxServiceRouter = require('./services/dropboxService')
+const discordServiceRouter = require('./services/discordService')
 const stravaServiceRouter = require('./services/stravaService')
 const gmailServiceRouter = require('./services/gmailService')
+
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
 const aboutRouter = require('./routes/about');
@@ -23,6 +25,8 @@ const { initWorkers } = require('./utils/initWorkers');
 const { migrateDatabase } = require("./utils/migrateDatabase")
 const { stopWorkingWorkers } = require('./utils/stopWorkingWorker');
 
+const { discordClient } = require('./discord/app');
+
 const app = express();
 const port = 8080;
 
@@ -31,6 +35,8 @@ const port = 8080;
 //   key: fs.readFileSync(__dirname + '/selfsigned.key'),
 //   cert: cert
 // };
+
+discordClient.login(process.env.DISCORD_BOT_TOKEN);
 
 app.use(cors());
 app.use(express.json());
@@ -46,10 +52,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', userRouter);
+
 app.use('/github', githubServiceRouter);
 app.use('/dropbox', dropboxServiceRouter);
+app.use('/discord', discordServiceRouter);
 app.use('/gmail', gmailServiceRouter)
 app.use('/strava', stravaServiceRouter);
+
 app.use('/api', actionsRouter);
 app.use('/api', reactionRouter);
 app.use('/auth', authRouter);

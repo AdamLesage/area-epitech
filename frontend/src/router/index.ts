@@ -126,6 +126,11 @@ const router = createRouter({
       component: Cook,
     },
     {
+      path: '/discord-end-of-process',
+      name: 'discord-end-of-process',
+      component: () => import('@/views/EndofProcessGithub.vue'),
+    },
+    {
       // Catch-all route
       path: '/:pathMatch(.*)*',
       name: 'not-found',

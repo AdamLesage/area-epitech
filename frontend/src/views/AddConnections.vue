@@ -64,17 +64,17 @@ function selectPlatform(platformName: string) {
     }
     const email = user.email
     console.log(`Selected platform: ${platformName}`);
-    if (platformName === 'github') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github?email=${user.email}`;
-    } else if (platformName === 'spotify') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify?email=${user.email}`;
-    } else if (platformName === 'dropbox') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/dropbox?email=${user.email}`;
-    } else if (platformName === 'strava') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/strava?email=${user.email}`;
-    } else if (platformName === 'gmail') {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google?email=${user.email}`;
+    if (platformName == 'github' ||
+        platformName == 'spotify' ||
+        platformName == 'dropbox' ||
+        platformName == 'discord' ||
+        platformName == 'strava') {
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/${platformName}?email=${email}`;
     } else {
+        if (platformName == 'gmail') {
+            window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google?email=${email}`;
+            return;
+        }
         console.error(`Platform ${platformName} not yet supported`);
     }
 }

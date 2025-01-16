@@ -342,6 +342,93 @@ router.get('/github/redirect',
     }
 );
 
+// Discord auth routes
+router.get('/discord', async (req, res) => {
+    const email = req.query.email;
+
+    passport.session.email = email;
+    passport.authenticate('discord')(req, res);
+});
+
+router.get('/discord/callback',
+    passport.authenticate('discord', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+
+            let user = await getUser(req);
+
+            const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+
+            const linkedAccountParams = {
+                uuid: uuidv4(),
+                serviceName: 'discord',
+                authToken: req.user.accessToken,
+                username: req.user.username || 'Username not found',
+                accountEmail: req.user.accountEmail,
+            };
+
+            const userParams = {
+                email: userEmail,
+                name: req.user.displayName || '',
+                surname: '',
+                uuid: uuidv4(),
+                hashedPassword: req.user.accessToken,
+            };
+
+            if (!user) {
+                // Create a new user
+                userParams.authToken = uuidv4(); // Add authentication token
+                user = await prisma.user.create({ 
+                    data: {
+                        ...userParams,
+                        linkedAccounts: {
+                            create: [linkedAccountParams],
+                        },
+                    },
+                    include: { linkedAccounts: true },
+                });
+                linkedAccountParams.userId = user.id;
+
+                await prisma.linkedAccount.update({
+                    where: {
+                        uuid: linkedAccountParams.uuid,
+                    },
+                    data: {
+                        userId: user.id,
+                    },
+                });
+            } else {
+                // Check if the account is already linked
+                const linkedAccount = user.linkedAccounts.find(
+                    account => account.serviceName === 'discord'
+                );
+
+                if (!linkedAccount) {
+                    await prisma.linkedAccount.create({ 
+                        data: {
+                            ...linkedAccountParams,
+                            userId: user.id, // Use the numeric ID from Prisma
+                        },
+                    });
+    
+                    // Refresh user data to include the new linked account
+                    user = await prisma.user.findUnique({
+                        where: { email: userParams.email },
+                        include: { linkedAccounts: true },
+                    });
+                }
+            }
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        }
+    }
+);
+
 // DropBox auth routes
 router.get('/dropbox', async (req, res) => {
     const email = req.query.email;
