@@ -13,7 +13,6 @@
   "dependencies": {
     "@google-cloud/pubsub": "^4.9.0",
     "@prisma/client": "^5.22.0",
-    "@vue/server-renderer": "^3.5.13",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -42,8 +41,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "tar-fs": "^3.0.6",
-    "uuid": "^11.0.3",
-    "vue": "^3.5.13"
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "jest": "^29.7.0",
