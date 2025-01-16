@@ -87,7 +87,7 @@
 
                         <!-- Popup for Image Selection -->
                         <div v-if="showPopup"
-                            class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+                            class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
                             <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Choose an Image</h3>
                                 <div class="grid grid-cols-3 gap-4 justify-center">
