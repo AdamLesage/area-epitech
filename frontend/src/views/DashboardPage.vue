@@ -187,8 +187,8 @@
         </div>
     
         <!-- Services Animation -->
-        <div id="main-content" class="flex flex-col justify-center items-center w-full relative border-t-4 border-white/5 bg-home-div/90 z-[40]"
-            :style="{ height: `${services.length * 16.5}rem` }">
+        <div id="main-content" class="flex flex-col justify-center items-center w-full relative border-t-4 border-white/5 bg-home-div/90 z-[40] h-[10rem]"
+            :style="{ height: `${services.length * 250 / Math.min(Math.floor(containerWidth / 350), services.length) + 220}px` }">
             <div class="bg-home-div rounded-full w-[12rem] h-[3.5rem] flex justify-center items-center text-home-text-light absolute -top-4 z-10">
                 Explore
             </div>
@@ -216,8 +216,8 @@
         </div>
 
         <!-- Graph -->
-        <div id="area-content" class="flex flex-col justify-center items-center w-full border-t-4 border-white/5 relative bg-home-div/90"
-            :style="{ height: `${services.length * 16.5}rem` }">
+        <div id="area-content" class="flex flex-col justify-center items-center w-full border-t-4 border-white/5 relative bg-home-div/90 h-[10rem]"
+            :style="{ height: `${services.length * 250 / Math.min(Math.floor(containerWidth / 350), services.length) + 220}px` }">
             <div class="bg-home-div rounded-full w-[12rem] h-[3.5rem] flex justify-center items-center text-home-text-light absolute -top-4 z-10">
                 Global Graph
             </div>
@@ -532,6 +532,9 @@ function applyPhysics() {
         animationFrame = requestAnimationFrame(applyPhysics);
         return;
     }
+    const div = document.getElementById('area-content');
+    containerHeight.value = div?.clientHeight || 0;
+    containerWidth.value = div?.clientWidth || 0;
     for (const position of positions.value) {
         if (!position.isDragging) {
             position.velocityY += position.gravity;
@@ -721,7 +724,7 @@ onMounted(async () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
     services.value = serviceStore.services;
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise(resolve => setTimeout(resolve, 500));
     const div = document.getElementById('area-content');
     containerHeight.value = div?.clientHeight || 0;
     containerWidth.value = div?.clientWidth || 0;
