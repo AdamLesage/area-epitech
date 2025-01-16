@@ -56,14 +56,8 @@
                 "description": "The state of the milestone",
                 "type": "select",
                 "options": [
-                  {
-                    "name": "open",
-                    "display_name": "Open"
-                  },
-                  {
-                    "name": "closed",
-                    "display_name": "Closed"
-                  }
+                  "open",
+                  "closed"
                 ],
                 "required": false
               }
@@ -768,6 +762,200 @@
     ]
   },
   {
+    "name": "area",
+    "color": "#19194A",
+    "icon": "simple-icons:bento",
+    "reviews": {
+      "rate": 5,
+      "count": 40000
+    },
+    "saves": 12040000,
+    "categories": [
+      {
+        "name": "Area",
+        "display_name": "Area",
+        "actions": [
+          {
+            "name": "on_area_deleted",
+            "display_name": "Area Deleted",
+            "description": "Triggered when an area is deleted.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          },
+          {
+            "name": "on_area_start",
+            "display_name": "Area Start",
+            "description": "Triggered when an area starts.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          },
+          {
+            "name": "on_area_stop",
+            "display_name": "Area Stop",
+            "description": "Triggered when an area stops.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          },
+          {
+            "name": "on_area_created",
+            "display_name": "Area Created",
+            "description": "Triggered when a new area is created.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          },
+          {
+            "name": "on_area_activate",
+            "display_name": "Area Activate",
+            "description": "Triggered when an area is activated.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [
+              {
+                "name": "areaUuid",
+                "display_name": "Area Uuid",
+                "description": "The area you want to delete.",
+                "type": "AreaSelect",
+                "required": false
+              }
+            ],
+            "returnData": [
+              "id",
+              "uuid",
+              "title",
+              "reactionData",
+              "actionData",
+              "userUuid",
+              "description",
+              "creationDate",
+              "isActive",
+              "containerUuid",
+              "actionId",
+              "reactionId"
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "area_delete",
+            "display_name": "Delete Area",
+            "description": "Deletes a specified area.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [
+              {
+                "name": "areaUuid",
+                "display_name": "Area Uuid",
+                "description": "The area you want to delete.",
+                "type": "AreaSelect",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "area_start",
+            "display_name": "Start Area",
+            "description": "Starts a specified area.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [
+              {
+                "name": "areaUuid",
+                "display_name": "Area Uuid",
+                "description": "The area you want to start.",
+                "type": "AreaSelect",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "area_stop",
+            "display_name": "Stop Area",
+            "description": "Stops a specified area.",
+            "version": "1.0.0",
+            "release_date": "2025-01-14",
+            "updated_date": "2025-01-14",
+            "options": [
+              {
+                "name": "areaUuid",
+                "display_name": "Area Uuid",
+                "description": "The area you want to start.",
+                "type": "AreaSelect",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "gmail",
     "color": "#EA4335",
     "icon": "mdi:gmail",
@@ -1071,7 +1259,7 @@
               },
               {
                 "name": "label_id",
-                "display_name": "lable Id",
+                "display_name": "label Id",
                 "description": "the label you want to remove",
                 "type": "text",
                 "required": true
@@ -1095,7 +1283,7 @@
               },
               {
                 "name": "label_id",
-                "display_name": "lable Id",
+                "display_name": "label Id",
                 "description": "the label you want to remove",
                 "type": "text",
                 "required": true
@@ -1466,6 +1654,729 @@
                 "display_name": "Gear ID",
                 "description": "Identifier for the gear associated with the activity. ‘none’ clears gear from activity",
                 "type": "string",
+                "required": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "discord",
+    "color": "#7289da",
+    "icon": "ic:baseline-discord",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "message",
+        "display_name": "Message",
+        "actions": [
+          {
+            "name": "message_create",
+            "display_name": "Message Created",
+            "description": "A message is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "message_delete",
+            "display_name": "Message Deleted",
+            "description": "A message is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "message_update",
+            "display_name": "Message Updated",
+            "description": "A message is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "discord_send_message_to_a_channel",
+            "display_name": "Send a message",
+            "description": "Send a message to a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to send the message to",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "message",
+                "display_name": "Message",
+                "description": "The message to send",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_delete_message_from_a_channel",
+            "display_name": "Delete a message",
+            "description": "Delete a message from a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to delete the message from",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "message",
+                "display_name": "Message",
+                "description": "The message to delete",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_clear_all_messages_from_channel",
+            "display_name": "Clear all messages",
+            "description": "Clear all messages from a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to clear messages from",
+                "type": "DiscordGuildChannel",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "clear_custom_hours_messages_from_a_channel",
+            "display_name": "Delete messages from custom hours",
+            "description": "Delete messages from a channel within custom hours",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to delete messages from",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "hours",
+                "display_name": "Hours",
+                "description": "The number of hours to look back for messages to delete",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "clear_custom_days_messages_from_a_channel",
+            "display_name": "Delete messages from custom days",
+            "description": "Delete messages from a channel within custom days",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel to delete messages from",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "days",
+                "display_name": "Days",
+                "description": "The number of days to look back for messages to delete",
+                "type": "number",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "channel",
+        "display_name": "Channel",
+        "actions": [
+          {
+            "name": "channel_create",
+            "display_name": "Channel Created",
+            "description": "A channel is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "channel_delete",
+            "display_name": "Channel Deleted",
+            "description": "A channel is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "channel_update",
+            "display_name": "Channel Updated",
+            "description": "A channel is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "discord_create_channel_in_server",
+            "display_name": "Create a channel",
+            "description": "Create a channel in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to create the channel in",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The name of the channel to create",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_delete_channel_from_server",
+            "display_name": "Delete a channel",
+            "description": "Delete a channel from a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to delete the channel from",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The name of the channel to delete",
+                "type": "DiscordGuildChannel",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "thread",
+        "display_name": "Thread",
+        "actions": [
+          {
+            "name": "thread_create",
+            "display_name": "Thread Created",
+            "description": "A thread is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "thread_delete",
+            "display_name": "Thread Deleted",
+            "description": "A thread is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "thread_update",
+            "display_name": "Thread Updated",
+            "description": "A thread is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "reaction",
+        "display_name": "Reaction",
+        "actions": [
+          {
+            "name": "message_reaction_add",
+            "display_name": "Reaction Added",
+            "description": "A reaction is added",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "reaction_remove",
+            "display_name": "Reaction Removed",
+            "description": "A reaction is removed",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "reaction_remove_emoji",
+            "display_name": "Reaction Emoji Removed",
+            "description": "A reaction emoji is removed",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "reaction_remove_all",
+            "display_name": "All Reactions Removed",
+            "description": "All reactions are removed",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "discord_send_reaction_to_message",
+            "display_name": "Send a reaction to a message",
+            "description": "Send a reaction to a message in a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "channel",
+                "display_name": "Channel",
+                "description": "The channel containing the message",
+                "type": "DiscordGuildChannel",
+                "required": true
+              },
+              {
+                "name": "message",
+                "display_name": "Message",
+                "description": "The message to react to",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "emoji",
+                "display_name": "Emoji",
+                "description": "The emoji to react with",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "role",
+        "display_name": "Role",
+        "actions": [
+          {
+            "name": "role_create",
+            "display_name": "Role Created",
+            "description": "A role is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "role_delete",
+            "display_name": "Role Deleted",
+            "description": "A role is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          },
+          {
+            "name": "role_update",
+            "display_name": "Role Updated",
+            "description": "A role is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": []
+          }
+        ],
+        "reactions": [
+          {
+            "name": "discord_create_role_in_a_server",
+            "display_name": "Create a role",
+            "description": "Create a role in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to create the role in",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "role",
+                "display_name": "Role",
+                "description": "The name of the role to create",
+                "type": "text",
+                "required": true
+              },
+                {
+                "name": "color",
+                "display_name": "Color",
+                "description": "The color of the role",
+                "type": "DiscordRole",
+                "options": [
+                  {
+                  "name": "blue",
+                  "display_name": "Blue"
+                  },
+                  {
+                  "name": "red",
+                  "display_name": "Red"
+                  },
+                  {
+                  "name": "green",
+                  "display_name": "Green"
+                  },
+                  {
+                  "name": "white",
+                  "display_name": "White"
+                  },
+                  {
+                  "name": "black",
+                  "display_name": "Black"
+                  },
+                  {
+                  "name": "yellow",
+                  "display_name": "Yellow"
+                  },
+                  {
+                  "name": "orange",
+                  "display_name": "Orange"
+                  },
+                  {
+                  "name": "purple",
+                  "display_name": "Purple"
+                  }
+                ],
+                "required": false
+                }
+            ]
+          },
+          {
+            "name": "discord_delete_role_from_server",
+            "display_name": "Delete a role",
+            "description": "Delete a role in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "role",
+                "display_name": "Role",
+                "description": "The name of the role to delete",
+                "type": "DiscordRoleName",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_edit_role_in_server",
+            "display_name": "Update a role",
+            "description": "Update a role in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "role",
+                "display_name": "Role",
+                "description": "The name of the role to delete",
+                "type": "DiscordRoleName",
+                "required": true
+              },
+              {
+                "name": "Newrolename",
+                "display_name": "New Role Name",
+                "description": "The name of the new role",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "colorandpermission",
+                "display_name": "color and permission",
+                "description": "The server color and permission to update",
+                "type": "DiscordRole",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_attribute_role_to_a_user",
+            "display_name": "Attribute a role to a user",
+            "description": "Attribute a role to a user in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "roleserver",
+                "display_name": "Server",
+                "description": "The server to attribute the role in",
+                "type": "DiscordRoleName",
+                "required": true
+              },
+              {
+                "name": "user",
+                "display_name": "User",
+                "description": "The user to attribute the role to",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_remove_role_to_a_user",
+            "display_name": "Remove a role from a user",
+            "description": "Remove a role from a user in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "roleserver",
+                "display_name": "Server",
+                "description": "The server to attribute the role in",
+                "type": "DiscordRoleName",
+                "required": true
+              },
+              {
+                "name": "user",
+                "display_name": "User",
+                "description": "The user to attribute the role to",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ban",
+        "display_name": "Ban",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "discord_ban_user_from_a_server",
+            "display_name": "Ban a user",
+            "description": "Ban a user from a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to ban the user from",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "user",
+                "display_name": "User",
+                "description": "The user to ban",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discord_unban_user_from_a_server",
+            "display_name": "Unban a user",
+            "description": "Unban a user from a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server",
+                "display_name": "Server",
+                "description": "The server to unban the user from",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "user",
+                "display_name": "User",
+                "description": "The user to unban",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "timer",
+    "color": "#1e1e1f",
+    "icon": "mdi-timer",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "timer",
+        "display_name": "Timer",
+        "actions": [
+          {
+            "name": "timer.chronometer",
+            "display_name": "Trigger a reaction after a certain time",
+            "description": "Trigger a reaction after a certain time has passed",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "duration",
+                "display_name": "duration",
+                "description": "The time (in seconds) after which the reaction will be triggered",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "timer.alarm",
+            "display_name": "Trigger a reaction at a specific time",
+            "description": "Trigger a reaction at a specific time chosen by the user",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "date",
+                "display_name": "Date",
+                "description": "The date at which the reaction will be triggered",
+                "type": "date",
+                "required": true
+              },
+              {
+                "name": "time",
+                "display_name": "Time",
+                "description": "The time at which the reaction will be triggered",
+                "type": "time",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "timer.interval",
+            "display_name": "Trigger a reaction at regular intervals",
+            "description": "Trigger a reaction at regular intervals chosen by the user",
+            "version": "1.0.0",
+            "release_date": "2025-01-15",
+            "updated_date": "2025-01-15",
+            "options": [
+              {
+                "name": "interval",
+                "display_name": "Interval",
+                "description": "The interval at which the reaction will be triggered",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      }
+    ]
+  },
+  {
+    "name": "news",
+    "color": "#c7232d",
+    "icon": "mdi-newspaper",
+    "reviews": {
+      "rate": 4.8,
+      "count": 250000
+    },
+    "saves": 2250000,
+    "categories": [
+      {
+        "name": "news",
+        "display_name": "News",
+        "actions": [],
+        "reactions": [
+          {
+            "name": "news_alert",
+            "display_name": "News Alert",
+            "description": "Get a news alert",
+            "version": "1.0.0",
+            "release_date": "2025-01-13",
+            "updated_date": "2025-01-13",
+            "options": [
+              {
+                "name": "search_query",
+                "display_name": "Search Query",
+                "description": "Type what you want to search",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "website",
+                "display_name": "Website",
+                "description": "Choose the website",
+                "type": "text",
                 "required": false
               }
             ]

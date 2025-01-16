@@ -1,79 +1,78 @@
 [
   {
-    "name":"github",
+    "name": "github",
     "actions": [
       {
-        "name":"pull_request_review.submitted",
-        "description":"A pull request review is submitted"
+        "name": "pull_request_review.submitted",
+        "description": "A pull request review is submitted"
       },
       {
-        "name":"pull_request.labeled",
-        "description":"A pull request is labeled"
+        "name": "pull_request.labeled",
+        "description": "A pull request is labeled"
       },
       {
-        "name":"pull_request.unlabeled",
-        "description":"A pull request is unlabeled"
+        "name": "pull_request.unlabeled",
+        "description": "A pull request is unlabeled"
       },
       {
-        "name":"issues.labeled",
-        "description":"An issue is labeled"
+        "name": "issues.labeled",
+        "description": "An issue is labeled"
       },
       {
-        "name":"issues.unlabeled",
-        "description":"An issue is unlabeled"
+        "name": "issues.unlabeled",
+        "description": "An issue is unlabeled"
       },
       {
-        "name":"issues.assigned",
-        "description":"An issue is assigned"
+        "name": "issues.assigned",
+        "description": "An issue is assigned"
       },
       {
-        "name":"issues.unassigned",
-        "description":"An issue is unassigned"
+        "name": "issues.unassigned",
+        "description": "An issue is unassigned"
       },
       {
-        "name":"pull_request.assigned",
-        "description":"A pull request is assigned"
+        "name": "pull_request.assigned",
+        "description": "A pull request is assigned"
       },
       {
-        "name":"pull_request.unassigned",
-        "description":"An pull request is unassigned"
+        "name": "pull_request.unassigned",
+        "description": "An pull request is unassigned"
       },
       {
-        "name":"issues.opened",
-        "description":"An issue is opened"
+        "name": "issues.opened",
+        "description": "An issue is opened"
       },
       {
-        "name":"issues.closed",
-        "description":"An issue is closed"
+        "name": "issues.closed",
+        "description": "An issue is closed"
       },
       {
-        "name":"pull_request.opened",
-        "description":"An pull request is opened"
+        "name": "pull_request.opened",
+        "description": "An pull request is opened"
       },
       {
-        "name":"pull_request.closed",
-        "description":"An pull request is closed"
+        "name": "pull_request.closed",
+        "description": "An pull request is closed"
       }
     ],
     "reactions": [
       {
-        "name":"create_issue",
-        "description":"Create an issue"
+        "name": "create_issue",
+        "description": "Create an issue"
       },
       {
-        "name":"create_milestone",
-        "description":"Create a milestone"
+        "name": "create_milestone",
+        "description": "Create a milestone"
       },
       {
-        "name":"create_pull_request",
-        "description":"Create a pull request"
+        "name": "create_pull_request",
+        "description": "Create a pull request"
       }
     ]
   },
   {
-    "name":"spotify",
-    "actions": [
-    ],
+    "name": "spotify",
+    "actions": [],
     "reactions": [
       {
         "name":"playlist_create",
@@ -189,6 +188,73 @@
     ]
   },
   {
+    "name":"timer",
+    "actions": [
+      {
+        "name":"timer.chronometer",
+        "description":"Start a timer"
+      },
+      {
+        "name":"timer.alarm",
+        "description":"Set an alarm"
+      },
+      {
+        "name":"timer.interval",
+        "description":"Start an interval"
+      }
+    ],
+    "reactions": []
+  },
+  {
+    "name":"NewsFeed",
+    "actions": [],
+    "reactions": [
+      {
+        "name":"news_alert",
+        "description":"Get a news alert"
+      }
+    ]
+  },
+  {
+    "name":"area",
+    "actions": [
+      {
+        "name": "on_area_deleted",
+        "description": "Triggered when an area is deleted."
+      },
+      {
+        "name": "on_area_start",
+        "description": "Triggered when an area starts."
+      },
+      {
+        "name": "on_area_stop",
+        "description": "Triggered when an area stops."
+      },
+      {
+        "name": "on_area_created",
+        "description": "Triggered when a new area is created."
+      },
+      {
+        "name": "on_area_activate",
+        "description": "Triggered when an area is activated."
+      }
+    ],
+    "reactions": [
+      {
+        "name": "area_delete",
+        "description": "Deletes a specified area."
+      },
+      {
+        "name": "area_start",
+        "description": "Starts a specified area."
+      },
+      {
+        "name": "area_stop",
+        "description": "Stops a specified area."
+      }
+    ]
+  },
+  {
     "name":"github",
     "actions": [
       {
@@ -256,17 +322,6 @@
       {
         "name":"create_pull_request",
         "description":"Create a pull request"
-      }
-    ]
-  },
-  {
-    "name":"spotify",
-    "actions": [
-    ],
-    "reactions": [
-      {
-        "name":"playlist_create",
-        "description":"Create a playlist"
       }
     ]
   },
@@ -361,6 +416,137 @@
       {
         "name": "gmail_create_draft",
         "description": "Create a draft email in Gmail."
+      }
+    ]
+  },
+  {
+    "name": "discord",
+    "actions": [
+      {
+        "name": "message_create",
+        "description": "Triggered when a new message is created."
+      },
+      {
+        "name": "message_delete",
+        "description": "Triggered when a message is deleted."
+      },
+      {
+        "name": "message_update",
+        "description": "Triggered when a message is updated."
+      },
+      {
+        "name": "channel_create",
+        "description": "Triggered when a new channel is created."
+      },
+      {
+        "name": "channel_delete",
+        "description": "Triggered when a channel is deleted."
+      },
+      {
+        "name": "channel_update",
+        "description": "Triggered when a channel is updated."
+      },
+      {
+        "name": "thread_create",
+        "description": "Triggered when a new thread is created."
+      },
+      {
+        "name": "thread_delete",
+        "description": "Triggered when a thread is deleted."
+      },
+      {
+        "name": "thread_update",
+        "description": "Triggered when a thread is updated."
+      },
+      {
+        "name": "message_reaction_add",
+        "description": "Triggered when a reaction is added to a message."
+      },
+      {
+        "name": "message_reaction_remove",
+        "description": "Triggered when a reaction is removed from a message."
+      },
+      {
+        "name": "message_reaction_remove_emoji",
+        "description": "Triggered when an emoji is removed from reactions."
+      },
+      {
+        "name": "message_reaction_remove_all",
+        "description": "Triggered when all reactions are removed from a message."
+      },
+      {
+        "name": "role_create",
+        "description": "Triggered when a new role is created."
+      },
+      {
+        "name": "role_delete",
+        "description": "Triggered when a role is deleted."
+      },
+      {
+        "name": "role_update",
+        "description": "Triggered when a role is updated."
+      }
+    ],
+    "reactions": [
+      {
+        "name": "discord_send_message_to_a_channel",
+        "description": "Send a message to a specific channel"
+      },
+      {
+        "name": "discord_delete_message_from_a_channel",
+        "description": "Delete a message from a specific channel"
+      },
+      {
+        "name": "discord_create_channel_in_server",
+        "description": "Create a channel"
+      },
+      {
+        "name": "discord_delete_channel_from_server",
+        "description": "Delete a channel"
+      },
+      {
+        "name": "discord_clear_all_messages_from_channel",
+        "description": "Clear all messages from a channel"
+      },
+      {
+        "name": "clear_custom_hours_messages_from_a_channel",
+        "description": "Clear all messages from a channel"
+      },
+      {
+        "name": "clear_custom_days_messages_from_a_channel",
+        "description": "Clear all messages from a channel"
+      },
+      {
+        "name": "discord_send_reaction_to_message",
+        "description": "Send a reaction to a message"
+      },
+      {
+        "name": "discord_create_role_in_a_server",
+        "description": "Create a role in a server"
+      },
+      {
+        "name": "discord_delete_role_from_server",
+        "description": "Delete a role in a server"
+      },
+      {
+        "name": "discord_edit_role_in_server",
+        "description": "Update a role in a server"
+      },
+      {
+        "name": "discord_attribute_role_to_a_user",
+        "description": "Attribute a role to a user"
+      },
+      {
+        "name": "discord_remove_role_to_a_user",
+        "description": "Remove a role to a user"
+      },
+      {
+        "name": "discord_ban_user_from_a_server",
+        "description": "Ban a user from a server"
+      },
+      {
+        "name": "discord_unban_user_from_a_server",
+        "description": "Unban a user from a server"
       }
     ]
   }

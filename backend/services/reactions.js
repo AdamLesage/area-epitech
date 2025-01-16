@@ -3,26 +3,26 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { Dropbox } = require('dropbox');
 const { initializeGmailClient } = require('../utils/initGmailClient');
+const { Client,GatewayIntentBits, Partials, ChannelType, PermissionsBitField } = require('discord.js');
 const { google } = require('googleapis');
 
 // Create a new Map to store reaction handlers
 const reactions = new Map();
+
+// Dropbox Reactions
 reactions.set('dropbox_add_file', dropbox_add_file);
 reactions.set('dropbox_share_file', dropbox_share_file);
 reactions.set('dropbox_unshare_file', dropbox_unshare_file);
 reactions.set('dropbox_add_folder', dropbox_add_folder);
 reactions.set('dropbox_delete_file', dropbox_delete_file);
 
+// Github Reactions
 reactions.set('create_issue', github_create_issue);
 reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
 
+// Spotify Reactions
 reactions.set('playlist_create', spotify_create_playlist);
-
-reactions.set('update_athlete', strava_update_athlete);
-reactions.set('create_activity', strava_create_activity);
-reactions.set('update_activity', strava_update_activity);
-
 reactions.set('playlist_add_track', spotify_add_to_playlist);
 reactions.set('save_track', spotify_save_track);
 reactions.set('skip_track', spotify_skip_track);
@@ -31,6 +31,37 @@ reactions.set('start_resume', spotify_start_resume);
 reactions.set('pause', spotify_pause);
 reactions.set('add_track_to_queue', spotify_add_track_to_queue);
 
+// Discord Reactions
+reactions.set('discord_send_message_to_a_channel', discord_send_message_to_a_channel);
+reactions.set('discord_delete_message_from_a_channel', discord_delete_message_from_a_channel);
+reactions.set('discord_create_channel_in_server', discord_create_channel_in_server);
+reactions.set('discord_delete_channel_from_server', discord_delete_channel_from_server);
+reactions.set('discord_clear_all_messages_from_channel', discord_clear_all_messages_from_channel);
+reactions.set('clear_custom_hours_messages_from_a_channel', clear_custom_hours_messages_from_a_channel);
+reactions.set('clear_custom_days_messages_from_a_channel', clear_custom_days_messages_from_a_channel);
+reactions.set('discord_send_reaction_to_message', discord_send_reaction_to_message);
+reactions.set('discord_create_role_in_a_server', discord_create_role_in_a_server);
+reactions.set('discord_delete_role_from_server', discord_delete_role_from_server);
+reactions.set('discord_edit_role_in_server', discord_edit_role_in_server);
+reactions.set('discord_attribute_role_to_a_user', discord_attribute_role_to_a_user);
+reactions.set('discord_remove_role_to_a_user', discord_remove_role_to_a_user);
+reactions.set('discord_ban_user_from_a_server', discord_ban_user_from_a_server);
+reactions.set('discord_unban_user_from_a_server', discord_unban_user_from_a_server);
+
+// Strava Reactions
+reactions.set('update_athlete', strava_update_athlete);
+reactions.set('create_activity', strava_create_activity);
+reactions.set('update_activity', strava_update_activity);
+
+// News Reactions
+reactions.set('fetch_news', fetchNews);
+
+// Area Reactions
+reactions.set('area_delete', area_delete);
+reactions.set('area_start', area_start);
+reactions.set('area_stop', area_stop);
+
+// Gmail Reactions
 reactions.set('gmail_send_email', gmail_send_email);
 reactions.set('gmail_delete_email', gmail_delete_email);
 reactions.set('gmail_add_label', gmail_add_label);
@@ -43,7 +74,7 @@ reactions.set('gmail_create_draft', gmail_create_draft);
  * @brief Retrieve the access token for a user's linked service account.
  * 
  * @param {string} userUuid - The UUID of the user.
- * @param {string} serviceName - The name of the linked service (e.g., "github").
+ * @param {string} serviceName - The name of the linked service (e.g., 'github').
  * @returns {string} The access token for the linked service.
  * @throws {Error} If the user or the linked service account does not exist, or if no token is found.
  */
@@ -57,7 +88,7 @@ async function getAccessToken(userUuid, serviceName) {
     const linkedAccount = user.linkedAccounts.find(
         account => account.serviceName === serviceName
     );
-    console.log("Linked account:", linkedAccount);
+    console.log('Linked account:', linkedAccount);
     return linkedAccount.authToken;
 }
 
@@ -367,9 +398,9 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         }
         const username = await getusername(userUuid, "spotify");
         console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
-        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
+        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlist_uri}/tracks`,
             {
-                "uris": [reactionData.trackUri]
+                "uris": [reactionData.music_uri]
             },
             {
                 headers: {
@@ -395,7 +426,7 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         console.log("Saving track in Spotify:", reactionData, actionResponseData);
         const response = await axios.put(`https://api.spotify.com/v1/me/tracks`,
             {
-                "ids": [reactionData.trackId]
+                "ids": [reactionData.music_id]
             },
             {
                 headers: {
@@ -866,6 +897,110 @@ async function gmail_create_draft(reactionData, actionResponseData, userUuid) {
     }
 }
 
+async function fetchNews(domain, query) {
+    try {
+        const response = await axios.get(`https://newsapi.org/v2/everything`, {
+        params: {
+            domains: domain,
+            q: query,
+            language: 'en',
+            sortBy: 'publishedAt',
+            apiKey: '6b140d55899b499ca9c96e9d932b3cf2',
+        },
+        });
+        return response.data.articles;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données:', error);
+        return [];
+    }
+};
+
+/**
+ * Handler function for the 'area_delete' reaction.
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ * 
+ * @author Romain Chevallier
+ */
+async function area_delete(reactionData, actionResponseData, userUuid) {
+    try {
+        if (!reactionData.areaId) {
+           throw new Error("Area UUID is required");
+        }
+        area = await prisma.actionReaction.findUnique ({
+            where: {
+                uuid: reactionData.areaUuid
+            }
+        });
+        const response = await axios.delete(`${process.env.BACKEND_URL}/api/action/${area.id}`);
+        if (response.status > 299) {
+            throw new Error(`Error calling area_delete`);
+            return;
+        } else {
+            console.log("Area deleted successfully:", response);
+        }
+    } catch (e) {
+        console.error(e)
+        return;
+    }
+}
+
+/**
+ * Handler function for the 'area_start' reaction.
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ * 
+ * @author Romain Chevallier
+ */
+async function area_start(reactionData, actionResponseData, userUuid) {
+    try {
+        if (!reactionData.areaUuid) {
+           throw new Error("Area UUID is required");
+        }
+        const response = await axios.put(`${process.env.BACKEND_URL}/api/action/set_active/${reactionData.areaUuid}`, {
+            isActive: true
+        });
+        if (response.status > 299) {
+            throw new Error(`Error calling area_start`);
+            return;
+        } else {
+            console.log("Area started successfully:", response);
+        }
+    } catch (e) {
+        console.error(e)
+        return;
+    }
+}
+
+/**
+ * Handler function for the 'area_stop' reaction.
+ * @param {Object} reactionData Data related to the reaction
+ * @param {Object} actionResponseData Data sent by the action that triggered this reaction.
+ * @param {string} userUuid - The UUID of the user performing the reaction.
+ * 
+ * @author Romain Chevallier
+ */
+async function area_stop(reactionData, actionResponseData, userUuid) {
+    try {
+        if (!reactionData.areaUuid) {
+           throw new Error("Area UUID is required");
+        }
+        const response = await axios.put(`${process.env.BACKEND_URL}/api/action/set_active/${reactionData.areaUuid}`, {
+            isActive: false
+        });
+        if (response.status > 299) {
+            throw new Error(`Error calling area_stop`);
+            return;
+        } else {
+            console.log("Area stopped successfully:", response);
+        }
+    } catch (e) {
+        console.error(e)
+        return;
+    }
+}
 async function strava_update_athlete(reactionData, actionResponseData, userUuid) {
     const accessToken = await getAccessToken(userUuid, "strava");
 
@@ -1133,6 +1268,438 @@ async function spotify_add_track_to_queue(reactionData, actionResponseData, user
         return;
     }
     console.log("Track added to queue successfully:", response);
+}
+
+// Function to send a message to a specific channel
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds, 
+        GatewayIntentBits.GuildMessages, 
+        GatewayIntentBits.GuildMessageReactions,  
+        GatewayIntentBits.MessageContent,
+    ],
+    partials: [
+        Partials.Message, 
+        Partials.Channel, 
+        Partials.Reaction,
+        Partials.User,
+    ]
+});
+client.login(process.env.DISCORD_BOT_TOKEN); 
+
+async function discord_send_message_to_a_channel(channelId) {
+    console.log('Sending message to channel:', channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realmessage = String(channelId.message);
+    realmessage
+    try {
+        const channel = await client.channels.fetch(realchannelId);
+        if (channel) {
+            await channel.send(realmessage);
+            console.log('Message sent successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+}
+
+async function discord_delete_message_from_a_channel(channelId) {
+    console.log('Deleting message:', channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realmessageId = String(channelId.message);
+    try {
+        const channel = await client.channels.fetch(realchannelId);
+        if (channel) {
+            const message = await channel.messages.fetch(realmessageId);
+            if (message) {
+                await message.delete();
+                console.log('Message deleted successfully');
+            } else {
+                console.error('Message not found');
+            }
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error deleting message:', error);
+    }
+}
+
+
+// Function to create a channel
+async function discord_create_channel_in_server(ChannelId) {
+    console.log('Creating channel:', ChannelId.channelName);
+    console.log('Server:', ChannelId.channel);
+    const realserverId = String(ChannelId.server).split('/')[0];
+    const realchannelName = String(ChannelId.channel);
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            await server.channels.create({
+                name: realchannelName,
+                type: ChannelType.GuildText // Use ChannelType.GuildText instead of "GUILD_TEXT"
+            });
+            console.log('Channel created successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error creating channel:', error);
+    }
+}
+
+
+//Function to delete a channel
+
+async function discord_delete_channel_from_server(ChannelId) {
+    console.log('Deleting channel:', ChannelId);
+    const realserverId = String(ChannelId.server).split('/')[0];
+    const realchannelId = String(ChannelId.channel).split('/')[1];
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            const channel = server.channels.cache.get(realchannelId);
+            if (channel) {
+                await channel.delete();
+                console.log('Channel deleted successfully');
+            } else {
+                console.error('Channel not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error deleting channel:', error);
+    }
+}
+
+
+async function discord_clear_all_messages_from_channel(channelId) {
+    console.log('Clearing all messages from channel:', channelId.channel);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    console.log('realchannelId:', realchannelId);
+    try {
+        const channel = await client.channels.fetch(realchannelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            messages.forEach(async message => {
+                await message.delete();
+            });
+            console.log('All messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing all messages:', error);
+    }
+}
+
+
+async function clear_custom_hours_messages_from_a_channel(channelId) {
+    console.log('Clearing custom hours messages from channel:',channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realhours = String(channelId.hours);
+    console.log('realchannelId:', realchannelId);
+    console.log('realhours:', realhours);
+    try {
+        const channel = await client.channels.fetch(realchannelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            const now = new Date();
+            messages.forEach(async message => {
+                if (now - message.createdAt < realhours * 3600000) {
+                    await message.delete();
+                }
+            });
+            console.log('Custom hours messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing custom hours messages:', error);
+    }
+}
+
+async function clear_custom_days_messages_from_a_channel(channelId) {
+    console.log('Clearing custom days messages from channel:', channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realdays = String(channelId.days);
+    console.log('realchannelId:', realchannelId);
+    console.log('realdays:', realdays);
+
+    try {
+        const channel = await client.channels.fetch(realchannelId);
+        if (channel) {
+            const messages = await channel.messages.fetch();
+            const now = new Date();
+            messages.forEach(async message => {
+                if (now - message.createdAt < realdays * 86400000) {
+                    await message.delete();
+                }
+            });
+            console.log('Custom days messages cleared successfully');
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error clearing custom days messages:', error);
+    }
+}
+
+
+async function discord_send_reaction_to_message(channelId) {
+    console.log('Sending reaction to message:', channelId);
+    const realchannelId = String(channelId.channel).split('/')[1];
+    const realmessageId = String(channelId.message);
+    const realemoji = String(channelId.emoji);
+    try {
+        const channel = await client.channels.fetch(realchannelId);
+        if (channel) {
+            const message = await channel.messages.fetch(realmessageId);
+            if (message) {
+                await message.react(realemoji);
+                console.log('Reaction sent successfully');
+            } else {
+                console.error('Message not found');
+            }
+        } else {
+            console.error('Channel not found');
+        }
+    } catch (error) {
+        console.error('Error sending reaction:', error);
+    }
+}
+
+
+async function discord_create_role_in_a_server(serverId) {
+    console.log('Creating role:', serverId);
+    const realserverId = String(serverId.server);
+    const realroleName = String(serverId.role);
+    const realpermissionType = String(serverId.color.type);
+    const realcolor = String(serverId.color.color);
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            let permissions;
+            switch (realpermissionType) {
+                case 'usual':
+                    permissions = [
+                        PermissionsBitField.Flags.ViewChannel,
+                        PermissionsBitField.Flags.SendMessages,
+                        PermissionsBitField.Flags.ReadMessageHistory
+                    ];
+                    break;
+                case 'explorer':
+                    permissions = [
+                        PermissionsBitField.Flags.ViewChannel,
+                        PermissionsBitField.Flags.SendMessages,
+                        PermissionsBitField.Flags.ReadMessageHistory,
+                        PermissionsBitField.Flags.ManageMessages,
+                        PermissionsBitField.Flags.ManageChannels
+                    ];
+                    break;
+                case 'admin':
+                    permissions = [
+                        PermissionsBitField.Flags.Administrator
+                    ];
+                    break;
+                default:
+                    throw new Error('Invalid permission type');
+            }
+
+            await server.roles.create({
+                name: realroleName,
+                permissions: permissions,
+                color: realcolor
+            });
+            console.log('Role created successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error creating role:', error);
+    }
+}
+
+async function discord_delete_role_from_server(serverId) {
+    console.log('Deleting role:', serverId);
+    const realserverId = String(serverId.role).split('/')[0];
+    const realroleid = String(serverId.role).split('/')[1];
+    console.log('realserverId:', realserverId);
+    console.log('realroleName:', realroleid);
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            const role = server.roles.cache.get(realroleid);
+            if (role) {
+                await role.delete();
+                console.log('Role deleted successfully');
+            } else {
+                console.error('Role not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error deleting role:', error);
+    }
+}
+async function discord_edit_role_in_server(serverId) {
+    console.log('Editing role:', serverId);
+    const realserverId = String(serverId.role).split('/')[0];
+    const realroleid = String(serverId.role).split('/')[1];
+    const realnewrolename = String(serverId.Newrolename);
+    const realnewpermissionType = String(serverId.colorandpermission.type);
+    const realnewcolor = String(serverId.colorandpermission.color);
+    console.log('realserverId:', realserverId);
+    console.log('realroleName:', realroleid);
+    console.log('realnewrolename:', realnewrolename);
+    console.log('realnewpermissionType:', realnewpermissionType);
+    console.log('realnewcolor:', realnewcolor);
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            const role = server.roles.cache.get(realroleid);
+            if (role) {
+                let newPermissions;
+                switch (realnewpermissionType) {
+                    case 'usual':
+                        newPermissions = [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                            PermissionsBitField.Flags.ReadMessageHistory
+                        ];
+                        break;
+                    case 'explorer':
+                        newPermissions = [
+                            PermissionsBitField.Flags.ViewChannel,
+                            PermissionsBitField.Flags.SendMessages,
+                            PermissionsBitField.Flags.ReadMessageHistory,
+                            PermissionsBitField.Flags.ManageMessages,
+                            PermissionsBitField.Flags.ManageChannels
+                        ];
+                        break;
+                    case 'admin':
+                        newPermissions = [
+                            PermissionsBitField.Flags.Administrator
+                        ];
+                        break;
+                    default:
+                        throw new Error('Invalid permission type');
+                }
+
+                await role.edit({
+                    name: realnewrolename,
+                    permissions: newPermissions,
+                    color: realnewcolor
+                });
+                console.log('Role edited successfully');
+            } else {
+                console.error('Role not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error editing role:', error);
+    }
+}
+
+async function discord_attribute_role_to_a_user(serverId, userId, roleName) {
+    console.log('Adding role to user:', serverId);
+    const realuserId = String(serverId.user);
+    const realserverId = String(serverId.roleserver).split('/')[0];
+    const realroleId = String(serverId.roleserver).split('/')[1];
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            const member = await server.members.fetch(realuserId);
+            if (member) {
+                const role = server.roles.cache.get(realroleId);
+                if (role) {
+                    await member.roles.add(role);
+                    console.log('Role added to user successfully');
+                } else {
+                    console.error('Role not found');
+                }
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error adding role to user:', error);
+    }
+}
+
+async function discord_remove_role_to_a_user(serverId, userId, roleName) {
+    console.log('Removing role from user:', serverId);
+    const realuserId = String(serverId.user);
+    const realserverId = String(serverId.roleserver).split('/')[0];
+    const realroleId = String(serverId.roleserver).split('/')[1];
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            const member = await server.members.fetch(realuserId);
+            if (member) {
+                const role = server.roles.cache.get(realroleId);
+                if (role) {
+                    await member.roles.remove(role);
+                    console.log('Role removed from user successfully');
+                } else {
+                    console.error('Role not found');
+                }
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error removing role from user:', error);
+    }
+}
+
+async function discord_ban_user_from_a_server(serverId, userId) {
+    console.log('Banning user from server:', serverId);
+    const realuserId = String(serverId.user);
+    const realserverId = String(serverId.server);
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            const member = await server.members.fetch(realuserId);
+            if (member) {
+                await member.ban();
+                console.log('User banned successfully');
+            } else {
+                console.error('User not found');
+            }
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error banning user:', error);
+    }
+}
+
+async function discord_unban_user_from_a_server(serverId, userId) {
+    console.log('Unbanning user from server:', serverId);
+    const realserverId = String(serverId.server);
+    const realuserId = String(serverId.user);
+    try {
+        const server = await client.guilds.fetch(realserverId);
+        if (server) {
+            await server.members.unban(realuserId);
+            console.log('User unbanned successfully');
+        } else {
+            console.error('Server not found');
+        }
+    } catch (error) {
+        console.error('Error unbanning user:', error);
+    }
 }
 
 module.exports = reactions;

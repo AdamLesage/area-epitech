@@ -5,19 +5,19 @@
         :class="{ 'select-none pointer-events-none !bg-transparent': !displayPopup }">
         <div
             v-if="!displayPopup"
-            class="fixed z-50 p-2 rounded-full pointer-events-auto hover:cursor-pointer"
+            class="fixed z-50 p-2 half:p-1 rounded-full pointer-events-auto hover:cursor-pointer"
             :style="{ bottom: `${props.bottom}px`, backgroundColor: props.color, left: `${props.left}px` }"
             @click.stop="displayPopup = true">
             <Icon
                 icon="material-symbols:help"
-                class="text-white w-12 h-12"
+                class="text-white w-12 h-12 half:w-10 half:h-10"
                 aria-label="Open Help Popup"
                 role="button"
                 tabindex="0" />
         </div>
         <div
             v-else
-            class="fixed bottom-4 left-4 w-[90vw] max-w-[30rem] h-[85vh] max-h-[29.5rem] rounded-xl shadow-2xl bg-white !z-50 pointer-events-auto"
+            class="fixed bottom-4 left-4 w-adjusted max-w-[30rem] h-[85vh] max-h-[29.5rem] rounded-xl shadow-2xl bg-white !z-50 pointer-events-auto"
             role="dialog"
             aria-labelledby="help-popup-header"
             @click.stop>
@@ -192,4 +192,7 @@ const tips = [
 </script>
 
 <style scoped>
+.w-adjusted {
+    width: calc(100% - 2rem);
+}
 </style>

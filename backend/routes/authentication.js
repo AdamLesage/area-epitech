@@ -6,8 +6,6 @@
 */
 
 const express = require('express');
-// const { PrismaClient } = require('@prisma/client');
-// const prisma = new PrismaClient();
 const router = express.Router();
 const passport = require('passport');
 const { PrismaClient } = require('@prisma/client');
@@ -20,6 +18,10 @@ const { google } = require('googleapis');
 const { initializeGmailClient } = require('../utils/initGmailClient');
 // Intern auth routes
 
+// Global variable for reset email code
+let resetPasswordCodeAccordingToEmail = {};
+
+// Intern auth routes
 router.post('/login', (req, res) => {
     const { password, email } = req.body;
 
@@ -46,35 +48,86 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const { password, email, name, surname, bio, birthDate, phoneNumber, profilePicture } = req.body;
+    const { password, email } = req.body;
 
     if (!password || !email) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const uuid = uuidv4();
-    const authToken = uuidv4();
 
-    prisma.user.create({
-        data: {
-            email,
-            hashedPassword,
-            name: name ? name : 'Invalid name',
-            surname: surname ? surname : 'Invalid surname',
-            bio,
-            uuid: uuid,
-            birthDate: birthDate ? new Date(birthDate) : null,
-            phoneNumber,
-            profilePicture: profilePicture ? { create: profilePicture } : undefined,
-            authToken: authToken,
-        },
-    }).then((user) => {
-        return res.status(201).json(user);
-    }).catch((error) => {
+    const areaServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'area',
+        authToken: uuidv4(),
+        username: '',
+        accountEmail: email || '',
+    };
+
+    const timerServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'timer',
+        authToken: uuidv4(),
+        username: '',
+        accountEmail: email || '',
+    };
+
+    const userParams = {
+        email: email,
+        name: '',
+        surname: '',
+        uuid: uuidv4(),
+        hashedPassword: hashedPassword,
+        profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s',
+    };
+
+    // Check if a user with this email already exists
+    let user = await prisma.user.findUnique({
+        where: { email: email },
+        include: { linkedAccounts: true },
+    });
+
+    if (user) {
+        return res.status(409).json({ error: 'User already exists' });
+    }
+
+    try {
+        userParams.authToken = uuidv4(); // Add authentication token
+        user = await prisma.user.create({
+            data: {
+                ...userParams,
+                linkedAccounts: {
+                    create: [areaServiceParams, timerServiceParams],
+                },
+            },
+            include: { linkedAccounts: true },
+        });
+
+        areaServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: areaServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        timerServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: timerServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        return res.status(201).json({ message: 'User registered', authToken: user.authToken });
+    } catch (error) {
         console.error(error);
         return res.status(500).json({ error: error.message });
-    });
+    }
 });
 
 router.get('/logout', (req, res) => {
@@ -109,104 +162,111 @@ router.get('/logout', (req, res) => {
     });
 });
 
-
 router.post('/reset-password', async (req, res) => {
     const { email } = req.body;
-    const headers = req.headers;
 
     if (!email) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    // Check if headers given are correct
-    if (headers.authorization) {
+    try {
+        // Check if the user exists
         const user = await prisma.user.findUnique({
-            where: { authToken: headers.authorization },
+            where: { email: email },
         });
 
-        if (user === null) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
-    } else {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    // Check if user exists
-    prisma.user.findUnique({
-        where: {
-            email: email,
-        },
-    }).then((user) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        // Generate a random verification code
+        const code = Math.floor(100000 + Math.random() * 900000);
+
+        // Configure Nodemailer
         const transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false,
+            host: 'smtp.gmail.com',
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
             },
         });
 
+        // Create the email data
         const mailData = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: 'Reset password for Area Romain le malin',
-            text: `Click on the link to reset your password: ${process.env.FRONTEND_URL}/reset-password/${user.uuid}`,
+            subject: 'Password Reset',
+            html: `
+                <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+                    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #007bff;">Réinitialisation de votre mot de passe</h2>
+                        <p>Bonjour,</p>
+                        <p>Nous avons reçu une demande de réinitialisation de votre mot de passe. Veuillez utiliser le code de
+                        vérification ci-dessous :</p>
+                        <div style="text-align: center; font-size: 24px; font-weight: bold; color: #007bff; margin: 20px 0;">
+                        ${code}
+                        </div>
+                        <p>Si vous n'avez pas fait cette demande, vous pouvez ignorer cet e-mail.</p>
+                        <p style="color: #666; font-size: 12px;">Merci,</p>
+                        <p style="color: #666; font-size: 12px;">L'équipe de support Area Romain le malin</p>
+                    </div>
+                </div>
+            `
         };
 
-        // Send email with reset password link
-        transporter.sendMail(mailData, (err, info) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: err.message });
-            }
+        // Send the email
+        const info = await transporter.sendMail(mailData);
 
-        });
-        return res.status(200).json({ message: 'Email sent' });
-    });
+        // Store the verification code for this email
+        resetPasswordCodeAccordingToEmail[email] = code;
+
+        return res.status(200).json({ message: `Email sent to ${email}`, info });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: error.message });
+    }
 });
 
-// Method /GET because user will click on the link
-router.get('/reset-password/:uuid', async (req, res) => {
-    const { newPassword } = req.body;
-    const uuid = req.params.uuid;
+router.post('/reset-password-confirm', async (req, res) => {
+    const { email, code } = req.body;
 
-    if (!newPassword) {
+    if (!email || !code) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    prisma.user.findUnique({
-        where: {
-            uuid: uuid,
-        },
-    }).then((user) => {
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: err.message });
-            }
+    if (resetPasswordCodeAccordingToEmail[email] === parseInt(code, 10)) {
+        // Redirect to the reset password page
+        return res.status(200).json({ message: 'Code is correct', redirectUrl: `/change-password?code=${code}&email=${email}` });
+    } else {
+        return res.status(400).json({ error: 'Code is incorrect' });
+    }
+});
 
-            prisma.user.update({
-                where: {
-                    uuid: uuid,
-                },
-                data: {
-                    hashedPassword,
-                },
-            }).then(() => {
-                return res.status(20).json({ message: 'Password updated' });
-            }).catch((error) => {
-                console.error(error);
-                return res.status(500).json({ error: error.message });
-            });
-        });
+
+router.put('/change-password', async (req, res) => {
+    const { email, code, password } = req.body;
+
+    if (!email || !code || !password) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    if (resetPasswordCodeAccordingToEmail[email] !== parseInt(code, 10)) {
+        return res.status(400).json({ error: 'Code is incorrect' });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    prisma.user.update({
+        where: {
+            email: email,
+        },
+        data: {
+            hashedPassword: hashedPassword,
+        },
+    }).then(() => {
+        return res.status(200).json({ message: 'Password updated', redirectUrl: '/login' });
+    }).catch((error) => {
+        console.error(error);
+        return res.status(500).json({ error: error.message });
     });
 });
 
@@ -255,6 +315,122 @@ async function getUser(req) {
     return null;
 }
 
+/**
+ * Handles the user authentication in the Database.
+ * 
+ * @param {string} username - The username of the user.
+ * @param {string} accountEmail - The email associated with the account.
+ * @param {string} userEmail - The email of the user.
+ * @param {string} displayName - The display name of the user.
+ * @param {string} surname - The surname of the user.
+ * @param {string} authToken - The authentication token.
+ * @param {string} serviceName - The name of the service.
+ * @param {object} user - The user object.
+ * @returns {string} - The authentication token of the user.
+ */
+async function auth(username, accountEmail, userEmail, displayName, surname, authToken, serviceName, user) {
+    const linkedAccountParams = {
+        uuid: uuidv4(),
+        serviceName: serviceName,
+        authToken: authToken,
+        username: username || '',
+        accountEmail: accountEmail,
+    };
+
+    const areaServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'area',
+        authToken: uuidv4(),
+        username: username || '',
+        accountEmail: accountEmail || '',
+    };
+
+    const timerServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'timer',
+        authToken: uuidv4(),
+        username: username || '',
+        accountEmail: accountEmail || '',
+    };
+
+    const userParams = {
+        email: userEmail,
+        name: displayName || '',
+        surname: surname || '',
+        uuid: uuidv4(),
+        hashedPassword: authToken,
+        profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
+    };
+
+    if (!user) {
+        // Create the new user
+        userParams.authToken = uuidv4(); // Add authentication token
+        user = await prisma.user.create({
+            data: {
+                ...userParams,
+                linkedAccounts: {
+                    create: [linkedAccountParams, areaServiceParams, timerServiceParams],
+                },
+            },
+            include: { linkedAccounts: true },
+        });
+
+        // Create the linkedAccount
+        linkedAccountParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: linkedAccountParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        // Create the area service linked account
+        areaServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: areaServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        // Create the timer service linked account
+        timerServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: timerServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+    } else {
+        // Check if the account is already linked
+        const linkedAccount = await user.linkedAccounts.find(
+            account => account.serviceName === serviceName
+        );
+
+        if (!linkedAccount) {
+            await prisma.linkedAccount.create({
+                data: {
+                    ...linkedAccountParams,
+                    userId: user.id, // Use the numeric ID from Prisma
+                },
+            });
+
+            // Refresh user data to include the new linked account
+            user = await prisma.user.findUnique({
+                where: { email: userParams.email }
+            });
+        }
+    }
+
+    return user.authToken;
+}
+
 // Github auth routes
 router.get('/github', async (req, res) => {
     const email = req.query.email;
@@ -275,66 +451,55 @@ router.get('/github/redirect',
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-            const linkedAccountParams = {
-                uuid: uuidv4(),
-                serviceName: 'github',
-                authToken: req.user.accessToken,
-                username: req.user.username || 'Username not found',
-                accountEmail: req.user.accountEmail,
-            };
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'github',
+                user);
 
-            const userParams = {
-                email: userEmail,
-                name: req.user.displayName || 'Name not found',
-                surname: req.user.surname || 'Surname not found',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-            };
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
+        }
+    }
+);
 
-            if (!user) {
-                // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
-                    data: {
-                        ...userParams,
-                        linkedAccounts: {
-                            create: [linkedAccountParams],
-                        },
-                    },
-                    include: { linkedAccounts: true },
-                });
-                linkedAccountParams.userId = user.id;
+// Discord auth routes
+router.get('/discord', async (req, res) => {
+    const email = req.query.email;
 
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: linkedAccountParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-            } else {
-                // Check if the account is already linked
-                const linkedAccount = user.linkedAccounts.find(
-                    account => account.serviceName === 'github'
-                );
+    passport.session.email = email;
+    passport.authenticate('discord')(req, res);
+});
 
-                if (!linkedAccount) {
-                    await prisma.linkedAccount.create({
-                        data: {
-                            ...linkedAccountParams,
-                            userId: user.id, // Use the numeric ID from Prisma
-                        },
-                    });
-
-                    // Refresh user data to include the new linked account
-                    user = await prisma.user.findUnique({
-                        where: { email: userParams.email },
-                        include: { linkedAccounts: true },
-                    });
-                }
+router.get('/discord/callback',
+    passport.authenticate('discord', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
             }
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+
+            let user = await getUser(req);
+
+            const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'discord',
+                user);
+
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -358,67 +523,17 @@ router.get('/dropbox/callback',
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-            const userParams = {
-                email: userEmail,
-                name: req.user.displayName || '',
-                surname: '',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-            };
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'dropbox',
+                user);
 
-            const linkedAccountParams = {
-                serviceName: 'dropbox',
-                authToken: req.user.accessToken,
-                username: req.user.displayName,
-                uuid: uuidv4(),
-                accountEmail: req.user.accountEmail,
-            };
-
-            if (!user) {
-                // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
-                    data: {
-                        ...userParams,
-                        linkedAccounts: {
-                            create: [linkedAccountParams],
-                        },
-                    },
-                    include: { linkedAccounts: true },
-                });
-                linkedAccountParams.userId = user.id;
-
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: linkedAccountParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-            } else {
-                // Check if the account is already linked
-                const linkedAccount = user.linkedAccounts.find(
-                    account => account.serviceName === 'dropbox'
-                );
-
-                if (!linkedAccount) {
-                    await prisma.linkedAccount.create({
-                        data: {
-                            ...linkedAccountParams,
-                            userId: user.id, // Use the numeric ID from Prisma
-                        },
-                    });
-
-                    // Refresh user data to include the new linked account
-                    user = await prisma.user.findUnique({
-                        where: { email: userParams.email },
-                        include: { linkedAccounts: true },
-                    });
-                }
-            }
-
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -433,7 +548,7 @@ router.get('/spotify', async (req, res) => {
     passport.session.email = email;
 
     await passport.authenticate('spotify', {
-        scope: ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private'],
+        scope: ['user-modify-playback-state', 'user-library-modify', 'user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private'],
         showDialog: true,
     })(req, res);
 });
@@ -450,66 +565,17 @@ router.get('/spotify/callback',
 
             const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
 
-            const linkedAccountParams = {
-                uuid: uuidv4(),
-                serviceName: 'spotify',
-                authToken: req.user.accessToken,
-                username: req.user.username || 'Username not found',
-                accountEmail: req.user.accountEmail,
-            };
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.accessToken,
+                'spotify',
+                user);
 
-            const userParams = {
-                email: userEmail,
-                name: req.user.displayName || '',
-                surname: '',
-                uuid: uuidv4(),
-                hashedPassword: req.user.accessToken,
-            };
-
-            if (!user) {
-                // Create a new user
-                userParams.authToken = uuidv4(); // Add authentication token
-                user = await prisma.user.create({
-                    data: {
-                        ...userParams,
-                        linkedAccounts: {
-                            create: [linkedAccountParams],
-                        },
-                    },
-                    include: { linkedAccounts: true },
-                });
-                linkedAccountParams.userId = user.id;
-
-                await prisma.linkedAccount.update({
-                    where: {
-                        uuid: linkedAccountParams.uuid,
-                    },
-                    data: {
-                        userId: user.id,
-                    },
-                });
-            } else {
-                // Check if the account is already linked
-                const linkedAccount = user.linkedAccounts.find(
-                    account => account.serviceName === 'spotify'
-                );
-
-                if (!linkedAccount) {
-                    await prisma.linkedAccount.create({
-                        data: {
-                            ...linkedAccountParams,
-                            userId: user.id, // Use the numeric ID from Prisma
-                        },
-                    });
-
-                    // Refresh user data to include the new linked account
-                    user = await prisma.user.findUnique({
-                        where: { email: userParams.email },
-                        include: { linkedAccounts: true },
-                    });
-                }
-            }
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -517,15 +583,14 @@ router.get('/spotify/callback',
     }
 );
 
-
 // Google auth routes
-router.get('/google', async(req, res) => {
+router.get('/google', async (req, res) => {
     const email = req.query.email;
 
     passport.session.email = email;
 
     await passport.authenticate('google', {
-        scope: ['profile', 'email', 
+        scope: ['profile', 'email',
             'https://mail.google.com/',
             'https://www.googleapis.com/auth/gmail.readonly',
             'https://www.googleapis.com/auth/gmail.compose',
@@ -537,85 +602,36 @@ router.get('/google', async(req, res) => {
     })(req, res);
 });
 
-router.get('/google/callback', 
-    passport.authenticate('google', {failureRedirect: '/login',}),
-    async(req, res) => {
-    try {
-        if (req.user === undefined) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
-
-        let user = await getUser(req);
-
-        const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
-        console.log("refreshToken", req.user.refreshToken)
-
-        const linkedAccountParams = {
-            uuid: uuidv4(),
-            serviceName: 'gmail',
-            authToken: req.user.refreshToken,
-            username: req.user.username || 'Username not found',
-            accountEmail: req.user.accountEmail,
-        };
-
-        const userParams = {
-            email: userEmail,
-            name: req.user.displayName || '',
-            surname: '',
-            uuid: uuidv4(),
-            hashedPassword: req.user.refreshToken,
-        };
-
-        if (!user) {
-            // Create a new user
-            userParams.authToken = uuidv4(); // Add authentication token
-            user = await prisma.user.create({ 
-                data: {
-                    ...userParams,
-                    linkedAccounts: {
-                        create: [linkedAccountParams],
-                    },
-                },
-                include: { linkedAccounts: true },
-            });
-            linkedAccountParams.userId = user.id;
-
-            await prisma.linkedAccount.update({
-                where: {
-                    uuid: linkedAccountParams.uuid,
-                },
-                data: {
-                    userId: user.id,
-                },
-            });
-        } else {
-            // Check if the account is already linked
-            const linkedAccount = user.linkedAccounts.find(
-                account => account.serviceName === 'gmail'
-            );
-
-            if (!linkedAccount) {
-                await prisma.linkedAccount.create({ 
-                    data: {
-                        ...linkedAccountParams,
-                        userId: user.id, // Use the numeric ID from Prisma
-                    },
-                });
-
-                // Refresh user data to include the new linked account
-                user = await prisma.user.findUnique({
-                    where: { email: userParams.email },
-                    include: { linkedAccounts: true },
-                });
+router.get('/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login', }),
+    async (req, res) => {
+        try {
+            if (req.user === undefined) {
+                return res.status(401).json({ error: 'Unauthorized' });
             }
+
+            let user = await getUser(req);
+
+            const userEmail = req.user.sessionEmail ?? req.user.accountEmail;
+
+            const authToken = await auth(
+                req.user.username,
+                req.user.accountEmail,
+                userEmail,
+                req.user.displayName,
+                req.user.surname,
+                req.user.refreshToken,
+                'gmail',
+                user);
+
+            await watchGmail(req.user.refreshToken);
+            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
         }
-        await watchGmail(req.user.refreshToken)
-        return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: error.message });
     }
-});
+);
 
 async function watchGmail(refreshToken) {
     try {

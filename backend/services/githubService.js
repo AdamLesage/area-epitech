@@ -24,16 +24,29 @@ router.post('/webhook', async (req, res) => {
         const actionName = `${event}.${action}`;
 
         console.log("receive github webhook", actionName)
+        console.log('repository:', req.body.repository.full_name);
+        console.log('sender:', req.body.sender.login);
+
         // get active github area
-        const activeGithubActions = await prisma.actionReaction.findMany({
+        let activeGithubActions = await prisma.actionReaction.findMany({
             where: {
                 isActive: true,
                 action: {
                     service: {
                         name: "github",
                     },
-                },
+                }
             },
+        });
+
+        // remove the github actions where the repository is not the same
+        activeGithubActions = activeGithubActions.filter((action) => {
+            const actionData = action.actionData;
+            const repository = actionData.repository;
+            if (repository !== req.body.repository.full_name) {
+                return false;
+            }
+            return true;
         });
 
         const promises = activeGithubActions.map(async (action) => {
