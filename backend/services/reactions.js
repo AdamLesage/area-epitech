@@ -2,6 +2,7 @@ const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { Dropbox } = require('dropbox');
+const { initializeGmailClient } = require('../utils/initGmailClient');
 const { Client,GatewayIntentBits, Partials, ChannelType, PermissionsBitField } = require('discord.js');
 const { google } = require('googleapis');
 
@@ -572,9 +573,7 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
 async function gmail_send_email(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(accessToken)
         
         if (!(reactionData.from && reactionData.to && reactionData.subject && reactionData.body)) {
             throw new Error("Missing required email data");
@@ -617,9 +616,7 @@ async function gmail_send_email(reactionData, actionResponseData, userUuid) {
 async function gmail_delete_email(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(accessToken)
 
         if (!(reactionData.mail_id)) {
             throw new Error("Missing required email data");
@@ -646,9 +643,7 @@ async function gmail_delete_email(reactionData, actionResponseData, userUuid) {
 async function gmail_add_label(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(accessToken)
 
         if (!(reactionData.mail_id) || !(reactionData.label_id)) {
             throw new Error("Missing required email or label data");
@@ -678,9 +673,7 @@ async function gmail_add_label(reactionData, actionResponseData, userUuid) {
 async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(accessToken)
 
         if (!(reactionData.mail_id) || !(reactionData.label_id)) {
             throw new Error("Missing required email or label data");
@@ -710,9 +703,7 @@ async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
 async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(accessToken)
 
         if (!(reactionData.mail_id) || !(reactionData.label_id)) {
             throw new Error("Missing required email or label data");
@@ -742,9 +733,7 @@ async function gmail_remove_label(reactionData, actionResponseData, userUuid) {
 async function gmail_reply_to_email(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(accessToken)
 
         if (!(reactionData.mail_id) || !(reactionData.reply_body)) {
             throw new Error("Missing required email or reply data");
@@ -804,9 +793,7 @@ async function gmail_reply_to_email(reactionData, actionResponseData, userUuid) 
 async function gmail_forward_email(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(accessToken)
 
         if (!reactionData.mail_id || !reactionData.forward_to) {
             throw new Error("Missing required email or forwarding address data");
@@ -874,9 +861,7 @@ async function gmail_forward_email(reactionData, actionResponseData, userUuid) {
 async function gmail_create_draft(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(accessToken)
 
         if (!reactionData.to || !reactionData.subject || !reactionData.body) {
             throw new Error("Missing required fields: 'to', 'subject', or 'body'.");

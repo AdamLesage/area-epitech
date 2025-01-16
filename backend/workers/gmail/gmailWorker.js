@@ -32,15 +32,36 @@ async function send(data2) {
     }
 }
 
+async function initializeGmailClient(refreshToken) {
+
+    // Initialize the OAuth2 client with your credentials
+    const auth = new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET
+    );
+
+    // Set the refresh token
+    auth.setCredentials({ refresh_token: refreshToken });
+
+    // Ensure the access token is fetched using the refresh token
+    const { token } = await auth.getAccessToken();
+
+    // Set the access token explicitly (optional, as `auth` will manage it)
+    auth.setCredentials({ access_token: token });
+
+    // Create the Gmail API client
+    const gmail = google.gmail({ version: 'v1', auth });
+
+    return gmail;
+}
+
 /**
  * @brief Retrieves the last history ID for the authenticated Gmail user.
  * @returns {String|undefined} The last history ID or undefined if not found.
  */
 async function getLastHistoryId() {
     console.log(ACCESS_TOKEN)
-    const auth = new google.auth.OAuth2();
-    auth.setCredentials({ access_token: ACCESS_TOKEN });
-    const gmail = google.gmail({ version: 'v1', auth });
+    const gmail = await initializeGmailClient(ACCESS_TOKEN)
 
     try {
         const response = await gmail.users.getProfile({ userId: 'me' });
@@ -60,11 +81,10 @@ async function getLastHistoryId() {
 
 /**
  * @brief Retrieves all labels for the authenticated Gmail user and maps their IDs to names.
- * @param {Object} auth - The authentication object for Gmail API.
  * @returns {Object} A mapping of label IDs to label names.
  */
-async function getLabels(auth) {
-    const gmail = google.gmail({ version: 'v1', auth });
+async function getLabels() {
+    const gmail = await initializeGmailClient(ACCESS_TOKEN)
     const response = await gmail.users.labels.list({ userId: 'me' });
     const labels = response.data.labels;
     if (!labels) {
@@ -119,9 +139,7 @@ async function messageInfo(gmail, messageId, labelMap) {
  */
 async function handleNotification(webhookData) {
     console.log("ACCESS TOKEN: ", ACCESS_TOKEN)
-    const auth = new google.auth.OAuth2();
-    auth.setCredentials({ access_token: ACCESS_TOKEN });
-    const gmail = google.gmail({ version: 'v1', auth });
+    const gmail = await initializeGmailClient(ACCESS_TOKEN)
 
     // Get Gmail history items
     const historyResponse = await gmail.users.history.list({
@@ -129,7 +147,7 @@ async function handleNotification(webhookData) {
         startHistoryId: lastHistoryId,
         historyTypes: ['messageAdded', 'messageDeleted', 'labelAdded', 'labelRemoved'],
     });
-    const labelMap = await getLabels(auth);
+    const labelMap = await getLabels();
 
     console.log(historyResponse.data)
     if (historyResponse.data.history) {
@@ -137,12 +155,17 @@ async function handleNotification(webhookData) {
             if (event.messagesAdded && (targetAction === "gmail_on_new_mail" || targetAction === "gmail_on_mail_send" || targetAction === "gmail_on_draft_create")) {
                 for (const message of event.messagesAdded) {
                     const mailInfo = await messageInfo(gmail, message.message.id, labelMap);
-                    if (mailInfo.labels.includes('DRAFT') && targetAction === "gmail_on_draft_create") {
-                        send(mailInfo);
-                    } else if (mailInfo.labels.includes('SENT') && targetAction === "gmail_on_mail_send") {
-                        send(mailInfo);
-                    } else if (targetAction === "gmail_on_new_mail") {
-                        send(mailInfo);
+                    if (mailInfo.labels.includes('DRAFT')) {
+                        if (targetAction === "gmail_on_draft_create")
+                            send(mailInfo);
+                    } else if (mailInfo.labels.includes('SENT')) {
+                        if (targetAction === "gmail_on_mail_send") {
+                            send(mailInfo);
+                        }
+                    } else {
+                        if (targetAction === "gmail_on_new_mail") {
+                            send(mailInfo);
+                        }
                     }
                 }
             }

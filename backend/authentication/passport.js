@@ -132,9 +132,10 @@ passport.use(new GoogleStrategy({
     const profileEmail = profile.emails?.[0]?.value || null;
 
     console.log('session:', sessionEmail, 'profile:', profileEmail);
+    console.log("RefreshToken: ",refreshToken)
     const user = { 
         ...profile,
-        accessToken,
+        refreshToken,
         sessionEmail: sessionEmail,
         accountEmail: profileEmail
     };

@@ -150,7 +150,9 @@ async function create_container(data, uuid, image_name, workerFileName, targetAc
             `UUID=${uuid}`, // Set the UUID environment variable
             `DATA=${typeof data === 'object' && data !== null ? JSON.stringify(data) : '{}'}`, // Set the DATA environment variable
             `CALL_BACK=http://server:8080/api/reaction/${uuid}`, // Set the callback URL
-            `TARGET_ACTION=${targetAction}`
+            `TARGET_ACTION=${targetAction}`,
+            `GOOGLE_CLIENT_ID=${process.env.GOOGLE_CLIENT_ID}`,
+            `GOOGLE_CLIENT_SECRET=${process.env.GOOGLE_CLIENT_SECRET}`
         ],
         HostConfig: {
             NetworkMode: "area-epitech_db"

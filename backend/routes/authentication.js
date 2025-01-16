@@ -15,7 +15,8 @@ const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 const { google } = require('googleapis');
-
+const { initializeGmailClient } = require('../utils/initGmailClient');
+// Intern auth routes
 
 // Global variable for reset email code
 let resetPasswordCodeAccordingToEmail = {};
@@ -595,7 +596,9 @@ router.get('/google', async (req, res) => {
             'https://www.googleapis.com/auth/gmail.compose',
             'https://www.googleapis.com/auth/gmail.modify',
             'https://www.googleapis.com/auth/gmail.insert',
-            'https://www.googleapis.com/auth/gmail.settings.basic',]
+            'https://www.googleapis.com/auth/gmail.settings.basic'],
+        accessType: 'offline',
+        approvalPrompt: 'force'
     })(req, res);
 });
 
@@ -617,11 +620,11 @@ router.get('/google/callback',
                 userEmail,
                 req.user.displayName,
                 req.user.surname,
-                req.user.accessToken,
+                req.user.refreshToken,
                 'gmail',
                 user);
 
-            await watchGmail(req.user.accessToken);
+            await watchGmail(req.user.refreshToken);
             return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
@@ -630,12 +633,9 @@ router.get('/google/callback',
     }
 );
 
-async function watchGmail(accessToken) {
+async function watchGmail(refreshToken) {
     try {
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-
-        const gmail = google.gmail({ version: 'v1', auth });
+        const gmail = await initializeGmailClient(refreshToken)
 
         const response = await gmail.users.watch({
             userId: 'me',  // 'me' corresponds to the authenticated user
