@@ -49,61 +49,86 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const { password, email, name, surname, bio, birthDate, phoneNumber, profilePicture } = req.body;
+    const { password, email } = req.body;
 
     if (!password || !email) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const uuid = uuidv4();
-    const authToken = uuidv4();
-    const timerLinkedAccount = await prisma.linkedAccount.findFirst({ where: { accountEmail: email, serviceName: 'timer' } });
-    if (!timerLinkedAccount) {
-        await prisma.linkedAccount.create({
-            data: {
-                serviceName: 'timer',
-                authToken: '',
-                username: name ? name : 'Invalid name',
-                accountEmail: email,
-                uuid: uuidv4(),
-                userId: 0,
-            },
-        });
+
+    const areaServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'area',
+        authToken: uuidv4(),
+        username: '',
+        accountEmail: email || '',
+    };
+
+    const timerServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'timer',
+        authToken: uuidv4(),
+        username: '',
+        accountEmail: email || '',
+    };
+
+    const userParams = {
+        email: email,
+        name: '',
+        surname: '',
+        uuid: uuidv4(),
+        hashedPassword: hashedPassword,
+        profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s',
+    };
+
+    // Check if a user with this email already exists
+    let user = await prisma.user.findUnique({
+        where: { email: email },
+        include: { linkedAccounts: true },
+    });
+
+    if (user) {
+        return res.status(409).json({ error: 'User already exists' });
     }
 
-    prisma.user.create({
-        data: {
-            email,
-            hashedPassword,
-            name: name ? name : 'Invalid name',
-            surname: surname ? surname : 'Invalid surname',
-            bio,
-            uuid: uuid,
-            birthDate: birthDate ? new Date(birthDate) : null,
-            phoneNumber,
-            profilePicture: profilePicture ? { create: profilePicture } : undefined,
-            profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s',
-            authToken: authToken,
-        },
-    }).then((user) => {
-        prisma.linkedAccount.update({
+    try {
+        userParams.authToken = uuidv4(); // Add authentication token
+        user = await prisma.user.create({
+            data: {
+                ...userParams,
+                linkedAccounts: {
+                    create: [areaServiceParams, timerServiceParams],
+                },
+            },
+            include: { linkedAccounts: true },
+        });
+
+        areaServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
             where: {
-                username: user.name,
+                uuid: areaServiceParams.uuid,
             },
             data: {
                 userId: user.id,
             },
-        }).then(() => {
-            return res.status(201).json(user);
-        }).catch((error) => {
-            console.error(error);
-            return res.status(500).json({ error: error.message });
         });
-    }).catch((error) => {
+
+        timerServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: timerServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        return res.status(201).json({ message: 'User registered', authToken: user.authToken });
+    } catch (error) {
         console.error(error);
         return res.status(500).json({ error: error.message });
-    });
+    }
 });
 
 router.get('/logout', (req, res) => {
