@@ -413,4 +413,88 @@ router.put('/user/:uuid', async (req, res) => {
     }
 });
 
+/**
+ * @brief delete the linked account and all the actions and reactions linked to it
+ * 
+ * @param {string} service_name
+ * @return {object} message
+ * @exemple DELETE /user/linked-account/spotify
+ * @autor Tugdual de Reviers
+ */
+router.delete('/user/linked-account/:service_name', async (req, res) => {
+    console.log('Entered delete linked account route');
+    const serviceName = req.params.service_name;
+    const headers = req.headers;
+
+    // Check if headers given are correct
+    if (headers.authorization) {
+        const authToken = headers.authorization.split(' ')[1];
+        const user = await prisma.user.findUnique({
+            where: {
+                authToken: authToken,
+            },
+            include: {
+                linkedAccounts: true,
+            },
+        });
+
+        if (!user) {
+            console.log('Unauthorized > user not found');
+            return res.status(401).json({ error: 'Unauthorized: User not found' });
+        }
+
+        const linkedAccount = user.linkedAccounts.find((account) => account.serviceName === serviceName);
+
+        if (!linkedAccount) {
+            return res.status(404).json({ error: 'Linked account not found' });
+        }
+
+        console.log('Deleting linked account:', linkedAccount);
+
+        const actions = await prisma.action.findMany({
+            where: {
+                service: {
+                    name: serviceName,
+                },
+            },
+            select: { id: true },
+        });
+
+        const reactions = await prisma.reaction.findMany({
+            where: {
+                service: {
+                    name: serviceName,
+                },
+            },
+            select: { id: true },
+        });
+
+        // Extract the IDs
+        const actionIds = actions.map(action => action.id);
+        const reactionIds = reactions.map(reaction => reaction.id);
+
+        // Delete the ActionReaction records that are linked to the fetched actionIds or reactionIds
+        await prisma.actionReaction.deleteMany({
+            where: {
+                userUuid: user.uuid,
+                OR: [
+                    { actionId: { in: actionIds } },
+                    { reactionId: { in: reactionIds } },
+                ],
+            },
+        });
+
+        await prisma.linkedAccount.delete({
+            where: {
+                id: linkedAccount.id,
+            },
+        });
+
+        return res.status(200).json({ message: 'Linked account deleted' });
+    } else {
+        console.log('Unauthorized > headers missing');
+        return res.status(401).json({ error: 'Unauthorized: Headers missing' });
+    }
+});
+
 module.exports = router;

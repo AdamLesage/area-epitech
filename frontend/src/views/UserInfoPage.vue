@@ -1,7 +1,24 @@
 <template>
-    <div class="flex flex-col justify-center items-center min-h-screen bg-home font-sans text-white">
-        <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10 absolute top-0" />
+    <div class="flex flex-col justify-center items-center min-h-screen bg-home font-sans text-white" @click="displayedLinkedAccount = null">
+        <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10 absolute top-0" @click.stop />
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden fixed bottom-0 z-40 bg-home" />
+        <div v-if="displayedLinkedAccount" class="bg-black/20 w-screen h-screen absolute justify-center flex items-center z-50">
+            <div class="flex flex-col justify-between items-center bg-home rounded-lg p-8 relative">
+                <div class="flex items-center gap-2">
+                    <Icon :icon="displayedLinkedAccount.icon" class="text-xl w-12 h-12 text-white" />
+                    <h3 class="text-lg font-semibold text-white capitalize">{{ displayedLinkedAccount.name }}</h3>
+                </div>
+                <button @click="displayedLinkedAccount = null" class="rounded-lg absolute top-4 right-4">
+                    <Icon icon="mdi:close-circle" class="w-8 h-8 text-home-text-light" />
+                </button>
+                <button v-if="canDelete(displayedLinkedAccount.name)" @click="deleteLinkedAccount(displayedLinkedAccount)" class="bg-red-500 rounded-lg py-2 px-4 gap-2 my-8 flex items-center">
+                    <Icon icon="clarity:disconnect-line" class="w-8 h-8 text-white" />
+                    <p class="text-white">Disconnect</p>
+                </button>
+                <p class="text-home-text-light" v-if="canDelete(displayedLinkedAccount.name)">Disconnecting this account will delete all your AREA's created with it.</p>
+                <p class="text-home-text-light mt-6" v-else>Cannot delete this account.</p>
+            </div>
+        </div>
 
         <div v-if="!isEditing && user"
             class="bg-home-div mobile:bg-transparent rounded-xl mobile:p-4 p-10 mobile:w-full w-2/3 max-w-[66.75rem] text-center shadow-2xl mobile:shadow-none mt-20 mobile:mt-0 relative">
@@ -158,10 +175,13 @@ import ServiceNavComponent from "@/components/ServiceNavComponent.vue";
 import MobileServiceNavComponent from "@/components/MobileServiceNavComponent.vue";
 import { Icon } from '@iconify/vue';
 import * as yup from 'yup';
+import { fetchUser, fetchUserAreas } from "@/logic/user";
+import axios from 'axios';
 
 const userStore = useUserStore();
 const servicesStore = useServiceStore();
 const router = useRouter();
+const displayedLinkedAccount = ref<null | Platform>(null);
 
 // User Info
 const user = ref(userStore.user);
@@ -173,7 +193,10 @@ const images = [
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcuxHZa3v-lXfJ7pht9asToYn0T2iaDZYC-Q&s',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRj99Q4V5JK8HyiS1pB8vdl9YAVkMMNd0izw&s',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX4NAMWyVaJNETPVYdp3cxMy2GZVbEcPqL1Q&s'
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX4NAMWyVaJNETPVYdp3cxMy2GZVbEcPqL1Q&s',
+    'https://lesminis.fr/blog/wp-content/uploads/2023/11/5-3.jpg.webp',
+    'https://media.istockphoto.com/id/473012660/fr/photo/%C3%A9cureuil-gris-b%C3%A2iller.jpg?s=612x612&w=0&k=20&c=8R3bKQCmoFvktQ5q0QsrxcR20HLJNDFKuxsIBLoDzeU=',
+    'https://www.zoologiste.com/images/main/cochon.jpg',
 ];
 
 watch(() => userStore.user, (newUser) => {
@@ -186,6 +209,36 @@ watch(() => userStore.user, (newUser) => {
         profilePictureUrl: newUser?.profilePictureUrl,
     };
 });
+
+function canDelete(platformName: string) {
+    const cannotDelete = ['gmail', 'timer', 'area'];
+    return !cannotDelete.includes(platformName);
+}
+
+async function deleteLinkedAccount(platform: Platform) {
+    console.log(`Deleting ${platform.name}`);
+    const URL = `${import.meta.env.VITE_BACKEND_URL}/api/user/linked-account/${platform.name}`;
+    console.log(URL);
+    try {
+        const response = await axios.delete(URL, {
+            headers: {
+                'Authorization': `Bearer ${user.value?.authToken}`,
+            }
+        });
+        console.log(response.data);
+        const authToken = user.value?.authToken;
+        userStore.areas = [];
+        userStore.user = null;
+        userStore.user = await fetchUser(authToken);
+        const areas = await fetchUserAreas(authToken);
+        for (const area of areas) {
+            userStore.addArea(area);
+        }
+        displayedLinkedAccount.value = null;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
 const schema = yup.object({
     phoneNumber: yup.string().matches(/^[0-9]{10}$/, 'Phone number must be 10 digits').required('Phone number is required'),
@@ -287,6 +340,7 @@ const detailedPlatforms = computed<Platform[]>(() => {
 
 function handleSocialClick(platformName: string) {
     console.log(`Connect with ${platformName}`);
+    displayedLinkedAccount.value = detailedPlatforms.value.find((platform) => platform.name === platformName) || null;
 }
 
 function goToAddConnections() {
