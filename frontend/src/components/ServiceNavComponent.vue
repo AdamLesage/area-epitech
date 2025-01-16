@@ -7,7 +7,6 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const user = ref(userStore.user);
-console.log('User:', user.value);
 
 watch(() => userStore.user, (newUser) => {
     user.value = newUser;
