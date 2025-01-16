@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
 import { Action } from '@/types/services';
 
 const props = defineProps<{
@@ -8,18 +7,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['menu-click', 'more-click', 'configure-click']);
-
-function handleMenuClick() {
-    emit('menu-click');
-}
-
-function handleMoreClick() {
-    emit('more-click');
-}
-
-function handleConfigureClick() {
-    emit('configure-click');
-}
 </script>
 
 <template>
