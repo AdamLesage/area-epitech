@@ -1,47 +1,60 @@
 <template>
-    <div class="text-white font-sans h-screen flex flex-col">
-        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="displayedService.color" class="z-50" v-if="displayedService" />
-        <div class="flex flex-col items-center justify-between web:h-1/4 mobile:h-full">
-            <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" />
-            <div class="flex justify-center items-center p-4 mobile:hidden z-10">
-                <Icon icon="material-symbols:explore-rounded" class="w-28 h-28 text-white" />
-                <div class="flex flex-col justify-end items-center p-4">
-                    <h1 class="text-white text-[3rem] leading-[2.5rem] font-bold">EXPLORE</h1>
-                    <h2 class="text-white text-md font-medium text-right w-full pr-2 mobile:hidden">
-                        Unleash endless potential
-                    </h2>
-                </div>
+    <div class="text-white font-sans min-h-screen h-full flex flex-col">
+        <HelpAssistantPopupComponent :bottom="8" :left="8" :color="displayedService.color" class="z-50 mobile:hidden" v-if="displayedService"/>
+        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="displayedService.color" class="z-50 web:hidden" v-if="displayedService"/>
+        <div
+            v-if="displayedService"
+            @click.stop.prevent="freezeTime = !freezeTime"
+            class="fixed w-screen h-screen top-0 !z-40 select-none pointer-events-none !bg-transparent">
+            <div
+                class="fixed z-50 p-2 half:p-1 rounded-full pointer-events-auto hover:cursor-pointer mobile:!bottom-[170px] half:bottom-[75px] bottom-[90px] left-[8px] group"
+                :style="{ backgroundColor: displayedService.color }">
+                <Icon
+                    icon="mdi:snowflake"
+                    class="text-white w-12 h-12 half:w-10 half:h-10"
+                    aria-label="Open Help Popup"
+                    role="button"
+                    tabindex="0" />
+                <p class="absolute font-bold -ml-1">{{ secondsBeforeSwitch }}</p>
             </div>
-            <div />
         </div>
+        <div class="flex flex-col fixed w-full items-center justify-between h-fit z-10 mobile:hidden">
+            <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" v-if="scrollY === 0" />
+            <ServiceNavScrollComponent @back-button="handleBackButton" class="z-10" v-else-if="displayedService"
+                :style="{ backgroundColor: displayedService.color }"
+                logo="material-symbols:explore-rounded" title="Explore" :redirect="false" />
+        </div>
+        <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden fixed bottom-0 z-40"
+            v-if="displayedService"
+            :style="{ backgroundColor: getModifiedColor(displayedService.color, 15)}" />
         <!-- Main Content -->
-        <div v-if="displayedService" class="absolute w-full h-full">
+        <div v-if="displayedService" class="w-full h-full overflow-y-scroll flex flex-col justify-start"
+            id="main-content">
             <div
                 :key="displayedService.name"
-                class="flex flex-col items-center justify-center w-full h-full z-[2] shadow-lg absolute select-none transform"
+                class="flex flex-col items-center justify-between w-full h-full z-[2] shadow-lg select-none"
                 :style="{ backgroundColor: displayedService.color }"
                 :aria-label="`Explore ${displayedService.name}`"
                 role="button"
                 tabindex="0"
                 @click="handleServiceClick(displayedService.name)">
-                <div class="w-full h-3/4 absolute bottom-0 pt-8 pb-24 flex justify-center gap-8">
-                    <div class="flex height-adjusted items-center absolute right-0 z-30 w-[5.5%] flex-col justify-center">
-                        <ArrowComponent direction="right" :animate="false" color="white" class="w-8 h-8 text-white p-1 rounded-full hover:bg-black/20"
-                            @click.stop="nextSlide"/>
+                <div class="items-center w-1/3 justify-center gap-2 mobile:flex hidden my-8">
+                    <Icon icon="material-symbols:explore-rounded" class="w-[2.5rem] h-[2.5rem] flex-shrink-0 text-white hover:cursor-pointer"/>
+                    <div class="flex flex-col justify-end items-center">
+                        <h1 class="text-white text-[2rem] leading-3 font-bold hover:cursor-pointer select-none">Explore</h1>
                     </div>
-                    <div class="flex height-adjusted items-center absolute left-0 z-30 w-[5.5%] flex-col justify-center">
-                        <ArrowComponent direction="left" :animate="false" color="white" class="w-8 h-8 text-white p-1 rounded-full hover:bg-black/20"
-                            @click.stop="prevSlide"/>
-                    </div>
-                    <div class="flex items-center bg-black/20 w-1/5 rounded-lg flex-col p-8 justify-between">
+                </div>
+                <div class="w-full h-full flex half:justify-start web:justify-center gap-8 half:flex-col items-center overflow-y-scroll web:mt-24 web:pb-16 half:pb-0 web:pt-4 half:pt-0"
+                    @scroll="updateScrollY">
+                    <div class="flex items-center bg-black/20 w-[20rem] half:w-11/12 h-full half:!h-fit rounded-lg flex-col p-8 justify-between px-8 half:px-4">
                         <div class="flex flex-col items-center">
-                            <Icon :icon="displayedService.icon" class="text-4xl w-32 h-32 text-white" aria-hidden="true" />
-                            <span class="text-2xl font-bold text-white select-none capitalize">{{ displayedService.name }}</span>
+                            <Icon :icon="displayedService.icon" class="text-4xl w-32 half:w-24 h-32 half:h-24 text-white" aria-hidden="true" />
+                            <span class="text-2xl mobile:text-xl font-bold text-white select-none capitalize">{{ displayedService.name }}</span>
                         </div>
-                        <div class="flex flex-col justify-center w-full items-center text-center gap-4 -mt-4" v-if="userStore.user">
-                            <h1 class="text-md font-black text-white" v-if="!linked">You need to connect to <span class="capitalize">{{ displayedService.name }}</span> in order to have access to this action.</h1>
+                        <div class="flex flex-col justify-center w-full items-center text-center gap-4 -mt-4 half:mt-0" v-if="userStore.user">
+                            <h1 class="text-md mobile:text-sm font-black text-white" v-if="!linked">You need to connect to <span class="capitalize">{{ displayedService.name }}</span> in order to have access to this action.</h1>
                             <h1 class="text-md font-black text-white" v-else>You are correctly linked to <span class="capitalize">{{ displayedService.name }}</span>.</h1>
-                            <div class="flex w-full items-center justify-center">
+                            <div class="flex w-full items-center justify-center half:mb-2">
                                 <div
                                     class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
                                     @click.stop="switchLinkStatus">
@@ -69,19 +82,19 @@
                             <SaveComponent :saves="displayedService.saves" textcolor="white" color="white" />
                         </div>
                     </div>
-                    <div class="flex justify-start flex-col p-8 items-center bg-black/20 w-2/3 rounded-lg">
-                        <div class="flex gap-2 items-center mb-4">
+                    <div class="flex justify-start flex-col half:px-4 py-4 half:py-4 pb-12 items-center bg-black/20 w-2/3 half:w-11/12 half:h-fit h-full rounded-lg mobile:!mb-8 half:mb-16 px-8 flex-shrink-0">
+                        <div class="flex gap-2 items-center mb-4 half:hidden">
                             <Icon :icon="displayedService.icon" class="text-4xl w-16 h-16 mb-2 text-white" aria-hidden="true" />
                             <span class="text-xl font-bold text-white select-none capitalize">{{ displayedService.name }}</span>
                         </div>
-                        <div class="flex flex-wrap gap-4 overflow-y-scroll w-full">
-                            <div class="flex flex-wrap gap-6 w-full justify-center" v-if="sortedCategories.length > 0">
+                        <div class="flex flex-wrap gap-4 overflow-y-scroll w-fit">
+                            <div class="flex flex-wrap gap-6 half:gap-2 w-fit justify-center" v-if="sortedCategories.length > 0">
                                 <AREAInfoComponent
                                     v-for="item in sortedCategories"
                                     :key="item.name"
                                     :object="item"
                                     :color="displayedService.color"
-                                    class="hover:cursor-pointer"
+                                    class="hover:cursor-pointer half:scale-90"
                                     @click.stop="redirectToCard(null, item.name)" />
                             </div>
                             <div class="flex flex-wrap gap-6 w-full" v-else>
@@ -90,23 +103,32 @@
                             </div>
                         </div>
                     </div>
+                    <footer class="flex justify-between items-center flex-col h-64 half:!h-fit py-8 relative z-[2] w-full bg-black/20 web:hidden half:flex" v-if="displayedService">
+                        <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
+                        <div class="flex half:flex-col w-full justify-center items-center px-8">
+                            <div class="flex gap-4 items-center w-full justify-center">
+                                <Icon icon="material-symbols:mail-outline" class="w-6 h-6 text-white" />
+                                <p class="text-white hover:cursor-pointer" @click="copyEmail">contact.area.ownspace@gmail.com</p>
+                            </div>
+                            <p class="w-full text-center text-white">Project made at Epitech</p>
+                            <h1 class="text-4xl font-black text-white text-center w-full hover:cursor-pointer half:mt-12" @click="scrollToTop">AREA</h1>
+                        </div>
+                        <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm mobile:mb-20">
+                            <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/mentions')">Mentions</p>
+                            <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/cookies')">Cookies</p>
+                            <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/privacy')">Privacy</p>
+                            <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/terms')">Terms</p>
+                        </div>
+                    </footer>
                 </div>
             </div>
-        </div>
-        <div class="flex absolute bottom-0 z-20 w-full justify-center items-center">
-            <h2 class="text-white text-lg font-medium text-center p-4 mobile:hidden">
-                Switching in {{ secondsBeforeSwitch }} seconds . . .
-            </h2>
-            <Icon icon="mdi:snowflake" class="w-8 h-8 text-white" />
-            <p class="text-white text-lg font-medium text-center mobile:hidden pl-2 underline hover:cursor-pointer" @click.stop="freezeTime = !freezeTime" >
-                Click to {{ freezeTime ? 'un' : '' }}freeze
-            </p>
+            <FooterComponent class="!mt-0 half:hidden" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Service } from '@/types/services';
 import { useServiceStore } from '@/stores/service';
@@ -119,6 +141,9 @@ import RateComponent from '@/components/RateComponent.vue';
 import SaveComponent from '@/components/SaveComponent.vue';
 import ArrowComponent from '@/components/ArrowComponent.vue';
 import AREAInfoComponent from '@/components/AREAInfoComponent.vue';
+import MobileServiceNavComponent from '@/components/MobileServiceNavComponent.vue';
+import ServiceNavScrollComponent from '@/components/ServiceNavScrollComponent.vue';
+import FooterComponent from '@/components/FooterComponent.vue';
 
 // Store and Router Initialization
 const serviceStore = useServiceStore();
@@ -129,12 +154,57 @@ const services = ref<Service[]>(serviceStore.services);
 const displayedService = ref<Service | null>(null);
 const secondsBeforeSwitch = ref(10);
 const freezeTime = ref(false);
+const scrollY = ref(0);
+
+// Method to update scrollY ref
+const updateScrollY = (event: Event) => {
+  const target = event.target as HTMLElement;
+  scrollY.value = target.scrollTop;
+};
+
+function navigateTo(path: string) {
+    router.push(path);
+}
 
 const intervalDuration = 1000;
 
 const linked = ref(false);
 
 const interval = ref<NodeJS.Timeout | null>(null);
+
+function copyEmail() {
+    navigator.clipboard.writeText('contact.area.ownspace@gmail.com');
+    alert('Email copied to clipboard');
+}
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+};
+
+function getModifiedColor(color: string, percent: number = 10): string {
+  // Remove the hash if present
+  color = color.replace(/^#/, '');
+
+  // Parse the color into its RGB components
+  let r = parseInt(color.substring(0, 2), 16);
+  let g = parseInt(color.substring(2, 4), 16);
+  let b = parseInt(color.substring(4, 6), 16);
+
+  // Lighten each component
+  r = Math.min(255, Math.round(r + (255 - r) * (percent / 100)));
+  g = Math.min(255, Math.round(g + (255 - g) * (percent / 100)));
+  b = Math.min(255, Math.round(b + (255 - b) * (percent / 100)));
+
+  // Convert back to hexadecimal and return the color
+  const lighterColor = `#${r.toString(16).padStart(2, '0')}${g
+    .toString(16)
+    .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+  return lighterColor;
+}
 
 const sortedCategories = computed(() => {
     if (!displayedService.value) {
@@ -323,6 +393,10 @@ function handleServiceClick(name: string) {
 
 onMounted(() => {
     startAnimation();
+});
+
+onUnmounted(() => {
+    clearInterval(interval.value!);
 });
 </script>
 

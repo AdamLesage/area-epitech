@@ -6,6 +6,10 @@ import LoginPage from '@/views/LoginPage.vue'
 import ServicePage from '@/views/ServicePage.vue';
 import CardPage from '@/views/CardPage.vue';
 import CategoryPage from '@/views/CategoryPage.vue';
+import PrivacyPage from '@/views/PrivacyPage.vue';
+import TermsPage from '@/views/TermsPage.vue';
+import MentionsPage from '@/views/MentionsPage.vue';
+import Cook from '@/views/CookPage.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -81,12 +85,6 @@ const router = createRouter({
       beforeEnter: auth,
     },
     {
-      path: '/areas',
-      name: 'areas',
-      component: () => import('@/views/MyAreaPage.vue'),
-      beforeEnter: auth,
-    },
-    {
       path: '/auth-callback',
       name: 'auth-callback',
       component: () => import('@/views/AuthCallbackPage.vue'),
@@ -106,6 +104,26 @@ const router = createRouter({
       path: '/not-authorized',
       name: 'not-authorized',
       component: () => import('@/views/NotAuthorizedPage.vue'),
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: PrivacyPage,
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: TermsPage,
+    },
+    {
+      path: '/mentions',
+      name: 'mentions',
+      component: MentionsPage,
+    },
+    {
+      path: '/cookies',
+      name: 'cookies',
+      component: Cook,
     },
     {
       path: '/discord-end-of-process',

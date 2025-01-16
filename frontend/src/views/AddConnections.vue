@@ -1,16 +1,11 @@
 <template>
     <div class="min-h-screen bg-home text-white font-sans flex justify-center items-center px-4 sm:px-8">
+        <ServiceNavComponent @back-button="goBack" class="mobile:hidden z-10 absolute top-0" />
+        <MobileServiceNavComponent @back-button="goBack" class="web:hidden fixed bottom-0 z-40" />
         <!-- Main container -->
-        <div class="bg-home-div rounded-xl p-6 sm:p-10 w-full max-w-3xl text-center shadow-2xl relative">
-            <div class="flex justify-between items-center mb-6 sm:mb-8">
-                <h2 class="text-2xl sm:text-4xl font-semibold tracking-wide">Add a new account</h2>
-                <button 
-                    @click="goBack" 
-                    class="p-2 sm:p-3 md:p-4 bg-home-text text-white rounded-lg transition-all text-sm sm:text-lg md:text-xl hover:cursor-pointer" 
-                    aria-label="Back to previous page"
-                    role="button">
-                    Back
-                </button>
+        <div class="bg-home-div mobile:bg-transparent mobile:shadow-none rounded-xl p-6 sm:p-10 w-2/3 mobile:w-full max-w-[66.75rem] text-center shadow-2xl relative mobile:px-0">
+            <div class="flex justify-center items-center mb-6 sm:mb-8">
+                <h2 class="half:text-2xl text-4xl font-semibold tracking-wide">Add a new account</h2>
             </div>
 
             <!-- Responsive icons flexbox -->
@@ -20,15 +15,15 @@
                     :key="platform.name"
                     :style="{ backgroundColor: platform.color }"
                     @click="selectPlatform(platform.name)"
-                    class="p-4 sm:p-6 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all focus:outline-none focus:ring-2 focus:ring-white"
+                    class="rounded-full flex items-center justify-center shadow-lg focus:outline-none focus:ring-2 focus:ring-white w-16 mobile:w-[3rem] h-16 mobile:h-[3rem]"
                     :aria-label="`Select ${platform.name}`"
                     role="button">
-                    <Icon :icon="platform.icon" class="text-3xl sm:text-4xl text-white" />
+                    <Icon :icon="platform.icon" class="w-[3.5rem] mobile:w-[2.5rem] h-[3.5rem] mobile:h-[2.5rem] text-white" />
                 </button>
             </div>
             <div class="flex items-center justify-center gap-4" v-if="notConnectedServices.length == 0">
-                <Icon icon="akar-icons:check" class="text-3xl sm:text-4xl text-green-500" />
-                <h1 class="text-lg sm:text-lg font-semibold tracking-wide">No more platforms to connect to</h1>
+                <Icon icon="akar-icons:check" class="mobile:text-2xl text-4xl text-green-500" />
+                <h1 class="mobile:text-base text-lg font-semibold tracking-wide">No more platforms to connect to</h1>
             </div>
         </div>
     </div>
@@ -42,6 +37,9 @@ import { useUserStore } from "@/stores/user";
 import { useServiceStore } from "@/stores/service";
 import { Service } from "@/types/services";
 import { LinkedAccount } from "@/types/auth";
+
+import MobileServiceNavComponent from "@/components/MobileServiceNavComponent.vue";
+import ServiceNavComponent from "@/components/ServiceNavComponent.vue";
 
 const userStore = useUserStore();
 const serviceStore = useServiceStore();
@@ -69,9 +67,14 @@ function selectPlatform(platformName: string) {
     if (platformName == 'github' ||
         platformName == 'spotify' ||
         platformName == 'dropbox' ||
-        platformName == 'discord') {
+        platformName == 'discord' ||
+        platformName == 'strava') {
         window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/${platformName}?email=${email}`;
     } else {
+        if (platformName == 'gmail') {
+            window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google?email=${email}`;
+            return;
+        }
         console.error(`Platform ${platformName} not yet supported`);
     }
 }

@@ -9,6 +9,8 @@ require('./authentication/passport');
 const githubServiceRouter = require('./services/githubService')
 const dropboxServiceRouter = require('./services/dropboxService')
 const discordServiceRouter = require('./services/discordService')
+const stravaServiceRouter = require('./services/stravaService')
+const gmailServiceRouter = require('./services/gmailService')
 
 const userRouter = require('./routes/user');
 const authRouter = require('./routes/authentication');
@@ -28,12 +30,11 @@ const { discordClient } = require('./discord/app');
 const app = express();
 const port = 8080;
 
-var key = fs.readFileSync(__dirname + '/selfsigned.key');
-var cert = fs.readFileSync(__dirname + '/selfsigned.crt');
-var options = {
-  key: key,
-  cert: cert
-};
+// var cert = fs.readFileSync(__dirname + '/selfsigned.crt');
+// var options = {
+//   key: fs.readFileSync(__dirname + '/selfsigned.key'),
+//   cert: cert
+// };
 
 discordClient.login(process.env.DISCORD_BOT_TOKEN);
 
@@ -51,9 +52,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', userRouter);
+
 app.use('/github', githubServiceRouter);
 app.use('/dropbox', dropboxServiceRouter);
 app.use('/discord', discordServiceRouter);
+app.use('/gmail', gmailServiceRouter)
+app.use('/strava', stravaServiceRouter);
+
 app.use('/api', actionsRouter);
 app.use('/api', reactionRouter);
 app.use('/auth', authRouter);
@@ -62,7 +67,7 @@ app.use('', aboutRouter);
 
 var server = http.createServer(app);
 
-server.listen(port, async () => {
+app.listen(port, async () => {
   await migrateDatabase();
   initServices();
   await initWorkers();

@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'area-mobile',
   webDir: 'dist',
   server: {
-    url: 'http://13.39.148.166:8081/',
+    url: 'http://35.180.240.182:8081/',
     cleartext: true
   }
 };

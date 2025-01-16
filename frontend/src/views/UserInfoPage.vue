@@ -2,39 +2,40 @@
     <div
         class="flex flex-col justify-center items-center min-h-screen bg-home font-sans text-white">
         <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10 absolute top-0" />
+        <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden fixed bottom-0 z-40" />
         <div
-            class="bg-home-div rounded-xl p-4 md:p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform mt-20"
+            class="bg-home-div mobile:bg-transparent rounded-xl mobile:p-4 p-10 mobile:w-full w-2/3 max-w-[66.75rem] text-center shadow-2xl mobile:shadow-none mt-20 mobile:mt-0"
             v-if="user">
 
             <!-- PFP -->
             <img
                 :src="(user.profilePicture == null) ? '/images/temppfp.jpeg' : user.profilePicture.url"
                 alt="Profile Picture"
-                class="w-24 h-24 md:w-48 md:h-48 rounded-full mb-6 border-4 border-[#333] mx-auto shadow-lg" />
+                class="w-48 h-48 mini:w-24 mini:h-24 rounded-full mb-6 border-4 mobile:border-2 border-white/70 mx-auto shadow-lg" />
 
             <!-- Username and creation date -->
-            <h2 class="text-xl md:text-4xl font-semibold tracking-wide mb-2">{{ user.name }}</h2>
-            <p class="text-xs md:text-sm text-gray-400 font-light">{{ user.bio }}</p>
+            <h2 class="mobile:text-xl text-4xl font-semibold tracking-wide mb-2">{{ user.name }}</h2>
+            <p class="mobile:text-xs text-sm text-gray-400 font-light">{{ user.bio }}</p>
 
             <!-- Actions -->
-            <div class="flex flex-col md:flex-row justify-around mt-8 text-center text-gray-300">
-                <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0 w-1/3">
-                    <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.length }}</h3>
-                    <p class="text-xs md:text-base font-light">Actions Created</p>
+            <div class="flex flex-row justify-center items-center mt-8 mobile:mt-6 gap-8 mobile:gap-4 text-center text-gray-300">
+                <div class="hover:text-white w-[10rem] mobile:w-[7rem]">
+                    <h3 class="mobile:text-2xl text-5xl font-extrabold">{{ userStore.areas.length }}</h3>
+                    <p class="mobile:text-xs text-base font-light">Actions Created</p>
                 </div>
-                <div class="hover:text-white transition-all duration-300 mb-4 md:mb-0 w-1/3">
-                    <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == true).length }}</h3>
-                    <p class="text-xs md:text-base font-light">Actions <span class="text-green-500">On</span></p>
+                <div class="hover:text-white w-[10rem] mobile:w-[7rem]">
+                    <h3 class="mobile:text-2xl text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == true).length }}</h3>
+                    <p class="mobile:text-xs text-base font-light">Actions <span class="text-green-500">On</span></p>
                 </div>
-                <div class="hover:text-white transition-all duration-300 w-1/3">
-                    <h3 class="text-2xl md:text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == false).length }}</h3>
-                    <p class="text-xs md:text-base font-light">Actions <span class="text-red-500">Off</span></p>
+                <div class="hover:text-white w-[10rem] mobile:w-[7rem]">
+                    <h3 class="mobile:text-2xl text-5xl font-extrabold">{{ userStore.areas.filter((a) => a.isActive == false).length }}</h3>
+                    <p class="mobile:text-xs text-base font-light">Actions <span class="text-red-500">Off</span></p>
                 </div>
             </div>
 
             <!-- Connected Platforms -->
-            <div class="mt-8 md:mt-12">
-                <h3 class="text-lg md:text-2xl font-semibold mb-4 md:mb-6 tracking-wide">Connected Platforms</h3>
+            <div class="mobile:!mt-6 mt-12">
+                <h3 class="mobile:!text-base text-2xl font-semibold mobile:mb-4 mb-6 tracking-wide">Connected Platforms</h3>
                 <ConnectedApiIcons :platforms="detailedPlatforms ?? []" @socialClick="handleSocialClick" />
             </div>
 
@@ -42,12 +43,12 @@
             <div class="flex gap-4 justify-center items-center w-full">
                 <button
                     @click="goToAddConnections"
-                    class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+                    class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg mobile:text-sm text-white font-bold tracking-wide">
                     Add Connections
                 </button>
                 <button
                     @click="logout"
-                    class="mt-6 md:mt-8 px-4 md:px-6 py-3 bg-red-600 hover:bg-red-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all">
+                    class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-red-600 hover:bg-red-700 rounded-full shadow-lg mobile:text-sm text-white font-bold tracking-wide">
                     Logout
                 </button>
             </div>
@@ -62,7 +63,9 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useServiceStore } from "@/stores/service";
 import Cookies from 'js-cookie';
+
 import ServiceNavComponent from "@/components/ServiceNavComponent.vue";
+import MobileServiceNavComponent from "@/components/MobileServiceNavComponent.vue";
 
 const userStore = useUserStore();
 const servicesStore = useServiceStore();

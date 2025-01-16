@@ -45,6 +45,7 @@ export interface Option {
     description: string;
     type: OptionType;
     required: boolean;
+    options: String[] | undefined;
 }
 
 export type OptionType = 
@@ -67,7 +68,9 @@ export type OptionType =
     | 'DiscordGuild'
     | 'DiscordRole'
     | 'DiscordRoleName'
-    | 'DiscordGuildChannel';
+    | 'DiscordGuildChannel'
+    | 'SpotifyPlaylist'
+    | 'SpotifyMusic';
 
 export interface Reaction {
     name: string;

@@ -102,9 +102,7 @@
                             class="mobile:w-8 mobile:h-8" />
                         <label for="terms" class="mobile:text-auth-secondary mobile:text-sm">
                             I agree to the 
-                            <router-link to="" class="underline hover:cursor-pointer" @click.prevent>Terms</router-link>
-                            and 
-                            <router-link to="" class="underline hover:cursor-pointer" @click.prevent>Conditions</router-link>
+                            <router-link to="/terms" class="underline hover:cursor-pointer" @click.prevent>Terms</router-link>
                         </label>
                     </div>
                     <ErrorMessage name="terms" class="text-red-500 text-sm mt-1" />
@@ -211,7 +209,10 @@ const onSubmit: SubmissionHandler<SignUpFormValues, GenericObject, unknown> = (v
 };
 
 // Social authentication functions
-const authWithGoogle: () => void = () => console.log('Authenticating with Google...');
+const authWithGoogle: () => void = async () => {
+    console.log('Authenticating with Google...');
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google`;
+}
 const authWithGithub: () => void = async () => {
     console.log('Authenticating with Github...');
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/github`;
