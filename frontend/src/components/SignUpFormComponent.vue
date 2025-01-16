@@ -129,13 +129,6 @@ import { Icon } from '@iconify/vue';
 import AuthButton from '@/components/AuthButton.vue';
 import * as yup from 'yup';
 import { SignUpFormValues } from '@/types/auth';
-import axios from 'axios';
-import router from '@/router';
-import Cookies from 'js-cookie';
-import { useUserStore } from '@/stores/user';
-import { User } from '@/types/auth';
-
-const store = useUserStore();
 
 // Form state
 const email = ref<string>('');
@@ -221,7 +214,6 @@ const authWithDiscord: () => void = async () => {
     console.log('Authenticating with Github...');
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/discord`;
 }
-const authWithTwitter: () => void = () => console.log('Authenticating with Twitter...');
 const authWithApple: () => void = () => console.log('Authenticating with Apple...');
 const authWithMicrosoft: () => void = () => console.log('Authenticating with Microsoft...');
 const authWithSpotify: () => void = async () => {
