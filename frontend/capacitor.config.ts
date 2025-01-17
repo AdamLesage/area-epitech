@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.arearomainlemalin.area',
-  appName: 'area-mobile',
+  appName: 'AREA',
   webDir: 'dist',
   loggingBehavior: 'none'
 };
