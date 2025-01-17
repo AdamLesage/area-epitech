@@ -24,6 +24,29 @@
             </div>
         </div>
 
+        <div v-if="showDeleteAccountPopup" class="bg-black/20 w-screen h-screen absolute justify-center flex items-center z-50 top-0 left-0" @click="showDeleteAccountPopup = false">
+            <div class="flex flex-col justify-between items-center bg-home rounded-lg p-8 relative" @click.stop>
+                <h3 class="text-lg font-semibold text-white">Delete Account</h3>
+                <p class="text-white font-bold text-sm mt-4">Are you sure you want to delete your account?</p>
+                <p class="text-white text-sm mt-4">Please enter this code below: <span class="select-none">{{ verifyCode }}</span></p>
+                <input type="text" placeholder="Enter the code..." v-model="userVerifyCode" @change="errorCode = null"
+                    class="w-full mt-4 p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1" />
+                <p class="text-red-500 text-sm mt-4 mb-2" v-if="errorCode">{{ errorCode }}</p>
+                <button
+                    aria-label="close-delete-user-popup-button"
+                    @click="showDeleteAccountPopup = false" class="rounded-lg absolute top-4 right-4">
+                    <Icon icon="mdi:close-circle" class="w-8 h-8 text-home-text-light" />
+                </button>
+                <button
+                    aria-label="delete-account-button"
+                    @click="deleteAccount"
+                    class="bg-red-500 rounded-lg py-2 px-4 gap-2 mt-4 flex items-center">
+                    <Icon icon="mdi:bin" class="w-8 h-8 text-white" />
+                    <p class="text-white">Delete Account</p>
+                </button>
+            </div>
+        </div>
+
         <div v-if="!isEditing && user"
             class="bg-home-div mobile:bg-transparent rounded-xl mobile:p-4 p-10 mobile:w-full w-2/3 max-w-[66.75rem] text-center shadow-2xl mobile:shadow-none mt-20 mobile:mt-0 relative">
 
@@ -88,8 +111,8 @@
         </div>
 
         <!-- Edit Profile Card -->
-        <div v-else
-            class="bg-home-div rounded-xl p-4 md:p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform mt-20 mobile:mt-0">
+        <div v-else-if="user"
+            class="bg-home-div rounded-xl p-4 md:p-10 w-11/12 md:w-2/3 lg:w-1/2 text-center shadow-2xl transition-transform transform mt-20 mobile:mt-4 mobile:overflow-y-scroll mobile:mb-[6.25rem]">
             <h2 class="text-2xl md:text-4xl font-semibold tracking-wide mb-6 mobile:text-xl">Edit Profile</h2>
 
             <form @submit.prevent="saveProfile" class="space-y-6" :validation-schema="schema">
@@ -99,7 +122,7 @@
                         <!-- Avatar Section -->
                         <div class="relative">
                             <img :src="editForm.profilePictureUrl" alt="Profile Picture"
-                                class="w-24 h-24 md:w-32 md:h-32 hover:cursor-pointer rounded-full border-4 border-gray-300 shadow-lg mobile:w-20 mobile:h-20"
+                                class="w-24 h-24 md:w-32 md:h-32 object-cover hover:cursor-pointer rounded-full border-4 border-gray-300 shadow-lg mobile:w-20 mobile:h-20"
                                 @click="openPopup" />
 
                             <!-- Upload Button -->
@@ -161,18 +184,26 @@
                 </div>
 
                 <!-- Buttons -->
-                <div class="flex gap-4 justify-center items-center w-full">
+                <div class="flex gap-4 justify-center items-center w-full mobile:flex-wrap mt-6 mobile:mt-4">
                     <button
                         aria-label="save-user-edit-button"
                         type="submit"
-                        class="mt-6 px-4 py-3 bg-green-600 hover:bg-green-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all mobile:mt-4 mobile:px-3 mobile:py-2">
+                        class="px-4 py-3 bg-green-600 hover:bg-green-700 rounded-md shadow-lg text-white font-bold tracking-wide transition-all mobile:px-2 mobile:py-2 mobile:text-sm">
                         Save Changes
                     </button>
                     <button
                         aria-label="cancel-user-edit-button"
                         @click="toggleEdit"
-                        class="mt-6 px-4 py-3 bg-gray-600 hover:bg-gray-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all mobile:mt-4 mobile:px-3 mobile:py-2">
+                        class="px-4 py-3 bg-gray-600 hover:bg-gray-700 rounded-md shadow-lg text-white font-bold tracking-wide transition-all mobile:px-2 mobile:py-2 mobile:text-sm">
                         Cancel
+                    </button>
+                    <button
+                        aria-label="delete-user-button"
+                        role="button"
+                        type="button"
+                        @click.stop="showDeleteAccountPopup = true"
+                        class="px-4 py-3 bg-red-600 hover:bg-red-700 rounded-md shadow-lg text-white font-bold tracking-wide transition-all mobile:px-2 mobile:py-2 mobile:text-sm">
+                        Delete Account
                     </button>
                 </div>
             </form>
@@ -199,6 +230,10 @@ const userStore = useUserStore();
 const servicesStore = useServiceStore();
 const router = useRouter();
 const displayedLinkedAccount = ref<null | Platform>(null);
+const showDeleteAccountPopup = ref(false);
+const userVerifyCode = ref('');
+const verifyCode = ref(generateRandomCode());
+const errorCode = ref<string | null>(null);
 
 // User Info
 const user = ref(userStore.user);
@@ -226,6 +261,43 @@ watch(() => userStore.user, (newUser) => {
         profilePictureUrl: newUser?.profilePictureUrl,
     };
 });
+
+function generateRandomCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters[randomIndex];
+    }
+    return result;
+}
+
+async function deleteAccount() {
+    if (userVerifyCode.value !== verifyCode.value) {
+        console.log(userVerifyCode.value, verifyCode.value);
+        console.log('Invalid code');
+        errorCode.value = 'Invalid code';
+        return;
+    }
+    console.log('Deleting account');
+    const URL = `${import.meta.env.VITE_BACKEND_URL}/api/user/${user.value?.uuid}`;
+    console.log(URL);
+
+    try {
+        const response = await axios.delete(URL, {
+            headers: {
+                'Authorization': `Bearer ${user.value?.authToken}`,
+            }
+        });
+        console.log(response.data);
+        userStore.setUser(null);
+        userStore.areas = [];
+        Cookies.remove('token');
+        router.push('/');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
 function canDelete(platformName: string) {
     const cannotDelete = ['gmail', 'timer', 'area'];
