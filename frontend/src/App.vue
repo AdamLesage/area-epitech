@@ -83,16 +83,22 @@ function handleCreate() {
 
 // Watches the route for changes and initializes the stores if necessary
 watch(async () => route.fullPath, async (newPath) => {
+    if (await newPath === '/' ||
+        await newPath === '/terms' ||
+        await newPath === '/cookies' ||
+        await newPath === '/privacy' ||
+        await newPath === '/mentions') {
+        popupStore.display = false;
+        tempHide.value = true;
+        await initStores();
+        return;
+    }
     if (tempHide.value) {
         tempHide.value = false;
         popupStore.display = true;
+        await initStores();
         return;
     }
-    if (await newPath === '/') {
-        popupStore.display = false;
-        tempHide.value = true;
-    }
-    await initStores();
 })
 
 /**
