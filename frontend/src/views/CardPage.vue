@@ -30,7 +30,10 @@
                 </p>
             </div>
             <div class="w-full flex justify-center mt-12">
-                <button @click="selectCard" class="bg-[#333] p-4 w-[90vw] max-w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
+                <button
+                    aria-label="use-card-button-start"
+                    @click="selectCard"
+                    class="bg-[#333] p-4 w-[90vw] max-w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
                     v-if="user">
                     Use this {{ isAction ? 'Action' : 'Reaction' }}
                     <Icon icon="fluent:cursor-click-24-filled" class="w-8 h-8 text-white" />
@@ -104,7 +107,10 @@
             </div>
         </div>
         <div class="w-full flex justify-center mt-12">
-            <button @click="selectCard" class="bg-[#333] p-4 w-[90vw] max-w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
+            <button
+                aria-label="use-card-button-end"
+                @click="selectCard"
+                class="bg-[#333] p-4 w-[90vw] max-w-[66.75rem] rounded-lg text-white text-xl font-black flex items-center justify-center gap-4"
                 v-if="user">
                 Use this {{ isAction ? 'Action' : 'Reaction' }}
                 <Icon icon="fluent:cursor-click-24-filled" class="w-8 h-8 text-white" />

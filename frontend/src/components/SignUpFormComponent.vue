@@ -102,7 +102,7 @@
                             class="mobile:w-8 mobile:h-8" />
                         <label for="terms" class="mobile:text-auth-secondary mobile:text-sm">
                             I agree to the 
-                            <router-link to="/terms" class="underline hover:cursor-pointer" @click.prevent>Terms</router-link>
+                            <router-link to="/terms" aria-label="agree-terms-router-link" class="underline hover:cursor-pointer" @click.prevent>Terms</router-link>
                         </label>
                     </div>
                     <ErrorMessage name="terms" class="text-red-500 text-sm mt-1" />
@@ -110,11 +110,12 @@
                 <!-- Sign Up Button -->
                 <div class="flex flex-col gap-3 web:mt-4">
                     <button
+                        aria-label="sign-up-form-button"
                         type="submit"
                         class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
                         Sign Up
                     </button>
-                    <h2 class="text-center mobile:text-white">Already have an account? <router-link to="/login" class="text-auth-primary hover:underline hover:cursor-pointer mobile:text-white mobile:font-bold">Login</router-link></h2>
+                    <h2 class="text-center mobile:text-white">Already have an account? <router-link to="/login" aria-label="signin-redirect-link" class="text-auth-primary hover:underline hover:cursor-pointer mobile:text-white mobile:font-bold">Login</router-link></h2>
                 </div>
             </Form>
         </div>

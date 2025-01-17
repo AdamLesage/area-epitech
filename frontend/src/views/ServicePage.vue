@@ -44,7 +44,9 @@
         <div class="flex flex-col web:hidden gap-2">
             <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbActions }} Actions / {{ nbReactions }} Reactions</h2>
             <div class="flex flex-row gap-2 items-center justify-center">
-                <button class="rounded-full py-2 px-6 bg-white w-32">
+                <button
+                    aria-label="activate-service-button"
+                    class="rounded-full py-2 px-6 bg-white w-32">
                     <h1 class="font-semibold">Activate</h1>
                 </button>
             </div>
@@ -93,31 +95,41 @@
             <div class="mobile:hidden" />
         </div>
         <div class="flex mobile:justify-around justify-center mobile:flex-wrap w-full gap-8 mobile:gap-4 mt-6 mobile:mt-8 px-8">
-            <button class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
+            <button
+                aria-label="overview-nav-service-button"
+                class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'overview' ? 'underline' : ''"
                 :style="{ color: '#333', textDecorationColor: '#333' }"
                 @click="switchView('overview')">
                 Overview
             </button>
-            <button class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
+            <button
+                aria-label="categories-nav-service-button"
+                class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'categories' ? 'underline' : ''"
                 :style="{ color: '#333', textDecorationColor: '#333' }"
                 @click="switchView('categories')">
                 Categories
             </button>
-            <button class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
+            <button
+                aria-label="actions-nav-service-button"
+                class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'actions' ? 'underline' : ''"
                 :style="{ color: '#333', textDecorationColor: '#333' }"
                 @click="switchView('actions')">
                 Actions
             </button>
-            <button class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
+            <button
+                aria-label="reactions-nav-service-button"
+                class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'reactions' ? 'underline' : ''"
                 :style="{ color: '#333', textDecorationColor: '#333' }"
                 @click="switchView('reactions')">
                 Reactions
             </button>
-            <button class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
+            <button
+                aria-label="details-nav-service-button"
+                class="text-lg mobile:text-base font-black hover:cursor-pointer decoration-2 hover:underline"
                 :class="view === 'details' ? 'underline' : ''"
                 :style="{ color: '#333', textDecorationColor: '#333' }"
                 @click="switchView('details')">
@@ -153,6 +165,7 @@
                     </div>
                 </div>
                 <button
+                    aria-label="arrow-left-carousel-category-categories-service-button"
                     class="absolute h-full top-0 left-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
                     v-if="service.categories.length > 1"
                     :style="{ backgroundColor: service!.color }"
@@ -164,6 +177,7 @@
                         class="w-1/3" />
                 </button>
                 <button
+                    aria-label="arrow-right-carousel-category-categories-service-button"
                     class="absolute h-full top-0 right-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
                     v-if="service.categories.length > 1"
                     :style="{ backgroundColor: service!.color }"
@@ -306,6 +320,7 @@
                     </div>
                 </div>
                 <button
+                    aria-label="arrow-left-carousel-category-overview-service-button"
                     class="absolute h-full top-0 left-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
                     v-if="service.categories.length > 1"
                     :style="{ backgroundColor: service!.color }"
@@ -317,6 +332,7 @@
                         class="w-1/3" />
                 </button>
                 <button
+                    aria-label="arrow-right-carousel-category-overview-service-button"
                     class="absolute h-full top-0 right-0 p-2 z-20 before:hover:bg-black/5 before:absolute before:top-0 before:left-0 before:h-full before:w-full"
                     v-if="service.categories.length > 1"
                     :style="{ backgroundColor: service!.color }"
@@ -348,20 +364,26 @@
             </div>
             <div class="flex justify-between w-[90vw] max-w-[66.75rem] mt-6 relative">
                 <div class="flex gap-2 mobile:justify-center w-full">
-                    <button class="p-2 rounded-full px-4"
+                    <button
+                        aria-label="select-mode-action-all-service-button"
+                        class="p-2 rounded-full px-4"
                         :style="{ backgroundColor: modeSelected == 'Actions' ? service!.color : '#fff',
                             color: modeSelected == 'Actions' ? 'white' : '#333'
                          }"
                         @click="modeSelected = 'Actions'">
                         <h1 class="text-lg font-semibold">Actions</h1>
                     </button>
-                    <button class="p-2 rounded-full px-4"
+                    <button
+                        aria-label="select-mode-reaction-all-service-button"
+                        class="p-2 rounded-full px-4"
                         :style="{ backgroundColor: modeSelected == 'Reactions' ? service!.color : '#fff',
                             color: modeSelected == 'Reactions' ? 'white' : '#333' }"
                         @click="modeSelected = 'Reactions'">
                         <h1 class="text-lg font-semibold">Reactions</h1>
                     </button>
-                    <button class="p-2 rounded-full px-4"
+                    <button
+                        aria-label="select-mode-both-all-service-button"
+                        class="p-2 rounded-full px-4"
                         :style="{ backgroundColor: modeSelected == 'Both' ? service!.color : '#fff',
                             color: modeSelected == 'Both' ? 'white' : '#333' }"
                         @click="modeSelected = 'Both'">

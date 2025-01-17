@@ -62,7 +62,7 @@
                         @click="selectPlaylist(playlist)" >
                         <img v-if="playlist.images && playlist.images[0]" :src="playlist.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
                         <div class="flex flex-col">
-                            <a :href="playlist.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{playlist.name}}</a>
+                            <a aria-label="playlist name selection" :href="playlist.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{playlist.name}}</a>
                             <h4 class="text-white text-xs">{{ playlist.tracks.total }} tracks</h4>
                         </div>
                     </div>
@@ -73,13 +73,15 @@
                 <div class="bg-[#24292e] p-2 rounded-md flex items-center gap-2 w-full justify-start">
                     <img :src="selectedPlaylist.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
                     <div class="flex flex-col">
-                        <a :href="selectedPlaylist.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{selectedPlaylist.name}}</a>
+                        <a aria-label="selected-playlist-name" :href="selectedPlaylist.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{selectedPlaylist.name}}</a>
                         <h4 class="text-white text-xs">{{ selectedPlaylist.tracks.total }} tracks</h4>
                     </div>
-                    <button class="rounded-md text-sm text-[#fff] underline transition"
+                    <button
+                        aria-label="choose-another-playlist-spotify-button"
+                        class="rounded-md text-sm text-[#fff] underline transition"
                         @click="backToPlaylistSelection">
                         {{ action ? 'Connect' : 'Choose'}} Another Playlist
-                        </button>
+                    </button>
                 </div>
             </div>
         </div>
@@ -100,6 +102,7 @@
                         class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] w-full"
                     />
                     <button
+                        aria-label="search-music-spotify-button"
                         class="p-2 w-full bg-[#1db954] rounded-md text-sm text-white hover:[#38e073] transition"
                         @click="searchmusic">
                         Search
@@ -111,7 +114,7 @@
                         @click="selectMusic(music)" >
                         <img :src="music.images[0].url" alt="Music Cover" class="w-8 h-8 rounded-md" />
                         <div class="flex flex-col">
-                            <a :href="music.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{music.name}}</a>
+                            <a aria-label="music name selection" :href="music.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{music.name}}</a>
                             <h4 class="text-white text-xs">
                                 <span v-for="(artist, index) in music.artists" :key="artist.name">
                                     {{ artist.name }}<span v-if="index < music.artists.length - 1">, </span>
@@ -126,17 +129,19 @@
                 <div class="bg-[#24292e] p-2 rounded-md flex items-center gap-2 w-full justify-start">
                     <img :src="selectedMusic.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
                     <div class="flex flex-col">
-                        <a :href="selectedMusic.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{selectedMusic.name}}</a>
+                        <a aria-label="selected-music-name" :href="selectedMusic.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{selectedMusic.name}}</a>
                         <h4 class="text-white text-xs">
                             <span v-for="(artist, index) in selectedMusic.artists" :key="artist.name">
                                 {{ artist.name }}<span v-if="index < selectedMusic.artists.length - 1">, </span>
                             </span>
                         </h4>
                     </div>
-                    <button class="rounded-md text-sm text-[#fff] underline transition"
+                    <button
+                        aria-label="choose-another-music-spotify-button"
+                        class="rounded-md text-sm text-[#fff] underline transition"
                         @click="backToMusicSelection">
                         {{ action ? 'Connect' : 'Choose'}} Another Music
-                        </button>
+                    </button>
                 </div>
             </div>
         </div>
@@ -171,7 +176,7 @@
                     @click="selectRepository(repo)">
                     <div class="flex gap-2 items-center">
                         <Icon icon="mdi:github" class="text-white" />
-                        <a :href="repo.url" target="_blank" class="text-white hover:text-blue-500 hover:underline">
+                        <a aria-label="repository owner + name" :href="repo.url" target="_blank" class="text-white hover:text-blue-500 hover:underline">
                             {{ repo.owner + '/' + repo.name }}
                         </a>
                     </div>
@@ -182,6 +187,7 @@
                     </span>
                 </div>
                 <button
+                    aria-label="back-to-user-selection-github-button"
                     class="p-2 w-full mt-2 bg-blue-500 rounded-md text-sm text-white hover:bg-blue-600 transition"
                     @click="backToUserSelection">
                     Back to User Selection
@@ -197,7 +203,7 @@
                 <div class="bg-[#24292e] p-2 pl-3 flex rounded-md justify-between items-center transition">
                     <div class="flex gap-2 items-center">
                         <Icon icon="mdi:github" class="text-white" />
-                        <a :href="selectedRepository.url" target="_blank" class="text-white hover:text-blue-500 hover:underline">
+                        <a aria-label="selected-repository-owner-and-name" :href="selectedRepository.url" target="_blank" class="text-white hover:text-blue-500 hover:underline">
                             {{ selectedRepository.owner + '/' + selectedRepository.name }}
                         </a>
                     </div>
@@ -219,7 +225,9 @@
                         <h3 class="text-md font-semibold">All Done {{ action ? '(Connected)' : ''}}</h3>
                         <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
                     </div>
-                    <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                    <button
+                        aria-label="back-to-user-selection-end-github-button"
+                        class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
                         @click="backToUserSelection">
                         {{ action ? 'Connect' : 'Choose'}} Another Repository
                     </button>
@@ -260,6 +268,7 @@
                             <i>No Guilds found.<br/>Verify you are correctly linked to Discord</i>
                         </div>
                         <button
+                            aria-label="fetch-guilds-discord-button"
                             @click="fetchGuilds"
                             class="w-full h-12 mt-4 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
                             <Icon icon="mdi:reload" class="text-white w-6 h-6" />
@@ -281,7 +290,9 @@
                                 <h3 class="text-md font-semibold text-[#333]">Guild Connected</h3>
                                 <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
                             </div>
-                            <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                            <button
+                                aria-label="back-to-guild-selection-discord-button"
+                                class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
                                 @click="backToGuildSelection">
                                 Choose Another Guild
                             </button>
@@ -322,6 +333,7 @@
                                 </div>
                             </div>
                             <button
+                                aria-label="fetch-channels-discord-button"
                                 @click="fetchChannels(selectedGuild.id)"
                                 class="w-full h-12 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
                                 <Icon icon="mdi:reload" class="text-white w-6 h-6" />
@@ -343,7 +355,9 @@
                                     <h3 class="text-md font-semibold text-[#333]">Channel is Correct</h3>
                                     <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
                                 </div>
-                                <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                                <button
+                                    aria-label="back-to-channel-selection-discord-button"
+                                    class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
                                     @click="backToChannelSelection">
                                     Choose Another Channel
                                 </button>
@@ -384,6 +398,7 @@
                             <i>No Guilds found.<br/>Verify you are correctly linked to Discord</i>
                         </div>
                         <button
+                            aria-label="fetch-guilds-role-discord-button"
                             @click="fetchGuilds"
                             class="w-full h-12 mt-4 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
                             <Icon icon="mdi:reload" class="text-white w-6 h-6" />
@@ -405,7 +420,9 @@
                                 <h3 class="text-md font-semibold text-[#333]">Guild Connected</h3>
                                 <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
                             </div>
-                            <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                            <button
+                                aria-label="back-to-guild-selection-end-discord-button"
+                                class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
                                 @click="backToGuildSelection">
                                 Choose Another Guild
                             </button>
@@ -440,6 +457,7 @@
                             <i>No Roles found.<br/>Verify you are correctly linked to Discord</i>
                         </div>
                         <button
+                            aria-label="fetch-roles-discord-button"
                             @click="fetchRoles(selectedGuild.id)"
                             class="w-full h-12 mt-4 bg-[#7289da] items-center justify-center text-md text-white rounded-md flex gap-4">
                             <Icon icon="mdi:reload" class="text-white w-6 h-6" />
@@ -460,7 +478,9 @@
                                 <h3 class="text-md font-semibold text-[#333]">Role Selected</h3>
                                 <Icon icon="mdi:check-circle" class="text-green-500 text-xl" />
                             </div>
-                            <button class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
+                            <button
+                                aria-label="back-to-role-selection-discord-button"
+                                class="rounded-md text-sm text-[#333] underline decoration-[#333] transition"
                                 @click="backToRoleSelection">
                                 Choose Another Role
                             </button>

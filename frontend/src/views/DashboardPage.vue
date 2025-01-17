@@ -2,7 +2,9 @@
     <div>
         <HelpAssistantPopupComponent :bottom="16" :left="16" color="#1c1c53" class="z-[60] mobile:hidden" />
         <HelpAssistantPopupComponent :bottom="116" :left="16" color="#1c1c53" class="z-[60] web:hidden" />
-        <button class="fixed bottom-4 mobile:bottom-28 right-4 z-[70] w-12 h-12 text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0"
+        <button
+            aria-label="scrollTop-arrow-dashboard-button"
+            class="fixed bottom-4 mobile:bottom-28 right-4 z-[70] w-12 h-12 text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0"
             :style="{ backgroundColor: '#1c1c53' }">
             <ArrowComponent
                 direction="top"
@@ -36,11 +38,6 @@
                         MY AREA
                     </h1>
                 </div>
-            </div>
-            <div class="flex w-full justify-center web:hidden m-4 z-50">
-                <button class="rounded-full py-2 px-6 bg-white w-32 mobile:hidden">
-                    <h1 class="font-semibold">Activate</h1>
-                </button>
             </div>
             <div class="flex flex-col items-center z-50 justify-start w-full p-4 web:hidden gap-4 overflow-y-scroll h-1/2 mx-auto"
                 @wheel.stop>
@@ -135,9 +132,13 @@
                     </div>
                     <div class="bg-white flex flex-col p-4 rounded-xl w-60 mobile:flex-row items-center mobile:w-[90vw] mobile:gap-8" @click.stop>
                         <h1 class="text-xl font-black text-[#333] text-center mb-4 mobile:hidden">Quick Actions</h1>
-                        <button class="w-full py-2 px-8 mobile:px-4 mb-2 mobile:mb-0 bg-[#333] text-white rounded-md hover:cursor-pointer flex gap-2 items-center justify-center"
+                        <button
+                            aria-label="toggle-area-dashboard-button"
+                            class="w-full py-2 px-8 mobile:px-4 mb-2 mobile:mb-0 bg-[#333] text-white rounded-md hover:cursor-pointer flex gap-2 items-center justify-center"
                             @click="toggleArea(area)"><Icon icon="lucide:mouse-pointer-click" class="text-white w-6 h-6 flex-shrink-0" />{{ area.isActive ? 'Deactivate' : 'Activate' }}</button>
-                        <button class="w-full py-2 px-8 mobile:px-4 bg-[#333] text-white rounded-md hover:cursor-pointer flex gap-2 items-center justify-center"
+                        <button
+                            aria-label="delete-area-dashboard-button"
+                            class="w-full py-2 px-8 mobile:px-4 bg-[#333] text-white rounded-md hover:cursor-pointer flex gap-2 items-center justify-center"
                             @click="deleteArea(area)">
                             <Icon icon="mdi:delete" class="text-red-500 w-6 h-6" />Delete</button>
                     </div>

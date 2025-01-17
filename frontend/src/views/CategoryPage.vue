@@ -30,20 +30,26 @@
             </div>
             <div class="flex justify-between w-[90vw] max-w-[66.75rem] mt-6 relative">
                 <div class="flex gap-2 mobile:justify-center w-full">
-                    <button class="p-2 rounded-full px-4"
+                    <button
+                        aria-label="mode-selection-action-category-button"
+                        class="p-2 rounded-full px-4"
                         :style="{ backgroundColor: modeSelected == 'Actions' ? service!.color : '#fff',
                             color: modeSelected == 'Actions' ? 'white' : '#333'
                          }"
                         @click="modeSelected = 'Actions'">
                         <h1 class="text-lg font-semibold">Actions</h1>
                     </button>
-                    <button class="p-2 rounded-full px-4"
+                    <button
+                        aria-label="mode-selection-reaction-category-button"
+                        class="p-2 rounded-full px-4"
                         :style="{ backgroundColor: modeSelected == 'Reactions' ? service!.color : '#fff',
                             color: modeSelected == 'Reactions' ? 'white' : '#333' }"
                         @click="modeSelected = 'Reactions'">
                         <h1 class="text-lg font-semibold">Reactions</h1>
                     </button>
-                    <button class="p-2 rounded-full px-4"
+                    <button
+                        aria-label="mode-selection-both-category-button"
+                        class="p-2 rounded-full px-4"
                         :style="{ backgroundColor: modeSelected == 'Both' ? service!.color : '#fff',
                             color: modeSelected == 'Both' ? 'white' : '#333' }"
                         @click="modeSelected = 'Both'">

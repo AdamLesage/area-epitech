@@ -8,10 +8,14 @@
                     <Icon :icon="displayedLinkedAccount.icon" class="text-xl w-12 h-12 text-white" />
                     <h3 class="text-lg font-semibold text-white capitalize">{{ displayedLinkedAccount.name }}</h3>
                 </div>
-                <button @click="displayedLinkedAccount = null" class="rounded-lg absolute top-4 right-4">
+                <button
+                    aria-label="close-user-info-displayed-linked-account-button"
+                    @click="displayedLinkedAccount = null" class="rounded-lg absolute top-4 right-4">
                     <Icon icon="mdi:close-circle" class="w-8 h-8 text-home-text-light" />
                 </button>
-                <button v-if="canDelete(displayedLinkedAccount.name)" @click="deleteLinkedAccount(displayedLinkedAccount)" class="bg-red-500 rounded-lg py-2 px-4 gap-2 my-8 flex items-center">
+                <button
+                    aria-label="delete-user-info-displayed-linked-account-button"
+                    v-if="canDelete(displayedLinkedAccount.name)" @click="deleteLinkedAccount(displayedLinkedAccount)" class="bg-red-500 rounded-lg py-2 px-4 gap-2 my-8 flex items-center">
                     <Icon icon="clarity:disconnect-line" class="w-8 h-8 text-white" />
                     <p class="text-white">Disconnect</p>
                 </button>
@@ -24,7 +28,8 @@
             class="bg-home-div mobile:bg-transparent rounded-xl mobile:p-4 p-10 mobile:w-full w-2/3 max-w-[66.75rem] text-center shadow-2xl mobile:shadow-none mt-20 mobile:mt-0 relative">
 
             <!-- Edit Profile Button -->
-            <button @click="toggleEdit"
+            <button
+                @click="toggleEdit"
                 class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 hover:border-white border-2 border-transparent text-white font-bold px-4 py-2 md:px-6 md:py-2 rounded-full shadow-lg transition-all flex items-center justify-center gap-2"
                 aria-label="Edit Profile">
                 <Icon icon="bi:pencil-fill" class="w-4 h-4 md:w-5 md:h-5" />
@@ -67,11 +72,15 @@
 
             <!-- Buttons -->
             <div class="flex gap-4 justify-center items-center w-full">
-                <button @click="goToAddConnections"
+                <button
+                    aria-label="add-connections-button"
+                    @click="goToAddConnections"
                     class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg mobile:text-sm text-white font-bold tracking-wide">
                     Add Connections
                 </button>
-                <button @click="logout"
+                <button
+                    aria-label="logout-button"
+                    @click="logout"
                     class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-red-600 hover:bg-red-700 rounded-full shadow-lg mobile:text-sm text-white font-bold tracking-wide">
                     Logout
                 </button>
@@ -94,7 +103,9 @@
                                 @click="openPopup" />
 
                             <!-- Upload Button -->
-                            <button type="button" :onclick="openPopup"
+                            <button
+                                aria-label="upload button"
+                                type="button" :onclick="openPopup"
                                 class="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-blue-700 transition mobile:w-6 mobile:h-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                     stroke="white" class="w-4 h-4 mobile:w-3 mobile:h-3">
@@ -114,7 +125,9 @@
                                         class="cursor-pointer border-2 border-transparent hover:border-blue-500 rounded-md w-32 h-32 object-cover mobile:w-24 mobile:h-24"
                                         @click="selectImage(image)" />
                                 </div>
-                                <button @click="closePopup"
+                                <button
+                                    aria-label="close-popup-user-info-button"
+                                    @click="closePopup"
                                     class="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition">Cancel</button>
                             </div>
                         </div>
@@ -149,11 +162,15 @@
 
                 <!-- Buttons -->
                 <div class="flex gap-4 justify-center items-center w-full">
-                    <button type="submit"
+                    <button
+                        aria-label="save-user-edit-button"
+                        type="submit"
                         class="mt-6 px-4 py-3 bg-green-600 hover:bg-green-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all mobile:mt-4 mobile:px-3 mobile:py-2">
                         Save Changes
                     </button>
-                    <button @click="toggleEdit"
+                    <button
+                        aria-label="cancel-user-edit-button"
+                        @click="toggleEdit"
                         class="mt-6 px-4 py-3 bg-gray-600 hover:bg-gray-700 rounded-full shadow-lg text-white font-bold tracking-wide transition-all mobile:mt-4 mobile:px-3 mobile:py-2">
                         Cancel
                     </button>

@@ -70,12 +70,14 @@
                 <div class="flex flex-col gap-2">
                     <!-- Validate Button -->
                     <button
+                        aria-label="validate-password-change-form-button"
                         type="submit"
                         class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
                         Submit
                     </button>
                     <!-- Abort Button -->
                     <button
+                        aria-label="abort-password-change-form-button"
                         type="button"
                         class="web:text-auth-primary mobile:text-white p-2 rounded-lg hover:cursor-pointer mx-4"
                         @click="abort">

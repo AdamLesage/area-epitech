@@ -1,6 +1,7 @@
 <template>
     <div class="flex justify-center items-center flex-wrap gap-2">
-        <button 
+        <button
+            aria-label="connected-api-button"
             v-for="platform in platforms"
             :key="platform.name"
             :style="{ backgroundColor: platform.color }"

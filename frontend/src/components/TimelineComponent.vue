@@ -102,27 +102,33 @@
                 </g>
             </g>
         </svg>
-        <button class="absolute text-white top-4 left-8 w-32 h-32 rounded-full"
+        <button
+            aria-label="project-start-button"
+            class="absolute text-white top-4 left-8 w-32 h-32 rounded-full"
             @click="displayProjectStart">
         </button>
-        <div 
-            v-if="menuToggles[0]" 
+        <div
+            v-if="menuToggles[0]"
             class="absolute top-[4rem] left-8 w-32 bg-home-div text-white text-sm p-3 rounded-lg flex justify-center pointer-events-none">
             <p>
                 <span class="text-[#4F92FF]">18 Nov. 2024</span>
             </p>
         </div>
-        <button class="absolute text-white top-4 left-56 w-32 h-32 rounded-full"
+        <button
+            aria-label="final-product-button"
+            class="absolute text-white top-4 left-56 w-32 h-32 rounded-full"
             @click="displayFinalProduct">
         </button>
-        <div 
-            v-if="menuToggles[1]" 
+        <div
+            v-if="menuToggles[1]"
             class="absolute top-[4rem] left-56 w-32 bg-home-div text-white text-sm p-3 rounded-lg flex justify-center pointer-events-none">
             <p>
                 <span class="text-[#A8DD38]">19 Jan. 2025</span>
             </p>
         </div>
-        <button class="absolute text-white bottom-4 left-32 w-32 h-32 rounded-full"
+        <button
+            aria-label="mvp-button"
+            class="absolute text-white bottom-4 left-32 w-32 h-32 rounded-full"
             @click="displayMVP">
         </button>
         <div 
@@ -132,11 +138,13 @@
                 <span class="text-[#44E095]">11 Dec. 2024</span>
             </p>
         </div>
-        <button class="absolute text-white bottom-4 left-80 w-32 h-32 rounded-full"
+        <button
+            aria-label="project-end-button"
+            class="absolute text-white bottom-4 left-80 w-32 h-32 rounded-full"
             @click="displayProjectEnd">
         </button>
-        <div 
-            v-if="menuToggles[3]" 
+        <div
+            v-if="menuToggles[3]"
             class="absolute bottom-[4rem] left-80 w-32 bg-home-div text-white text-sm p-3 rounded-lg flex justify-center pointer-events-none">
             <p>
                 <span class="text-[#1AC6FF]">22 Jan. 2025</span>

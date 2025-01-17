@@ -46,14 +46,17 @@
                 </div>
                 <div class="flex flex-col gap-2">
                     <!-- Validate Button -->
-                    <h2 class="text-center web:text-auth-primary mobile:text-white mb-8 mt-8">Not received? <span class="font-bold hover:cursor-pointer hover:underline" @click="sendAgain">Send Again</span></h2>
+                    <h2 class="text-center web:text-auth-primary mobile:text-white mb-8 mt-8">Not received? <span class="font-bold hover:cursor-pointer hover:underline" @click="sendAgain"
+                        aria-label="send-again-verif-form">Send Again</span></h2>
                     <button
+                        aria-label="validate-email-verif-form-button"
                         type="submit"
                         class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
                         Validate
                     </button>
                     <!-- Abort Button -->
                     <button
+                        aria-label="abort-email-verif-form-button"
                         type="button"
                         class="web:text-auth-primary mobile:text-white p-2 rounded-lg hover:cursor-pointer mx-4"
                         @click="abort">
