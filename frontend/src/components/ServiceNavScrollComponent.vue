@@ -4,10 +4,12 @@ import NavButton from '@/components/NavButton.vue';
 import { Icon } from '@iconify/vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { usePopupStore } from '@/stores/popup';
 import { ref } from 'vue';
 
 const userStore = useUserStore();
 const user = userStore.user;
+const popupStore = usePopupStore();
 
 const router = useRouter();
 const route = useRoute();
@@ -18,24 +20,28 @@ const handleExploreRedirect = () => {
     console.log('Redirecting to explore');
     window.scrollTo(0, 0);
     router.push('/explore');
+    popupStore.display = true;
 }
 
 const handleMyAreasRedirect = () => {
     console.log('Redirecting to dashboard');
     window.scrollTo(0, 0);
     router.push('/dashboard');
+    popupStore.display = true;
 }
 
 const handleWorkshopRedirect = () => {
     console.log('Redirecting to workshop');
     window.scrollTo(0, 0);
     router.push('/workshop');
+    popupStore.display = false;
 }
 
 const handleUserProfileRedirect = () => {
     console.log('Redirecting to user profile');
     window.scrollTo(0, 0);
     router.push('/userinfo');
+    popupStore.display = true;
 }
 
 const handleBackButton = () => {

@@ -3,7 +3,9 @@ import { ref } from 'vue';
 import NavButton from '@/components/NavButton.vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { usePopupStore } from '@/stores/popup';
 
+const popupStore = usePopupStore();
 const userStore = useUserStore();
 const user = ref(userStore.user);
 
@@ -22,16 +24,19 @@ const emit = defineEmits(['back-button']);
 const handleExploreRedirect = () => {
     console.log('Redirecting to explore');
     router.push('/explore');
+    popupStore.display = true;
 }
 
 const handleUserProfileRedirect = () => {
     console.log('Redirecting to user profile');
     router.push('/userinfo');
+    popupStore.display = true;
 }
 
 function handleWorkshopRedirect() {
     console.log('Redirecting to workshop');
     router.push('/workshop');
+    popupStore.display = false;
 }
 
 const handleBackButton = () => {
