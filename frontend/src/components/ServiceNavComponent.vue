@@ -36,6 +36,10 @@ const handleWorkshopRedirect = () => {
 }
 
 const handleUserProfileRedirect = () => {
+    if (!user.value) {
+        console.error('User not found, redirection aborted');
+        return;
+    }
     console.log('Redirecting to user profile');
     window.scrollTo(0, 0);
     router.push('/userinfo');
@@ -58,7 +62,7 @@ const handleBackButton = () => {
                 <img
                     v-if="user && user.profilePictureUrl"
                     :src="user?.profilePictureUrl" alt="User profile picture" class="w-12 h-12 rounded-full hover:opacity-90 hover:cursor-pointer border-white border-2 object-cover" @click="handleUserProfileRedirect" />
-                <UserSvgComponent color="white" class="w-12 h-12 hover:opacity-90 hover:cursor-pointer" @click="handleUserProfileRedirect" v-else />
+                <UserSvgComponent color="white" class="w-12 h-12 hover:opacity-90 hover:cursor-pointer" @click="handleUserProfileRedirect" v-else-if="user" />
             </div>
         </nav>
     </div>
