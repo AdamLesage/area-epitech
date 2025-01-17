@@ -1,5 +1,6 @@
 <template>
-    <router-link to="/signup">
+    <router-link to="/signup"
+        aria-label="signup-button-router-link">
         <svg width="143" height="55" viewBox="0 0 143 55" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 fill-rule="evenodd"

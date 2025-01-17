@@ -61,9 +61,13 @@
                     <div class="h-8 w-4 rounded-xl bg-[#333]" />
                 </div>
                 <div class="flex justify-end items-center w-1/2 mobile:w-fit gap-4 mobile:mt-4">
-                    <button class="w-36 h-12 rounded-xl bg-blue-500 text-white text-lg font-black hover:cursor-pointer shadow-lg"
+                    <button
+                        aria-label="save-workshop-button"
+                        class="w-36 h-12 rounded-xl bg-blue-500 text-white text-lg font-black hover:cursor-pointer shadow-lg"
                         @click="save">Save</button>
-                    <button class="w-36 h-12 rounded-xl bg-red-500 text-white text-lg font-black hover:cursor-pointer shadow-lg"
+                    <button
+                        aria-label="cancel-setup-workshop-button" 
+                        class="w-36 h-12 rounded-xl bg-red-500 text-white text-lg font-black hover:cursor-pointer shadow-lg"
                         @click="cancelSetup">Cancel Setup</button>
                 </div>
             </div>
@@ -164,7 +168,10 @@
                     <div v-if="actionSearch.service && !actionSearch.category" class="w-[75%] mobile:w-[90%]">
                         <div class="flex justify-between items-center">
                             <h1 class="text-xl font-black text-[#333]">Select a Category</h1>
-                            <button @click="actionSearch.service = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Change Service</button>
+                            <button
+                                aria-label="change-service-action-workshop-button"
+                                @click="actionSearch.service = null"
+                                class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Change Service</button>
                         </div>
                         <div v-for="category in actionSearch.service.categories.filter(category => category.actions.length > 0)" :key="category.name" class="flex h-16 justify-between px-4 my-4 items-center bg-[#333] text-white rounded-xl hover:cursor-pointer shadow-lg"
                             @click="actionSearch.category = category"
@@ -176,8 +183,12 @@
                         <div class="flex justify-between items-center">
                             <h1 class="text-xl font-black text-[#333]">Select an Action</h1>
                             <div class="flex justify-end gap-2">
-                                <button @click="actionSearch.category = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Category</button>
-                                <button @click="actionSearch.service = null; actionSearch.category = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Service</button>
+                                <button
+                                    aria-label="change-category-action-workshop-button"
+                                    @click="actionSearch.category = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Category</button>
+                                <button
+                                    aria-label="change-service2-action-workshop-button"
+                                    @click="actionSearch.service = null; actionSearch.category = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Service</button>
                             </div>
                         </div>
                         <div v-for="card in actionSearch.category.actions" :key="card.name" class="flex w-full h-16 justify-between px-4 my-4 items-center bg-[#333] text-white rounded-xl hover:cursor-pointer shadow-lg"
@@ -291,7 +302,9 @@
                     <div v-if="reactionSearch.service && !reactionSearch.category" class="w-[75%] mobile:w-[90%]">
                         <div class="flex justify-between items-center">
                             <h1 class="text-xl font-black text-[#333]">Select a Category</h1>
-                            <button @click="reactionSearch.service = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Change Service</button>
+                            <button
+                                aria-label="change-service-reaction-workshop-button"
+                                @click="reactionSearch.service = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Change Service</button>
                         </div>
                         <div v-for="category in reactionSearch.service.categories.filter(category => category.reactions.length > 0)" :key="category.name" class="flex h-16 justify-between px-4 my-4 items-center bg-[#333] text-white rounded-xl hover:cursor-pointer shadow-lg"
                             @click="reactionSearch.category = category"
@@ -303,8 +316,12 @@
                         <div class="flex justify-between items-center">
                             <h1 class="text-xl font-black text-[#333]">Select a Reaction</h1>
                             <div class="flex justify-end gap-2">
-                                <button @click="reactionSearch.category = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Category</button>
-                                <button @click="reactionSearch.service = null; reactionSearch.category = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Service</button>
+                                <button
+                                    aria-label="change-category-reaction-workshop-button"
+                                    @click="reactionSearch.category = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Category</button>
+                                <button
+                                    aria-label="change-service2-reaction-workshop-button"
+                                    @click="reactionSearch.service = null; reactionSearch.category = null" class="p-2 bg-[#333] rounded-md text-white hover:cursor-pointer">Service</button>
                             </div>
                         </div>
                         <div v-for="card in reactionSearch.category.reactions" :key="card.name" class="flex w-full h-16 justify-between px-4 my-4 items-center bg-[#333] text-white rounded-xl hover:cursor-pointer shadow-lg"

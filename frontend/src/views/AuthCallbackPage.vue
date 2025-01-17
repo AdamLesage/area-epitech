@@ -11,7 +11,9 @@
             <p class="text-sm text-home-text-light mb-6 text-center">
                 * If this takes too long, please contact an administrator or try login again.
             </p>
-            <button @click="back" class="btn btn-primary px-12 py-4 text-white bg-home-div rounded-lg transition hover:cursor-pointer z-10">
+            <button
+                aria-label="back-auth-callback-button"
+                @click="back" class="btn btn-primary px-12 py-4 text-white bg-home-div rounded-lg transition hover:cursor-pointer z-10">
                 Back
             </button>
         </div>

@@ -53,10 +53,10 @@
                     You can set your browser to block or alert you about these cookies, but some parts of the site will not then work. These settings are usually found in the 'options' or 'preferences' menu of your browser. To understand these settings, the following links may be helpful. Otherwise, you should use the 'Help' option in your browser for more details.
                 </p>
                 <ul class="list-disc list-inside mb-4">
-                    <li><a href="https://support.google.com/chrome/answer/95647?hl=en" class="text-blue-500 hover:underline">Google Chrome</a></li>
-                    <li><a href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences" class="text-blue-500 hover:underline">Mozilla Firefox</a></li>
-                    <li><a href="https://support.apple.com/kb/PH21411?locale=en_US" class="text-blue-500 hover:underline">Safari</a></li>
-                    <li><a href="https://support.microsoft.com/en-us/help/17442/windows-internet-explorer-delete-manage-cookies" class="text-blue-500 hover:underline">Internet Explorer</a></li>
+                    <li><a aria-label="Google Chrome" href="https://support.google.com/chrome/answer/95647?hl=en" class="text-blue-500 hover:underline">Google Chrome</a></li>
+                    <li><a aria-label="Mozilla Firefox" href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences" class="text-blue-500 hover:underline">Mozilla Firefox</a></li>
+                    <li><a aria-label="Safari" href="https://support.apple.com/kb/PH21411?locale=en_US" class="text-blue-500 hover:underline">Safari</a></li>
+                    <li><a aria-label="Internet Explorer" href="https://support.microsoft.com/en-us/help/17442/windows-internet-explorer-delete-manage-cookies" class="text-blue-500 hover:underline">Internet Explorer</a></li>
                 </ul>
                 <h2 class="text-2xl mobile:text-lg font-bold mb-2">Changes to This Cookies Policy</h2>
                 <p class="mb-4">
@@ -64,7 +64,7 @@
                 </p>
                 <h2 class="text-2xl mobile:text-lg font-bold mb-2">Contact Us</h2>
                 <p class="mb-4">
-                    If you have any questions about this Cookies Policy, please contact us at <a href="mailto:contact.area.ownspace@gmail.com" class="text-blue-500 hover:underline">contact.area.ownspace@gmail.com</a>.
+                    If you have any questions about this Cookies Policy, please contact us at <a aria-label="email-contact" href="mailto:contact.area.ownspace@gmail.com" class="text-blue-500 hover:underline">contact.area.ownspace@gmail.com</a>.
                 </p>
             </div>
         </div>

@@ -35,11 +35,11 @@
                 </p>
                 <h2 class="text-2xl mobile:text-lg font-bold mb-2">Website Publisher</h2>
                 <p class="mb-4">
-                    The website <a href="http://area-workspace.fr:8081/" class="text-blue-500 hover:underline">http://area-workspace.fr:8081/</a> is published by AREA, a company registered under the laws of France.
+                    The website <a aria-label="our-app-link" href="http://area-workspace.fr:8081/" class="text-blue-500 hover:underline">http://area-workspace.fr:8081/</a> is published by AREA, a company registered under the laws of France.
                 </p>
                 <h2 class="text-2xl mobile:text-lg font-bold mb-2">Contact Information</h2>
                 <p class="mb-4">
-                    You can contact us at <a href="mailto:area.romainlemalin@gmail.com" class="text-blue-500 hover:underline">area.romainlemalin@gmail.com</a>.
+                    You can contact us at <a aria-label="send-a-mail-to-our-email" href="mailto:area.romainlemalin@gmail.com" class="text-blue-500 hover:underline">area.romainlemalin@gmail.com</a>.
                 </p>
                 <h2 class="text-2xl mobile:text-lg font-bold mb-2">Hosting Provider</h2>
                 <p class="mb-4">

@@ -7,7 +7,9 @@
                 :key="suggestion.id"
                 class="bg-indigo-600 rounded-lg p-4 flex items-center justify-between hover:shadow-lg transition-transform transform hover:scale-105">
                 <span class="font-medium">{{ suggestion.content }}</span>
-                <button class="bg-indigo-800 px-4 py-2 rounded-md hover:bg-indigo-900">Try</button>
+                <button
+                    aria-label="try-suggestion-button"
+                    class="bg-indigo-800 px-4 py-2 rounded-md hover:bg-indigo-900">Try</button>
             </li>
         </ul>
     </section>

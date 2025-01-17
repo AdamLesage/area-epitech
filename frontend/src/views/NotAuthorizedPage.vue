@@ -35,7 +35,9 @@
             <p class="text-sm text-home-text-light mb-6 text-center">
                 * If you believe this is an error, please contact an administrator.
             </p>
-            <button @click="goHome" class="btn btn-primary px-12 py-4 text-white bg-home-div rounded-lg transition hover:cursor-pointer z-10">
+            <button
+                aria-label="back-not-authorized-button"
+                @click="goHome" class="btn btn-primary px-12 py-4 text-white bg-home-div rounded-lg transition hover:cursor-pointer z-10">
                 Back
             </button>
         </div>

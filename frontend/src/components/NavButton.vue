@@ -13,7 +13,9 @@ const handleRedirect = () => {
 </script>
 
 <template>
-    <button class="flex flex-col items-center justify-between" @click.stop="handleRedirect">
+    <button
+        aria-label="nav-button"
+        class="flex flex-col items-center justify-between" @click.stop="handleRedirect">
         <Icon :icon="icon" class="w-8 h-8 text-white" v-if="props.text"/>
         <Icon :icon="icon" class="w-12 h-12 text-white" v-else/>
         <span class="text-xs text-white" v-if="props.text">{{ props.text }}</span>

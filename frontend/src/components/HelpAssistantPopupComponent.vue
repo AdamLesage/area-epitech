@@ -59,6 +59,7 @@
                             </p>
                         </div>
                         <button
+                            aria-label="hide displayed tip button"
                             class="flex items-center justify-center bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800"
                             @click.stop="displayedTip = null">
                             Back

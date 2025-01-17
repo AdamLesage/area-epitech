@@ -66,18 +66,22 @@
                                     Remember me
                                 </label>
                             </div>
-                            <router-link to="/forgot-password" class="web:text-auth-neutral mobile:text-white underline hover:cursor-pointer">Forgot Password?</router-link>
+                            <router-link
+                                aria-label="forgot-password-router-link"
+                                to="/forgot-password"
+                                class="web:text-auth-neutral mobile:text-white underline hover:cursor-pointer">Forgot Password?</router-link>
                         </div>
                     </div>
                 </div>
                 <!-- Sign In Button -->
                 <div class="flex flex-col gap-3">
                     <button
+                        aria-label="sign-in-button"
                         type="submit"
                         class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
                         Sign In
                     </button>
-                    <h2 class="text-center mobile:text-white">Don't have an account yet? <router-link to="/signup" class="web:text-auth-primary hover:underline hover:cursor-pointer mobile:text-white mobile:font-bold">Sign Up</router-link></h2>
+                    <h2 class="text-center mobile:text-white">Don't have an account yet? <router-link to="/signup" aria-label="signup-redirect-link" class="web:text-auth-primary hover:underline hover:cursor-pointer mobile:text-white mobile:font-bold">Sign Up</router-link></h2>
                 </div>
             </Form>
         </div>

@@ -5,10 +5,14 @@
         <header class="bg-gray-300 rounded-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="normalView">
             <h1 class="text-[#333] font-black">New AREA</h1>
             <div class="flex justify-end items-center gap-1">
-                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="normalView">
+                <button
+                    aria-label="mini-popup-normalView-button"
+                    class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="normalView">
                     <Icon icon="heroicons:plus-20-solid" class="w-6 h-6 text-[#333]" />
                 </button>
-                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
+                <button
+                    aria-label="mini-popup-resetPopup-button"
+                    class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
                     <Icon icon="eva:close-outline" class="w-6 h-6 text-[#333]" />
                 </button>
             </div>
@@ -19,13 +23,19 @@
         <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer" @click="minimalView">
             <h1 class="text-[#333] font-black">New AREA</h1>
             <div class="flex justify-end items-center gap-1">
-                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="minimalView">
+                <button
+                    aria-label="normal-popup-miniView-button"
+                    class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="minimalView">
                     <Icon icon="heroicons:minus-20-solid" class="w-6 h-6 text-[#333]" />
                 </button>
-                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="extendedView">
+                <button
+                    aria-label="normal-popup-extendedView-button"
+                    class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="extendedView">
                     <Icon icon="heroicons:plus-20-solid" class="w-6 h-6 text-[#333]" />
                 </button>
-                <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
+                <button
+                    aria-label="normal-popup-resetPopup-button"
+                    class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
                     <Icon icon="eva:close-outline" class="w-6 h-6 text-[#333]" />
                 </button>
             </div>
@@ -68,8 +78,12 @@
                 </div>
             </section>
         </div>
-        <button class="w-full text-white rounded-b-xl h-[40px] bg-blue-500 hover:cursor-pointer"
-            @click="create">Continue</button>
+        <button
+            aria-label="normal-popup-continue-button"
+            class="w-full text-white rounded-b-xl h-[40px] bg-blue-500 hover:cursor-pointer"
+            @click="create">
+            Continue
+        </button>
     </div>
     <!-- Extended view -->
     <div class="fixed w-full h-full top-0 bg-black/30 flex justify-center items-center z-[10000]" v-if="popupView == 'Extended'" @click="normalView">
@@ -77,10 +91,14 @@
             <header class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center hover:cursor-pointer w-full" @click="normalView">
                 <h1 class="text-[#333] font-black">New AREA</h1>
                 <div class="flex justify-end items-center gap-1">
-                    <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="normalView">
+                    <button
+                        aria-label="extended-popup-normalView-button"
+                        class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="normalView">
                         <Icon icon="heroicons:minus-20-solid" class="w-6 h-6 text-[#333]" />
                     </button>
-                    <button class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
+                    <button
+                        aria-label="extended-popup-resetPopup-button"
+                        class="rounded-full text-2xl hover:bg-gray-400 flex items-center justify-center" @click.stop="resetPopup">
                         <Icon icon="eva:close-outline" class="w-6 h-6 text-[#333]" />
                     </button>
                 </div>
@@ -123,8 +141,12 @@
                     </div>
                 </section>
             </div>
-            <button class="w-full text-white rounded-b-xl h-[60px] bg-blue-500 hover:cursor-pointer"
-                @click="create">Continue</button>
+            <button
+                aria-label="extended-popup-continue-button"
+                class="w-full text-white rounded-b-xl h-[60px] bg-blue-500 hover:cursor-pointer"
+                @click="create">
+                Continue
+            </button>
         </div>
     </div>
 </template>

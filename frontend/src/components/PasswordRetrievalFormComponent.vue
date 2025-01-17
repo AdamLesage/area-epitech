@@ -49,12 +49,14 @@
                     <!-- Validate Button -->
                     <h2 class="text-center web:text-auth-primary mobile:text-white mb-8 mt-8">Not received? <span class="font-bold hover:cursor-pointer hover:underline" @click="sendAgain">Send Again</span></h2>
                     <button
+                        aria-label="send-email-password-retrieval-form-button"
                         type="submit"
                         class="web:bg-auth-primary mobile:bg-auth-tertiary text-white p-2 rounded-lg hover:cursor-pointer">
                         Send email
                     </button>
                     <!-- Abort Button -->
                     <button
+                        aria-label="abort-password-retrieval-form-button"
                         type="button"
                         class="web:text-auth-primary mobile:text-white p-2 rounded-lg hover:cursor-pointer mx-4"
                         @click="abort">

@@ -3,7 +3,9 @@
         <HelpAssistantPopupComponent :bottom="16" :left="16" color="#13134c" class="z-50" />
         <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-10 z-0"></div>
         <!-- Signup and login button -->
-        <button class="fixed bottom-4 right-4 z-[100] w-12 h-12 bg-home-div text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0">
+        <button
+            aria-label="scrollTop-arrow"
+            class="fixed bottom-4 right-4 z-[100] w-12 h-12 bg-home-div text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0">
             <ArrowComponent
                 direction="top"
                 color="#4C4CDC"
@@ -166,6 +168,7 @@
                 </div>
             </div>
             <button
+                aria-label="showDetails-How"
                 class="mt-16 w-48 h-12 bg-home-div text-white rounded-lg hover:cursor-pointer hover:bg-home-hover border-2 border-solid border-home-light z-[2]"
                 @click="showDetails = !showDetails">
                 {{ showDetails ? 'Hide Details' : 'Learn More' }}
@@ -238,6 +241,7 @@
                 </div>
             </div>
             <button class="w-48 h-12 bg-home-div text-white rounded-lg mt-16 hover:cursor-pointer hover:bg-home-hover border-2 border-solid border-home-light z-[2]"
+                aria-label="explore-all-services"
                 @click="navigateTo('/explore')">Explore all services</button>
         </div>
 
@@ -274,7 +278,9 @@
                             :key="'empty-' + index"
                             @click="userRate = index + userRate" />
                     </div>
-                    <button class="w-48 h-12 bg-home-light text-white rounded-lg mt-4 hover:cursor-pointer" @click="sendReview">Add a review</button>
+                    <button
+                        aria-label="add-a-review"
+                        class="w-48 h-12 bg-home-light text-white rounded-lg mt-4 hover:cursor-pointer" @click="sendReview">Add a review</button>
                 </div>
             </section>
         </div>

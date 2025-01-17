@@ -34,7 +34,7 @@
                     Welcome to AREA's Privacy Policy page. Your privacy is critically important to us.
                 </p>
                 <p class="mb-4">
-                    It is AREA's policy to respect your privacy regarding any information we may collect while operating our website. This Privacy Policy applies to <a href="http://area-workspace.fr:8081/ " class="text-blue-500 hover:underline">http://area-workspace.fr:8081/ </a> (hereinafter, "us", "we", or "http://area-workspace.fr:8081/ "). We respect your privacy and are committed to protecting personally identifiable information you may provide us through the Website. We have adopted this privacy policy ("Privacy Policy") to explain what information may be collected on our Website, how we use this information, and under what circumstances we may disclose the information to third parties.
+                    It is AREA's policy to respect your privacy regarding any information we may collect while operating our website. This Privacy Policy applies to <a aria-label="our-app-website-url" href="http://area-workspace.fr:8081/ " class="text-blue-500 hover:underline">http://area-workspace.fr:8081/ </a> (hereinafter, "us", "we", or "http://area-workspace.fr:8081/ "). We respect your privacy and are committed to protecting personally identifiable information you may provide us through the Website. We have adopted this privacy policy ("Privacy Policy") to explain what information may be collected on our Website, how we use this information, and under what circumstances we may disclose the information to third parties.
                 </p>
                 <h2 class="text-2xl mobile:text-lg font-bold mb-2">Information We Collect</h2>
                 <p class="mb-4">
@@ -99,7 +99,7 @@
                 </p>
                 <h2 class="text-2xl mobile:text-lg font-bold mb-2">Contact Us</h2>
                 <p class="mb-4">
-                    If you have any questions about this Privacy Policy, please contact us at <a href="mailto:contact.area.ownspace@gmail.com" class="text-blue-500 hover:underline">contact.area.ownspace@gmail.com</a>.
+                    If you have any questions about this Privacy Policy, please contact us at <a aria-label="send-a-mail-to-our-contact-email" href="mailto:contact.area.ownspace@gmail.com" class="text-blue-500 hover:underline">contact.area.ownspace@gmail.com</a>.
                 </p>
             </div>
         </div>

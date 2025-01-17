@@ -59,7 +59,7 @@
                 </p>
                 <h2 class="text-2xl mobile:text-lg font-bold mb-2">Contact Us</h2>
                 <p class="mb-4">
-                    If you have any questions about these Terms and Conditions, please contact us at <a href="mailto:contact.area.ownspace@gmail.com" class="text-blue-500 hover:underline">contact.area.ownspace@gmail.com</a>.
+                    If you have any questions about these Terms and Conditions, please contact us at <a aria-label="send-a-mail-to-our-contact-email-terms" href="mailto:contact.area.ownspace@gmail.com" class="text-blue-500 hover:underline">contact.area.ownspace@gmail.com</a>.
                 </p>
             </div>
         </div>
