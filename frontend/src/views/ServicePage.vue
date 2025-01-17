@@ -21,21 +21,20 @@
                 </div>
             </div>
             <div
-                class="border-4 border-auth-neutral w-[300px] h-[90px] rounded-full bg-white flex justify-between items-center px-4 cursor-pointer transition-transform duration-300 mobile:hidden"
-                @click.stop="handleClick">
+                class="border-4 border-auth-neutral w-[300px] h-[90px] rounded-full bg-white flex justify-between items-center px-4 transition-transform duration-300 mobile:hidden">
                 <div
-                    v-if="isCircleFirst"
+                    v-if="isAccountLinked"
                     class="rounded-full w-[60px] h-[60px] transition-all duration-500"
                     :style="{ backgroundColor: color }"
                 />
                 <h1
                     class="text-xl font-semibold w-1/2 transition-all duration-500 select-none"
-                    :style="{ color: color, textAlign: isCircleFirst ? 'left' : 'right' }"
+                    :style="{ color: color, textAlign: isAccountLinked ? 'left' : 'right' }"
                 >
-                    {{ isCircleFirst ? 'Activate' : 'Deactivate' }}
+                    {{ isAccountLinked ? 'Linked' : 'Not Linked' }}
                 </h1>
                 <div
-                    v-if="!isCircleFirst"
+                    v-if="!isAccountLinked"
                     class="rounded-full w-[60px] h-[60px] transition-all duration-500"
                     :style="{ backgroundColor: color }"
                 />
@@ -43,12 +42,23 @@
         </div>
         <div class="flex flex-col web:hidden gap-2">
             <h2 class="text-white text-xl font-bold text-center w-full pr-2">{{ nbActions }} Actions / {{ nbReactions }} Reactions</h2>
-            <div class="flex flex-row gap-2 items-center justify-center">
-                <button
-                    aria-label="activate-service-button"
-                    class="rounded-full py-2 px-6 bg-white w-32">
-                    <h1 class="font-semibold">Activate</h1>
-                </button>
+            <div class="flex flex-row gap-2 items-center justify-center mt-4">
+                <div
+                    class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 transition-transform duration-300">
+                    <div
+                        v-if="isAccountLinked"
+                        class="rounded-full w-[30px] h-[30px] transition-all duration-500"
+                        :style="{ backgroundColor: color }" />
+                    <h1
+                        class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
+                        :style="{ color: color, textAlign: isAccountLinked ? 'left' : 'right' }">
+                        {{ isAccountLinked ? 'Linked' : 'Not Linked' }}
+                    </h1>
+                    <div
+                        v-if="!isAccountLinked"
+                        class="rounded-full w-[30px] h-[30px] transition-all duration-500"
+                        :style="{ backgroundColor: color }" />
+                </div>
             </div>
         </div>
         <div class="flex justify-between items-center p-4 mobile:hidden">
@@ -279,19 +289,18 @@
                 <RateComponent :rate="service.reviews.rate" :reviews="service.reviews.count" :color="service.color" textcolor="#6b7280" class="w-full mobile:hidden"/>
                 <div class="flex w-full items-center justify-center">
                     <div
-                        class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
-                        @click.stop="handleClick">
+                        class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 transition-transform duration-300">
                         <div
-                            v-if="isCircleFirst"
+                            v-if="isAccountLinked"
                             class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                             :style="{ backgroundColor: color }" />
                         <h1
                             class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
-                            :style="{ color: color, textAlign: isCircleFirst ? 'left' : 'right' }">
-                            {{ isCircleFirst ? 'Not Linked' : 'Linked' }}
+                            :style="{ color: color, textAlign: isAccountLinked ? 'left' : 'right' }">
+                            {{ isAccountLinked ? 'Linked' : 'Not Linked' }}
                         </h1>
                         <div
-                            v-if="!isCircleFirst"
+                            v-if="!isAccountLinked"
                             class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                             :style="{ backgroundColor: color }" />
                     </div>
@@ -465,7 +474,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { useServiceStore } from '@/stores/service';
@@ -512,7 +521,6 @@ const logo = ref<string>(service!.icon);
 const rate = ref<number>(service!.reviews.rate);
 const reviews = ref<number>(service!.reviews.count);
 const saves = ref<number>(service!.saves);
-const isActivated = ref<boolean>(true);
 const nbActions = ref<number>(0);
 const nbReactions = ref<number>(0);
 const currentSlide = ref<number>(0);
@@ -580,17 +588,12 @@ if (service && service.categories) {
 const nameCapitalized = ref(name.value.toUpperCase());
 const isHeroVisible = ref(!noHeader);
 
-const isCircleFirst = ref(true);
+const isAccountLinked = ref(true);
 const scrollY = ref(0);
 
 window.addEventListener('scroll', () => {
     scrollY.value = window.scrollY;
 })
-
-function handleClick() {
-    isActivated.value = !isActivated.value;
-    isCircleFirst.value = !isCircleFirst.value;
-}
 
 function openServicePage() {
     console.log('Service page opened');
@@ -654,4 +657,23 @@ function copyColor() {
     navigator.clipboard.writeText(service!.color);
     alert('Color copied to clipboard');
 }
+
+onMounted(() => {
+    const user = userStore.user;
+    scrollY.value = window.scrollY;
+
+    if (!user) {
+        console.error('User is not logged in.');
+        return;
+    }
+
+    const linkedAccounts = user.linkedAccounts;
+    const linkedAccount = linkedAccounts.find(account => account.serviceName === serviceId);
+
+    if (linkedAccount) {
+        isAccountLinked.value = true;
+    } else {
+        isAccountLinked.value = false;
+    }
+})
 </script>
