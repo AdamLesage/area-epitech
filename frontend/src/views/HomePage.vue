@@ -1,6 +1,6 @@
 <template>
     <div class="bg-home !h-full relative overflow-hidden">
-        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#13134c" class="z-50" />
+        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#13134c" class="z-[500]" />
         <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-10 z-0"></div>
         <!-- Signup and login button -->
         <button class="fixed bottom-4 right-4 z-[100] w-12 h-12 bg-home-div text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0">

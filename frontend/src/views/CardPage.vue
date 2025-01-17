@@ -1,7 +1,7 @@
 <template>
     <div v-if="service && category && card" class="flex flex-col justify-between min-h-screen" :key="reload">
-        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="color" class="z-50 mobile:hidden" />
-        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="color" class="z-50 web:hidden" />
+        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="color" class="z-[60] mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="color" class="z-[60] web:hidden" />
         <MobileServiceNavComponent @back-button="handleBackButtonFirstPage" class="web:hidden fixed bottom-0 z-50"
             :style="{ backgroundColor: color }" />
         <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"
@@ -83,6 +83,7 @@
                             <CustomInput
                                 v-for="(option, index) in card.options"
                                 :key="option.name"
+                                :options="option.options"
                                 :type="option.type"
                                 :name="option.display_name"
                                 :action="isAction"
