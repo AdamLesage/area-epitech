@@ -47,7 +47,7 @@
                 "name": "due_on",
                 "display_name": "Due On",
                 "description": "The due date of the milestone",
-                "type": "datetime",
+                "type": "datetime-local",
                 "required": false
               },
               {
@@ -1604,7 +1604,7 @@
                 "name": "start_date_local",
                 "display_name": "Start Date",
                 "description": "The start date of the activity",
-                "type": "datetime",
+                "type": "datetime-local",
                 "required": false
               },
               {
@@ -1618,7 +1618,7 @@
                 "name": "description",
                 "display_name": "Description",
                 "description": "The description of the activity",
-                "type": "string",
+                "type": "text",
                 "required": false
               },
               {
@@ -1632,28 +1632,40 @@
                 "name": "trainer",
                 "display_name": "Trainer",
                 "description": "Whether this activity was recorded on a training machine",
-                "type": "boolean",
+                "type": "select",
+                "options": [
+                  "yes",
+                  "no"
+                ],
                 "required": false
               },
               {
                 "name": "commute",
                 "display_name": "Commute",
                 "description": "Whether this activity is a commute",
-                "type": "boolean",
+                "type": "select",
+                "options": [
+                  "yes",
+                  "no"
+                ],
                 "required": false
               },
               {
                 "name": "hide_from_home",
                 "display_name": "Hide from Home",
                 "description": "Whether this activity is muted",
-                "type": "boolean",
+                "type": "select",
+                "options": [
+                  "yes",
+                  "no"
+                ],
                 "required": false
               },
               {
                 "name": "gear_id",
                 "display_name": "Gear ID",
                 "description": "Identifier for the gear associated with the activity. ‘none’ clears gear from activity",
-                "type": "string",
+                "type": "text",
                 "required": false
               }
             ]
