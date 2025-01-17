@@ -299,11 +299,6 @@
                     />
                 </svg>
             </div>
-            <div v-if="services.length == 0">
-                <div class="flex flex-col items-center justify-center w-full my-8 mb-16">
-                    <h1 class="text-3xl font-black text-white text-center">Loading . . .</h1>
-                </div>
-            </div>
         </div>
         <div class="w-full h-12 bg-home-div/90" />
 
@@ -543,7 +538,7 @@ function applyPhysics() {
 
             // Check bounds
             if (position.y >= containerHeight.value - 242) {
-                position.y = containerHeight.value - 243;
+                position.y = containerHeight.value - 242;
                 position.velocityY *= -damping;
             }
             if (position.y <= 50) {
@@ -717,15 +712,15 @@ window.addEventListener('scroll', () => {
 
 onMounted(async () => {
     // wait 1s
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    scrollY.value = window.scrollY;
-
     if (serviceStore.services.length == 0) {
         // wait 1 more s
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
+    scrollY.value = window.scrollY;
     services.value = serviceStore.services;
-    await new Promise(resolve => setTimeout(resolve, 500));
+
+    await new Promise(resolve => setTimeout(resolve, 250));
+
     const div = document.getElementById('area-content');
     containerHeight.value = div?.clientHeight || 0;
     containerWidth.value = div?.clientWidth || 0;
