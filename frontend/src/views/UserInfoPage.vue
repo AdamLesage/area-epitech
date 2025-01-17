@@ -47,21 +47,40 @@
             </div>
         </div>
 
+        <!-- Popup for Image Selection -->
+        <div v-if="showPopup"
+            class="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50 h-screen w-screen top-0 left-0">
+            <div class="bg-home rounded-lg p-6 w-11/12 max-w-md">
+                <h3 class="text-lg font-semibold text-white mb-4">Choose an Image</h3>
+                <div class="grid grid-cols-3 gap-4 justify-center">
+                    <img v-for="(image, index) in images" :key="index" :src="image"
+                        :alt="'Option ' + (index + 1)"
+                        class="cursor-pointer border-2 border-transparent hover:border-blue-500 rounded-md w-32 h-32 object-cover mobile:w-24 mobile:h-24"
+                        @click="selectImage(image)" />
+                </div>
+                <button
+                    aria-label="close-popup-user-info-button"
+                    @click="closePopup"
+                    class="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition">Cancel</button>
+            </div>
+        </div>
+
         <div v-if="!isEditing && user"
             class="bg-home-div mobile:bg-transparent rounded-xl mobile:p-4 p-10 mobile:w-full w-2/3 max-w-[66.75rem] text-center shadow-2xl mobile:shadow-none mt-20 mobile:mt-0 relative">
 
             <!-- Edit Profile Button -->
             <button
                 @click="toggleEdit"
-                class="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 hover:border-white border-2 border-transparent text-white font-bold px-4 py-2 md:px-6 md:py-2 rounded-full shadow-lg transition-all flex items-center justify-center gap-2"
+                class="absolute top-4 right-4 bg-home-text hover:bg-indigo-700 border-transparent text-white font-bold px-4 py-2 md:px-6 md:py-2 rounded-lg shadow-lg transition-all flex items-center justify-center gap-2"
                 aria-label="Edit Profile">
                 <Icon icon="bi:pencil-fill" class="w-4 h-4 md:w-5 md:h-5" />
                 <span class="hidden md:inline">Edit Profile</span>
             </button>
 
             <!-- PFP -->
-            <img :src="user.profilePictureUrl" alt="Profile Picture"
-                class="w-48 h-48 mini:w-24 mini:h-24 rounded-full mb-6 border-4 mobile:border-2 border-white/70 mx-auto shadow-lg" />
+            <img v-if="user && user.profilePictureUrl" :src="user.profilePictureUrl" alt="Profile Picture"
+                class="w-48 h-48 mini:w-24 mini:h-24 rounded-full object-cover mb-6 border-4 mobile:border-2 border-white mx-auto shadow-lg" />
+            <UserSvgComponent color="#1c1c53" class="w-48 h-48 mini:w-24 mini:h-24 hover:opacity-90 mb-6 bg-white shadow-lg mx-auto rounded-full border-4 mobile:border-2 border-white" v-else />
 
             <!-- Username and creation date -->
             <h2 class="mobile:text-xl text-4xl font-semibold tracking-wide mb-2">{{ user.name }}</h2>
@@ -98,13 +117,13 @@
                 <button
                     aria-label="add-connections-button"
                     @click="goToAddConnections"
-                    class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg mobile:text-sm text-white font-bold tracking-wide">
+                    class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-home-text hover:bg-indigo-700 rounded-lg shadow-lg mobile:text-sm text-white font-bold tracking-wide">
                     Add Connections
                 </button>
                 <button
                     aria-label="logout-button"
                     @click="logout"
-                    class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-red-600 hover:bg-red-700 rounded-full shadow-lg mobile:text-sm text-white font-bold tracking-wide">
+                    class="mobile:mt-6 mt-8 mobile:px-4 px-6 py-3 mobile:py-2 bg-red-600 hover:bg-red-700 rounded-lg shadow-lg mobile:text-sm text-white font-bold tracking-wide">
                     Logout
                 </button>
             </div>
@@ -121,38 +140,25 @@
                     <div class="flex flex-col items-center space-y-4">
                         <!-- Avatar Section -->
                         <div class="relative">
-                            <img :src="editForm.profilePictureUrl" alt="Profile Picture"
-                                class="w-24 h-24 md:w-32 md:h-32 object-cover hover:cursor-pointer rounded-full border-4 border-gray-300 shadow-lg mobile:w-20 mobile:h-20"
+                            <img v-if="editForm.profilePictureUrl" :src="editForm.profilePictureUrl" alt="Profile Picture"
+                                class="w-24 h-24 md:w-32 md:h-32 object-cover hover:cursor-pointer rounded-full border-4 border-white shadow-lg mobile:w-20 mobile:h-20"
+                                @click="openPopup" />
+                            <UserSvgComponent
+                                color="#1c1c53"
+                                class="w-24 h-24 md:w-32 md:h-32 object-cover hover:cursor-pointer rounded-full border-4 border-white shadow-lg mobile:w-20 mobile:h-20 bg-white"
+                                v-else
                                 @click="openPopup" />
 
                             <!-- Upload Button -->
                             <button
                                 aria-label="upload button"
                                 type="button" :onclick="openPopup"
-                                class="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-blue-700 transition mobile:w-6 mobile:h-6">
+                                class="absolute bottom-0 right-0 w-8 h-8 bg-home-text hover:bg-indigo-700 rounded-full flex items-center justify-center shadow-md cursor-pointer transition mobile:w-6 mobile:h-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                     stroke="white" class="w-4 h-4 mobile:w-3 mobile:h-3">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                                 </svg>
                             </button>
-                        </div>
-
-                        <!-- Popup for Image Selection -->
-                        <div v-if="showPopup"
-                            class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-                            <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Choose an Image</h3>
-                                <div class="grid grid-cols-3 gap-4 justify-center">
-                                    <img v-for="(image, index) in images" :key="index" :src="image"
-                                        :alt="'Option ' + (index + 1)"
-                                        class="cursor-pointer border-2 border-transparent hover:border-blue-500 rounded-md w-32 h-32 object-cover mobile:w-24 mobile:h-24"
-                                        @click="selectImage(image)" />
-                                </div>
-                                <button
-                                    aria-label="close-popup-user-info-button"
-                                    @click="closePopup"
-                                    class="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition">Cancel</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,6 +227,8 @@ import Cookies from 'js-cookie';
 
 import ServiceNavComponent from "@/components/ServiceNavComponent.vue";
 import MobileServiceNavComponent from "@/components/MobileServiceNavComponent.vue";
+import UserSvgComponent from "@/components/UserSvgComponent.vue";
+
 import { Icon } from '@iconify/vue';
 import * as yup from 'yup';
 import { fetchUser, fetchUserAreas } from "@/logic/user";
@@ -358,6 +366,13 @@ function openPopup() {
 
 function toggleEdit() {
     isEditing.value = !isEditing.value;
+    editForm.value = {
+        name: user.value?.name || "",
+        bio: user.value?.bio || "",
+        birthDate: user.value?.birthDate ? new Date(user.value.birthDate).toISOString().split('T')[0] : "",
+        phoneNumber: user.value?.phoneNumber || "",
+        profilePictureUrl: user.value?.profilePictureUrl,
+    };
 }
 
 async function saveProfile() {
@@ -380,9 +395,16 @@ async function saveProfile() {
         })
     }).then((res) => {
         if (res.ok) {
-            res.json().then((data) => {
-                userStore.setUser(data);
+            res.json().then(async (data) => {
+                const authToken = user.value?.authToken;
                 isEditing.value = false;
+                userStore.areas = [];
+                userStore.user = null;
+                userStore.user = await fetchUser(authToken);
+                const areas = await fetchUserAreas(authToken);
+                for (const area of areas) {
+                    userStore.addArea(area);
+                }
             });
         } else {
             res.json().then((error) => {
