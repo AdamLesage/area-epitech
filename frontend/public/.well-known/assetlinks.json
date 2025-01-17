@@ -1,0 +1,5 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target" : { "namespace": "android_app", "package_name": "com.arearomainlemalin.area",
+                "sha256_cert_fingerprints": ["D6:CD:54:FC:B3:EF:62:51:23:02:30:B4:DD:F4:BE:10:94:AC:A3:87:CF:56:41:1F:10:11:7A:EF:99:DE:27:3C"] }
+}]

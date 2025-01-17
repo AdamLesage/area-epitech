@@ -1,7 +1,7 @@
 <template>
     <div
         @click.stop.prevent="displayPopup = false; displayedTip = null"
-        class="fixed w-screen h-screen top-0 bg-black/40 !z-50"
+        class="fixed w-screen h-screen top-0 bg-black/40 !z-[100]"
         :class="{ 'select-none pointer-events-none !bg-transparent': !displayPopup }">
         <div
             v-if="!displayPopup"
@@ -17,23 +17,23 @@
         </div>
         <div
             v-else
-            class="fixed bottom-4 left-4 w-adjusted max-w-[30rem] h-[85vh] max-h-[29.5rem] rounded-xl shadow-2xl bg-white !z-50 pointer-events-auto"
+            class="fixed bottom-4 left-4 w-adjusted max-w-[30rem] h-[85vh] max-h-[29.5rem] rounded-xl shadow-2xl bg-white !z-[100] pointer-events-auto"
             role="dialog"
             aria-labelledby="help-popup-header"
             @click.stop>
             <header
                 id="help-popup-header"
-                class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center !z-50">
+                class="bg-gray-300 rounded-t-xl px-4 py-2 flex justify-between items-center !z-[100]">
                 <h1 class="text-gray-900 font-bold text-lg">Need Help?</h1>
                 <button
-                    class="rounded-full hover:bg-gray-400 flex items-center justify-center p-1 !z-50"
+                    class="rounded-full hover:bg-gray-400 flex items-center justify-center p-1 !z-[100]"
                     aria-label="Close Help Popup"
                     @click.stop="displayPopup = false">
                     <Icon icon="eva:close-outline" class="w-6 h-6 text-gray-900" />
                 </button>
             </header>
   
-            <main class="p-4 overflow-y-auto !z-50">
+            <main class="p-4 overflow-y-auto !z-[100]">
                 <div v-if="!displayedTip">
                     <ul>
                         <li

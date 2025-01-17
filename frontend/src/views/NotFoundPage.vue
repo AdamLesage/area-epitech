@@ -30,7 +30,7 @@
         <div class="flex flex-col items-center justify-center h-[100vh] z-[2] px-4">
             <h1 class="text-5xl mobile:text-2xl font-extrabold text-white mb-4">Not Found</h1>
             <p class="text-xl mobile:text-lg text-home-text-light text-center mb-2 bg-home">
-                The page you requested is either not existent or currently unavailable.
+                The page you requested: {{ route.fullPath }} is either not existent or currently unavailable.
             </p>
             <p class="text-sm text-home-text-light mb-6 text-center">
                 * If you believe this is an error, please contact an administrator.
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 import LoginButtonText from '@/components/LoginButtonText.vue';
 import SignUpButtonText from '@/components/SignUpButtonText.vue';
@@ -58,6 +58,7 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const router = useRouter();
+const route = useRoute();
 const user = ref(userStore.user);
 
 function back() {

@@ -1,7 +1,7 @@
 <template>
     <div v-if="service && category" class="flex flex-col justify-between min-h-screen">
-        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="service.color" class="z-50 mobile:hidden" />
-        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="service.color" class="z-50 web:hidden" />
+        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="service.color" class="z-[60] mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="service.color" class="z-[60] web:hidden" />
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden fixed bottom-0 z-50"
             :style="{ backgroundColor: color }" />
         <div class="fixed top-0 flex justify-center items-center w-full mobile:hidden z-50"

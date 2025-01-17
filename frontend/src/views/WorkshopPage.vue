@@ -3,8 +3,8 @@
         class="flex flex-col justify-between before:bg-[url('@/assets/svg/Grid12.svg')] before:absolute before:w-full before:h-full overflow-hidden relative before:z-0"
         @click="workshopVisible = true"
         @wheel="handleScrollAttempt" v-if="!workshopVisible">
-        <HelpAssistantPopupComponent :bottom="8" :left="8" color="#333" class="z-50 mobile:hidden" />
-        <HelpAssistantPopupComponent :bottom="108" :left="8" color="#333" class="z-50 web:hidden" />
+        <HelpAssistantPopupComponent :bottom="8" :left="8" color="#333" class="z-[60] mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="108" :left="8" color="#333" class="z-[60] web:hidden" />
         <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" />
         <div class="flex flex-col justify-center items-center z-10 h-full">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
@@ -25,8 +25,8 @@
         <MobileServiceNavComponent @back-button="handleBackButton" class="web:hidden fixed bottom-0 bg-[#333] z-[10000]" />
     </div>
     <div v-else>
-        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#333" class="z-50 mobile:hidden" />
-        <HelpAssistantPopupComponent :bottom="116" :left="16" color="#333" class="z-50 web:hidden" />
+        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#333" class="z-[60] mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="116" :left="16" color="#333" class="z-[60] web:hidden" />
         <div class="flex flex-col items-center justify-between mobile:justify-center web:h-1/2 mobile:h-28 before:bg-[url('@/assets/svg/Grid12.svg')] before:absolute before:rotate-[12deg] before:w-[200%] before:h-[200%] before:top-[-50%] before:left-[-50%] overflow-hidden relative before:z-0"
             :style="{ backgroundColor: '#333' }">
             <ServiceNavComponent @back-button="handleBackButton" class="mobile:hidden z-10" />

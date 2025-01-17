@@ -9,8 +9,8 @@
         <ServiceNavComponent
             @back-button="handleBackButton"
             class="mobile:hidden" />
-        <HelpAssistantPopupComponent :bottom="56" :left="8" :color="color" class="z-50 mobile:hidden" />
-        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="color" class="z-50 web:hidden" />
+        <HelpAssistantPopupComponent :bottom="56" :left="8" :color="color" class="z-[60] mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="color" class="z-[60] web:hidden" />
         <RateComponent :rate="rate" :reviews="reviews" color="white" textcolor="white" class="web:hidden p-4" />
         <div class="flex flex-col justify-center items-center">
             <div class="flex justify-center items-center p-4 web:flex-row mobile:flex-col">
@@ -136,8 +136,8 @@
                 Details
             </button>
         </div>
-        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="color" class="z-50 mobile:hidden" />
-        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="color" class="z-50 web:hidden" />
+        <HelpAssistantPopupComponent :bottom="16" :left="16" :color="color" class="z-[60] mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="color" class="z-[60] web:hidden" />
 
         <!-- Categories -->
         <div class="flex flex-wrap justify-center w-full items-center flex-col mt-12"
