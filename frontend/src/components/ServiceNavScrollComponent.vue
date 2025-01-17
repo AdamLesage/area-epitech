@@ -5,6 +5,7 @@ import { Icon } from '@iconify/vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { ref } from 'vue';
+import UserSvgComponent from './UserSvgComponent.vue';
 
 const userStore = useUserStore();
 const user = userStore.user;
@@ -99,7 +100,10 @@ const showMenu = ref<boolean>(false);
                 <NavButton icon="material-symbols:folder-outline" class="half:hidden" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />
                 <NavButton icon="mdi:hammer-screwdriver" class="half:hidden" text="Workshop" @redirect="handleWorkshopRedirect" v-if="user" />
                 <NavButton icon="mdi:menu" class="hidden half:flex" text="Menu" @redirect="openMenu" />
-                <img :src="user?.profilePictureUrl || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full" @click="handleUserProfileRedirect" v-if="user" />
+                <img
+                    v-if="user && user.profilePictureUrl"
+                    :src="user?.profilePictureUrl" alt="User profile picture" class="w-12 h-12 rounded-full hover:opacity-90 hover:cursor-pointer border-white border-2 object-cover" @click="handleUserProfileRedirect" />
+                <UserSvgComponent color="white" class="w-12 h-12 hover:opacity-90 hover:cursor-pointer" @click="handleUserProfileRedirect" v-else />
             </div>
         </nav>
         <div v-if="showMenu" class="mt-6 text-white text-xl hidden half:flex flex-col items-center bg-black/10 rounded-md py-4 gap-2">

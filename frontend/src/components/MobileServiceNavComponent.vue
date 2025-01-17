@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import NavButton from '@/components/NavButton.vue';
+import UserSvgComponent from './UserSvgComponent.vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
@@ -47,7 +48,10 @@ const handleBackButton = () => {
             <NavButton icon="ion:chevron-back-circle-sharp" text="" @click="handleBackButton" />
             <NavButton icon="material-symbols:explore-rounded" text="" @redirect="handleExploreRedirect" />
             <NavButton icon="mdi:hammer-screwdriver" text="" @redirect="handleWorkshopRedirect" />
-            <img :src="user?.profilePictureUrl || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full" @click="handleUserProfileRedirect" v-if="user" />
+            <img
+                v-if="user && user.profilePictureUrl"
+                :src="user?.profilePictureUrl" alt="User profile picture" class="w-12 h-12 rounded-full hover:opacity-90 hover:cursor-pointer border-white border-2 object-cover" @click="handleUserProfileRedirect" />
+            <UserSvgComponent color="white" class="w-12 h-12 hover:opacity-90 hover:cursor-pointer" @click="handleUserProfileRedirect" v-else />
         </nav>
     </div>
 </template>
