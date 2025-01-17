@@ -694,14 +694,19 @@ async function save() {
 function cancelSetup() {
     console.log('Setup cancelled.');
     router.go(-1);
-    store.display = true;
-    store.title = title.value;
+    store.display = false;
+    store.action = null;
+    store.reaction = null;
+    store.actionData = {};
+    store.reactionData = {};
+    store.view = 'Normal';
+    store.title = '';
 }
 
 function handleBackButton() {
     console.log('Back button clicked');
     window.scrollTo(0, 0);
-    router.push('/dashboard');
+    router.go(-1);
     window.scrollTo(0, 0);
     store.display = true;
     store.title = title.value;
