@@ -1,7 +1,7 @@
 <template>
     <div>
-        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#1c1c53" class="z-50 mobile:hidden" />
-        <HelpAssistantPopupComponent :bottom="116" :left="16" color="#1c1c53" class="z-50 web:hidden" />
+        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#1c1c53" class="z-[60] mobile:hidden" />
+        <HelpAssistantPopupComponent :bottom="116" :left="16" color="#1c1c53" class="z-[60] web:hidden" />
         <button class="fixed bottom-4 mobile:bottom-28 right-4 z-[70] w-12 h-12 text-white rounded-full hover:cursor-pointer hover:bg-home-hover" v-if="scrollY != 0"
             :style="{ backgroundColor: '#1c1c53' }">
             <ArrowComponent

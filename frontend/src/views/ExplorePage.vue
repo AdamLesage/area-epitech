@@ -1,7 +1,7 @@
 <template>
     <div class="text-white font-sans min-h-screen h-full flex flex-col">
-        <HelpAssistantPopupComponent :bottom="8" :left="8" :color="displayedService.color" class="z-50 mobile:hidden" v-if="displayedService"/>
-        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="displayedService.color" class="z-50 web:hidden" v-if="displayedService"/>
+        <HelpAssistantPopupComponent :bottom="8" :left="8" :color="displayedService.color" class="z-[60] mobile:hidden" v-if="displayedService"/>
+        <HelpAssistantPopupComponent :bottom="108" :left="8" :color="displayedService.color" class="z-[60] web:hidden" v-if="displayedService"/>
         <div
             v-if="displayedService"
             @click.stop.prevent="freezeTime = !freezeTime"

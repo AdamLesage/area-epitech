@@ -1,6 +1,6 @@
 <template>
     <div class="bg-home !h-full relative overflow-hidden">
-        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#13134c" class="z-50" />
+        <HelpAssistantPopupComponent :bottom="16" :left="16" color="#13134c" class="z-[60]" />
         <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-5 z-0"></div>
 
         <!-- Navigation Bar -->
