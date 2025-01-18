@@ -89,7 +89,7 @@ router.get('/redirect', async (req, res) => {
         console.error(error);
     }
 
-    return res.redirect(`${process.env.FRONTEND_URL}/#/discord-end-of-process`);
+    return res.redirect(`${process.env.FRONTEND_URL}/discord-end-of-process`);
 });
 
 async function exchangeCodeForToken(code) {

@@ -431,7 +431,7 @@ async function auth(username, accountEmail, userEmail, displayName, surname, aut
 }
 
 router.get('/cancel', (req, res) => {
-    return res.redirect(`${process.env.FRONTEND_URL}/#/`);
+    return res.redirect(`${process.env.FRONTEND_URL}/`);
 });
 
 // Github auth routes
@@ -464,7 +464,7 @@ router.get('/github/redirect',
                 'github',
                 user);
 
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -502,7 +502,7 @@ router.get('/discord/callback',
                 'discord',
                 user);
 
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -536,7 +536,7 @@ router.get('/dropbox/callback',
                 'dropbox',
                 user);
 
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -578,7 +578,7 @@ router.get('/spotify/callback',
                 'spotify',
                 user);
 
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -628,7 +628,7 @@ router.get('/google/callback',
                 user);
 
             await watchGmail(req.user.refreshToken);
-            return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${authToken}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/auth-callback?token=${authToken}`);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: error.message });
@@ -740,7 +740,7 @@ router.get('/strava/callback', async (req, res) => {
         }
 
         // Create a linked account with strava
-        return res.redirect(`${process.env.FRONTEND_URL}/#/auth-callback?token=${user.authToken}`);
+        return res.redirect(`${process.env.FRONTEND_URL}/auth-callback?token=${user.authToken}`);
     } catch (error) {
         console.error(`Error during token retrieval: ${error.message}`);
         return res.status(500).json({ error: 'Failed to retrieve token' });
