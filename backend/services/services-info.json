@@ -47,7 +47,7 @@
                 "name": "due_on",
                 "display_name": "Due On",
                 "description": "The due date of the milestone",
-                "type": "datetime",
+                "type": "datetime-local",
                 "required": false
               },
               {
@@ -390,7 +390,7 @@
           {
             "name": "dropbox_on_new_file",
             "display_name": "New File in Dropbox",
-            "description": "Triggered when a new file is added to the specified Dropbox folder.",
+            "description": "Triggered when a new file is added to the specified Dropbox folder",
             "version": "1.0.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -415,7 +415,7 @@
           {
             "name": "dropbox_on_file_renamed",
             "display_name": "File Renamed in Dropbox",
-            "description": "Triggered when an existing file is renamed in Dropbox.",
+            "description": "Triggered when an existing file is renamed in Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -432,7 +432,7 @@
           {
             "name": "dropbox_on_file_modified",
             "display_name": "File Modified in Dropbox",
-            "description": "Triggered when an existing file is modified in Dropbox.",
+            "description": "Triggered when an existing file is modified in Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -449,7 +449,7 @@
           {
             "name": "dropbox_on_deleted",
             "display_name": "File or Folder Deleted in Dropbox",
-            "description": "Triggered when a file or folder is deleted from Dropbox.",
+            "description": "Triggered when a file or folder is deleted from Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -467,8 +467,8 @@
         "reactions": [
           {
             "name": "dropbox_share_file",
-            "display_name": "File Shared in Dropbox",
-            "description": "Triggered when a file is shared in Dropbox.",
+            "display_name": "Share a file to Dropbox",
+            "description": "Share a file to Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -476,7 +476,7 @@
               {
                 "name": "filePath",
                 "display_name": "File path",
-                "description": "The name of the file to shared",
+                "description": "The name of the file to share",
                 "type": "text",
                 "required": true
               }
@@ -484,8 +484,8 @@
           },
           {
             "name": "dropbox_unshare_file",
-            "display_name": "File Unshared in Dropbox",
-            "description": "Triggered when a file is unshared in Dropbox.",
+            "display_name": "Unshare a file from Dropbox",
+            "description": "Unshare a file from Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -493,7 +493,7 @@
               {
                 "name": "filePath",
                 "display_name": "File path",
-                "description": "The name of the file to shared",
+                "description": "The name of the file you want to unshare",
                 "type": "text",
                 "required": true
               }
@@ -501,8 +501,8 @@
           },
           {
             "name": "dropbox_add_file",
-            "display_name": "File Added to Dropbox",
-            "description": "Triggered when a new file is added to Dropbox.",
+            "display_name": "Add a file to Dropbox",
+            "description": "Add a file to Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -532,8 +532,8 @@
           },
           {
             "name": "dropbox_delete_file",
-            "display_name": "File Deleted from Dropbox",
-            "description": "Triggered when a file is deleted from Dropbox.",
+            "display_name": "Delete a file from Dropbox",
+            "description": "Delete a file from Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -541,7 +541,7 @@
               {
                 "name": "filePath",
                 "display_name": "File path",
-                "description": "The name of the file to shared",
+                "description": "The name of the file to delete",
                 "type": "text",
                 "required": true
               }
@@ -556,7 +556,7 @@
           {
             "name": "dropbox_on_new_folder",
             "display_name": "New Folder Created in Dropbox",
-            "description": "Triggered when a new folder is created in Dropbox.",
+            "description": "Triggered when a new folder is created in Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -573,7 +573,7 @@
           {
             "name": "dropbox_on_folder_renamed",
             "display_name": "Folder Renamed in Dropbox",
-            "description": "Triggered when an existing folder is renamed in Dropbox.",
+            "description": "Triggered when an existing folder is renamed in Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -592,7 +592,7 @@
           {
             "name": "dropbox_add_folder",
             "display_name": "Create a folder on Dropbox",
-            "description": "Triggered when a file is deleted from Dropbox.",
+            "description": "Create a folder on Dropbox",
             "version": "1.1.0",
             "release_date": "2024-12-23",
             "updated_date": "2024-12-23",
@@ -778,7 +778,7 @@
           {
             "name": "on_area_deleted",
             "display_name": "Area Deleted",
-            "description": "Triggered when an area is deleted.",
+            "description": "Triggered when an area is deleted",
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
@@ -801,7 +801,7 @@
           {
             "name": "on_area_start",
             "display_name": "Area Start",
-            "description": "Triggered when an area starts.",
+            "description": "Triggered when an area starts",
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
@@ -824,7 +824,7 @@
           {
             "name": "on_area_stop",
             "display_name": "Area Stop",
-            "description": "Triggered when an area stops.",
+            "description": "Triggered when an area stops",
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
@@ -847,7 +847,7 @@
           {
             "name": "on_area_created",
             "display_name": "Area Created",
-            "description": "Triggered when a new area is created.",
+            "description": "Triggered when a new area is created",
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
@@ -870,7 +870,7 @@
           {
             "name": "on_area_activate",
             "display_name": "Area Activate",
-            "description": "Triggered when an area is activated.",
+            "description": "Triggered when an area is activated",
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
@@ -878,7 +878,7 @@
               {
                 "name": "areaUuid",
                 "display_name": "Area Uuid",
-                "description": "The area you want to delete.",
+                "description": "The area you want to delete",
                 "type": "AreaSelect",
                 "required": false
               }
@@ -903,7 +903,7 @@
           {
             "name": "area_delete",
             "display_name": "Delete Area",
-            "description": "Deletes a specified area.",
+            "description": "Delete a specified area",
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
@@ -911,7 +911,7 @@
               {
                 "name": "areaUuid",
                 "display_name": "Area Uuid",
-                "description": "The area you want to delete.",
+                "description": "The area you want to delete",
                 "type": "AreaSelect",
                 "required": true
               }
@@ -920,7 +920,7 @@
           {
             "name": "area_start",
             "display_name": "Start Area",
-            "description": "Starts a specified area.",
+            "description": "Start a specified area",
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
@@ -928,7 +928,7 @@
               {
                 "name": "areaUuid",
                 "display_name": "Area Uuid",
-                "description": "The area you want to start.",
+                "description": "The area you want to start",
                 "type": "AreaSelect",
                 "required": true
               }
@@ -937,7 +937,7 @@
           {
             "name": "area_stop",
             "display_name": "Stop Area",
-            "description": "Stops a specified area.",
+            "description": "Stop a specified area",
             "version": "1.0.0",
             "release_date": "2025-01-14",
             "updated_date": "2025-01-14",
@@ -945,7 +945,7 @@
               {
                 "name": "areaUuid",
                 "display_name": "Area Uuid",
-                "description": "The area you want to start.",
+                "description": "The area you want to start",
                 "type": "AreaSelect",
                 "required": true
               }
@@ -972,7 +972,7 @@
           {
             "name": "gmail_on_new_mail",
             "display_name": "Gmail on new mail",
-            "description": "Triggered when a new mail is received in Gmail.",
+            "description": "Triggered when a new mail is received in Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
@@ -992,7 +992,7 @@
           {
             "name": "gmail_on_mail_send",
             "display_name": "Gmail on mail send",
-            "description": "Triggered when a new mail is send in Gmail.",
+            "description": "Triggered when a new mail is send in Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
@@ -1012,7 +1012,7 @@
           {
             "name": "gmail_on_mail_deleted",
             "display_name": "Gmail on delete mail",
-            "description": "Triggered when a mail is deleted from Gmail.",
+            "description": "Triggered when a mail is deleted from Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
@@ -1034,7 +1034,7 @@
           {
             "name": "gmail_send_email",
             "display_name": "Gmail send email",
-            "description": "Send an email via Gmail.",
+            "description": "Send an email via Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
@@ -1072,7 +1072,7 @@
           {
             "name": "gmail_delete_email",
             "display_name": "Gmail delete email",
-            "description": "delete email on Gmail.",
+            "description": "Delete email on Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-13",
             "updated_date": "2025-01-13",
@@ -1089,7 +1089,7 @@
           {
             "name": "gmail_reply_to_email",
             "display_name": "Gmail reply to an email",
-            "description": "reply to an email on Gmail.",
+            "description": "Reply to an email on Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-13",
             "updated_date": "2025-01-13",
@@ -1113,7 +1113,7 @@
           {
             "name": "gmail_forward_email",
             "display_name": "Gmail forward an email",
-            "description": "forward email on Gmail.",
+            "description": "Forward email on Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-13",
             "updated_date": "2025-01-13",
@@ -1143,7 +1143,7 @@
           {
             "name": "gmail_on_label_added",
             "display_name": "Gmail on label added",
-            "description": "Triggered when a label is added to a mail in Gmail.",
+            "description": "Triggered when a label is added to a mail in Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
@@ -1162,7 +1162,7 @@
               {
                 "name": "type_label",
                 "display_name": "Type label",
-                "description": "the type of the triggered label",
+                "description": "The type of the triggered label",
                 "type": "select",
                 "options": [
                   "INBOX",
@@ -1193,7 +1193,7 @@
           {
             "name": "gmail_on_label_removed",
             "display_name": "Gmail on label removed",
-            "description": "Triggered when a label is removed from a mail in Gmail.",
+            "description": "Triggered when a label is removed from a mail in Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-11",
             "updated_date": "2025-01-11",
@@ -1245,7 +1245,7 @@
           {
             "name": "gmail_add_label",
             "display_name": "Gmail add label",
-            "description": "add a label from a email on Gmail.",
+            "description": "Add a label from a email on Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-13",
             "updated_date": "2025-01-13",
@@ -1269,7 +1269,7 @@
           {
             "name": "gmail_remove_label",
             "display_name": "Gmail remove label",
-            "description": "remove a label from a email on Gmail.",
+            "description": "Remove a label from a email on Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-13",
             "updated_date": "2025-01-13",
@@ -1299,7 +1299,7 @@
           {
             "name": "gmail_on_draft_create",
             "display_name": "Gmail on draft created",
-            "description": "Triggered when a new draft is created in Gmail.",
+            "description": "Triggered when a new draft is created in Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-10",
             "updated_date": "2025-01-10",
@@ -1321,7 +1321,7 @@
           {
             "name": "gmail_create_draft",
             "display_name": "Gmail create draft",
-            "description": "create draft on Gmail.",
+            "description": "Create draft on Gmail",
             "version": "1.0.0",
             "release_date": "2025-01-13",
             "updated_date": "2025-01-13",
@@ -1604,7 +1604,7 @@
                 "name": "start_date_local",
                 "display_name": "Start Date",
                 "description": "The start date of the activity",
-                "type": "datetime",
+                "type": "datetime-local",
                 "required": false
               },
               {
@@ -1618,7 +1618,7 @@
                 "name": "description",
                 "display_name": "Description",
                 "description": "The description of the activity",
-                "type": "string",
+                "type": "text",
                 "required": false
               },
               {
@@ -1632,28 +1632,40 @@
                 "name": "trainer",
                 "display_name": "Trainer",
                 "description": "Whether this activity was recorded on a training machine",
-                "type": "boolean",
+                "type": "select",
+                "options": [
+                  "yes",
+                  "no"
+                ],
                 "required": false
               },
               {
                 "name": "commute",
                 "display_name": "Commute",
                 "description": "Whether this activity is a commute",
-                "type": "boolean",
+                "type": "select",
+                "options": [
+                  "yes",
+                  "no"
+                ],
                 "required": false
               },
               {
                 "name": "hide_from_home",
                 "display_name": "Hide from Home",
                 "description": "Whether this activity is muted",
-                "type": "boolean",
+                "type": "select",
+                "options": [
+                  "yes",
+                  "no"
+                ],
                 "required": false
               },
               {
                 "name": "gear_id",
                 "display_name": "Gear ID",
                 "description": "Identifier for the gear associated with the activity. ‘none’ clears gear from activity",
-                "type": "string",
+                "type": "text",
                 "required": false
               }
             ]

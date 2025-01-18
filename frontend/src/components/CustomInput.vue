@@ -13,7 +13,7 @@
                 name="select"
                 id="actionreaction-select"
                 @change="handleChange"
-                class="border-gray-300 text-gray-700 px-3 py-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500"
+                class="border-2 border-[#777] px-3 py-1 rounded-md text-[#333] w-full bg-white"
             >
                 <option
                     v-for="option in props.options"
@@ -964,7 +964,8 @@ const areas = ref<Area[]>(userStore.areas);
 
 if (props.type == 'text' || props.type == 'number' || props.type == 'email' || props.type == 'password'
     || props.type == 'date' || props.type == 'time' || props.type == 'month' || props.type == 'week'
-    || props.type == 'file' || props.type == 'checkbox' || props.type == 'radio' || props.type == 'boolean') {
+    || props.type == 'file' || props.type == 'checkbox' || props.type == 'radio' || props.type == 'boolean'
+    || props.type == 'datetime-local') {
     isSupported.value = true;
     isDefaultInput.value = true;
 }
@@ -977,11 +978,8 @@ if (props.type == 'GithubRepository' ||
     props.type == 'textarea' ||
     props.type == 'select' ||
     props.type == 'SpotifyPlaylist' ||
-    props.type == 'SpotifyMusic') {
-    isSupported.value = true;
-}
-
-if (props.type == 'AreaSelect') {
+    props.type == 'SpotifyMusic' ||
+    props.type == 'AreaSelect') {
     isSupported.value = true;
 }
 
