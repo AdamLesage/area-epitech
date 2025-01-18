@@ -1,7 +1,7 @@
 <template>
     <div class="bg-home !h-full relative overflow-hidden">
         <div class="absolute inset-0 bg-[url('@/assets/img/Grid2.png')] w-full h-full bg-repeat bg-center opacity-5 z-0"></div>
-  
+
         <!-- Navigation Bar -->
         <nav class="flex items-center w-full justify-between pl-8 pr-4 py-4 fixed bg-home z-10 mobile:flex-col">
             <div class="w-full h-[55px] items-center flex">
