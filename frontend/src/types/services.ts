@@ -51,6 +51,7 @@ export interface Option {
 export type OptionType = 
     | 'text'
     | 'textarea'
+    | 'datetime-local'
     | 'date'
     | 'time'
     | 'checkbox'
