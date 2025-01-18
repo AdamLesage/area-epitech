@@ -60,7 +60,7 @@ const handleBackButton = () => {
 <template>
     <div class="w-full p-4">
         <nav class="flex justify-between items-center w-full">
-            <BackButton color="white" class="hover:cursor-pointer" @click="handleBackButton" />
+            <BackButton color="white" class="hover:cursor-pointer" aria-label="back-button-nav" @click="handleBackButton" />
             <div class="flex gap-8">
                 <NavButton icon="material-symbols:explore-rounded" text="Explore" @redirect="handleExploreRedirect" />
                 <NavButton icon="material-symbols:folder-outline" text="My Area" @redirect="handleMyAreasRedirect" v-if="user" />

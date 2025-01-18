@@ -105,7 +105,7 @@ const showMenu = ref<boolean>(false);
         :class="{ 'shadow-xl': showMenu }">
         <nav class="flex justify-between items-center w-full">
             <div class="flex justify-start w-1/3">
-                <BackButton color="white" class="hover:cursor-pointer" @click="handleBackButton" />
+                <BackButton color="white" class="hover:cursor-pointer" aria-label="back-button-scroll-nav" @click="handleBackButton" />
             </div>
             <div class="flex items-center w-1/3 justify-center gap-2">
                 <Icon :icon="props.logo" class="w-[3rem] h-[3rem] text-white hover:cursor-pointer" @click="redirectToService" v-if="props.logo" />

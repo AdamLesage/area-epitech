@@ -99,6 +99,7 @@ watch(async () => route.fullPath, async (newPath) => {
         await initStores();
         return;
     }
+    await initStores();
 })
 
 /**
