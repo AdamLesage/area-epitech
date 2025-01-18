@@ -90,19 +90,18 @@
                         <h1 class="text-md font-black text-[#333]" v-else>You are correctly linked to {{ action.service.name.charAt(0).toUpperCase() + action.service.name.slice(1) }}.</h1>
                         <div class="flex w-full items-center justify-end">
                             <div
-                                class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
-                                @click.stop="switchActionLinkStatus">
+                                class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 transition-transform duration-300">
                                 <div
-                                    v-if="!linkStatusAction"
+                                    v-if="linkStatusAction"
                                     class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                                     :style="{ backgroundColor: action.service.color }"/>
                                 <h1
                                     class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
-                                    :style="{ color: action.service.color, textAlign: !linkStatusAction ? 'left' : 'right' }">
-                                    {{ !linkStatusAction ? 'Not Linked' : 'Linked' }}
+                                    :style="{ color: action.service.color, textAlign: linkStatusAction ? 'left' : 'right' }">
+                                    {{ linkStatusAction ? 'Linked' : 'Not Linked' }}
                                 </h1>
                                 <div
-                                    v-if="linkStatusAction"
+                                    v-if="!linkStatusAction"
                                     class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                                     :style="{ backgroundColor: action.service.color }"/>
                             </div>
@@ -224,19 +223,18 @@
                         <h1 class="text-md font-black text-[#333]" v-else>You are correctly linked to {{ reaction.service.name.charAt(0).toUpperCase() + reaction.service.name.slice(1) }}.</h1>
                         <div class="flex w-full items-center justify-end">
                             <div
-                                class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
-                                @click.stop="switchReactionLinkStatus">
+                                class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 transition-transform duration-300">
                                 <div
-                                    v-if="!linkStatusReaction"
+                                    v-if="linkStatusReaction"
                                     class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                                     :style="{ backgroundColor: reaction.service.color }"/>
                                 <h1
                                     class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
-                                    :style="{ color: reaction.service.color, textAlign: !linkStatusReaction ? 'left' : 'right' }">
-                                    {{ !linkStatusReaction ? 'Not Linked' : 'Linked' }}
+                                    :style="{ color: reaction.service.color, textAlign: linkStatusReaction ? 'left' : 'right' }">
+                                    {{ linkStatusReaction ? 'Linked' : 'Not Linked' }}
                                 </h1>
                                 <div
-                                    v-if="linkStatusReaction"
+                                    v-if="!linkStatusReaction"
                                     class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                                     :style="{ backgroundColor: reaction.service.color }"/>
                             </div>
@@ -711,20 +709,6 @@ function handleBackButton() {
     store.display = true;
     store.title = title.value;
     store.view = 'Minimal';
-}
-
-function switchActionLinkStatus() {
-    linkStatusAction.value = !linkStatusAction.value;
-    if (action.value?.service.name == reaction.value?.service.name) {
-        linkStatusReaction.value = linkStatusAction.value;
-    }
-}
-
-function switchReactionLinkStatus() {
-    linkStatusReaction.value = !linkStatusReaction.value;
-    if (action.value?.service.name == reaction.value?.service.name) {
-        linkStatusAction.value = linkStatusReaction.value;
-    }
 }
 
 function redirectToAction() {
