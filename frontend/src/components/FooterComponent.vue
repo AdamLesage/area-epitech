@@ -27,6 +27,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 function navigateTo(path: string) {
+    window.scrollTo(0, 0);
     router.push(path);
 }
 
