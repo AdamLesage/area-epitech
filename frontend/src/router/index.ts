@@ -153,6 +153,11 @@ const router = createRouter({
       component: () => import('@/views/EndofProcessGithub.vue'),
     },
     {
+      path: '/client.apk',
+      name: '/client.apk',
+      component: () => import('@/views/ClientApk.vue'),
+    },
+    {
       // Catch-all route
       path: '/:pathMatch(.*)*',
       name: 'not-found',

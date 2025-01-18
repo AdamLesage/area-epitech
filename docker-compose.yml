@@ -74,7 +74,7 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - shared-volume:/apk
+      - shared-volume:/app/public/apk
     environment:
       - BACKEND_URL=${BACKEND_URL}
       - FRONTEND_URL=${FRONTEND_URL}

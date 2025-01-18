@@ -10,8 +10,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build-only
-
 EXPOSE 8081
 
-CMD [ "http-server", "dist", "-p", "8081" ]
+CMD npm run build-only && http-server dist -p 8081
