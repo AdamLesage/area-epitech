@@ -341,23 +341,54 @@ router.delete('/user/:uuid', async (req, res) => {
 
     // Check if headers given are correct
     if (headers.authorization) {
+        const authToken = headers.authorization.split(' ')[1];
         const user = await prisma.user.findUnique({
             where: {
-                authToken: headers.authorization,
+                authToken: authToken,
+            },
+            include: {
+                linkedAccounts: true,
             },
         });
 
         if (!user) {
-            return res.status(401).json({ error: 'Unauthorized' });
+            console.log('Unauthorized > user not found');
+            return res.status(401).json({ error: 'Unauthorized: User not found' });
         }
     } else {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
     try {
+        console.log('Deleting user:', uuid);
+        const user = await prisma.user.findUnique({
+            where: {
+                uuid: uuid,
+            },
+            include: {
+                linkedAccounts: true,
+            },
+        });
+
+        // User exists, we delete all the AREA's linked to the user
+        await prisma.actionReaction.deleteMany({
+            where: {
+                userUuid: user.uuid,
+            },
+        });
+
+        // Remove the linked accounts
+        await prisma.linkedAccount.deleteMany({
+            where: {
+                userId: user.id,
+            },
+        });
+
+        // And then we delete the user
         await prisma.user.delete({ where: { uuid } });
-        res.json({ message: 'User deleted' });
+        res.status(204).json({ message: 'User deleted' });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
