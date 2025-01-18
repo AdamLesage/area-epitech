@@ -242,7 +242,6 @@ router.post('/reset-password-confirm', async (req, res) => {
     }
 });
 
-
 router.put('/change-password', async (req, res) => {
     const { email, code, password } = req.body;
 
@@ -431,6 +430,10 @@ async function auth(username, accountEmail, userEmail, displayName, surname, aut
     return user.authToken;
 }
 
+router.get('/cancel', (req, res) => {
+    return res.redirect(`${process.env.FRONTEND_URL}/#/`);
+});
+
 // Github auth routes
 router.get('/github', async (req, res) => {
     const email = req.query.email;
@@ -440,7 +443,7 @@ router.get('/github', async (req, res) => {
 });
 
 router.get('/github/redirect',
-    passport.authenticate('github', { failureRedirect: '/login' }),
+    passport.authenticate('github', { failureRedirect: '/auth/cancel' }),
     async (req, res) => {
         try {
             if (req.user === undefined) {
@@ -478,7 +481,7 @@ router.get('/discord', async (req, res) => {
 });
 
 router.get('/discord/callback',
-    passport.authenticate('discord', { failureRedirect: '/login' }),
+    passport.authenticate('discord', { failureRedirect: '/auth/cancel' }),
     async (req, res) => {
         try {
             if (req.user === undefined) {
@@ -516,7 +519,7 @@ router.get('/dropbox', async (req, res) => {
 });
 
 router.get('/dropbox/callback',
-    passport.authenticate('dropbox-oauth2', { failureRedirect: '/login' }),
+    passport.authenticate('dropbox-oauth2', { failureRedirect: '/auth/cancel' }),
     async (req, res) => {
         try {
             let user = await getUser(req);
@@ -554,7 +557,7 @@ router.get('/spotify', async (req, res) => {
 });
 
 router.get('/spotify/callback',
-    passport.authenticate('spotify', { failureRedirect: '/login' }),
+    passport.authenticate('spotify', { failureRedirect: '/auth/cancel' }),
     async (req, res) => {
         try {
             if (req.user === undefined) {
@@ -603,7 +606,7 @@ router.get('/google', async (req, res) => {
 });
 
 router.get('/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login', }),
+    passport.authenticate('google', { failureRedirect: '/auth/cancel', }),
     async (req, res) => {
         try {
             if (req.user === undefined) {

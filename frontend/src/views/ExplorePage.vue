@@ -6,16 +6,18 @@
             v-if="displayedService"
             @click.stop.prevent="freezeTime = !freezeTime"
             class="fixed w-screen h-screen top-0 !z-40 select-none pointer-events-none !bg-transparent">
-            <div
-                class="fixed z-50 p-2 half:p-1 rounded-full pointer-events-auto hover:cursor-pointer mobile:!bottom-[170px] half:bottom-[75px] bottom-[90px] left-[8px] group"
-                :style="{ backgroundColor: displayedService.color }">
-                <Icon
-                    icon="mdi:snowflake"
-                    class="text-white w-12 h-12 half:w-10 half:h-10"
-                    aria-label="Open Help Popup"
-                    role="button"
-                    tabindex="0" />
-                <p class="absolute font-bold -ml-1">{{ secondsBeforeSwitch }}</p>
+            <div class="fixed z-50 mobile:!bottom-[170px] half:bottom-[75px] bottom-[90px] left-[8px] flex justify-center items-center">
+                <div
+                    class="p-2 half:p-1 rounded-full pointer-events-auto relative group"
+                    :style="{ backgroundColor: displayedService.color }">
+                    <Icon
+                        icon="mdi:snowflake"
+                        class="text-white w-12 h-12 half:w-10 half:h-10"
+                        aria-label="Open Help Popup"
+                        role="button"
+                        tabindex="0" />
+                    <p class="font-bold -top-2 right-0 absolute text-xl">{{ secondsBeforeSwitch }}</p>
+                </div>
             </div>
         </div>
         <div class="flex flex-col fixed w-full items-center justify-between h-fit z-10 mobile:hidden">
@@ -32,12 +34,10 @@
             id="main-content">
             <div
                 :key="displayedService.name"
-                class="flex flex-col items-center justify-between w-full h-full z-[2] shadow-lg select-none"
+                class="flex flex-col items-center justify-between w-full h-full z-[2] shadow-lg select-none cursor-default"
                 :style="{ backgroundColor: displayedService.color }"
                 :aria-label="`Explore ${displayedService.name}`"
-                role="button"
-                tabindex="0"
-                @click="handleServiceClick(displayedService.name)">
+                tabindex="0">
                 <div class="items-center w-1/3 justify-center gap-2 mobile:flex hidden my-8">
                     <Icon icon="material-symbols:explore-rounded" class="w-[2.5rem] h-[2.5rem] flex-shrink-0 text-white hover:cursor-pointer"/>
                     <div class="flex flex-col justify-end items-center">
@@ -46,8 +46,9 @@
                 </div>
                 <div class="w-full h-full flex half:justify-start web:justify-center gap-8 half:flex-col items-center overflow-y-scroll web:mt-24 web:pb-16 half:pb-0 web:pt-4 half:pt-0"
                     @scroll="updateScrollY">
-                    <div class="flex items-center bg-black/20 w-[20rem] half:w-11/12 h-full half:!h-fit rounded-lg flex-col p-8 justify-between px-8 half:px-4">
-                        <div class="flex flex-col items-center">
+                    <div class="flex items-center bg-black/20 w-[22rem] half:w-11/12 h-full half:!h-fit rounded-lg flex-col p-8 justify-between px-8 half:px-4">
+                        <div class="flex flex-col items-center hover:cursor-pointer"
+                            @click="handleServiceClick(displayedService.name)">
                             <Icon :icon="displayedService.icon" class="text-4xl w-32 half:w-24 h-32 half:h-24 text-white" aria-hidden="true" />
                             <span class="text-2xl mobile:text-xl font-bold text-white select-none capitalize">{{ displayedService.name }}</span>
                         </div>
@@ -56,19 +57,18 @@
                             <h1 class="text-md font-black text-white" v-else>You are correctly linked to <span class="capitalize">{{ displayedService.name }}</span>.</h1>
                             <div class="flex w-full items-center justify-center half:mb-2">
                                 <div
-                                    class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 cursor-pointer transition-transform duration-300"
-                                    @click.stop="switchLinkStatus">
+                                    class="border-4 border-auth-neutral w-[200px] h-[50px] rounded-full bg-white flex justify-between items-center px-2 transition-transform duration-300">
                                     <div
-                                        v-if="!linked"
+                                        v-if="linked"
                                         class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                                         :style="{ backgroundColor: displayedService.color }" />
                                     <h1
-                                        class="text-xl font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
-                                        :style="{ color: displayedService.color, textAlign: !linked ? 'left' : 'right' }">
-                                        {{ !linked ? 'Not Linked' : 'Linked' }}
+                                        class="text-xl mobile:text-lg font-semibold transition-all duration-500 select-none w-[146px] flex justify-center"
+                                        :style="{ color: displayedService.color, textAlign: linked ? 'left' : 'right' }">
+                                        {{ linked ? 'Linked' : 'Not Linked' }}
                                     </h1>
                                     <div
-                                        v-if="linked"
+                                        v-if="!linked"
                                         class="rounded-full w-[30px] h-[30px] transition-all duration-500"
                                         :style="{ backgroundColor: displayedService.color }" />
                                 </div>
@@ -77,13 +77,21 @@
                         <div class="flex flex-col gap-2 items-center justify-center text-center" v-else>
                             <h1 class="text-md font-black text-white">Login to start using this AmAzIng service!</h1>
                         </div>
+                        <button
+                            aria-label="redirect-to-service-button"
+                            @click="handleServiceClick(displayedService.name)"
+                            class="btn btn-primary px-12 py-4 text-white bg-white rounded-lg transition hover:cursor-pointer half:my-4 mobile:px-4 mobile:py-2"
+                            :style="{ backgroundColor: displayedService.color }">
+                            <span class="text-xl mobile:!text-base font-bold">Go to <span class="capitalize">{{ displayedService.name }}</span></span>
+                        </button>
                         <div class="flex flex-col gap-2 items-center">
                             <RateComponent :rate="displayedService.reviews.rate" :reviews="displayedService.reviews.count" textcolor="white" color="white" />
                             <SaveComponent :saves="displayedService.saves" textcolor="white" color="white" />
                         </div>
                     </div>
-                    <div class="flex justify-start flex-col half:px-4 py-4 half:py-4 pb-12 items-center bg-black/20 w-2/3 half:w-11/12 half:h-fit h-full rounded-lg mobile:!mb-8 half:mb-16 px-8 flex-shrink-0">
-                        <div class="flex gap-2 items-center mb-4 half:hidden">
+                    <div class="flex justify-start flex-col half:px-4 py-4 half:py-4 pb-12 items-center bg-black/20 w-[59%] half:w-11/12 half:h-fit h-full rounded-lg mobile:!mb-8 half:mb-16 px-8 flex-shrink-0">
+                        <div class="flex gap-2 items-center mb-4 half:hidden hover:cursor-pointer"
+                            @click="handleServiceClick(displayedService.name)">
                             <Icon :icon="displayedService.icon" class="text-4xl w-16 h-16 mb-2 text-white" aria-hidden="true" />
                             <span class="text-xl font-bold text-white select-none capitalize">{{ displayedService.name }}</span>
                         </div>
@@ -122,7 +130,26 @@
                     </footer>
                 </div>
             </div>
-            <FooterComponent class="!mt-0 half:hidden" />
+            <div class="flex justify-between items-center flex-col h-64 w-full half:!h-fit"
+                :style="{ backgroundColor: displayedService.color }">
+                <footer class="flex justify-between items-center flex-col h-64 half:!h-fit py-8 relative z-[2] w-full bg-black/20 !mt-0 half:hidden" v-if="displayedService">
+                    <h1 class="text-3xl font-black text-white text-center mb-8">CONTACT US</h1>
+                    <div class="flex half:flex-col w-full justify-center items-center px-8">
+                        <div class="flex gap-4 items-center w-full justify-center">
+                            <Icon icon="material-symbols:mail-outline" class="w-6 h-6 text-white" />
+                            <p class="text-white hover:cursor-pointer" @click="copyEmail">contact.area.ownspace@gmail.com</p>
+                        </div>
+                        <p class="w-full text-center text-white">Project made at Epitech</p>
+                        <h1 class="text-4xl font-black text-white text-center w-full hover:cursor-pointer half:mt-12" @click="scrollToTop">AREA</h1>
+                    </div>
+                    <div class="flex justify-center items-center gap-8 mt-8 text-white/60 text-sm mobile:mb-20">
+                        <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/mentions')">Mentions</p>
+                        <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/cookies')">Cookies</p>
+                        <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/privacy')">Privacy</p>
+                        <p class="hover:underline hover:cursor-pointer" @click="navigateTo('/terms')">Terms</p>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
 </template>
@@ -163,6 +190,7 @@ const updateScrollY = (event: Event) => {
 };
 
 function navigateTo(path: string) {
+    window.scrollTo(0, 0);
     router.push(path);
 }
 
