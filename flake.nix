@@ -23,8 +23,8 @@
           PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
           PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
           JAVA_HOME = "${pkgs.openjdk}/lib/openjdk";
-          ANDROID_HOME = "/home/derevierst/Android/Sdk";  # Set the SDK path to your Android SDK location
-          PATH = "${pkgs.openjdk}/bin:${pkgs.nodejs_22}/bin:/home/derevierst/Android/Sdk/platform-tools:/home/derevierst/Android/Sdk/tools:$PATH";  # Add platform-tools and tools to PATH
+          ANDROID_HOME = "/home/derevierst/Android/Sdk";
+          PATH = "${pkgs.openjdk}/bin:${pkgs.nodejs_22}/bin:/home/derevierst/Android/Sdk/platform-tools:/home/derevierst/Android/Sdk/tools:$PATH";
         };
         packages = with pkgs; [
           bashInteractiveFHS
