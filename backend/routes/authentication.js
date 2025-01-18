@@ -242,7 +242,6 @@ router.post('/reset-password-confirm', async (req, res) => {
     }
 });
 
-
 router.put('/change-password', async (req, res) => {
     const { email, code, password } = req.body;
 

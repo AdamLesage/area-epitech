@@ -22,16 +22,6 @@ const redis = new Redis({
 const { areaNotify } = require("../utils/areaNotify");
 
 /**
- * @brief return a list of all actions of the user
- */
-router.get('/action', async (req, res) => {
-    const posts = await prisma.actionReaction.findMany({
-        where: { isActive: true },
-    })
-    res.json(posts)
-});
-
-/**
  * @brief create a new action and return the action
  * 
  * @param {string} title the title of the action reaction
