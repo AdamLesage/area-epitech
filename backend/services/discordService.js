@@ -138,7 +138,7 @@ async function exchangeCodeForToken(code) {
             client_secret: process.env.DISCORD_CLIENT_SECRET,
             grant_type: 'authorization_code',
             code: code,
-            redirect_uri: 'http://localhost:8080/discord/redirect',
+            redirect_uri: `${process.env.BACKEND_URL}/discord/redirect`,
         }), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
