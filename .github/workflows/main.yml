@@ -34,7 +34,9 @@ jobs:
       with:
         fetch-depth: 0
     - run: |
-        cd frontend && npm run test:e2e
+        cd frontend
+        npm install typescript ts-node @types/node
+        npm run test:e2e
       shell: sh -e {0}
       timeout-minutes: 5
 
