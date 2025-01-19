@@ -17,7 +17,8 @@ jobs:
     - run: |
         echo "Need to implement compilation check"
       timeout-minutes: 1
-  run_tests_and_coverage:
+
+  run_tests:
     needs:
       - check_compilation
     runs-on: ubuntu-latest
@@ -31,9 +32,10 @@ jobs:
     - run: |
         echo "Need to implement tests and coverage"
       timeout-minutes: 1
+
   push_to_mirror:
     needs:
-      - run_tests_and_coverage
+      - run_tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

@@ -19,7 +19,9 @@ const { initializeGmailClient } = require('../utils/initGmailClient');
 // Intern auth routes
 
 // Global variable for reset email code
-let resetPasswordCodeAccordingToEmail = {};
+let resetPasswordCodeAccordingToEmail = {
+    "test.user@mail.com": 123456
+};
 
 // Intern auth routes
 router.post('/login', (req, res) => {

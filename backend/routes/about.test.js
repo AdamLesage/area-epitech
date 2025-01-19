@@ -17,11 +17,23 @@ beforeAll(async () => {
 });
 
 
-describe('User Routes', () => {
-    it('should create a new user', async () => {
+describe('About Routes', () => {
+    it('Should get all services', async () => {
         const response = await request(app).get('/about.json');
         expect(response.statusCode).toBe(200);
         expect(response.body).toHaveProperty('client');
         expect(response.body).toHaveProperty('server');;
+    }, 10000);
+
+    it('Should get all services info', async () => {
+        const response = await request(app).get('/services-info.json');
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('services');
+    }, 10000);
+
+    it('Should get all services areas', async () => {
+        const response = await request(app).get('/services-areas.json');
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('services');
     }, 10000);
 });
