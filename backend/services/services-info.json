@@ -4536,16 +4536,16 @@
             "updated_date": "2025-01-07",
             "options": [
               {
-                "name": "music_uri",
-                "display_name": "Music URI",
-                "description": "The URI of the music",
+                "name": "playlist_id",
+                "display_name": "Playlist URI",
+                "description": "The URI of the playlist",
                 "type": "SpotifyPlaylist",
                 "required": true
               },
               {
-                "name": "playlist_uri",
-                "display_name": "Playlist URI",
-                "description": "The URI of the playlist",
+                "name": "music_uri",
+                "display_name": "Music URI",
+                "description": "The URI of the music",
                 "type": "SpotifyMusic",
                 "required": true
               }

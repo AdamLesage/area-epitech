@@ -71,7 +71,7 @@
             </div>
             <div v-if="step2 === 'allDone' && selectedPlaylist" class="flex flex-col gap-2 mt-2">
                 <div class="bg-[#24292e] p-2 rounded-md flex items-center gap-2 w-full justify-start">
-                    <img :src="selectedPlaylist.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
+                    <img v-if="selectedPlaylist.images && selectedPlaylist.images[0]" :src="selectedPlaylist.images[0].url" alt="Playlist Cover" class="w-8 h-8 rounded-md" />
                     <div class="flex flex-col">
                         <a aria-label="selected-playlist-name" :href="selectedPlaylist.external_urls.spotify" target="_blank" class="text-white hover:text-blue-500 hover:underline">{{selectedPlaylist.name}}</a>
                         <h4 class="text-white text-xs">{{ selectedPlaylist.tracks.total }} tracks</h4>
@@ -822,13 +822,13 @@ function selectUser(user: GithubUser) {
 function selectPlaylist(playlist: Playlist) {
     selectedPlaylist.value = playlist;
     step2.value = 'allDone';
-    emit('change', playlist.uri);
+    emit('change', playlist.id);
 };
 
 function selectMusic(music: Music) {
     selectedMusic.value = music;
     step3.value = 'allDone';
-    emit('change', music.id);
+    emit('change', music.uri);
 };
 
 async function selectRepository(repo: Repository) {
