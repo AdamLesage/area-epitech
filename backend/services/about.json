@@ -1108,8 +1108,48 @@
         "description": "Triggered when a new message is created."
       },
       {
+        "name": "message_create_server",
+        "description": "Triggered when a new message is created in a specific server."
+      },
+      {
+        "name": "message_create_channel",
+        "description": "Triggered when a new message is created in a specific channel."
+      },
+      {
+        "name": "message_create_user",
+        "description": "Triggered when a new message is created by a specific user."
+      },
+      {
+        "name": "message_create_server_user",
+        "description": "Triggered when a new message is created in a specific server by a specific user."
+      },
+      {
+        "name": "message_create_channel_user",
+        "description": "Triggered when a new message is created in a specific channel by a specific user."
+      },
+      {
         "name": "message_delete",
         "description": "Triggered when a message is deleted."
+      },
+      {
+        "name": "message_delete_server",
+        "description": "Triggered when a message is deleted in a specific server."
+      },
+      {
+        "name": "message_delete_channel",
+        "description": "Triggered when a message is deleted in a specific channel."
+      },
+      {
+        "name": "message_delete_user",
+        "description": "Triggered when a message is deleted by a specific user."
+      },
+      {
+        "name": "message_delete_server_user",
+        "description": "Triggered when a message is deleted in a specific server by a specific user."
+      },
+      {
+        "name": "message_delete_channel_user",
+        "description": "Triggered when a message is deleted in a specific channel by a specific user."
       },
       {
         "name": "message_update",
