@@ -5,15 +5,11 @@ let code = '';
 async function signIn(page) {
     await page.goto('http://area-workspace.fr:8081/#/');
     await page.getByLabel('signup-text-button-router-link').click();
-    await page.getByPlaceholder('Enter your email...').click();
     await page.getByPlaceholder('Enter your email...').fill('bidule@gmail.com');
-    await page.locator('input[name="password"]').click();
     await page.locator('input[name="password"]').fill('lalalalallala');
-    await page.locator('input[name="confirmPassword"]').click();
     await page.locator('input[name="confirmPassword"]').fill('lalalalallala');
     await page.getByLabel('I agree to the Terms').check();
     await page.getByLabel('sign-up-form-button').click();
-    await page.getByPlaceholder('Enter your username...').click();
     await page.getByPlaceholder('Enter your username...').fill('lallalallaa');
     await page.getByPlaceholder('Enter a description for your').click();
     await page.getByPlaceholder('Enter a description for your').fill('lalallalaa');
