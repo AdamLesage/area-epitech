@@ -84,6 +84,7 @@ You can find our documentation inside the `documentation` folder:
 5. [Models of the Database](documentation/MODELS.md) (see doc: `./documentation/MODELS.md`)
 6. [Route of the Database](documentation/ROUTES.md) (see doc: `./documentation/ROUTES.md`)
 7. [Route of the Front](documentation/ROUTES_FRONT.md) (see doc: `./documentation/ROUTES_FRONT.md`)
+8. [Backend Worker architecture](documentation/backend-arch.md) (see doc: `./documentation/backend-arch.md`)
 
 ### API Documentation
 
