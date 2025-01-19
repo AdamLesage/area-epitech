@@ -900,9 +900,7 @@ async function selectRepository(repo: Repository) {
             name: 'web',
             active: true,
             events: [
-                'issues',
-                'pull_request',
-                'pull_request_review'
+                '*'
             ],
             config: {
                 url: import.meta.env.VITE_DEPLOYED_URL + '/github/webhook/',
