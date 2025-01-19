@@ -112,73 +112,101 @@ describe('User Routes', () => {
         expect(response.body[0]).toHaveProperty('email', userEmail);
     }, 10000);
 
-    // it('should retrieve no users with specified emails (GET /api/users?emails=email1,email2)', async () => {
-    //     const headers = {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `${userAuthToken}`
-    //     };
+    it('should retrieve a user by uuid (GET /api/user/:uuid)', async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAuthToken}`
+        };
 
-    //     const response = await request(app)
-    //         .get('/api/users?emails=invalid-email')
-    //         .set(headers);
+        const response = await request(app)
+            .get(`/api/user/${userUuid}`)
+            .set(headers);
 
-    //     expect(response.statusCode).toBe(200);
-    //     expect(Array.isArray(response.body)).toBe(true);
-    //     expect(response.body.length).toBe(0);
-    // }, 10000);
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('uuid', userUuid);
+        expect(response.body).toHaveProperty('email', userEmail);
+    }, 10000);
 
-    // it('should retrieve a user by uuid (GET /api/user/:uuid)', async () => {
-    //     const headers = {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `${userAuthToken}`
-    //     };
+    it('should try to retrieve an invalid user by uuid (GET /api/user/:uuid)', async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAuthToken}`
+        };
 
-    //     const response = await request(app)
-    //         .get(`/api/user/${userUuid}`)
-    //         .set(headers);
+        const response = await request(app)
+            .get(`/api/user/${userUuid}7`)
+            .set(headers);
 
-    //     expect(response.statusCode).toBe(200);
-    //     expect(response.body).toHaveProperty('uuid', userUuid);
-    //     expect(response.body).toHaveProperty('email', 'john.doe@mail.com');
-    // }, 10000);
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toHaveProperty('error', "User not found");
+    }, 10000);
 
-    // it('should update a user (PUT /api/user/:uuid)', async () => {
-    //     const headers = {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `${userAuthToken}`
-    //     };
+    it('should try to retrieve a user with invalid authToken (GET /api/user/:uuid)', async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAuthToken}eazeaz`
+        };
 
-    //     const updatedData = {
-    //         email: 'updated@email.com',
-    //         bio: 'I am an updated user',
-    //     };
+        const response = await request(app)
+            .get(`/api/user/${userUuid}`)
+            .set(headers);
 
-    //     const response = await request(app)
-    //         .put(`/api/user/${userUuid}`)
-    //         .set(headers)
-    //         .send(updatedData);
-    //     expect(response.statusCode).toBe(200);
-    //     expect(response.body).toHaveProperty('email', 'updated@email.com');
-    //     expect(response.body).toHaveProperty('bio', 'I am an updated user');
-    // }, 10000);
+        expect(response.statusCode).toBe(401);
+        expect(response.body).toHaveProperty('error', "Unauthorized");
+    }, 10000);
 
-    // it('should delete a user (DELETE /api/user/:uuid)', async () => {
-    //     const headers = {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `${userAuthToken}`
-    //     };
+    it('should try to retrieve a user without authToken (GET /api/user/:uuid)', async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+        };
 
-    //     const response = await request(app)
-    //         .delete(`/api/user/${userUuid}`)
-    //         .set(headers);
+        const response = await request(app)
+            .get(`/api/user/${userUuid}`)
+            .set(headers);
 
-    //     expect(response.statusCode).toBe(200);
+        expect(response.statusCode).toBe(401);
+        expect(response.body).toHaveProperty('error', "Unauthorized");
+    }, 10000);
 
-    //     const checkDeleted = await request(app)
-    //         .get(`/api/user/${userUuid}`)
-    //         .set(headers);
+    it('should retrieve a user by auth token (GET /api/user)', async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAuthToken}`
+        };
 
-    //     // Status code 401 means authorization token is not found so the user is deleted
-    //     expect(checkDeleted.statusCode).toBe(401);
-    // }, 10000);
+        const response = await request(app)
+            .get('/api/user')
+            .set(headers);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('uuid', userUuid);
+        expect(response.body).toHaveProperty('email', userEmail);
+    }, 10000);
+
+    it('should try to retrieve a user but without auth token (GET /api/user)', async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAuthToken}`
+        };
+
+        const response = await request(app)
+            .get('/api/user')
+
+        expect(response.statusCode).toBe(401);
+        expect(response.body).toHaveProperty('error', "Unauthorized: Missing authorization token");
+    }, 10000);
+
+    it('should retrieve a user by email (GET /api/user?email=email)', async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAuthToken}`
+        };
+
+        const response = await request(app)
+            .get(`/api/user?email=${userEmail}`)
+            .set(headers);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('email', userEmail);
+    }, 10000);
 });

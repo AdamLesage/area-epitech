@@ -236,4 +236,11 @@ describe('Authentication Routes', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body).toHaveProperty('error', 'Code is incorrect');
     });
+
+    it('should redirect to frontend URL on cancel (GET /auth/cancel)', async () => {
+        const response = await request(app).get('/auth/cancel');
+
+        expect(response.statusCode).toBe(302);
+        expect(response.headers.location).toBe(`${process.env.FRONTEND_URL}/`);
+    });
 });
