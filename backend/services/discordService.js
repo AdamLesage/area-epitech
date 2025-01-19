@@ -23,22 +23,14 @@ const guildTokens = new Map();
 // ACTION
 router.post('/webhook', async (req, res) => {
     try {
-        console.log("receive discord webhook");
+        // console.log("receive discord webhook");
 
-        console.log("Headers:", req.headers);
-        console.log("Body:", req.body);
+        // console.log("Headers:", req.headers);
+        // console.log("Body:", req.body);
 
         // Fetch all actionReactions that are active and have the service "discord"
-        const targetuser = await prisma.user.findFirst({
-            where: {
-                linkedAccounts: {
-                    some: {
-                        serviceName: "discord",
-                        uuid: req.body.guild_id
-                    }
-                },
-            }
-        });
+
+        const actionName = req.body.Event;
 
         const activeDiscordActions = await prisma.actionReaction.findMany({
             where: {
@@ -47,12 +39,56 @@ router.post('/webhook', async (req, res) => {
                     service: {
                         name: "discord",
                     },
+                    name: actionName,
                 },
-                userUuid: targetuser.uuid,
             },
         });
 
-        const promises = activeDiscordActions.map(async (action) => {
+        if (activeDiscordActions.length === 0) {
+            return res.status(200).send('No active actions found for this event');
+        }
+
+        let filteredActions = [];
+
+        console.log("DATA", req.body);
+        const group = req.body.group;
+        const channel_id = req.body.data.channelId;
+        const server_id = req.body.data.serverId;
+        const user_id = req.body.data.userId;
+
+        switch (group) {
+            case 0:
+
+                filteredActions = activeDiscordActions;
+                break;
+            case 1:
+                if (server_id) {
+                    filteredActions.push(activeDiscordActions.filter((action) => action.actionData.server_id == server_id));
+                }
+                break;
+            case 2:
+                if (channel_id && server_id)
+                    filteredActions.push(activeDiscordActions.filter((action) => action.actionData.channel_id == channel_id && action.actionData.server_id == server_id));
+                break;
+            case 3:
+                if (user_id)
+                    filteredActions.push(activeDiscordActions.filter((action) => action.actionData.user_id == user_id));
+                break;
+            case 4:
+                if (server_id && user_id)
+                    filteredActions.push(activeDiscordActions.filter((action) => action.actionData.server_id == server_id && action.actionData.user_id == user_id));
+                break;
+            case 5:
+                if (server_id && channel_id && user_id)
+                    filteredActions.push(activeDiscordActions.filter((action) => action.actionData.server_id == server_id && action.actionData.channel_id == channel_id && action.actionData.user_id == user_id));
+                break;
+        }
+
+        // for (let i = 0; i < filteredActions.length; i++) {
+        //     console.log(filteredActions[i]);
+        // }
+
+        const promises = filteredActions.flat().map(async (action) => {
             // Push each action to the Redis queue
             console.log("send to worker", action.uuid);
             await redis.lpush(action.uuid, JSON.stringify(req.body));
