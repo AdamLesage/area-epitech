@@ -34,7 +34,8 @@ jobs:
       with:
         fetch-depth: 0
     - run: |
-        cd frontend && sudo docker run -it playwright-docker:latest npx playwright test
+        cd frontend && npm run test:e2e
+      shell: sh -e {0}
       timeout-minutes: 1
 
   push_to_mirror:
