@@ -1,7 +1,5 @@
 FROM node:lts-alpine
 
-RUN npm install -g http-server
-
 WORKDIR /app
 
 COPY package*.json ./
@@ -12,4 +10,4 @@ COPY . .
 
 EXPOSE 8081
 
-CMD npm run build && npx cap sync && http-server dist -p 8081
+CMD npm run build && npx cap sync && node server.js
