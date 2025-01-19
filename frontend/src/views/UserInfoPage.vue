@@ -308,7 +308,7 @@ async function deleteAccount() {
 }
 
 function canDelete(platformName: string) {
-    const cannotDelete = ['gmail', 'timer', 'area'];
+    const cannotDelete = ['gmail', 'timer', 'area', 'news'];
     return !cannotDelete.includes(platformName);
 }
 

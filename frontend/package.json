@@ -8,7 +8,7 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
-    "test:e2e": "cd e2e && npx playwright test --reporter=dot",
+    "test:e2e": "cd e2e && sudo docker build -t playwright-docker . && sudo docker run -it playwright-docker:latest npx playwright test --reporter=dot",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",

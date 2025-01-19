@@ -6693,7 +6693,7 @@
         "actions": [],
         "reactions": [
           {
-            "name": "news_alert",
+            "name": "fetch_news",
             "display_name": "News Alert",
             "description": "Get a news alert",
             "version": "1.0.0",
@@ -6701,14 +6701,21 @@
             "updated_date": "2025-01-13",
             "options": [
               {
-                "name": "search_query",
+                "name": "query",
                 "display_name": "Search Query",
                 "description": "Type what you want to search",
                 "type": "text",
                 "required": true
               },
               {
-                "name": "website",
+                "name": "to",
+                "display_name": "to",
+                "description": "the name of the receiver",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "domain",
                 "display_name": "Website",
                 "description": "Choose the website",
                 "type": "text",
