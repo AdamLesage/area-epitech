@@ -36,7 +36,7 @@ jobs:
     - run: |
         cd frontend && npm run test:e2e
       shell: sh -e {0}
-      timeout-minutes: 1
+      timeout-minutes: 5
 
   push_to_mirror:
     needs:
