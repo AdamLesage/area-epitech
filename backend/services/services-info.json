@@ -5597,7 +5597,7 @@
                 "name": "server_id",
                 "display_name": "Server ID",
                 "description": "The ID of the server",
-                "type": "text",
+                "type": "DiscordGuild",
                 "required": true
               },
               {
@@ -5645,7 +5645,7 @@
                 "name": "server_id",
                 "display_name": "Server ID",
                 "description": "The ID of the server",
-                "type": "text",
+                "type": "DiscordGuild",
                 "required": true
               },
               {
@@ -5669,7 +5669,7 @@
                 "name": "server_id",
                 "display_name": "Server ID",
                 "description": "The ID of the server",
-                "type": "text",
+                "type": "DiscordGuild",
                 "required": true
               },
               {
@@ -5719,7 +5719,7 @@
                 "name": "server_id",
                 "display_name": "Server ID",
                 "description": "The ID of the server",
-                "type": "text",
+                "type": "DiscordGuild",
                 "required": true
               },
               {
@@ -5757,16 +5757,16 @@
             "updated_date": "2025-01-08",
             "options": [
               {
-                "name": "channel_id",
-                "display_name": "Channel ID",
-                "description": "The ID of the channel",
-                "type": "text",
-                "required": true
-              },
-              {
                 "name": "server_id",
                 "display_name": "Server ID",
                 "description": "The ID of the server",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel_id",
+                "display_name": "Channel ID",
+                "description": "The ID of the channel",
                 "type": "text",
                 "required": true
               },
@@ -5791,13 +5791,44 @@
                 "name": "server_id",
                 "display_name": "Server ID",
                 "description": "The ID of the server",
-                "type": "text",
+                "type": "DiscordGuild",
                 "required": true
               },
               {
                 "name": "user_id",
                 "display_name": "User ID",
                 "description": "The ID of the user",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "message_delete_message_id",
+            "display_name": "Message with ID Deleted",
+            "description": "A message with a specific ID is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel_id",
+                "display_name": "Channel ID",
+                "description": "The ID of the channel",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "message_id",
+                "display_name": "Message ID",
+                "description": "The ID of the message to delete",
                 "type": "text",
                 "required": true
               }
@@ -5811,6 +5842,150 @@
             "release_date": "2025-01-08",
             "updated_date": "2025-01-08",
             "options": []
+          },
+          {
+            "name": "message_update_server",
+            "display_name": "Message Updated in Server",
+            "description": "A message is updated in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "message_update_channel",
+            "display_name": "Message Updated in Channel",
+            "description": "A message is updated in a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel_id",
+                "display_name": "Channel ID",
+                "description": "The ID of the channel",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "message_update_user",
+            "display_name": "Message from User Updated",
+            "description": "A message from a user is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "user_id",
+                "display_name": "User ID",
+                "description": "The ID of the user",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "message_update_server_user",
+            "display_name": "Message from User Updated in Server",
+            "description": "A message from a user is updated in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "user_id",
+                "display_name": "User ID",
+                "description": "The ID of the user",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "message_update_channel_user",
+            "display_name": "Message from User Updated in Channel",
+            "description": "A message from a user is updated in a channel",
+            "version": "1.0.0",
+            "release_date": "2025-01-08",
+            "updated_date": "2025-01-08",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel_id",
+                "display_name": "Channel ID",
+                "description": "The ID of the channel",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "user_id",
+                "display_name": "User ID",
+                "description": "The ID of the user",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "message_update_message_id",
+            "display_name": "Message with ID Updated",
+            "description": "A message with a specific ID is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "DiscordGuild",
+                "required": true
+              },
+              {
+                "name": "channel_id",
+                "display_name": "Channel ID",
+                "description": "The ID of the channel",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "message_id",
+                "display_name": "Message ID",
+                "description": "The ID of the message to delete",
+                "type": "text",
+                "required": true
+              }
+            ]
           }
         ],
         "reactions": [
@@ -5943,6 +6118,23 @@
             "options": []
           },
           {
+            "name": "channel_create_server",
+            "display_name": "Channel Created in Server",
+            "description": "A channel is created in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
             "name": "channel_delete",
             "display_name": "Channel Deleted",
             "description": "A channel is deleted",
@@ -5952,6 +6144,23 @@
             "options": []
           },
           {
+            "name": "channel_delete_server",
+            "display_name": "Channel Deleted from Server",
+            "description": "A channel is deleted from a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
             "name": "channel_update",
             "display_name": "Channel Updated",
             "description": "A channel is updated",
@@ -5959,6 +6168,23 @@
             "release_date": "2025-01-08",
             "updated_date": "2025-01-08",
             "options": []
+          },
+          {
+            "name": "channel_update_server",
+            "display_name": "Channel Updated in Server",
+            "description": "A channel is updated in a server",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "server_id",
+                "display_name": "Server ID",
+                "description": "The ID of the server",
+                "type": "text",
+                "required": true
+              }
+            ]
           }
         ],
         "reactions": [

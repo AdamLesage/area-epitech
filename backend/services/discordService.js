@@ -55,16 +55,15 @@ router.post('/webhook', async (req, res) => {
         const channel_id = req.body.data.channelId;
         const server_id = req.body.data.serverId;
         const user_id = req.body.data.userId;
+        const message_id = req.body.data.messageId;
 
         switch (group) {
             case 0:
-
                 filteredActions = activeDiscordActions;
                 break;
             case 1:
-                if (server_id) {
+                if (server_id)
                     filteredActions.push(activeDiscordActions.filter((action) => action.actionData.server_id == server_id));
-                }
                 break;
             case 2:
                 if (channel_id && server_id)
@@ -81,6 +80,10 @@ router.post('/webhook', async (req, res) => {
             case 5:
                 if (server_id && channel_id && user_id)
                     filteredActions.push(activeDiscordActions.filter((action) => action.actionData.server_id == server_id && action.actionData.channel_id == channel_id && action.actionData.user_id == user_id));
+                break;
+            case 6:
+                if (message_id && channel_id && server_id)
+                    filteredActions.push(activeDiscordActions.filter((action) => action.actionData.message_id == message_id && action.actionData.channel_id == channel_id && action.actionData.server_id == server_id));
                 break;
         }
 
