@@ -41,12 +41,97 @@ client.on(Events.MessageCreate, async (message) => {
             serverId: message.guild.id,  // Add server ID
             channelId: message.channel.id,  // Add channel ID
             userId: message.author.id,  // Add user ID
-            Event: "message_create",
+            Group: 0,
         };
+
+        const messageData_server = {
+            author: message.author.username, // Add author username
+            content: message.content, // Add message content
+            channel: message.channel.name, // Add channel name
+            timestamp: message.createdAt, // Add timestamp
+            serverId: message.guild.id,  // Add server ID
+            channelId: message.channel.id,  // Add channel ID
+            userId: message.author.id,  // Add user ID
+        };
+
+
+        const messageData_channel = {
+            author: message.author.username, // Add author username
+            content: message.content, // Add message content
+            channel: message.channel.name, // Add channel name
+            timestamp: message.createdAt, // Add timestamp
+            serverId: message.guild.id,  // Add server ID
+            channelId: message.channel.id,  // Add channel ID
+            userId: message.author.id,  // Add user ID
+
+        };
+
+
+        const messageData_user = {
+            author: message.author.username, // Add author username
+            content: message.content, // Add message content
+            channel: message.channel.name, // Add channel name
+            timestamp: message.createdAt, // Add timestamp
+            serverId: message.guild.id,  // Add server ID
+            channelId: message.channel.id,  // Add channel ID
+            userId: message.author.id,  // Add user ID
+        };
+
+        
+        const messageData_server_user = {
+            author: message.author.username, // Add author username
+            content: message.content, // Add message content
+            channel: message.channel.name, // Add channel name
+            timestamp: message.createdAt, // Add timestamp
+            serverId: message.guild.id,  // Add server ID
+            channelId: message.channel.id,  // Add channel ID
+            userId: message.author.id,  // Add user ID
+        };
+
+
+        const messageData_channel_user = {
+            author: message.author.username, // Add author username
+            content: message.content, // Add message content
+            channel: message.channel.name, // Add channel name
+            timestamp: message.createdAt, // Add timestamp
+            serverId: message.guild.id,  // Add server ID
+            channelId: message.channel.id,  // Add channel ID
+            userId: message.author.id,  // Add user ID
+        };
+
 
         try {
             // Send a POST request to your webhook route with the message data
-            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, messageData, { httpsAgent: agent });
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+                data: messageData,
+                group: 0,
+                Event: "message_create",
+            }, { httpsAgent: agent });
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+                data: messageData_channel,
+                group: 2,
+                Event: "message_create_channel",
+            }, { httpsAgent: agent });
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+                data: messageData_server,
+                group: 1,
+                Event: "message_create_server",
+            }, { httpsAgent: agent });
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+                data: messageData_user,
+                group: 3,
+                Event: "message_create_user",
+            }, { httpsAgent: agent });
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+                data: messageData_server_user,
+                group: 4,
+                Event: "message_create_server_user",
+            }, { httpsAgent: agent });
+            await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+                data: messageData_channel_user,
+                group: 5,
+                Event: "message_create_channel_user",
+            }, { httpsAgent: agent });
             console.log('Message data sent to webhook successfully');
         } catch (error) {
             console.error('Error sending message data to webhook:', error);
@@ -54,7 +139,7 @@ client.on(Events.MessageCreate, async (message) => {
     }
 });
 
-// Listen for message delete events
+// Listen for message delete Events
 client.on(Events.MessageDelete, async (message) => {
     const messageData = {
         content: message.content, // Add message content
@@ -64,12 +149,40 @@ client.on(Events.MessageDelete, async (message) => {
         serverId: message.guild.id,  // Add server ID
         channelId: message.channel.id,  // Add channel ID
         messageId: message.id,  // Add message ID
-        Event: "message_delete",
     };
 
     try {
         // Send a POST request to your webhook route with the deleted message data
-        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, messageData, { httpsAgent: agent });
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+            data: messageData,
+            group: 0,
+            Event: "message_delete",
+        }, { httpsAgent: agent });
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+            data: messageData,
+            group: 1,
+            Event: "message_delete_server",
+        }, { httpsAgent: agent });
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+            data: messageData,
+            group: 2,
+            Event: "message_delete_channel",
+        }, { httpsAgent: agent });
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+            data: messageData,
+            group: 3,
+            Event: "message_delete_user",
+        }, { httpsAgent: agent });
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+            data: messageData,
+            group: 4,
+            Event: "message_delete_server_user",
+        }, { httpsAgent: agent });
+        await axios.post(`${process.env.BACKEND_URL}/discord/webhook`, {
+            data: messageData,
+            group: 5,
+            Event: "message_delete_channel_user",
+        }, { httpsAgent: agent });
         console.log('Deleted message data sent to webhook successfully');
     } catch (error) {
         console.error('Error sending deleted message data to webhook:', error);
