@@ -699,7 +699,7 @@ const { Client, Token } = require('strava-oauth2');
 let config = {
     client_id: process.env.STRAVA_CLIENT_ID,
     client_secret: process.env.STRAVA_CLIENT_SECRET,
-    redirect_uri: `http://area-workspace.fr:8080/auth/strava/callback`,
+    redirect_uri: `${process.env.BACKEND_URL}/auth/strava/callback`,
 };
 
 const client = new Client(config);
@@ -709,7 +709,7 @@ router.get('/strava', (req, res) => {
     const email = req.query.email;
     req.session.email = email;
 
-    config.redirect_uri = `http://area-workspace.fr:8080/auth/strava/callback` + `?email=${email}`;
+    config.redirect_uri = `${process.env.BACKEND_URL}/auth/strava/callback` + `?email=${email}`;
     const authorizationUri = `https://www.strava.com/oauth/authorize?client_id=${config.client_id}&response_type=code&redirect_uri=${config.redirect_uri}&approval_prompt=auto&scope=read,activity:read_all,activity:write,profile:read_all,profile:write`;
     res.redirect(authorizationUri);
 });
