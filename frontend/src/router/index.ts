@@ -4,23 +4,18 @@ import { App, URLOpenListenerEvent } from '@capacitor/app';
 App.addListener('appUrlOpen', function (event: URLOpenListenerEvent) {
   const url = new URL(event.url);
 
-  const hash = url.hash;
+  const path = url.pathname;  // Get the path from the URL
 
-  if (hash) {
-    // Remove the leading "/#" from the hash
-    const slug = hash.slice(2);
+  const queryString = url.search;  // Get the query string if there are any parameters
 
-    // Separate the path and query string (if exists)
-    const [path, queryString] = slug.split('?');
+  // Parse query parameters
+  const queryParams = new URLSearchParams(queryString);
 
-    // Parse query parameters
-    const queryParams = new URLSearchParams(queryString || '');
-
-    router.push({
-      path: path,  // Navigate to the route part (e.g., "/auth-callback")
-      query: Object.fromEntries(queryParams.entries()),  // Convert query params to an object
-    });
-  }
+  // Navigate using Vue Router with the path and query parameters
+  router.push({
+    path: path,  // Navigate to the route part (e.g., "/test")
+    query: Object.fromEntries(queryParams.entries()),  // Convert query params to an object
+  });
 });
 
 import auth from '@/middleware/auth';
