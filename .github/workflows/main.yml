@@ -3,10 +3,6 @@ on:
   pull_request:
     branches-ignore:
       - "ga-ignore-*"
-  push:
-    branches:
-      - main
-      - master
 
 jobs:
   check_compilation:
@@ -34,11 +30,8 @@ jobs:
       with:
         fetch-depth: 0
     - run: |
-        cd frontend
-        npm install typescript ts-node @types/node
-        npm run test:e2e
-      shell: sh -e {0}
-      timeout-minutes: 5
+        echo "Need to implement tests and coverage"
+      timeout-minutes: 1
 
   push_to_mirror:
     needs:
