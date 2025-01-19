@@ -1,4 +1,4 @@
-package com.example.app;
+package com.arearomainlemalin.area;
 
 import com.getcapacitor.BridgeActivity;
 

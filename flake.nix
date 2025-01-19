@@ -23,6 +23,8 @@
           PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
           PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
           JAVA_HOME = "${pkgs.openjdk}/lib/openjdk";
+          ANDROID_HOME = "/home/derevierst/Android/Sdk";
+          PATH = "${pkgs.openjdk}/bin:${pkgs.nodejs_22}/bin:/home/derevierst/Android/Sdk/platform-tools:/home/derevierst/Android/Sdk/tools:$PATH";
         };
         packages = with pkgs; [
           bashInteractiveFHS
@@ -40,7 +42,7 @@
         ];
 
         shellHook = ''
-          echo Custom cpp nix-shell !
+          echo "Custom cpp nix-shell!"
         '';
       };
     };
