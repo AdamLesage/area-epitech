@@ -10,14 +10,14 @@ info:
 
     For more information, visit [our website](http://area-workspace.fr:8081).
 
-  termsOfService: http://area-workspace.fr:8081/#/terms
+  termsOfService: http://area-workspace.fr:8081/terms
   contact:
     name: API Support Team
     email: contact.area.ownspace@gmail.com
-    url: http://area-workspace.fr:8081/#/mentions
+    url: http://area-workspace.fr:8081/mentions
   license:
     name: MIT License
-    url: http://area-workspace.fr:8081/#/mentions
+    url: http://area-workspace.fr:8081/mentions
 
 components:
   securitySchemes:
