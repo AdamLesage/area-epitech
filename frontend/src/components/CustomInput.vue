@@ -723,7 +723,7 @@ async function selectGuild(guild: DiscordGuild) {
     const isAlreadyInGuild = await fetchChannels(guild.id);
 
     if (!isAlreadyInGuild) {
-        const redirectUri = 'http://localhost:8080/discord/redirect'
+        const redirectUri = `${import.meta.env.VITE_BACKEND_URL}/discord/redirect`;
         window.open(`https://discord.com/oauth2/authorize?client_id=1326285888266829884&scope=bot%20guilds&permissions=8&guild_id=${guild.id}&redirect_uri=${redirectUri}&response_type=code`, '_blank');
     }
     selectedGuild.value = guild;
