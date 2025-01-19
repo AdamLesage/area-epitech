@@ -207,7 +207,8 @@
                     tabindex="0"
                     @mousedown="startDrag($event, index, 1)"
                     @touchstart.prevent="startDrag($event, index, 1)"
-                    @click="!wasDragging && handleServiceClick(service.name)">
+                    @click="!wasDragging && handleServiceClick(service.name)"
+                    @touchend="!wasDragging && handleServiceClick(service.name)">
                     <Icon :icon="service.icon" class="text-4xl w-16 h-16 mb-2 text-white" aria-hidden="true" />
                     <Icon :icon="positions[index].gravity == 0 ? 'ic:baseline-gps-fixed' : 'ic:baseline-gps-not-fixed'" class="text-2xl w-8 h-8 text-white absolute top-2 right-2" aria-hidden="true" @click.stop="switchGravity(positions[index])" />
                     <span class="text-lg font-medium text-white select-none capitalize">{{ service.name }}</span>
@@ -236,7 +237,8 @@
                     tabindex="0"
                     @mousedown="startDrag($event, index, 2)"
                     @touchstart.prevent="startDrag($event, index, 2)"
-                    @click="!wasDragging && handleServiceClick(service.name)">
+                    @click="!wasDragging && handleServiceClick(service.name)"
+                    @touchend="!wasDragging && handleServiceClick(service.name)">
                     <Icon :icon="service.icon" class="text-4xl w-12 h-12 text-white" aria-hidden="true" />
                 </div>
                 <div
@@ -249,6 +251,7 @@
                     @mousedown="startDrag($event, index + services.length, 2)"
                     @touchstart.prevent="startDrag($event, index + services.length, 2)"
                     @click="!wasDragging && (areaTooltip[index] = true)"
+                    @touchend="!wasDragging && (areaTooltip[index] = true)"
                     class="w-[12rem] rounded-full flex flex-col select-none z-20 absolute hover:cursor-pointer">
                     <div class="p-3 flex flex-col justify-center gap-2 h-full rounded-t-lg"
                         :style="{ backgroundColor: getBackgroundColor(area.actionService) }">

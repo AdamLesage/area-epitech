@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 let code = '';
 
 async function signIn(page) {
-    await page.goto('http://area-workspace.fr:8081/#/');
+    await page.goto('http://area-workspace.fr:8081/');
     await page.getByLabel('signup-text-button-router-link').click();
     await page.getByPlaceholder('Enter your email...').fill('bidule@gmail.com');
     await page.locator('input[name="password"]').fill('lalalalallala');

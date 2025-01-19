@@ -28,7 +28,7 @@
             <div class="flex flex-col justify-between items-center bg-home rounded-lg p-8 relative" @click.stop>
                 <h3 class="text-lg font-semibold text-white">Delete Account</h3>
                 <p class="text-white font-bold text-sm mt-4">Are you sure you want to delete your account?</p>
-                <p class="text-white text-sm mt-4">Please enter this code below: <span class="select-none">{{ verifyCode }}</span></p>
+                <p class="text-white text-sm mt-4">Please enter this code below: <span class="select-none" aria-label="verify-code" id="verify-code" role="verify-code">{{ verifyCode }}</span></p>
                 <input type="text" placeholder="Enter the code..." v-model="userVerifyCode" @change="errorCode = null"
                     class="w-full mt-4 p-2 rounded-lg bg-white border border-gray-300 text-black focus:outline-none font-geist mobile:p-1" />
                 <p class="text-red-500 text-sm mt-4 mb-2" v-if="errorCode">{{ errorCode }}</p>

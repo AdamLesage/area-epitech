@@ -10,9 +10,2183 @@
     "saves": 2250000,
     "categories": [
       {
+        "name": "branch_protection_configuration",
+        "display_name": "Branch Protection Configuration",
+        "actions": [
+          {
+            "name": "branch_protection_configuration.disabled",
+            "display_name": "Branch Protection Configuration Disabled",
+            "description": "A branch protection configuration is disabled",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "branch_protection_configuration.enabled",
+            "display_name": "Branch Protection Configuration Enabled",
+            "description": "A branch protection configuration is enabled",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "branch_protection_rule",
+        "display_name": "Branch Protection Rule",
+        "actions": [
+          {
+            "name": "branch_protection_rule.created",
+            "display_name": "Branch Protection Rule Created",
+            "description": "A branch protection rule is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "branch_protection_rule.deleted",
+            "display_name": "Branch Protection Rule Deleted",
+            "description": "A branch protection rule is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "branch_protection_rule.edited",
+            "display_name": "Branch Protection Rule Edited",
+            "description": "A branch protection rule is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "check_run",
+        "display_name": "Check Run",
+        "actions": [
+          {
+            "name": "check_run.completed",
+            "display_name": "Check Run Completed",
+            "description": "A check run is completed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "check_run.created",
+            "display_name": "Check Run Created",
+            "description": "A check run is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "check_run.requested_action",
+            "display_name": "Check Run Requested Action",
+            "description": "A check run is requested action",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "check_run.rerequested",
+            "display_name": "Check Run Rerequested",
+            "description": "A check run is rerequested",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "check_suite",
+        "display_name": "Check Suite",
+        "actions": [
+          {
+            "name": "check_suite.completed",
+            "display_name": "Check Suite Completed",
+            "description": "A check suite is completed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "check_suite.requested",
+            "display_name": "Check Suite Requested",
+            "description": "A check suite is requested",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "check_suite.rerequested",
+            "display_name": "Check Suite Rerequested",
+            "description": "A check suite is rerequested",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "code_scanning_alert",
+        "display_name": "Code Scanning Alert",
+        "actions": [
+          {
+            "name": "code_scanning_alert.appeared_in_branch",
+            "display_name": "Code Scanning Alert Appeared in Branch",
+            "description": "A code scanning alert appeared in a branch",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "code_scanning_alert.closed_by_user",
+            "display_name": "Code Scanning Alert Closed by User",
+            "description": "A code scanning alert is closed by a user",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "code_scanning_alert.created",
+            "display_name": "Code Scanning Alert Created",
+            "description": "A code scanning alert is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "code_scanning_alert.fixed",
+            "display_name": "Code Scanning Alert Fixed",
+            "description": "A code scanning alert is fixed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "code_scanning_alert.reopened",
+            "display_name": "Code Scanning Alert Reopened",
+            "description": "A code scanning alert is reopened",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "code_scanning_alert.reopened_by_user",
+            "display_name": "Code Scanning Alert Reopened by User",
+            "description": "A code scanning alert is reopened by a user",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "commit_comment",
+        "display_name": "Commit Comment",
+        "actions": [
+          {
+            "name": "commit_comment",
+            "display_name": "Commit Comment Created",
+            "description": "A commit comment is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "create",
+        "display_name": "Create",
+        "actions": [
+          {
+            "name": "create",
+            "display_name": "Create Event",
+            "description": "A new branch or tag is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository that was created",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "custom_property_values",
+        "display_name": "Custom Property Values",
+        "actions": [
+          {
+            "name": "custom_property_values",
+            "display_name": "Custom Property Values Updated",
+            "description": "Custom property values are updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "delete",
+        "display_name": "Delete",
+        "actions": [
+          {
+            "name": "delete",
+            "display_name": "Delete Event",
+            "description": "A branch or tag is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository that was deleted",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "dependabot_alert",
+        "display_name": "Dependabot Alert",
+        "actions": [
+          {
+            "name": "dependabot_alert.auto_dismisssed",
+            "display_name": "Dependabot Alert Auto Dismisssed",
+            "description": "A dependabot alert is auto dismisssed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "dependabot_alert.auto_reopened",
+            "display_name": "Dependabot Alert Auto Reopened",
+            "description": "A dependabot alert is auto reopened",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "dependabot_alert.created",
+            "display_name": "Dependabot Alert Created",
+            "description": "A dependabot alert is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "dependabot_alert.dismissed",
+            "display_name": "Dependabot Alert Dismissed",
+            "description": "A dependabot alert is dismissed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "dependabot_alert.fixed",
+            "display_name": "Dependabot Alert Fixed",
+            "description": "A dependabot alert is fixed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "dependabot_alert.reintroduced",
+            "display_name": "Dependabot Alert Reintroduced",
+            "description": "A dependabot alert is reintroduced",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "dependabot_alert.reopened",
+            "display_name": "Dependabot Alert Reopened",
+            "description": "A dependabot alert is reopened",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "deploy_key",
+        "display_name": "Deploy Key",
+        "actions": [
+          {
+            "name": "deploy_key.created",
+            "display_name": "Deploy Key Created",
+            "description": "A deploy key is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "deploy_key.deleted",
+            "display_name": "Deploy Key Deleted",
+            "description": "A deploy key is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "deployment",
+        "display_name": "Deployment",
+        "actions": [
+          {
+            "name": "deployment",
+            "display_name": "Deployment Event",
+            "description": "A deployment event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "deployment_status",
+        "display_name": "Deployment Status",
+        "actions": [
+          {
+            "name": "deployment_status",
+            "display_name": "Deployment Status Event",
+            "description": "A deployment status event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "discussion",
+        "display_name": "Discussion",
+        "actions": [
+          {
+            "name": "discussion.answered",
+            "display_name": "Discussion Answered",
+            "description": "A discussion is answered",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.category_changed",
+            "display_name": "Discussion Category Changed",
+            "description": "A discussion category is changed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.closed",
+            "display_name": "Discussion Closed",
+            "description": "A discussion is closed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.created",
+            "display_name": "Discussion Created",
+            "description": "A discussion is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.deleted",
+            "display_name": "Discussion Deleted",
+            "description": "A discussion is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.edited",
+            "display_name": "Discussion Edited",
+            "description": "A discussion is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.labeled",
+            "display_name": "Discussion Labeled",
+            "description": "A discussion is labeled",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.locked",
+            "display_name": "Discussion Locked",
+            "description": "A discussion is locked",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.pinned",
+            "display_name": "Discussion Pinned",
+            "description": "A discussion is pinned",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.reopened",
+            "display_name": "Discussion Reopened",
+            "description": "A discussion is reopened",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.transferred",
+            "display_name": "Discussion Transferred",
+            "description": "A discussion is transferred",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.unanswered",
+            "display_name": "Discussion Unanswered",
+            "description": "A discussion is unanswered",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.unlabeled",
+            "display_name": "Discussion Unlabeled",
+            "description": "A discussion is unlabeled",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.unlocked",
+            "display_name": "Discussion Unlocked",
+            "description": "A discussion is unlocked",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion.unpinned",
+            "display_name": "Discussion Unpinned",
+            "description": "A discussion is unpinned",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "discussion_comment",
+        "display_name": "Discussion Comment",
+        "actions": [
+          {
+            "name": "discussion_comment.created",
+            "display_name": "Discussion Comment Created",
+            "description": "A discussion comment is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion_comment.deleted",
+            "display_name": "Discussion Comment Deleted",
+            "description": "A discussion comment is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "discussion_comment.edited",
+            "display_name": "Discussion Comment Edited",
+            "description": "A discussion comment is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "fork",
+        "display_name": "Fork",
+        "actions": [
+          {
+            "name": "fork",
+            "display_name": "Fork Event",
+            "description": "A repository is forked",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository that was forked",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "gollum",
+        "display_name": "Gollum",
+        "actions": [
+          {
+            "name": "gollum",
+            "display_name": "Gollum Event",
+            "description": "A wiki page is created or updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "issue_comment",
+        "display_name": "Issue Comment",
+        "actions": [
+          {
+            "name": "issue_comment.created",
+            "display_name": "Issue Comment Created",
+            "description": "An issue comment is created",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issue_comment.deleted",
+            "display_name": "Issue Comment Deleted",
+            "description": "An issue comment is deleted",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issue_comment.edited",
+            "display_name": "Issue Comment Edited",
+            "description": "An issue comment is edited",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "create_issue_comment",
+            "display_name": "Create Issue Comment",
+            "description": "Create an issue comment",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the comment",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "update_issue_comment",
+            "display_name": "Update Issue Comment",
+            "description": "Update an issue comment",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "comment_id",
+                "display_name": "Comment ID",
+                "description": "The ID of the comment",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the comment",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "delete_issue_comment",
+            "display_name": "Delete Issue Comment",
+            "description": "Delete an issue comment",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "comment_id",
+                "display_name": "Comment ID",
+                "description": "The ID of the comment",
+                "type": "number",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "issue",
+        "display_name": "Issue",
+        "actions": [
+          {
+            "name": "issues.assigned",
+            "display_name": "Issue Assigned",
+            "description": "An issue is assigned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.closed",
+            "display_name": "Issue Closed",
+            "description": "An issue is closed",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.deleted",
+            "display_name": "Issue Deleted",
+            "description": "An issue is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.demilestoned",
+            "display_name": "Issue Demilestoned",
+            "description": "An issue is demilestoned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.edited",
+            "display_name": "Issue Edited",
+            "description": "An issue is edited",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.labeled",
+            "display_name": "Issue Labeled",
+            "description": "An issue is labeled",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.locked",
+            "display_name": "Issue Locked",
+            "description": "An issue is locked",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.milestoned",
+            "display_name": "Issue Milestoned",
+            "description": "An issue is milestoned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.opened",
+            "display_name": "Issue Opened",
+            "description": "An issue is opened",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.pinned",
+            "display_name": "Issue Pinned",
+            "description": "An issue is pinned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.reopened",
+            "display_name": "Issue Reopened",
+            "description": "An issue is reopened",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.transferred",
+            "display_name": "Issue Transferred",
+            "description": "An issue is transferred",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.unassigned",
+            "display_name": "Issue Unassigned",
+            "description": "An issue is unassigned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.unlabeled",
+            "display_name": "Issue Unlabeled",
+            "description": "An issue is unlabeled",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.unlocked",
+            "display_name": "Issue Unlocked",
+            "description": "An issue is unlocked",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "issues.unpinned",
+            "display_name": "Issue Unpinned",
+            "description": "An issue is unpinned",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "create_issue",
+            "display_name": "Create a new issue",
+            "description": "Create a new issue",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "title",
+                "display_name": "Title",
+                "description": "The title of the issue",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the issue",
+                "type": "textarea",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "update_issue",
+            "display_name": "Update an issue",
+            "description": "Update an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "title",
+                "display_name": "Title",
+                "description": "The title of the issue",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the issue",
+                "type": "textarea",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "update_issue_state",
+            "display_name": "Update the state of an issue",
+            "description": "Update the state of an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "state",
+                "display_name": "State",
+                "description": "The state of the issue",
+                "type": "select",
+                "options": [
+                  "open",
+                  "closed"
+                ],
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "lock_issue",
+            "display_name": "Lock an issue",
+            "description": "Lock an issue",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "lock_reason",
+                "display_name": "Lock Reason",
+                "description": "The reason for locking the issue",
+                "type": "select",
+                "options": [
+                  "off-topic",
+                  "too heated",
+                  "resolved",
+                  "spam"
+                ],
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "unlock_issue",
+            "display_name": "Unlock an issue",
+            "description": "Unlock an issue",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "add_label_to_issue",
+            "display_name": "Add a label to an issue",
+            "description": "Add a label to an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "label",
+                "display_name": "Label",
+                "description": "The label to add to the issue",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "remove_label_from_issue",
+            "display_name": "Remove a label from an issue",
+            "description": "Remove a label from an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "label",
+                "display_name": "Label",
+                "description": "The label to remove from the issue",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "remove_all_labels_from_issue",
+            "display_name": "Remove all labels from an issue",
+            "description": "Remove all labels from an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "add_assignee_to_issue",
+            "display_name": "Add an assignee to an issue",
+            "description": "Add an assignee to an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "assignee",
+                "display_name": "Assignee",
+                "description": "The user to assign to the issue",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "remove_assignee_from_issue",
+            "display_name": "Remove an assignee from an issue",
+            "description": "Remove an assignee from an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "assignee",
+                "display_name": "Assignee",
+                "description": "The user to remove from the issue",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "add_milestone_to_issue",
+            "display_name": "Add a milestone to an issue",
+            "description": "Add a milestone to an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "milestone_number",
+                "display_name": "Milestone Number",
+                "description": "The milestone number to add to the issue",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "remove_milestone_from_issue",
+            "display_name": "Remove a milestone from an issue",
+            "description": "Remove a milestone from an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "create_reaction_for_issue",
+            "display_name": "Create a reaction for an issue",
+            "description": "Create a reaction for an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "issue_number",
+                "display_name": "Issue Number",
+                "description": "The number of the issue",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "reaction",
+                "display_name": "Reaction",
+                "description": "The reaction to create",
+                "type": "select",
+                "options": [
+                  "+1",
+                  "-1",
+                  "heart",
+                  "hooray",
+                  "laugh",
+                  "confused",
+                  "rocket",
+                  "eyes"
+                ],
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "label",
+        "display_name": "Label",
+        "actions": [
+          {
+            "name": "label.created",
+            "display_name": "Label Created",
+            "description": "A label is created",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "label.deleted",
+            "display_name": "Label Deleted",
+            "description": "A label is deleted",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "label.edited",
+            "display_name": "Label Edited",
+            "description": "A label is edited",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": [
+          {
+            "name": "create_label",
+            "display_name": "Create a new label",
+            "description": "Create a new label",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "name",
+                "display_name": "Name",
+                "description": "The name of the label",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "color",
+                "display_name": "Color",
+                "description": "The color of the label",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "delete_label",
+            "display_name": "Delete a label",
+            "description": "Delete a label",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "name",
+                "display_name": "Name",
+                "description": "The name of the label",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "edit_label",
+            "display_name": "Edit a label",
+            "description": "Edit a label",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "name",
+                "display_name": "Name",
+                "description": "The name of the label",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "new_name",
+                "display_name": "New Name",
+                "description": "The new name of the label",
+                "type": "text",
+                "required": true
+              },
+              {
+                "name": "color",
+                "display_name": "Color",
+                "description": "The color of the label",
+                "type": "text",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "member",
+        "display_name": "Member",
+        "actions": [
+          {
+            "name": "member.added",
+            "display_name": "Member Added",
+            "description": "A member is added",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "member.edited",
+            "display_name": "Member Edited",
+            "description": "A member is edited",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "member.removed",
+            "display_name": "Member Removed",
+            "description": "A member is removed",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "meta",
+        "display_name": "Meta",
+        "actions": [
+          {
+            "name": "meta",
+            "display_name": "Meta Event",
+            "description": "A meta event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
         "name": "milestone",
         "display_name": "Milestone",
-        "actions": [],
+        "actions": [
+          {
+            "name": "milestone.closed",
+            "display_name": "Milestone Closed",
+            "description": "A milestone is closed",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "milestone.created",
+            "display_name": "Milestone Created",
+            "description": "A milestone is created",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "milestone.deleted",
+            "display_name": "Milestone Deleted",
+            "description": "A milestone is deleted",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "milestone.edited",
+            "display_name": "Milestone Edited",
+            "description": "A milestone is edited",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "milestone.opened",
+            "display_name": "Milestone Opened",
+            "description": "A milestone is opened",
+            "version": "1.0.0",
+            "release_date": "2024-12-18",
+            "updated_date": "2024-12-20",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
         "reactions": [
           {
             "name": "create_milestone",
@@ -62,20 +2236,448 @@
                 "required": false
               }
             ]
+          },
+          {
+            "name": "update_milestone",
+            "display_name": "Update a milestone",
+            "description": "Update a milestone",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "milestone_number",
+                "display_name": "Milestone Number",
+                "description": "The number of the milestone",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "title",
+                "display_name": "Title",
+                "description": "The title of the milestone",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "description",
+                "display_name": "Description",
+                "description": "The description of the milestone",
+                "type": "textarea",
+                "required": false
+              },
+              {
+                "name": "due_on",
+                "display_name": "Due On",
+                "description": "The due date of the milestone",
+                "type": "datetime-local",
+                "required": false
+              },
+              {
+                "name": "state",
+                "display_name": "State",
+                "description": "The state of the milestone",
+                "type": "select",
+                "options": [
+                  "open",
+                  "closed"
+                ],
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "delete_milestone",
+            "display_name": "Delete a milestone",
+            "description": "Delete a milestone",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "milestone_number",
+                "display_name": "Milestone Number",
+                "description": "The number of the milestone",
+                "type": "number",
+                "required": true
+              }
+            ]
           }
         ]
       },
       {
-        "name": "pull_request_review",
-        "display_name": "Pull Request Review",
+        "name": "package",
+        "display_name": "Package",
         "actions": [
           {
-            "name": "pull_request_review.submitted",
-            "display_name": "Pull Request Review Submitted",
-            "description": "A pull request review is submitted",
+            "name": "package.published",
+            "display_name": "Package Published",
+            "description": "A package is published",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "package.unpublished",
+            "display_name": "Package Unpublished",
+            "description": "A package is unpublished",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "page_build",
+        "display_name": "Page Build",
+        "actions": [
+          {
+            "name": "page_build",
+            "display_name": "Page Build Event",
+            "description": "A Github page build event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "ping",
+        "display_name": "Ping",
+        "actions": [
+          {
+            "name": "ping",
+            "display_name": "Ping Event",
+            "description": "A Github ping event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "project_card",
+        "display_name": "Project Card",
+        "actions": [
+          {
+            "name": "project_card.converted",
+            "display_name": "Project Card Converted",
+            "description": "A project card is converted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project_card.created",
+            "display_name": "Project Card Created",
+            "description": "A project card is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project_card.deleted",
+            "display_name": "Project Card Deleted",
+            "description": "A project card is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project_card.edited",
+            "display_name": "Project Card Edited",
+            "description": "A project card is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project_card.moved",
+            "display_name": "Project Card Moved",
+            "description": "A project card is moved",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "project",
+        "display_name": "Project",
+        "actions": [
+          {
+            "name": "project.closed",
+            "display_name": "Project Closed",
+            "description": "A project is closed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project.created",
+            "display_name": "Project Created",
+            "description": "A project is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project.deleted",
+            "display_name": "Project Deleted",
+            "description": "A project is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project.edited",
+            "display_name": "Project Edited",
+            "description": "A project is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project.reopened",
+            "display_name": "Project Reopened",
+            "description": "A project is reopened",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "project_column",
+        "display_name": "Project Column",
+        "actions": [
+          {
+            "name": "project_column.created",
+            "display_name": "Project Column Created",
+            "description": "A project column is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project_column.deleted",
+            "display_name": "Project Column Deleted",
+            "description": "A project column is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project_column.edited",
+            "display_name": "Project Column Edited",
+            "description": "A project column is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "project_column.moved",
+            "display_name": "Project Column Moved",
+            "description": "A project column is moved",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "public",
+        "display_name": "Public",
+        "actions": [
+          {
+            "name": "public",
+            "display_name": "Public Event",
+            "description": "A repository changes from private to public",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -99,7 +2701,7 @@
             "description": "A pull request is assigned",
             "version": "1.0.0",
             "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -111,12 +2713,12 @@
             ]
           },
           {
-            "name": "pull_request.unassigned",
-            "display_name": "Pull Request Unassigned",
-            "description": "An pull request is unassigned",
+            "name": "pull_request.auto_merge_disabled",
+            "display_name": "Pull Request Auto Merge Disabled",
+            "description": "A pull request auto merge is disabled",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -128,46 +2730,12 @@
             ]
           },
           {
-            "name": "pull_request.labeled",
-            "display_name": "Pull Request Labeled",
-            "description": "A pull request is labeled",
+            "name": "pull_request.auto_merge_enabled",
+            "display_name": "Pull Request Auto Merge Enabled",
+            "description": "A pull request auto merge is enabled",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "options": [
-              {
-                "name": "repository",
-                "display_name": "Repository",
-                "description": "The repository where the event is happening",
-                "type": "GithubRepository",
-                "required": true
-              }
-            ]
-          },
-          {
-            "name": "pull_request.unlabeled",
-            "display_name": "Pull Request Unlabeled",
-            "description": "A pull request is unlabeled",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "options": [
-              {
-                "name": "repository",
-                "display_name": "Repository",
-                "description": "The repository where the event is happening",
-                "type": "GithubRepository",
-                "required": true
-              }
-            ]
-          },
-          {
-            "name": "pull_request.opened",
-            "display_name": "Pull Request Opened",
-            "description": "A pull request is opened",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -183,8 +2751,297 @@
             "display_name": "Pull Request Closed",
             "description": "An pull request is closed",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.converted_to_draft",
+            "display_name": "Pull Request Converted to Draft",
+            "description": "A pull request is converted to draft",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.demilestoned",
+            "display_name": "Pull Request Demilestoned",
+            "description": "A pull request is demilestoned",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.dequeued",
+            "display_name": "Pull Request Dequeued",
+            "description": "A pull request is dequeued",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.edited",
+            "display_name": "Pull Request Edited",
+            "description": "A pull request is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.enqueued",
+            "display_name": "Pull Request Enqueued",
+            "description": "A pull request is enqueued",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.labeled",
+            "display_name": "Pull Request Labeled",
+            "description": "A pull request is labeled",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.locked",
+            "display_name": "Pull Request Locked",
+            "description": "A pull request is locked",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.milestoned",
+            "display_name": "Pull Request Milestoned",
+            "description": "A pull request is milestoned",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.opened",
+            "display_name": "Pull Request Opened",
+            "description": "A pull request is opened",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.ready_for_review",
+            "display_name": "Pull Request Ready for Review",
+            "description": "A pull request is ready for review",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.reopened",
+            "display_name": "Pull Request Reopened",
+            "description": "A pull request is reopened",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.review_request_removed",
+            "display_name": "Pull Request Review Request Removed",
+            "description": "A pull request review request is removed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.review_requested",
+            "display_name": "Pull Request Review Requested",
+            "description": "A pull request review is requested",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.synchronize",
+            "display_name": "Pull Request Synchronize",
+            "description": "A pull request is synchronized",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.unassigned",
+            "display_name": "Pull Request Unassigned",
+            "description": "A pull request is unassigned",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.unlabeled",
+            "display_name": "Pull Request Unlabeled",
+            "description": "A pull request is unlabeled",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request.unlocked",
+            "display_name": "Pull Request Unlocked",
+            "description": "A pull request is unlocked",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -202,8 +3059,8 @@
             "display_name": "Create a new pull request",
             "description": "Create a new pull request",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -227,20 +3084,93 @@
                 "required": true
               }
             ]
+          },
+          {
+            "name": "update_pull_request",
+            "display_name": "Update a pull request",
+            "description": "Update a pull request",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "pull_request_number",
+                "display_name": "Pull Request Number",
+                "description": "The number of the pull request",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "title",
+                "display_name": "Title",
+                "description": "The title of the pull request",
+                "type": "text",
+                "required": false
+              },
+              {
+                "name": "body",
+                "display_name": "Body",
+                "description": "The body of the pull request",
+                "type": "textarea",
+                "required": false
+              }
+            ]
+          },
+          {
+            "name": "update_pull_request_state",
+            "display_name": "Update the state of a pull request",
+            "description": "Update the state of a pull request",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              },
+              {
+                "name": "pull_request_number",
+                "display_name": "Pull Request Number",
+                "description": "The number of the pull request",
+                "type": "number",
+                "required": true
+              },
+              {
+                "name": "state",
+                "display_name": "State",
+                "description": "The state of the pull request",
+                "type": "select",
+                "options": [
+                  "open",
+                  "closed"
+                ],
+                "required": true
+              }
+            ]
           }
         ]
       },
       {
-        "name": "issue",
-        "display_name": "Issue",
+        "name": "pull_request_review_comment",
+        "display_name": "Pull Request Review Comment",
         "actions": [
           {
-            "name": "issues.assigned",
-            "display_name": "Issue Assigned",
-            "description": "An issue is assigned",
+            "name": "pull_request_review_comment.created",
+            "display_name": "Pull Request Review Comment Created",
+            "description": "A pull request review comment is created",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -252,12 +3182,12 @@
             ]
           },
           {
-            "name": "issues.unassigned",
-            "display_name": "Issue Unassigned",
-            "description": "An issue is unassigned",
+            "name": "pull_request_review_comment.deleted",
+            "display_name": "Pull Request Review Comment Deleted",
+            "description": "A pull request review comment is deleted",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -269,63 +3199,12 @@
             ]
           },
           {
-            "name": "issues.labeled",
-            "display_name": "Issue Labeled",
-            "description": "An issue is labeled",
+            "name": "pull_request_review_comment.edited",
+            "display_name": "Pull Request Review Comment Edited",
+            "description": "A pull request review comment is edited",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "options": [
-              {
-                "name": "repository",
-                "display_name": "Repository",
-                "description": "The repository where the event is happening",
-                "type": "GithubRepository",
-                "required": true
-              }
-            ]
-          },
-          {
-            "name": "issues.unlabeled",
-            "display_name": "Issue Unlabeled",
-            "description": "An issue is unlabeled",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "options": [
-              {
-                "name": "repository",
-                "display_name": "Repository",
-                "description": "The repository where the event is happening",
-                "type": "GithubRepository",
-                "required": true
-              }
-            ]
-          },
-          {
-            "name": "issues.opened",
-            "display_name": "Issue Opened",
-            "description": "An issue is opened",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
-            "options": [
-              {
-                "name": "repository",
-                "display_name": "Repository",
-                "description": "The repository where the event is happening",
-                "type": "GithubRepository",
-                "required": true
-              }
-            ]
-          },
-          {
-            "name": "issues.closed",
-            "display_name": "Issue Closed",
-            "description": "An issue is closed",
-            "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -337,14 +3216,19 @@
             ]
           }
         ],
-        "reactions": [
+        "reactions": []
+      },
+      {
+        "name": "pull_request_review",
+        "display_name": "Pull Request Review",
+        "actions": [
           {
-            "name": "create_issue",
-            "display_name": "Create a new issue",
-            "description": "Create a new issue",
+            "name": "pull_request_review.submitted",
+            "display_name": "Pull Request Review Submitted",
+            "description": "A pull request review is submitted",
             "version": "1.0.0",
-            "release_date": "2024-12-18",
-            "updated_date": "2024-12-20",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
             "options": [
               {
                 "name": "repository",
@@ -352,24 +3236,1011 @@
                 "description": "The repository where the event is happening",
                 "type": "GithubRepository",
                 "required": true
-              },
+              }
+            ]
+          },
+          {
+            "name": "pull_request_review.edited",
+            "display_name": "Pull Request Review Edited",
+            "description": "A pull request review is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
               {
-                "name": "title",
-                "display_name": "Title",
-                "description": "The title of the issue",
-                "type": "text",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
-              },
+              }
+            ]
+          },
+          {
+            "name": "pull_request_review.dismissed",
+            "display_name": "Pull Request Review Dismissed",
+            "description": "A pull request review is dismissed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
               {
-                "name": "body",
-                "display_name": "Body",
-                "description": "The body of the issue",
-                "type": "textarea",
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
                 "required": true
               }
             ]
           }
-        ]
+        ],
+        "reactions": []
+      },
+      {
+        "name": "pull_request_review_thread",
+        "display_name": "Pull Request Review Thread",
+        "actions": [
+          {
+            "name": "pull_request_review_thread.resolved",
+            "display_name": "Pull Request Review Thread Resolved",
+            "description": "A pull request review thread is resolved",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "pull_request_review_thread.unresolved",
+            "display_name": "Pull Request Review Thread Unresolved",
+            "description": "A pull request review thread is unresolved",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "push",
+        "display_name": "Push",
+        "actions": [
+          {
+            "name": "push",
+            "display_name": "Push Event",
+            "description": "A Github push event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "registry_package",
+        "display_name": "Registry Package",
+        "actions": [
+          {
+            "name": "registry_package.published",
+            "display_name": "Registry Package Published",
+            "description": "A registry package is published",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "registry_package.updated",
+            "display_name": "Registry Package Updated",
+            "description": "A registry package is updated",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "release",
+        "display_name": "Release",
+        "actions": [
+          {
+            "name": "release.created",
+            "display_name": "Release Created",
+            "description": "A release is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "release.deleted",
+            "display_name": "Release Deleted",
+            "description": "A release is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "release.edited",
+            "display_name": "Release Edited",
+            "description": "A release is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "release.prereleased",
+            "display_name": "Release Prereleased",
+            "description": "A release is prereleased",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "release.published",
+            "display_name": "Release Published",
+            "description": "A release is published",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "release.released",
+            "display_name": "Release Released",
+            "description": "A release is released",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "release.unpublished",
+            "display_name": "Release Unpublished",
+            "description": "A release is unpublished",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "repository_advisory",
+        "display_name": "Repository Advisory",
+        "actions": [
+          {
+            "name": "repository_advisory.published",
+            "display_name": "Repository Advisory Published",
+            "description": "A repository advisory is published",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository_advisory.reported",
+            "display_name": "Repository Advisory Reported",
+            "description": "A repository advisory is reported",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "repository",
+        "display_name": "Repository",
+        "actions": [
+          {
+            "name": "repository.archived",
+            "display_name": "Repository Archived",
+            "description": "A repository is archived",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository.edited",
+            "display_name": "Repository Edited",
+            "description": "A repository is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository.privatized",
+            "display_name": "Repository Privatized",
+            "description": "A repository is privatized",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository.publicized",
+            "display_name": "Repository Publicized",
+            "description": "A repository is publicized",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository.renamed",
+            "display_name": "Repository Renamed",
+            "description": "A repository is renamed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository.transferred",
+            "display_name": "Repository Transferred",
+            "description": "A repository is transferred",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository.unarchived",
+            "display_name": "Repository Unarchived",
+            "description": "A repository is unarchived",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "repository_import",
+        "display_name": "Repository Import",
+        "actions": [
+          {
+            "name": "repository_import",
+            "display_name": "Repository Import Event",
+            "description": "A repository import event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "repository_ruleset",
+        "display_name": "Repository Ruleset",
+        "actions": [
+          {
+            "name": "repository_ruleset.created",
+            "display_name": "Repository Ruleset Created",
+            "description": "A repository ruleset is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository_ruleset.deleted",
+            "display_name": "Repository Ruleset Deleted",
+            "description": "A repository ruleset is deleted",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "repository_ruleset.edited",
+            "display_name": "Repository Ruleset Edited",
+            "description": "A repository ruleset is edited",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "secret_scanning_alert",
+        "display_name": "Secret Scanning Alert",
+        "actions": [
+          {
+            "name": "secret_scanning_alert.created",
+            "display_name": "Secret Scanning Alert Created",
+            "description": "A secret scanning alert is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "secret_scanning_alert.publicly_leaked",
+            "display_name": "Secret Scanning Alert Publicly Leaked",
+            "description": "A secret scanning alert is publicly leaked",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "secret_scanning_alert.reopened",
+            "display_name": "Secret Scanning Alert Reopened",
+            "description": "A secret scanning alert is reopened",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "secret_scanning_alert.resolved",
+            "display_name": "Secret Scanning Alert Resolved",
+            "description": "A secret scanning alert is resolved",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "secret_scanning_alert.validated",
+            "display_name": "Secret Scanning Alert Validated",
+            "description": "A secret scanning alert is validated",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "secret_scanning_alert_location",
+        "display_name": "Secret Scanning Alert Location",
+        "actions": [
+          {
+            "name": "secret_scanning_alert_location",
+            "display_name": "Secret Scanning Alert Location Event",
+            "description": "A secret scanning alert location is created",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "secret_scanning_scan",
+        "display_name": "Secret Scanning Scan",
+        "actions": [
+          {
+            "name": "secret_scanning_scan",
+            "display_name": "Secret Scanning Scan Event",
+            "description": "A secret scanning scan event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "security_and_analysis",
+        "display_name": "Security and Analysis",
+        "actions": [
+          {
+            "name": "security_and_analysis",
+            "display_name": "Security and Analysis Event",
+            "description": "A security and analysis event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "star",
+        "display_name": "Star",
+        "actions": [
+          {
+            "name": "star.created",
+            "display_name": "Star Created",
+            "description": "A star is created on a repository",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "star.deleted",
+            "display_name": "Star Deleted",
+            "description": "A star is deleted from a repository",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "status",
+        "display_name": "Status",
+        "actions": [
+          {
+            "name": "status",
+            "display_name": "Status Event",
+            "description": "A status event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "sub_issues",
+        "display_name": "Sub Issues",
+        "actions": [
+          {
+            "name": "sub_issues.parent_issue_added",
+            "display_name": "Parent Issue Added",
+            "description": "A parent issue is added to an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "sub_issues.parent_issue_removed",
+            "display_name": "Parent Issue Removed",
+            "description": "A parent issue is removed from an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "sub_issues.sub_issue_added",
+            "display_name": "Sub Issue Added",
+            "description": "A sub issue is added to an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "sub_issues.sub_issue_removed",
+            "display_name": "Sub Issue Removed",
+            "description": "A sub issue is removed from an issue",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "team_add",
+        "display_name": "Team Add",
+        "actions": [
+          {
+            "name": "team_add",
+            "display_name": "Team Add Event",
+            "description": "A team add event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "watch",
+        "display_name": "Watch",
+        "actions": [
+          {
+            "name": "watch",
+            "display_name": "Watch Event",
+            "description": "A watch event is received",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "workflow_job",
+        "display_name": "Workflow Job",
+        "actions": [
+          {
+            "name": "workflow_job.completed",
+            "display_name": "Workflow Job Completed",
+            "description": "A workflow job is completed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "workflow_job.in_progress",
+            "display_name": "Workflow Job In Progress",
+            "description": "A workflow job is in progress",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "workflow_job.queued",
+            "display_name": "Workflow Job Queued",
+            "description": "A workflow job is queued",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "workflow_job.waiting",
+            "display_name": "Workflow Job Waiting",
+            "description": "A workflow job is waiting",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
+      },
+      {
+        "name": "workflow_run",
+        "display_name": "Workflow Run",
+        "actions": [
+          {
+            "name": "workflow_run.completed",
+            "display_name": "Workflow Run Completed",
+            "description": "A workflow run is completed",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "workflow_run.in_progress",
+            "display_name": "Workflow Run In Progress",
+            "description": "A workflow run is in progress",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          },
+          {
+            "name": "workflow_run.requested",
+            "display_name": "Workflow Run Requested",
+            "description": "A workflow run is requested",
+            "version": "1.0.0",
+            "release_date": "2025-01-19",
+            "updated_date": "2025-01-19",
+            "options": [
+              {
+                "name": "repository",
+                "display_name": "Repository",
+                "description": "The repository where the event is happening",
+                "type": "GithubRepository",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "reactions": []
       }
     ]
   },
