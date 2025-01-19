@@ -66,6 +66,26 @@ describe('Authentication Routes', () => {
         expect(response.body).toHaveProperty('error', 'Invalid password');
     });
 
+
+    it('should not login a user without password (GET /auth/login)', async () => {
+        const response = await request(app).post('/auth/login').send({
+            email: userEmail,
+        });
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Missing parameters');
+    });
+
+    it('should not login a user with an unexisting user (GET /auth/login)', async () => {
+        const response = await request(app).post('/auth/login').send({
+            email: "unexisting.user@gmail.com",
+            password: userPassword,
+        });
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toHaveProperty('error', 'User not found');
+    });
+
     it('should not login a non-existent user (GET /auth/login)', async () => {
         const response = await request(app).get('/auth/login').send({
             email: 'nonexistent@mail.com',
@@ -73,6 +93,17 @@ describe('Authentication Routes', () => {
         });
 
         expect(response.statusCode).toBe(404);
+    });
+
+    it('should login a user (GET /auth/login)', async () => {
+        const response = await request(app).post('/auth/login').send({
+            email: userEmail,
+            password: userPassword,
+        });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('message', 'User logged in');
+        expect(response.body).toHaveProperty('user');
     });
 
     // it('should logout a user and change its auth token (GET /auth/logout)', async () => {
