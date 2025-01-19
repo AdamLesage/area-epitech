@@ -398,7 +398,7 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
         }
         const username = await getusername(userUuid, "spotify");
         console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
-        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlist_uri}/tracks`,
+        const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlist_id}/tracks`,
             {
                 "uris": [reactionData.music_uri]
             },
@@ -546,23 +546,24 @@ async function spotify_create_playlist(reactionData, actionResponseData, userUui
             return;
         }
         console.log("Adding track to queue in Spotify:", reactionData, actionResponseData);
-        const response = await axios.post(`https://api.spotify.com/v1/me/player/queue`,
-            {
-                "uri": reactionData.trackUri
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Accept': 'application/json',
-                    "Content-Type": "application/json"
+    
+        try {
+            const response = await axios.post(
+                `https://api.spotify.com/v1/me/player/queue?uri=${reactionData.music_uri}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        Accept: 'application/json',
+                    }
                 }
-            });
-        if (response.status > 299) {
-            console.error(`Error calling reaction add_track_to_queue`);
-            return;
+            );
+            console.log("Track added to queue successfully:", response.data);
+        } catch (error) {
+            console.error("Error adding track to queue:", error.response?.data || error.message);
         }
-        console.log("Track added to queue successfully:", response);
     }
+    
 /**
  * Handler function for the 'gmail_send_email' reaction.
  * 
@@ -1093,181 +1094,6 @@ async function strava_update_activity(reactionData, actionResponseData, userUuid
         return;
     }
     console.log("Activity updated successfully:", response);
-}
-
-async function spotify_add_to_playlist(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
-
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    const username = await getusername(userUuid, "spotify");
-    console.log("Adding track to playlist in Spotify:", reactionData, actionResponseData);
-    const response = await axios.post(`https://api.spotify.com/v1/playlists/${reactionData.playlistId}/tracks`,
-        {
-            "uris": [reactionData.trackUri]
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
-        });
-    if (response.status > 299) {
-        console.error(`Error calling reaction add_to_playlist`);
-        return;
-    }
-    console.log("Track added to playlist successfully:", response);
-}
-
-async function spotify_save_track(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
-
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Saving track in Spotify:", reactionData, actionResponseData);
-    const response = await axios.put(`https://api.spotify.com/v1/me/tracks`,
-        {
-            "ids": [reactionData.trackId]
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
-        });
-    if (response.status > 299) {
-        console.error(`Error calling reaction save_track`);
-        return;
-    }
-    console.log("Track saved successfully:", response);
-}
-
-async function spotify_skip_track(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
-
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Skipping track in Spotify:", reactionData, actionResponseData);
-    const response = await axios.post(`https://api.spotify.com/v1/me/player/next`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
-        });
-    if (response.status > 299) {
-        console.error(`Error calling reaction skip_track`);
-        return;
-    }
-    console.log("Track skipped successfully:", response);
-}
-
-async function spotify_previous_track(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
-
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Playing previous track in Spotify:", reactionData, actionResponseData);
-    const response = await axios.post(`https://api.spotify.com/v1/me/player/previous`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
-        });
-    if (response.status > 299) {
-        console.error(`Error calling reaction previous_track`);
-        return;
-    }
-    console.log("Previous track played successfully:", response);
-}
-   
-async function spotify_start_resume(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
-
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Starting or resuming playback in Spotify:", reactionData, actionResponseData);
-    const response = await axios.put(`https://api.spotify.com/v1/me/player/play`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
-        });
-    if (response.status > 299) {
-        console.error(`Error calling reaction start_resume`);
-        return;
-    }
-    console.log("Playback started or resumed successfully:", response);
-}
-
-async function spotify_pause(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
-
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Pausing playback in Spotify:", reactionData, actionResponseData);
-    const response = await axios.put(`https://api.spotify.com/v1/me/player/pause`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
-        });
-    if (response.status > 299) {
-        console.error(`Error calling reaction pause`);
-        return;
-    }
-    console.log("Playback paused successfully:", response);
-}
-
-async function spotify_add_track_to_queue(reactionData, actionResponseData, userUuid) {
-    const accessToken = await getAccessToken(userUuid, "spotify");
-
-    if (!accessToken) {
-        console.error("No access token found for user");
-        return;
-    }
-    console.log("Adding track to queue in Spotify:", reactionData, actionResponseData);
-    const response = await axios.post(`https://api.spotify.com/v1/me/player/queue`,
-        {
-            "uri": reactionData.trackUri
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            }
-        });
-    if (response.status > 299) {
-        console.error(`Error calling reaction add_track_to_queue`);
-        return;
-    }
-    console.log("Track added to queue successfully:", response);
 }
 
 // Function to send a message to a specific channel
