@@ -1,0 +1,1457 @@
+openapi: 3.0.0
+info:
+  title: REST API Docs
+  version: 1.0.0
+  description: |
+    API documentation for our application.
+
+    This API allows users to access and interact with the application's data, perform actions, 
+    and view server statuses.
+
+    For more information, visit [our website](http://area-workspace.fr:8081).
+
+  termsOfService: http://area-workspace.fr:8081/terms
+  contact:
+    name: API Support Team
+    email: contact.area.ownspace@gmail.com
+    url: http://area-workspace.fr:8081/mentions
+  license:
+    name: MIT License
+    url: http://area-workspace.fr:8081/mentions
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
+  /about.json:
+    get:
+      tags:
+        - About
+      description: Responds with all our services in a JSON format.
+      security: []
+      responses:
+        '200':
+          description: About file is displayed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  client:
+                    type: object
+                    properties:
+                      host:
+                        type: string
+                  server:
+                    type: object
+                    properties:
+                      current_time:
+                        type: integer
+                      service:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            actions:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  description:
+                                    type: string
+                            reactions:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  description:
+                                    type: string
+  /services-info.json:
+    get:
+      tags:
+        - About
+      description: Responds with all our services in a JSON format.
+      security: []
+      responses:
+        '200':
+          description: Services info file is displayed.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    color:
+                      type: string
+                    icon:
+                      type: string
+                    reviews:
+                      type: object
+                      properties:
+                        rate:
+                          type: number
+                        count:
+                          type: number
+                    saves:
+                      type: number
+                    categories:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          display_name:
+                            type: string
+                          actions:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                display_name:
+                                  type: string
+                                description:
+                                  type: string
+                                version:
+                                  type: string
+                                release_date:
+                                  type: string
+                                updated_date:
+                                  type: string
+                                options:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      name:
+                                        type: string
+                                      display_name:
+                                        type: string
+                                      description:
+                                        type: string
+                                      type:
+                                        type: string
+                                      required:
+                                        type: boolean
+                          reactions:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                display_name:
+                                  type: string
+                                description:
+                                  type: string
+                                version:
+                                  type: string
+                                release_date:
+                                  type: string
+                                updated_date:
+                                  type: string
+                                options:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      name:
+                                        type: string
+                                      display_name:
+                                        type: string
+                                      description:
+                                        type: string
+                                      type:
+                                        type: string
+                                      required:
+                                        type: boolean
+
+  /services-areas.json:
+    get:
+      tags:
+        - About
+      description: Responds with all service areas in a JSON format.
+      security: []
+      responses:
+        '200':
+          description: Service areas file is displayed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  services:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        version:
+                          type: string
+                        actions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              description:
+                                type: string
+                        reactions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              description:
+                                type: string
+
+  /api/action:
+    post:
+      tags:
+        - Area
+      summary: Create a new Area and return it
+      description: |
+        This endpoint creates a new action and reaction based on the provided data and returns the created action.
+
+        The user must be authenticated with a valid authorization token in the request headers.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of the action reaction
+                typeAction:
+                  type: string
+                  description: The type of the action (e.g., "dropbox_on_new_file")
+                typeReaction:
+                  type: string
+                  description: The type of the reaction (e.g., "dropbox_shares_file")
+                reactionData:
+                  type: object
+                  description: The data used for the reaction
+                  additionalProperties: true
+                actionData:
+                  type: object
+                  description: The data used for the action
+                  additionalProperties: true
+              required:
+                - title
+                - typeAction
+                - typeReaction
+                - reactionData
+                - actionData
+      responses:
+        '201':
+          description: Action and reaction successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The UUID of the created action
+                  title:
+                    type: string
+                    description: The title of the created action
+                  reactionData:
+                    type: object
+                    description: The reaction data for the created action
+                  actionData:
+                    type: object
+                    description: The action data for the created action
+                  uuid:
+                    type: string
+                    description: The unique identifier of the created action
+                  containerUuid:
+                    type: string
+                    description: The unique identifier of the container linked to the action
+        '400':
+          description: Bad request (Invalid input or missing data)
+        '401':
+          description: Unauthorized (Invalid or missing authentication token)
+        '404':
+          description: Action or reaction not found
+        '500':
+          description: Internal server error
+
+  /api/action/{id}:
+    delete:
+      tags:
+        - Area
+      summary: Delete an action reaction
+      description: |
+        This endpoint deletes an action reaction by its ID. It will also remove the associated container.
+        
+        The action reaction is identified by the `id` provided in the URL path.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the action to be deleted
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Action successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "action deleted"
+        '404':
+          description: Action not found
+        '500':
+          description: Internal server error
+
+  /api/action/set_active/{uuid}:
+    put:
+      tags:
+        - Area
+      summary: Update the state of the action (activate/deactivate)
+      description: |
+        This endpoint updates the state of an action identified by its `uuid`. The user can activate or deactivate the action.
+        If the action is deactivated (`isActive: false`), the associated container will be stopped. If the action is activated (`isActive: true`), the container will be started.
+        
+        The action is identified by the `uuid` provided in the URL path. 
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: The UUID of the action to update
+          schema:
+            type: string
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+                  description: The state of the action (true for active, false for inactive)
+              required:
+                - isActive
+      responses:
+        '200':
+          description: Action state successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updatedActionReaction:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                      isActive:
+                        type: boolean
+        '404':
+          description: Action not found
+        '500':
+          description: Internal server error
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: User login
+      description: |
+        This endpoint allows a user to log in using their email and password.
+        The system checks if the provided credentials match a registered user.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user trying to log in.
+                password:
+                  type: string
+                  description: The password of the user trying to log in.
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message confirming successful login
+                  user:
+                    type: object
+                    description: The logged-in user details
+                    properties:
+                      id:
+                        type: string
+                        description: The unique ID of the user
+                      email:
+                        type: string
+                        description: The email of the user
+                      name:
+                        type: string
+                        description: The name of the user
+        '400':
+          description: Missing required parameters (email or password)
+        '401':
+          description: Invalid password
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: User registration
+      description: |
+        This endpoint allows a new user to register by providing an email and password. 
+        The password will be hashed, and a new user will be created along with associated service accounts.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email of the user registering.
+                password:
+                  type: string
+                  description: The password of the user registering.
+              required:
+                - email
+                - password
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message confirming the registration
+                  authToken:
+                    type: string
+                    description: The authentication token for the newly registered user
+        '400':
+          description: Missing required parameters (email or password)
+        '409':
+          description: User already exists (duplicate email)
+        '500':
+          description: Internal server error
+
+  /auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: User logout
+      description: |
+        This endpoint logs out a user by invalidating their current authentication token.
+        The user needs to provide a valid authorization token in the request headers.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User successfully logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Confirmation message that the user has been logged out
+        '400':
+          description: Missing authorization header
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /auth/reset-password:
+    post:
+      tags:
+        - Auth
+      summary: Send password reset email
+      description: |
+        This endpoint allows a user to request a password reset by providing their email address.
+        A verification code will be sent to the provided email.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email address of the user requesting a password reset
+              required:
+                - email
+      responses:
+        '200':
+          description: Email sent with a verification code for password reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message confirming that the email has been sent
+                  info:
+                    type: object
+                    description: Information about the email sent
+        '400':
+          description: Missing required parameters (email)
+        '404':
+          description: User not found for the provided email
+        '500':
+          description: Internal server error
+
+  /auth/reset-password-confirm:
+    post:
+      tags:
+        - Auth
+      summary: Confirm password reset code
+      description: |
+        This endpoint allows a user to confirm the verification code sent to their email during the password reset process.
+        If the code matches, a redirect URL for changing the password will be returned.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email address associated with the account requesting password reset
+                code:
+                  type: string
+                  description: The verification code sent to the user's email
+              required:
+                - email
+                - code
+      responses:
+        '200':
+          description: Code is correct, redirect URL provided for password change
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Confirmation that the code is correct
+                  redirectUrl:
+                    type: string
+                    description: The URL to redirect the user to for changing their password
+        '400':
+          description: Missing required parameters or incorrect code
+
+  /auth/change-password:
+    put:
+      tags:
+        - Auth
+      summary: Change the user's password
+      description: |
+        This endpoint allows the user to change their password after verifying the reset code.
+        The user must provide the correct email, reset code, and the new password.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The email address associated with the account
+                code:
+                  type: string
+                  description: The verification code sent to the user's email
+                password:
+                  type: string
+                  description: The new password the user wants to set
+              required:
+                - email
+                - code
+                - password
+      responses:
+        '200':
+          description: Password successfully updated, redirect URL provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Confirmation message for the password update
+                  redirectUrl:
+                    type: string
+                    description: The URL to redirect the user to after password change (e.g., login page)
+        '400':
+          description: Missing parameters or incorrect code
+        '500':
+          description: Internal server error while updating the password
+
+  /api/github:
+    get:
+      tags:
+        - OAuth
+      summary: Authenticate using GitHub
+      description: |
+        This endpoint redirects the user to GitHub's authentication page. After authentication, the user will be redirected to the callback route.
+        The user's email is passed in the query string.
+      security: []
+      parameters:
+        - name: email
+          in: query
+          description: The email address of the user attempting to authenticate
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirects the user to GitHub for authentication
+        '400':
+          description: Missing email query parameter
+
+  /api/github/redirect:
+    get:
+      tags:
+        - OAuth
+      summary: GitHub authentication callback
+      description: |
+        This endpoint handles the redirect after successful authentication with GitHub. It processes the authentication response, creates or updates the user in the system, and redirects the user to the frontend with the generated authentication token.
+      security: []
+      parameters: []
+      responses:
+        '302':
+          description: Redirects the user to the frontend with an authentication token
+        '401':
+          description: Unauthorized - User is not authenticated
+        '500':
+          description: Internal server error
+
+  /api/discord:
+    get:
+      tags:
+        - OAuth
+      summary: Authenticate using Discord
+      description: |
+        This endpoint redirects the user to Discord's authentication page. The user's email is passed in the query string.
+      security: []
+      parameters:
+        - name: email
+          in: query
+          description: The email address of the user attempting to authenticate
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirects the user to Discord for authentication
+        '400':
+          description: Missing email query parameter
+
+  /api/discord/callback:
+    get:
+      tags:
+        - OAuth
+      summary: Discord authentication callback
+      description: |
+        This endpoint handles the redirect after successful authentication with Discord. It processes the authentication response, creates or updates the user in the system, and redirects the user to the frontend with the generated authentication token.
+      security: []
+      responses:
+        '302':
+          description: Redirects the user to the frontend with an authentication token
+        '401':
+          description: Unauthorized - User is not authenticated
+        '500':
+          description: Internal server error
+
+  /api/dropbox:
+    get:
+      tags:
+        - OAuth
+      summary: Authenticate using Dropbox
+      description: |
+        This endpoint redirects the user to Dropbox's authentication page. The user's email is passed in the query string.
+      security: []
+      parameters:
+        - name: email
+          in: query
+          description: The email address of the user attempting to authenticate
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirects the user to Dropbox for authentication
+        '400':
+          description: Missing email query parameter
+
+  /api/dropbox/callback:
+    get:
+      tags:
+        - OAuth
+      summary: Dropbox authentication callback
+      description: |
+        This endpoint handles the redirect after successful authentication with Dropbox. It processes the authentication response, creates or updates the user in the system, and redirects the user to the frontend with the generated authentication token.
+      security: []
+      responses:
+        '302':
+          description: Redirects the user to the frontend with an authentication token
+        '401':
+          description: Unauthorized - User is not authenticated
+        '500':
+          description: Internal server error
+
+  /api/spotify:
+    get:
+      tags:
+        - OAuth
+      summary: Authenticate using Spotify
+      description: |
+        This endpoint redirects the user to Spotify's authentication page. The user's email is passed in the query string.
+      security: []
+      parameters:
+        - name: email
+          in: query
+          description: The email address of the user attempting to authenticate
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirects the user to Spotify for authentication
+        '400':
+          description: Missing email query parameter
+
+  /api/spotify/callback:
+    get:
+      tags:
+        - OAuth
+      summary: Spotify authentication callback
+      description: |
+        This endpoint handles the redirect after successful authentication with Spotify. It processes the authentication response, creates or updates the user in the system, and redirects the user to the frontend with the generated authentication token.
+      security: []
+      responses:
+        '302':
+          description: Redirects the user to the frontend with an authentication token
+        '401':
+          description: Unauthorized - User is not authenticated
+        '500':
+          description: Internal server error
+
+  /api/google:
+    get:
+      tags:
+        - OAuth
+      summary: Authenticate using Google
+      description: |
+        This endpoint redirects the user to Google's authentication page. The user's email is passed in the query string.
+      security: []
+      parameters:
+        - name: email
+          in: query
+          description: The email address of the user attempting to authenticate
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirects the user to Google for authentication
+        '400':
+          description: Missing email query parameter
+
+  /api/google/callback:
+    get:
+      tags:
+        - OAuth
+      summary: Google authentication callback
+      description: |
+        This endpoint handles the redirect after successful authentication with Google. It processes the authentication response, creates or updates the user in the system, and redirects the user to the frontend with the generated authentication token.
+      security: []
+      responses:
+        '302':
+          description: Redirects the user to the frontend with an authentication token
+        '401':
+          description: Unauthorized - User is not authenticated
+        '500':
+          description: Internal server error
+
+  /api/strava:
+    get:
+      tags:
+        - OAuth
+      summary: Authenticate using Strava
+      description: |
+        This endpoint redirects the user to Strava's authentication page. The user's email is passed in the query string.
+      security: []
+      parameters:
+        - name: email
+          in: query
+          description: The email address of the user attempting to authenticate
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirects the user to Strava for authentication
+        '400':
+          description: Missing email query parameter
+
+  /api/strava/callback:
+    get:
+      tags:
+        - OAuth
+      summary: Strava authentication callback
+      description: |
+        This endpoint handles the redirect after successful authentication with Strava. It processes the authentication response, creates or updates the user in the system, subscribes the user to a webhook for Strava data, and redirects the user to the frontend with the generated authentication token.
+      security: []
+      responses:
+        '302':
+          description: Redirects the user to the frontend with an authentication token
+        '400':
+          description: Missing email parameter or other required parameters
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error or failure to retrieve the token
+
+  /api/reaction/{uuid}:
+    post:
+      tags:
+        - Reaction
+      summary: Create a new reaction and return the reaction
+      description: |
+        This endpoint creates a new reaction based on the provided `uuid` of the action reaction. It processes the reaction, updates relevant data, and notifies users based on the action.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: The `uuid` of the action reaction
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: The user ID performing the reaction
+                  example: "user-123"
+                reaction:
+                  type: string
+                  description: The reaction type (e.g., "like")
+                  example: "like"
+      responses:
+        '200':
+          description: Successfully processed the reaction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "receive reaction"
+        '400':
+          description: Bad request (invalid or missing parameters)
+        '404':
+          description: Not found (unknown action-reaction or reaction)
+        '500':
+          description: Internal server error
+
+  /api/users:
+    get:
+      tags:
+        - users
+      summary: Return a list of all users based on the provided `uuids` and `emails`
+      description: |
+        This endpoint retrieves a list of users based on the `uuids` and `emails` query parameters. It validates the `authorization` header to ensure that the request is authenticated.
+      parameters:
+        - name: uuids
+          in: query
+          required: false
+          description: A comma-separated list of user UUIDs.
+          schema:
+            type: string
+            example: "1,2,3"
+        - name: emails
+          in: query
+          required: false
+          description: A comma-separated list of user emails.
+          schema:
+            type: string
+            example: "adam@area.fr,romain@area.fr"
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved the list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The unique identifier of the user
+                    email:
+                      type: string
+                      description: The email of the user
+                      example: "adam@area.fr"
+                    name:
+                      type: string
+                      description: The name of the user
+                    surname:
+                      type: string
+                      description: The surname of the user
+        '401':
+          description: Unauthorized access due to missing or invalid authorization header
+        '500':
+          description: Internal server error
+
+  /api/user/{uuid}:
+    delete:
+      tags:
+        - user
+      summary: Delete a user by UUID
+      description: |
+        This endpoint deletes a user from the system by the provided UUID. The request requires a valid `Authorization` header with a valid authentication token.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: The unique identifier of the user to be deleted.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User deleted'
+        '401':
+          description: Unauthorized - Missing or invalid authorization token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'User not found'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Internal Server Error'
+    put:
+      tags:
+        - user
+      summary: Update a user by UUID
+      description: |
+        This endpoint updates the details of an existing user identified by their UUID. It requires a valid `Authorization` header with a valid authentication token. The request body can include fields such as email, name, bio, phone number, etc. Only the fields provided in the request will be updated.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: The unique identifier of the user to be updated.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "adam@area.com"
+                name:
+                  type: string
+                  example: "Adam"
+                bio:
+                  type: string
+                  example: "Developer and tech enthusiast."
+                birthDate:
+                  type: string
+                  format: date
+                  example: "1980-01-01"
+                phoneNumber:
+                  type: string
+                  example: "+1234567890"
+                profilePictureUrl:
+                  type: string
+                  example: "https://example.com/profile.jpg"
+      responses:
+        '200':
+          description: Successfully updated the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    example: "c3d50b74-bd47-4939-9bb0-01bbcb3a89d1"
+                  email:
+                    type: string
+                    example: "adam@area.com"
+                  name:
+                    type: string
+                    example: "Adam"
+                  bio:
+                    type: string
+                    example: "Developer and tech enthusiast."
+                  birthDate:
+                    type: string
+                    format: date
+                    example: "1980-01-01"
+                  phoneNumber:
+                    type: string
+                    example: "+1234567890"
+                  profilePictureUrl:
+                    type: string
+                    example: "https://example.com/profile.jpg"
+        '400':
+          description: Bad Request - Invalid or missing request data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid or missing data"
+        '401':
+          description: Unauthorized - Missing or invalid authorization token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        '404':
+          description: User not found - The user with the given UUID does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error: Some internal error"
+    get:
+      tags:
+        - user
+      summary: Get a user by UUID
+      description: |
+        This endpoint retrieves a user by their UUID. The request must include an `Authorization` header with a valid Bearer token for authentication.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: The UUID of the user to retrieve.
+          schema:
+            type: string
+            example: "user-123"
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The unique identifier of the user
+                  email:
+                    type: string
+                    description: The email of the user
+                  name:
+                    type: string
+                    description: The name of the user
+                  surname:
+                    type: string
+                    description: The surname of the user
+        '401':
+          description: Unauthorized access due to missing or invalid authorization header
+        '404':
+          description: User not found with the given UUID
+        '500':
+          description: Internal server error
+
+  /api/user:
+    post:
+      tags:
+        - user
+      summary: Create a new user and return the user object with a hashed password
+      description: |
+        This endpoint creates a new user in the system with the provided details. The password will be hashed before storing it. The `authToken` will also be generated for the new user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The first name of the user.
+                surname:
+                  type: string
+                  description: The surname of the user.
+                bio:
+                  type: string
+                  description: A short bio for the user.
+                birthDate:
+                  type: string
+                  format: date
+                  description: The birth date of the user in YYYY-MM-DD format.
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the user.
+                phoneNumber:
+                  type: string
+                  description: The phone number of the user.
+                password:
+                  type: string
+                  description: The password to be hashed and stored for the user.
+              required:
+                - name
+                - surname
+                - bio
+                - birthDate
+                - email
+                - phoneNumber
+                - password
+      responses:
+        '200':
+          description: Successfully created the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    description: The unique identifier for the user.
+                  name:
+                    type: string
+                    description: The first name of the user.
+                  surname:
+                    type: string
+                    description: The surname of the user.
+                  bio:
+                    type: string
+                    description: The short bio of the user.
+                  birthDate:
+                    type: string
+                    format: date
+                    description: The birth date of the user.
+                  email:
+                    type: string
+                    format: email
+                    description: The email address of the user.
+                  phoneNumber:
+                    type: string
+                    description: The phone number of the user.
+                  profilePictureUrl:
+                    type: string
+                    description: The URL of the user's profile picture.
+                  authToken:
+                    type: string
+                    description: The authentication token generated for the user.
+        '400':
+          description: Bad request due to missing parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Missing parameters'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Internal Server Error'
+    get:
+      tags:
+        - user
+      summary: Get a user by auth token
+      description: |
+        This endpoint retrieves the user by their `authToken` (provided in the `Authorization` header). The request must include a valid Bearer token for authentication.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The unique identifier of the user
+                  email:
+                    type: string
+                    description: The email of the user
+                  name:
+                    type: string
+                    description: The name of the user
+                  surname:
+                    type: string
+                    description: The surname of the user
+                  linkedAccounts:
+                    type: array
+                    description: The list of linked accounts for the user
+                    items:
+                      type: object
+                      properties:
+                        serviceName:
+                          type: string
+                          description: The name of the service (e.g., 'github', 'google', etc.)
+                        accountEmail:
+                          type: string
+                          description: The email associated with the linked account
+        '401':
+          description: Unauthorized due to missing or invalid authorization token
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /api/areas:
+    get:
+      tags:
+        - areas
+      summary: Get all areas of a user from token
+      description: |
+        This endpoint retrieves all areas associated with a user. The request must include a valid Bearer token for authentication. The user information is fetched based on the `authToken` in the `Authorization` header.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved areas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    actionName:
+                      type: string
+                      description: The display name of the action.
+                    actionDescription:
+                      type: string
+                      description: The description of the action.
+                    reactionName:
+                      type: string
+                      description: The display name of the reaction.
+                    reactionDescription:
+                      type: string
+                      description: The description of the reaction.
+                    actionService:
+                      type: string
+                      description: The name of the action service.
+                    reactionService:
+                      type: string
+                      description: The name of the reaction service.
+                    uuid:
+                      type: string
+                      description: The unique identifier for the area.
+                    userUuid:
+                      type: string
+                      description: The UUID of the user associated with the area.
+        '401':
+          description: Unauthorized due to missing or invalid authorization token
+        '500':
+          description: Internal server error
+        '404':
+          description: Areas not found for the user
+
+  /api/user/linked-account/{service_name}:
+    delete:
+      tags:
+        - user
+      summary: Delete a linked account and all associated actions and reactions
+      description: |
+        This endpoint allows the user to delete a linked account and all the actions and reactions related to it. The service name of the linked account must be provided in the request. It requires a valid `Authorization` header with a valid authentication token.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: service_name
+          in: path
+          required: true
+          description: The name of the linked account's service to be deleted (e.g., "spotify").
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted the linked account and associated actions and reactions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Linked account deleted"
+        '400':
+          description: Bad Request - Invalid or missing parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing parameters"
+        '401':
+          description: Unauthorized - Missing or invalid authorization token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized: User not found"
+        '404':
+          description: Not Found - The specified linked account does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Linked account not found"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error: Some internal error"

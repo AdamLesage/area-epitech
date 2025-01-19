@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 
 App.addListener('appUrlOpen', function (event: URLOpenListenerEvent) {
@@ -36,7 +36,7 @@ import MentionsPage from '@/views/MentionsPage.vue';
 import Cook from '@/views/CookPage.vue';
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
@@ -151,6 +151,11 @@ const router = createRouter({
       path: '/discord-end-of-process',
       name: 'discord-end-of-process',
       component: () => import('@/views/EndofProcessGithub.vue'),
+    },
+    {
+      path: '/client.apk',
+      name: '/client.apk',
+      component: () => import('@/views/ClientApk.vue'),
     },
     {
       // Catch-all route

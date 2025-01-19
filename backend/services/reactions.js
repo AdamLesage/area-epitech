@@ -20,6 +20,28 @@ reactions.set('dropbox_delete_file', dropbox_delete_file);
 reactions.set('create_issue', github_create_issue);
 reactions.set('create_milestone', github_create_milestone);
 reactions.set('create_pull_request', github_pull_request);
+reactions.set('create_label', github_create_label);
+reactions.set('delete_label', github_delete_label);
+reactions.set('edit_label', github_edit_label);
+reactions.set('lock_issue', github_lock_issue);
+reactions.set('unlock_issue', github_unlock_issue);
+reactions.set('update_issue', github_update_issue);
+reactions.set('update_issue_state', github_update_issue_state);
+reactions.set('add_label_to_issue', github_add_label_to_issue);
+reactions.set('remove_label_from_issue', github_remove_label_from_issue);
+reactions.set('remove_all_labels_from_issue', github_remove_all_labels_from_issue);
+reactions.set('create_issue_comment', github_create_issue_comment);
+reactions.set('update_issue_comment', github_update_issue_comment);
+reactions.set('delete_issue_comment', github_delete_issue_comment);
+reactions.set('add_assignee_to_issue', github_add_assignee_to_issue);
+reactions.set('remove_assignee_from_issue', github_remove_assignee_from_issue);
+reactions.set('update_milestone', github_update_milestone);
+reactions.set('delete_milestone', github_delete_milestone);
+reactions.set('add_milestone_to_issue', github_add_milestone_to_issue);
+reactions.set('remove_milestone_from_issue', github_remove_milestone_from_issue);
+reactions.set('update_pull_request', github_update_pull_request);
+reactions.set('update_pull_request_state', github_update_pull_request_state);
+reactions.set('create_reaction_for_issue', github_create_reaction_for_issue);
 
 // Spotify Reactions
 reactions.set('playlist_create', spotify_create_playlist);
@@ -357,6 +379,939 @@ async function github_pull_request(reactionData, actionResponseData, userUuid) {
         });
     if (response.status > 299) {
         console.error(`Error calling reaction create_milestone`);
+    }
+}
+
+async function github_create_label(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://api.github.com/repos/${repoOwner}/${repoName}/labels`,
+        {
+            "name": reactionData.name || "default name",
+            "color": reactionData.color || "ffffff"
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction create_label`);
+    }
+}
+
+async function github_delete_label(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.delete(`https://api.github.com/repos/${repoOwner}/${repoName}/labels/${reactionData.name}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction delete_label`);
+    }
+}
+
+async function github_edit_label(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/labels/${reactionData.name}`,
+        {
+            "name": reactionData.new_name || "default name",
+            "color": reactionData.color || "ffffff"
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction edit_label`);
+    }
+}
+
+async function github_lock_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.put(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}/lock`,
+        {
+            "lock_reason": reactionData.lock_reason || "off-topic"
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction lock_issue`);
+    }
+}
+
+async function github_unlock_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.delete(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}/lock`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction unlock_issue`);
+    }
+}
+
+async function github_update_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}`,
+        {
+            "title": reactionData.title || "default title",
+            "body": reactionData.body || "enter the body here",
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_issue`);
+    }
+}
+
+async function github_update_issue_state(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}`,
+        {
+            "state": reactionData.state || "open",
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_issue_state`);
+    }
+}
+
+async function github_add_label_to_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}/labels`,
+        {
+            "labels": [reactionData.label],
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction add_label_to_issue`);
+    }
+}
+
+async function github_remove_label_from_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.delete(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}/labels/${reactionData.label}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction remove_label_from_issue`);
+    }
+}
+
+async function github_remove_all_labels_from_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.delete(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}/labels`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction remove_all_labels_from_issue`);
+    }
+}
+
+async function github_create_issue_comment(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}/comments`,
+        {
+            "body": reactionData.body || "enter the body here",
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction create_issue_comment`);
+    }
+}
+
+async function github_update_issue_comment(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/comments/${reactionData.comment_id}`,
+        {
+            "body": reactionData.body || "enter the body here",
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_issue_comment`);
+    }
+}
+
+async function github_delete_issue_comment(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.delete(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/comments/${reactionData.comment_id}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction delete_issue_comment`);
+    }
+}
+
+async function github_add_assignee_to_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.post(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}/assignees`,
+        {
+            "assignees": [reactionData.assignee],
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction add_assignee_to_issue`);
+    }
+}
+
+async function github_remove_assignee_from_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const response = await axios.delete(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${reactionData.issue_number}/assignees`,
+        {
+            "assignees": [reactionData.assignee],
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction remove_assignee_from_issue`);
+    }
+}
+
+async function github_update_milestone(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+    if (!reactionData.milestone_number) {
+        console.error("Missing milestone_number in reaction data");
+        return;
+    }
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const milestone_number = reactionData.milestone_number;
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/milestones/${milestone_number}`,
+        {
+            "title": reactionData.title || "default title",
+            "state": reactionData.state || "open",
+            "description": reactionData.description || "enter the description here",
+            "due_on": reactionData.due_on || new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString() 
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_milestone`);
+    }
+}
+
+async function github_delete_milestone(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+
+    if (!reactionData.milestone_number) {
+        console.error("Missing milestone_number in reaction data");
+        return;
+    }
+
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const milestone_number = reactionData.milestone_number;
+
+    const response = await axios.delete(`https://api.github.com/repos/${repoOwner}/${repoName}/milestones/${milestone_number}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction delete_milestone`);
+    }
+}
+
+async function github_add_milestone_to_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+
+    if (!reactionData.milestone_number) {
+        console.error("Missing milestone_number in reaction data");
+        return;
+    }
+
+    if (!reactionData.issue_number) {
+        console.error("Missing issue_number in reaction data");
+        return;
+    }
+
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const milestone_number = reactionData.milestone_number;
+    const issue_number = reactionData.issue_number;
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${issue_number}`,
+        {
+            "milestone": milestone_number,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction add_milestone_to_issue`);
+    }
+}
+
+async function github_remove_milestone_from_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+
+    if (!reactionData.issue_number) {
+        console.error("Missing issue_number in reaction data");
+        return;
+    }
+
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const issue_number = reactionData.issue_number;
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${issue_number}`,
+        {
+            "milestone": null,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction remove_milestone_from_issue`);
+    }
+}
+
+async function github_update_pull_request(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+
+    if (!reactionData.pull_request_number) {
+        console.error("Missing pull_request_number in reaction data");
+        return;
+    }
+
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const pull_request_number = reactionData.pull_request_number;
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/pulls/${pull_request_number}`,
+        {
+            "title": reactionData.title || "default title",
+            "body": reactionData.body || "enter the body here"
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_pull_request`);
+    }
+}
+
+async function github_update_pull_request_state(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+
+    if (!reactionData.pull_request_number) {
+        console.error("Missing pull_request_number in reaction data");
+        return;
+    }
+
+    if (!reactionData.state) {
+        console.error("Missing state in reaction data");
+        return;
+    }
+
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const pull_request_number = reactionData.pull_request_number;
+
+    const response = await axios.patch(`https://api.github.com/repos/${repoOwner}/${repoName}/pulls/${pull_request_number}`,
+        {
+            "state": reactionData.state || "open"
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_pull_request_state`);
+    }
+}
+
+async function github_create_reaction_for_issue(reactionData, actionResponseData, userUuid) {
+    const repository = reactionData.repository || null;
+    if (!repository) {
+        console.error("Missing repository in reaction data");
+        return;
+    }
+    const [repoOwner, repoName] = repository.split('/');
+
+    if (!repoOwner || !repoName) {
+        console.error("Missing repoOwner or repoName in reaction data");
+        return;
+    }
+
+    if (!reactionData.issue_number) {
+        console.error("Missing issue_number in reaction data");
+        return;
+    }
+
+    if (!reactionData.reaction) {
+        console.error("Missing reaction in reaction data");
+        return;
+    }
+
+    if (!userUuid) {
+        console.error("Missing userUuid in reaction data");
+        return;
+    }
+
+    const accessToken = await getAccessToken(userUuid, "github");
+
+    if (!accessToken) {
+        console.error("No access token found for user");
+        return;
+    }
+
+    const issue_number = reactionData.issue_number;
+
+    const response = await axios.post(`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${issue_number}/reactions`,
+        {
+            "content": reactionData.reaction
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+            }
+        });
+    if (response.status > 299) {
+        console.error(`Error calling reaction update_pull_request_state`);
     }
 }
 

@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import NavButton from '@/components/NavButton.vue';
+import UserSvgComponent from './UserSvgComponent.vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { usePopupStore } from '@/stores/popup';
 
+const popupStore = usePopupStore();
 const userStore = useUserStore();
 const user = ref(userStore.user);
 
@@ -21,17 +24,27 @@ const emit = defineEmits(['back-button']);
 
 const handleExploreRedirect = () => {
     console.log('Redirecting to explore');
+    window.scrollTo(0, 0);
     router.push('/explore');
+    popupStore.display = true;
 }
 
 const handleUserProfileRedirect = () => {
+    if (!user.value) {
+        console.error('User not found, redirection aborted');
+        return;
+    }
     console.log('Redirecting to user profile');
+    window.scrollTo(0, 0);
     router.push('/userinfo');
+    popupStore.display = true;
 }
 
 function handleWorkshopRedirect() {
     console.log('Redirecting to workshop');
+    window.scrollTo(0, 0);
     router.push('/workshop');
+    popupStore.display = false;
 }
 
 const handleBackButton = () => {
@@ -46,8 +59,11 @@ const handleBackButton = () => {
         <nav class="flex justify-around items-center w-full">
             <NavButton icon="ion:chevron-back-circle-sharp" text="" @click="handleBackButton" />
             <NavButton icon="material-symbols:explore-rounded" text="" @redirect="handleExploreRedirect" />
-            <NavButton icon="mdi:hammer-screwdriver" text="" @redirect="handleWorkshopRedirect" />
-            <img :src="user?.profilePictureUrl || 'default-profile-picture.png'" alt="User profile picture" class="w-12 h-12 rounded-full" @click="handleUserProfileRedirect" v-if="user" />
+            <NavButton icon="mdi:hammer-screwdriver" text="" @redirect="handleWorkshopRedirect" v-if="user" />
+            <img
+                v-if="user && user.profilePictureUrl"
+                :src="user?.profilePictureUrl" alt="User profile picture" class="w-12 h-12 rounded-full hover:opacity-90 hover:cursor-pointer border-white border-2 object-cover" @click="handleUserProfileRedirect" />
+            <UserSvgComponent color="white" class="w-12 h-12 hover:opacity-90 hover:cursor-pointer" @click="handleUserProfileRedirect" v-else-if="user" />
         </nav>
     </div>
 </template>

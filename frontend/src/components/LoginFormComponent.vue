@@ -8,10 +8,8 @@
             <div class="flex-wrap flex web:gap-x-8 mobile:gap-x-4 gap-y-4 justify-center">
                 <AuthButton icon="mdi:github" color="black" @click="authWithGithub" />
                 <AuthButton icon="ic:baseline-discord" color="#6A5ACD" @click="authWithDiscord" />
-                <AuthButton icon="ic:baseline-apple" color="black" @click="authWithApple" />
                 <AuthButton icon="logos:spotify-icon" color="green" @click="authWithSpotify" />
                 <AuthButton icon="flat-color-icons:google" color="" @click="authWithGoogle" />
-                <AuthButton icon="logos:microsoft-icon" color="blue" @click="authWithMicrosoft" />
             </div>
             <div class="flex justify-between items-center px-4">
                 <span class="w-2/5 web:bg-auth-neutral mobile:bg-auth-secondary h-0.5 rounded-md"></span>
@@ -146,12 +144,10 @@ const authWithDiscord: () => void = async () => {
     console.log('Authenticating with Github...');
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/discord`;
 }
-const authWithApple: () => void = () => console.log('Authenticating with Apple...');
 const authWithSpotify: () => void = async () => {
     console.log('Authenticating with Spotify...');
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/spotify`;
 }
-const authWithMicrosoft: () => void = () => console.log('Authenticating with Microsoft...');
 </script>
 
 <style scoped>

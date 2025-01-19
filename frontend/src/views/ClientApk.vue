@@ -25,19 +25,14 @@
                     text-color="white" />
             </div>
         </nav>
-    
-        <!-- Not Authorized Content -->
+
+        <!-- Mobile App Content -->
         <div class="flex flex-col items-center justify-center h-[100vh] z-[2] px-4">
-            <h1 class="text-5xl mobile:text-2xl font-extrabold text-white mb-4">Not Authorized</h1>
-            <p class="text-xl mobile:text-lg text-home-text-light text-center mb-2 bg-home">
-                You are not authorized to view this page, please go back.
-            </p>
+            <h1 class="text-5xl mobile:text-2xl font-extrabold text-white mb-4">Mobile App downloading...</h1>
             <p class="text-sm text-home-text-light mb-6 text-center">
-                * If you believe this is an error, please contact an administrator.
+                * Please wait for the download to finish.
             </p>
-            <button
-                aria-label="back-not-authorized-button"
-                @click="goHome" class="btn btn-primary px-12 py-4 text-white bg-home-div rounded-lg transition hover:cursor-pointer z-10">
+            <button aria-label="mobile-app-back-button" @click="goHome" class="btn btn-primary px-12 py-4 text-white bg-home-div rounded-lg transition hover:cursor-pointer z-10">
                 Back
             </button>
         </div>
@@ -45,14 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-
-import LoginButtonText from '@/components/LoginButtonText.vue';
-import SignUpButtonText from '@/components/SignUpButtonText.vue';
-import DashboardButtonText from '@/components/DashboardButtonText.vue';
-
+import axios from "axios";
 import { onMounted, ref } from 'vue';
-
+import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
@@ -64,7 +54,29 @@ function goHome() {
 }
 
 onMounted(async () => {
+    try {
+        // Define the response type explicitly as AxiosResponse<Blob>
+        const response = await axios.get<Blob>("/apk/app-release.apk", {
+        responseType: "blob",  // Specify that we're expecting a Blob in the response
+        });
+
+        // Create a Blob from the response data
+        const blob: Blob = new Blob([response.data], {
+            type: "application/vnd.android.package-archive", // Correct MIME type for APK
+        });
+
+        // Create a link element to trigger the download
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);  // Create an object URL for the Blob
+        link.download = "app-release.apk";  // Specify the file name for the download
+        link.click();  // Programmatically click the link to trigger the download
+
+        // Clean up the created object URL
+        URL.revokeObjectURL(link.href);
+    } catch (error) {
+        console.error("Error downloading the file", error);
+    }
     await new Promise(resolve => setTimeout(resolve, 500));
     user.value = userStore.user;
-})
+});
 </script>

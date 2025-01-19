@@ -18,13 +18,13 @@ const authRouter = require('./routes/authentication');
 const aboutRouter = require('./routes/about');
 const actionsRouter = require('./routes/action');
 const reactionRouter = require('./routes/reaction');
-const actionReactionRouter = require('./routes/ActionReaction');
 
 const cors = require('cors');
 const { initServices } = require('./utils/initServices');
 const { initWorkers } = require('./utils/initWorkers');
 const { migrateDatabase } = require("./utils/migrateDatabase")
 const { stopWorkingWorkers } = require('./utils/stopWorkingWorker');
+const swaggerDocs = require('./utils/swagger');
 
 const { discordClient } = require('./discord/app');
 
@@ -64,7 +64,6 @@ app.use('/strava', stravaServiceRouter);
 app.use('/api', actionsRouter);
 app.use('/api', reactionRouter);
 app.use('/auth', authRouter);
-app.use('/api', actionReactionRouter);
 app.use('', aboutRouter);
 
 var server = http.createServer(app);
@@ -74,6 +73,8 @@ app.listen(port, async () => {
   initServices();
   await initWorkers();
   console.log("server starting on port : " + port)
+
+  swaggerDocs(app, port);
 });
 
 process.on('SIGTERM', stopWorkingWorkers);

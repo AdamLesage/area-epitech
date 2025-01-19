@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">area-mobile</string>
-    <string name="title_activity_main">area-mobile</string>
-    <string name="package_name">com.example.app</string>
-    <string name="custom_url_scheme">com.example.app</string>
+    <string name="app_name">AREA</string>
+    <string name="title_activity_main">AREA</string>
+    <string name="package_name">com.arearomainlemalin.area</string>
+    <string name="custom_url_scheme">com.arearomainlemalin.area</string>
 </resources>

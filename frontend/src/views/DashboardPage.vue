@@ -207,7 +207,8 @@
                     tabindex="0"
                     @mousedown="startDrag($event, index, 1)"
                     @touchstart.prevent="startDrag($event, index, 1)"
-                    @click="!wasDragging && handleServiceClick(service.name)">
+                    @click="!wasDragging && handleServiceClick(service.name)"
+                    @touchend="!wasDragging && handleServiceClick(service.name)">
                     <Icon :icon="service.icon" class="text-4xl w-16 h-16 mb-2 text-white" aria-hidden="true" />
                     <Icon :icon="positions[index].gravity == 0 ? 'ic:baseline-gps-fixed' : 'ic:baseline-gps-not-fixed'" class="text-2xl w-8 h-8 text-white absolute top-2 right-2" aria-hidden="true" @click.stop="switchGravity(positions[index])" />
                     <span class="text-lg font-medium text-white select-none capitalize">{{ service.name }}</span>
@@ -236,7 +237,8 @@
                     tabindex="0"
                     @mousedown="startDrag($event, index, 2)"
                     @touchstart.prevent="startDrag($event, index, 2)"
-                    @click="!wasDragging && handleServiceClick(service.name)">
+                    @click="!wasDragging && handleServiceClick(service.name)"
+                    @touchend="!wasDragging && handleServiceClick(service.name)">
                     <Icon :icon="service.icon" class="text-4xl w-12 h-12 text-white" aria-hidden="true" />
                 </div>
                 <div
@@ -249,6 +251,7 @@
                     @mousedown="startDrag($event, index + services.length, 2)"
                     @touchstart.prevent="startDrag($event, index + services.length, 2)"
                     @click="!wasDragging && (areaTooltip[index] = true)"
+                    @touchend="!wasDragging && (areaTooltip[index] = true)"
                     class="w-[12rem] rounded-full flex flex-col select-none z-20 absolute hover:cursor-pointer">
                     <div class="p-3 flex flex-col justify-center gap-2 h-full rounded-t-lg"
                         :style="{ backgroundColor: getBackgroundColor(area.actionService) }">
@@ -298,11 +301,6 @@
                         stroke-width="2"
                     />
                 </svg>
-            </div>
-            <div v-if="services.length == 0">
-                <div class="flex flex-col items-center justify-center w-full my-8 mb-16">
-                    <h1 class="text-3xl font-black text-white text-center">Loading . . .</h1>
-                </div>
             </div>
         </div>
         <div class="w-full h-12 bg-home-div/90" />
@@ -384,6 +382,7 @@ function handleScroll(event: Event) {
 }
 
 function navigateTo(path: string) {
+    window.scrollTo(0, 0);
     router.push(path);
 }
 
@@ -543,7 +542,7 @@ function applyPhysics() {
 
             // Check bounds
             if (position.y >= containerHeight.value - 242) {
-                position.y = containerHeight.value - 243;
+                position.y = containerHeight.value - 242;
                 position.velocityY *= -damping;
             }
             if (position.y <= 50) {
@@ -717,15 +716,15 @@ window.addEventListener('scroll', () => {
 
 onMounted(async () => {
     // wait 1s
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    scrollY.value = window.scrollY;
-
     if (serviceStore.services.length == 0) {
         // wait 1 more s
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
+    scrollY.value = window.scrollY;
     services.value = serviceStore.services;
-    await new Promise(resolve => setTimeout(resolve, 500));
+
+    await new Promise(resolve => setTimeout(resolve, 250));
+
     const div = document.getElementById('area-content');
     containerHeight.value = div?.clientHeight || 0;
     containerWidth.value = div?.clientWidth || 0;
