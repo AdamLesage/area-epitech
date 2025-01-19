@@ -4,12 +4,16 @@ const authRouter = require('./authentication');
 const userRouter = require('./user');
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 
 require('dotenv').config();
 
 // Setup Prisma Client
 const prisma = new PrismaClient();
 let app;
+
+jest.mock('nodemailer');
+
 
 beforeAll(async () => {
     app = express();
@@ -162,5 +166,74 @@ describe('Authentication Routes', () => {
 
         expect(response.statusCode).toBe(404);
         expect(response.body).toHaveProperty('error', 'User not found');
+    });
+
+
+    it('should send a reset password email (POST /auth/reset-password)', async () => {
+        // Mock nodemailer
+        const sendMailMock = jest.fn().mockResolvedValue({ messageId: 'testMessageId' });
+        nodemailer.createTransport.mockReturnValue({ sendMail: sendMailMock });
+
+        // Register a new user
+        await request(app).post('/auth/register').send({
+            email: userEmail,
+            password: userPassword,
+        });
+
+        const response = await request(app).post('/auth/reset-password').send({
+            email: userEmail,
+        });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('message', `Email sent to ${userEmail}`);
+        expect(sendMailMock).toHaveBeenCalled();
+    });
+
+    it('should not send a reset password email with missing parameters (POST /auth/reset-password)', async () => {
+        const response = await request(app).post('/auth/reset-password').send({});
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Missing required parameters');
+    });
+
+    it('should not send a reset password email to a non-existent user (POST /auth/reset-password)', async () => {
+        const response = await request(app).post('/auth/reset-password').send({
+            email: 'nonexistent@mail.com',
+        });
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toHaveProperty('error', 'User not found');
+    });
+
+    it('should not confirm reset password code with missing parameters (POST /auth/reset-password-confirm)', async () => {
+        const response = await request(app).post('/auth/reset-password-confirm').send({});
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Missing required parameters');
+    });
+
+    it('should not confirm reset password code with incorrect code (POST /auth/reset-password-confirm)', async () => {
+        // Mock nodemailer
+        const sendMailMock = jest.fn().mockResolvedValue({ messageId: 'testMessageId' });
+        nodemailer.createTransport.mockReturnValue({ sendMail: sendMailMock });
+
+        // Register a new user
+        await request(app).post('/auth/register').send({
+            email: userEmail,
+            password: userPassword,
+        });
+
+        // Send reset password email
+        await request(app).post('/auth/reset-password').send({
+            email: userEmail,
+        });
+
+        const response = await request(app).post('/auth/reset-password-confirm').send({
+            email: userEmail,
+            code: 'wrongcode',
+        });
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Code is incorrect');
     });
 });
