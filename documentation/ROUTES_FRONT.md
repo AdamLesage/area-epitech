@@ -1,5 +1,7 @@
 # Frontend Routes Documentation
 
+---
+
 ## Route: Login
 
 ### Path
@@ -9,19 +11,23 @@
 `login`
 
 ### Description
-The login page where users can enter their credentials (email and password) to authenticate and gain access to the platform.
+The login page allows users to enter their email and password to authenticate and gain access to the platform. Successful login redirects the user to the dashboard.
 
 ### Component
 `LoginPage.vue`
 
 ### Key Functionalities
-- Displays a login form.
-- Sends a POST request to the backend API endpoint `/auth/login` with the provided credentials.
-- If the login is successful:
-  - Saves the received authentication token and email in cookies.
-  - Stores the user information in the application store.
-  - Redirects the user to the `/dashboard` page.
-- Displays error messages if the login fails.
+- **Navigation**: Clicking the logo or "AREA" text redirects to the home page.
+- **Login Form**: Captures user credentials and handles form submission.
+- **Feedback**: Displays success or error messages based on the login result.
+
+### Visual Structure
+- A central layout with a logo, "AREA" text, and a login form.
+- The "Sign Up" button is positioned at the top-right for web view.
+
+### Data Handling
+- Stores the authentication token in cookies.
+- Redirects authenticated users to the dashboard.
 
 ---
 
@@ -34,19 +40,23 @@ The login page where users can enter their credentials (email and password) to a
 `signup`
 
 ### Description
-The sign-up page where new users can register by providing their details such as email, password, and personal information.
+The sign-up page allows new users to register by providing their email, password, and other personal details.
 
 ### Component
-`SignUpPage.vue`
+`SignUpPage.vue` (loaded dynamically)
 
 ### Key Functionalities
-- Displays a sign-up form.
-- Sends a POST request to the backend API endpoint `/auth/register` with the user’s registration details (email, password, name, and surname).
-- If the registration is successful:
-  - Saves the received authentication token and email in cookies.
-  - Stores the user information in the application store.
-  - Redirects the user to the `/signup/user-details` page for additional profile setup.
-- Displays error messages if the registration fails.
+- **Navigation**: Clicking the logo or "AREA" text redirects to the home page.
+- **Sign-Up Form**: Collects user details and handles form submission.
+- **Feedback**: Displays success or error messages based on the registration result.
+
+### Visual Structure
+- A central layout with a logo, "AREA" text, and a sign-up form.
+- The "Login" button is positioned at the top-right for web view.
+
+### Data Handling
+- Stores the authentication token in cookies upon successful registration.
+- Redirects users to the `signup/user-details` page for further information.
 
 ---
 
@@ -59,22 +69,21 @@ The sign-up page where new users can register by providing their details such as
 `user-details`
 
 ### Description
-This page allows users to complete their profile details after the initial signup process. It captures additional information, such as username and bio.
+The user details page allows users to enter additional information such as their username and bio after signing up.
 
 ### Component
-`UserDetailsPage.vue`
+`DetailsFormComponent.vue`
 
 ### Key Functionalities
-- **Profile Completion Form**: Displays a form with fields for the user to input their username and bio.
-- **Form Submission**:
-  - Handles the submission of profile details using the `handleSubmit` function.
-  - Sends a `PUT` request to the backend API endpoint `/api/user/:uuid` to update the user's details.
-  - Includes the user's authentication token in the request headers for authorization.
-  - If the update is successful:
-    - Updates the user information in the store.
-    - Redirects the user to the `/dashboard` page.
-  - If the update fails, logs the error and displays an appropriate message.
-- **Skip Option**: Allows users to skip the profile completion process using the `handleSkip` function.
+- **Navigation**: The "AREA" text and logo redirect to the home page.
+- **Details Form**: Captures additional user details like username and bio.
+- **Submission**: Updates the user's profile via an API call.
+- **Skip Option**: Allows users to bypass filling in details.
+
+### Data Handling
+- Uses `axios` for sending a `PUT` request to update user details.
+- Authenticates requests using a token stored in cookies.
+- On success, it redirects the user to the dashboard.
 
 ---
 
@@ -87,23 +96,15 @@ This page allows users to complete their profile details after the initial signu
 `email-verification`
 
 ### Description
-This page allows users to verify their email address after registration. It includes a form for entering the verification code and provides options to resend the verification email or abort the process.
+Allows users to verify their email address by entering the verification code sent to their email.
 
 ### Component
-`EmailVerificationPage.vue`
+`EmailVerificationPage.vue` (loaded dynamically)
 
-### Key Functionalities
-- **Email Verification Form**:
-  - Displays a form to input the email verification code.
-  - Handles submission using the `handleSubmit` function, logging the received verification data.
-- **Abort Verification**:
-  - Provides an "Abort" button that triggers the `handleAbort` function, logging that the user has aborted the process.
-- **Resend Verification Email**:
-  - Includes a "Send Again" button that triggers the `handleSendAgain` function to resend the verification email and logs the action.
+### Status
+Not used in the project...
 
 ---
-
-# Frontend Routes Documentation
 
 ## Route: Forgot Password
 
@@ -114,19 +115,23 @@ This page allows users to verify their email address after registration. It incl
 `forgot-password`
 
 ### Description
-This page allows users to initiate the password retrieval process by providing their email address. It includes a form for submitting the request and options to resend the email or abort the process.
+This page allows users to initiate the password retrieval process by submitting their email. It also handles verification through a code sent to the user's email.
 
 ### Component
-`ForgotPasswordPage.vue`
+`ForgotPasswordPage.vue` (loaded dynamically)
 
 ### Key Functionalities
-- **Password Retrieval Form**:
-  - Collects the user's email address for password retrieval.
-  - Handles submission using the `handleSubmit` function, logging the received email data.
-- **Abort Retrieval**:
-  - Provides an "Abort" button that triggers the `handleAbort` function, logging that the user has aborted the retrieval process.
-- **Resend Email**:
-  - Includes a "Send Again" button that triggers the `handleSendAgain` function to resend the retrieval email and logs the action.
+- **Navigation**: The "AREA" text and logo redirect to the home page.
+- **Form**: `PasswordRetrievalFormComponent` handles the email input and verification code.
+- **Submission**: Sends a password reset request to the API.
+- **Code Verification**: Verifies the code sent to the user's email through the `/auth/reset-password-confirm` API endpoint.
+- **Abort Option**: Allows users to cancel the process and redirects them to the login page.
+- **Resend Code**: Users can request to resend the password reset code.
+
+### Data Handling
+- Uses the `fetch` API to interact with the backend for password reset and code verification.
+- Watches the route for changes and initializes the store if necessary.
+- Manages user state with `useUserStore` and cookies for authentication tokens.
 
 ---
 
@@ -139,55 +144,46 @@ This page allows users to initiate the password retrieval process by providing t
 `change-password`
 
 ### Description
-This page allows users to change their password after verifying their identity. It includes a form for entering the new password.
+This page allows users to change their password after verifying their identity via a code sent to their email.
 
 ### Component
-`ChangePasswordPage.vue`
+`ChangePasswordPage.vue` (loaded dynamically)
 
 ### Key Functionalities
-- **Password Change Form**:
-  - Collects the new password from the user.
-  - Handles submission using the `handleSubmit` function, logging the received password data.
-- **Abort Process**:
-  - Provides an "Abort" button that triggers the `handleAbort` function, logging that the user has canceled the process.
+- **Navigation**: Clicking "AREA" redirects to the home page.
+- **Form**: `PasswordChangeFormComponent` handles the password change form submission.
+- **Submission**: Upon form submission, the password change request is sent to the API using the provided email, new password, and verification code.
+- **Abort**: The user can abort the process, which redirects them to the login page.
+
+### Data Handling
+- Uses the `fetch` API to call the `/auth/change-password` endpoint to change the password.
+- Watches the route for changes and initializes the store if necessary.
+- Manages the user state with `useUserStore` and cookies for authentication tokens.
 
 ---
 
-## Route: Landing Page
+## Route: Home
 
 ### Path
 `/`
 
 ### Name
-`landing-page`
+`home`
 
 ### Description
-This is the landing page of the application. It serves as the starting point for new and returning users, providing navigation options to sign up, log in, or learn more about the application.
+The landing page of the application. It provides navigation options for users to sign up, log in, or learn more about the platform. Users are greeted with a welcoming interface and are prompted to either create an account, sign in, or access additional information about the application.
 
 ### Component
-`LandingPage.vue`
+`HomePage.vue`
 
-### Key Functionalities
-
-- **Navigation Buttons**:
-  - **Sign Up Button**:
-    - Changes color on hover (white to `#eee`).
-    - Triggers navigation to the sign-up page.
-  - **Login Button**:
-    - Changes color on hover (white to `#eee`).
-    - Triggers navigation to the login page.
-
-- **Logo Display**:
-  - Displays the main logo of the application in a central position.
-
-- **"About Us" Button**:
-  - Positioned below the logo.
-  - Navigates to the "About Us" page on click.
-  - Includes hover effects for a smooth transition between default and hover states.
+### Key Features:
+- **Navigation Options**: Directs users to either sign up, log in, or access more information.
+- **Responsive Design**: Adapts to various screen sizes for an optimal user experience.
+- **User Engagement**: Calls to action encourage users to take the next step in their journey (sign up, log in, or learn more about the app).
 
 ---
 
-## Route: Landing Page
+## Route: Service
 
 ### Path
 `/service/:id`
@@ -196,21 +192,44 @@ This is the landing page of the application. It serves as the starting point for
 `service`
 
 ### Description
-The page that allow you to be redirected to every service of the Area Project
+Displays detailed information about a specific service.
 
 ### Component
 `ServicePage.vue`
 
-### Key Functionalities
+---
 
-- **Activate / Desactivate Service**:
-  - **Activate Button**:
-    - Desactivate the service
-  - **Desactivate Button**:
-    - Activate the service
+## Route: Service Category
 
-- **Service Display**:
-  - Displays the main logo of the service an how many action reaction are linked to them.
+### Path
+`/service/:id/category/:category`
+
+### Name
+`service-category`
+
+### Description
+Displays a specific category within a service.
+
+### Component
+`CategoryPage.vue`
+
+---
+
+## Route: Service Card
+
+### Path
+`/service/:id/category/:category/:type/:card`
+
+### Name
+`service-card`
+
+### Description
+Displays a detailed view of a specific card within a service category.
+
+### Component
+`CardPage.vue`
+
+---
 
 ## Route: User Profile
 
@@ -218,34 +237,16 @@ The page that allow you to be redirected to every service of the Area Project
 `/userinfo`
 
 ### Name
-`user-profile`
+`userinfo`
 
 ### Description
-This route displays the user's profile information, including their profile picture, bio, and connected platforms. It also provides a section showing the user's created actions, actions they are involved in, and actions they are not part of. The route allows the user to navigate to different sections, including adding new platform connections.
+Displays the user's profile information, including their connected platforms and actions.
 
 ### Component
-`UserProfile.vue`
+`UserInfoPage.vue` (loaded dynamically)
 
-### Key Functionalities
-
-- **User Profile Information**:
-  - Displays the profile picture (fallback to a temporary image if not set).
-  - Displays the username and bio.
-  
-- **User Actions**:
-  - Shows statistics for the number of actions the user has created, actions they are involved in, and actions they are not part of. (Currently set to `0` for all actions).
-
-- **Connected Platforms**:
-  - Displays a list of platforms (like Spotify, Google, Twitter, etc.) that the user has connected to.
-  - Each platform has an associated icon and color, which is dynamically fetched based on the user’s connected platforms.
-  - Users can click on a platform to initiate further actions (for now, just logs the platform name).
-
-- **Add Connections Button**:
-  - Navigates the user to a route (`/add-connections`) where they can add or manage their connected platforms.
-
-- **Header Navigation**:
-  - Provides navigation links in the header for different sections such as "Explore", "My Areas", "Updates", and "Profile".
-  - Each link is associated with an icon and navigates to the corresponding route when clicked.
+### Middleware
+`auth`
 
 ---
 
@@ -258,116 +259,210 @@ This route displays the user's profile information, including their profile pict
 `add-connections`
 
 ### Description
-This route allows users to add new platform connections to their profile. It displays a selection of various platforms, each represented by a button with an icon and color. When a platform is selected, the app logs the name of the platform, signaling the platform connection process. Users can also navigate back to their profile page using a "Back" button.
+Allows users to add new platform connections to their profile.
 
 ### Component
-`AddConnections.vue`
+`AddConnections.vue` (loaded dynamically)
 
-### Key Functionalities
-
-- **Platform Selection**:
-  - A grid layout of buttons is displayed, each representing a different platform (such as Spotify, Google, Twitter, Facebook, etc.).
-  - Each button has the platform's icon and color, and clicking a button logs the selected platform's name.
-
-- **Back Navigation**:
-  - A "Back" button is located at the top-right of the screen, which navigates the user back to the `/userinfo` route (user profile page) when clicked.
-
-### Platforms List
-The following platforms are displayed with their respective icons and colors:
-
-- Spotify (`mdi:spotify` - `#1DB954`)
-- Google (`mdi:google` - `#FF0000`)
-- Twitter (`mdi:twitter` - `#1DA1F2`)
-- Facebook (`mdi:facebook` - `#1877F2`)
-- Instagram (`mdi:instagram` - `#E4405F`)
-- LinkedIn (`mdi:linkedin` - `#0077B5`)
-- YouTube (`mdi:youtube` - `#FF0000`)
-- Slack (`mdi:slack` - `#611F69`)
-- Twitch (`mdi:twitch` - `#6441A4`)
-- Discord (`mdi:discord` - `#5865F2`)
-- Reddit (`mdi:reddit` - `#FF4500`)
-- Pinterest (`mdi:pinterest` - `#E60023`)
-- Snapchat (`ri:snapchat-fill` - `#FFFC00`)
-- WhatsApp (`mdi:whatsapp` - `#25D366`)
-- Telegram (`mdi:telegram` - `#0088CC`)
-- Signal (`mdi:signal` - `#0081FF`)
-- Skype (`mdi:skype` - `#00AFF0`)
-- Microsoft (`mdi:microsoft` - `#F25022`)
-- Apple (`mdi:apple` - `#000000`)
-- Amazon (`mdi:amazon` - `#FF9900`)
-- Netflix (`mdi:netflix` - `#E50914`)
-- Hulu (`mdi:hulu` - `#1CE783`)
-- GitHub (`mdi:github` - `#181717`)
+### Middleware
+`auth`
 
 ---
 
-## Route: Add a New Connection
+## Route: Dashboard
 
 ### Path
-`/add-connections`
+`/dashboard`
 
 ### Name
-`add-connections`
+`dashboard`
 
 ### Description
-This route allows users to add new platform connections to their account. It presents a grid of buttons, each representing a different social or service platform (e.g., Spotify, Google, Twitter). Users can click on any platform to initiate the connection process. The page also includes a "Back" button, which navigates the user back to their profile page (`/userinfo`).
+The main dashboard for logged-in users, showing an overview of their activities and services.
 
 ### Component
-`AddConnection.vue`
+`DashboardPage.vue` (loaded dynamically)
 
-### Key Functionalities
-
-- **Platform Selection**:
-  - Displays a grid of buttons, each representing a different platform (e.g., Spotify, Google, Twitter).
-  - Each platform is visually represented with an icon and background color corresponding to the platform's branding.
-  - When a user clicks a platform, the `selectPlatform` function is called, logging the selected platform's name for further actions (such as API calls to connect).
-
-- **Back Button**:
-  - A button that allows the user to navigate back to their profile page (`/userinfo`).
-  - Positioned at the top-right corner of the page for easy access.
+### Middleware
+`auth`
 
 ---
 
-## Route: Area Creation
+## Route: Auth Callback
 
 ### Path
-`/areas`
+`/auth-callback`
 
 ### Name
-`areas`
+`auth-callback`
+
+### Description
+Handles the callback after authentication with third-party services.
 
 ### Component
-`MyAreaPage.vue`
-
-### Key Functionalities
-
-- **Dynamic Navigation and Scrolling:** 
-    - The pages feature dynamic navigation where the first page displays initial information and the second page shows detailed content. 
-    - Scrolling and wheel events are used to switch between the pages (handleScrollAttempt and handleScrollAttemptSecondPage methods).
-    - On scrolling down, the first page disappears and the second page is displayed. Additionally, scrolling up brings back the first page.
-
-- **Action and Area Creation:** 
-    - The second page allows users to view and interact with different actions related to the service, such as creating an area (handleCreateButtonClick), and displays components like AREACreationComponent for creating new areas. 
-    - The actions are dynamically rendered using AREAInfoComponent, and each action can trigger different configurations or options through interaction.
+`AuthCallbackPage.vue` (loaded dynamically)
 
 ---
 
-## Route: About us
+## Route: Workshop
 
 ### Path
-`/aboutus`
+`/workshop`
 
 ### Name
-`aboutus`
+`workshop`
+
+### Description
+A page dedicated to workshops, offering tools and resources.
 
 ### Component
-`AboutUsPage.vue`
+`WorkshopPage.vue` (loaded dynamically)
 
-### Key Functionalities
+### Middleware
+`auth`
 
-- **Navigation to the home page:** 
-    - There's a "Go to Home Page" button which, when clicked, redirects the user to the home page. 
-    - This is handled by the goToHomePage method, which uses the Vue router (useRouter) to perform the navigation.
-- **Hover effect on login buttons:** 
-    - The "Sign Up" and "Login" buttons change color when hovered over with the mouse. 
-    - This is managed by the hover reactive variable, which changes the color of the buttons according to the hover state (@mouseover and @mouseleave).
+---
+
+## Route: Explore
+
+### Path
+`/explore`
+
+### Name
+`explore`
+
+### Description
+Allows users to explore various services and categories.
+
+### Component
+`ExplorePage.vue` (loaded dynamically)
+
+---
+
+## Route: Not Authorized
+
+### Path
+`/not-authorized`
+
+### Name
+`not-authorized`
+
+### Description
+Displays a message when a user tries to access a restricted area without proper authorization.
+
+### Component
+`NotAuthorizedPage.vue` (loaded dynamically)
+
+---
+
+## Route: Privacy Policy
+
+### Path
+`/privacy`
+
+### Name
+`privacy`
+
+### Description
+Displays the application's privacy policy.
+
+### Component
+`PrivacyPage.vue`
+
+---
+
+## Route: Terms and Conditions
+
+### Path
+`/terms`
+
+### Name
+`terms`
+
+### Description
+Displays the application's terms and conditions.
+
+### Component
+`TermsPage.vue`
+
+---
+
+## Route: Mentions
+
+### Path
+`/mentions`
+
+### Name
+`mentions`
+
+### Description
+Displays legal mentions and information.
+
+### Component
+`MentionsPage.vue`
+
+---
+
+## Route: Cookies Policy
+
+### Path
+`/cookies`
+
+### Name
+`cookies`
+
+### Description
+Displays the cookies policy of the application.
+
+### Component
+`Cook.vue`
+
+---
+
+## Route: Discord End of Process
+
+### Path
+`/discord-end-of-process`
+
+### Name
+`discord-end-of-process`
+
+### Description
+Final step in the Discord integration process.
+
+### Component
+`EndofProcessGithub.vue` (loaded dynamically)
+
+---
+
+## Route: Client APK
+
+### Path
+`/client.apk`
+
+### Name
+`client-apk`
+
+### Description
+A page that allows users to download the client APK.
+
+### Component
+`ClientApk.vue` (loaded dynamically)
+
+---
+
+## Route: Not Found
+
+### Path
+`/:pathMatch(.*)*`
+
+### Name
+`not-found`
+
+### Description
+Displays a 404 error page when a user navigates to a non-existent route.
+
+### Component
+`NotFoundPage.vue` (loaded dynamically)
+
+---
