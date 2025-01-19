@@ -6,24 +6,12 @@
 */
 
 require('dotenv').config();
-const { v4: uuidv4 } = require('uuid');
 
 // Connect to db
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const services = require('../services/about.json');
-
-function attributeEndpointToReactionGithub(name) {
-    const nameDict = {
-        "create_issue": `https://api.github.com/repos/AdamLesage/area-epitech/issues`,
-        "create_milestone": `https://api.github.com/repos/AdamLesage/area-epitech/milestones`,
-        "create_pull_request": `https://api.github.com/repos/AdamLesage/area-epitech/pulls`,
-        "dropbox_shares_file": ``,
-    };
-
-    return nameDict[name];
-}
 
 async function initServices() {
     // Create new services if they do not exist
@@ -89,7 +77,7 @@ async function initServices() {
                     data: {
                         name: reaction.name,
                         description: reaction.description,
-                        endpoint: attributeEndpointToReactionGithub(reaction.name) || '',
+                        endpoint: '',
                         service: {
                             connect: { id: serviceDB.id },
                         },
