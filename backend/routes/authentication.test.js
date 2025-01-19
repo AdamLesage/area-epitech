@@ -106,105 +106,61 @@ describe('Authentication Routes', () => {
         expect(response.body).toHaveProperty('user');
     });
 
-    // it('should logout a user and change its auth token (GET /auth/logout)', async () => {
-    //     const responseUser = await request(app).post('/api/user').send({
-    //         name: "Jhon",
-    //         surname: "Doe",
-    //         bio: 'I am a user',
-    //         birthDate: new Date().toISOString(),
-    //         email: "john.doe@mail.com",
-    //         phoneNumber: '123456789',
-    //         password: 'password123',
-    //     });
+    it('should not register an existing user (POST /auth/register)', async () => {
+        const response = await request(app).post('/auth/register').send({
+            name: "Test",
+            surname: "User",
+            bio: 'Testing registration',
+            birthDate: new Date().toISOString(),
+            email: userEmail,
+            phoneNumber: '123456789',
+            password: userPassword,
+        });
 
-    //     expect(responseUser.statusCode).toBe(200);
-    //     expect(responseUser.body).toHaveProperty('uuid');
-    //     expect(responseUser.body).toHaveProperty('email');
-    //     expect(responseUser.body).toHaveProperty('name');
-    //     let userAuthToken = responseUser.body.authToken;
-    //     let userUuid = responseUser.body.uuid;
+        expect(response.statusCode).toBe(409);
+        expect(response.body).toHaveProperty('error', 'User already exists');
+    });
 
-    //     const headers = {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `${userAuthToken}`
-    //     };
-    //     const responseLogout = await request(app)
-    //         .get('/auth/logout')
-    //         .set(headers);
+    it('should logout a user and invalidate the auth token (GET /auth/logout)', async () => {
+        // Register a new user
+        const registerResponse = await request(app).post('/auth/register').send({
+            email: 'logout.user@mail.com',
+            password: 'logoutpassword123',
+        });
 
-    //     expect(responseLogout.statusCode).toBe(200);
-    //     expect(responseLogout.body).toHaveProperty('message', 'User logged out');
+        expect(registerResponse.statusCode).toBe(201);
+        const authToken = registerResponse.body.authToken;
 
-    //     // User with uuid should not have the same auth token
-    //     const responseUserAfterLogout = await request(app)
-    //         .get(`/api/user/${userUuid}`)
-    //         .set(headers);
+        // Logout the user
+        const logoutResponse = await request(app)
+            .get('/auth/logout')
+            .set('Authorization', authToken);
 
-    //     expect(responseUserAfterLogout.statusCode).toBe(401);
-    //     expect(responseUserAfterLogout.body).toHaveProperty('error', 'Unauthorized');
+        expect(logoutResponse.statusCode).toBe(200);
+        expect(logoutResponse.body).toHaveProperty('message', 'User logged out');
 
-    //     // delete all users
-    //     await prisma.user.deleteMany();
-    // });
+        // Try to logout again with the same token, should fail
+        const logoutAgainResponse = await request(app)
+            .get('/auth/logout')
+            .set('Authorization', authToken);
 
-    // it('should not send an email if email is invalid (POST /auth/reset-password)', async () => {
-    //     const responseUser = await request(app).post('/api/user').send({
-    //         name: "Jhon",
-    //         surname: "Doe",
-    //         bio: 'I am a user',
-    //         birthDate: new Date().toISOString(),
-    //         email: "john.doe@mail.com",
-    //         phoneNumber: '123456789',
-    //         password: 'password123',
-    //     });
-    //     expect(responseUser.statusCode).toBe(200);
-    //     let userAuthToken = responseUser.body.authToken;
-    //     console.log(userAuthToken);
+        expect(logoutAgainResponse.statusCode).toBe(404);
+        expect(logoutAgainResponse.body).toHaveProperty('error', 'User not found');
+    });
 
-    //     const headers = {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `${userAuthToken}`
-    //     };
+    it('should not logout a user with missing authorization header (GET /auth/logout)', async () => {
+        const response = await request(app).get('/auth/logout');
 
-    //     const response = await request(app)
-    //         .post('/auth/reset-password')
-    //         .set(headers)
-    //         .send({ email: 'invalidemail' });
+        expect(response.statusCode).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Missing authorization header');
+    });
 
-    //     expect(response.statusCode).toBe(404);
-    //     expect(response.body).toHaveProperty('error', 'User not found');
+    it('should not logout a user with invalid authorization token (GET /auth/logout)', async () => {
+        const response = await request(app)
+            .get('/auth/logout')
+            .set('Authorization', 'invalidtoken');
 
-    //     // delete all users
-    //     await prisma.user.deleteMany();
-    // });
-
-    // it('should send an email to reset password (POST /auth/reset-password)', async () => {
-    //     const responseUser = await request(app).post('/api/user').send({
-    //         name: "Jhon",
-    //         surname: "Doe",
-    //         bio: 'I am a user',
-    //         birthDate: new Date().toISOString(),
-    //         email: "john.doe@mail.com",
-    //         phoneNumber: '123456789',
-    //         password: 'password123',
-    //     });
-    //     expect(responseUser.statusCode).toBe(200);
-    //     let userAuthToken = responseUser.body.authToken;
-
-    //     const headers = {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `${userAuthToken}`
-    //     };
-
-    //     const response = await request(app)
-    //         .post('/auth/reset-password')
-    //         .set(headers)
-    //         .send({ email: 'john.doe@mail.com' });
-
-    //     expect(response.statusCode).toBe(200);
-    //     expect(response.body).toHaveProperty('message', 'Email sent');
-
-    //     // delete all users
-    //     await prisma.user.deleteMany();
-    // });
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toHaveProperty('error', 'User not found');
+    });
 });
