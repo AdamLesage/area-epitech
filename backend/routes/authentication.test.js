@@ -23,7 +23,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
     // Clean up the database after the tests
-    await prisma.user.deleteMany();
     await prisma.$disconnect();
 });
 
@@ -43,8 +42,9 @@ describe('Authentication Routes', () => {
         });
 
         expect(response.statusCode).toBe(201);
-        expect(response.body).toHaveProperty('email', userEmail);
-        expect(response.body).toHaveProperty('name', 'Test');
+        // Expect to retrieve a user authToken and a message "User registered"
+        expect(response.body).toHaveProperty('authToken');
+        expect(response.body).toHaveProperty('message', 'User registered');
     });
 
     it('should not register a user with missing parameters (POST /auth/register)', async () => {
