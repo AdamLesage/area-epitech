@@ -958,11 +958,11 @@
     "reactions": []
   },
   {
-    "name":"NewsFeed",
+    "name":"news",
     "actions": [],
     "reactions": [
       {
-        "name":"news_alert",
+        "name":"fetch_news",
         "description":"Get a news alert"
       }
     ]

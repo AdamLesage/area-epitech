@@ -74,6 +74,14 @@ router.post('/register', async (req, res) => {
         accountEmail: email || '',
     };
 
+    const newsServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'news',
+        authToken: uuidv4(),
+        username: '',
+        accountEmail: email || '',
+    };
+
     const userParams = {
         email: email,
         name: '',
@@ -99,7 +107,7 @@ router.post('/register', async (req, res) => {
             data: {
                 ...userParams,
                 linkedAccounts: {
-                    create: [areaServiceParams, timerServiceParams],
+                    create: [areaServiceParams, timerServiceParams, newsServiceParams],
                 },
             },
             include: { linkedAccounts: true },
@@ -119,6 +127,16 @@ router.post('/register', async (req, res) => {
         await prisma.linkedAccount.update({
             where: {
                 uuid: timerServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        newsServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: newsServiceParams.uuid,
             },
             data: {
                 userId: user.id,
@@ -333,7 +351,7 @@ async function auth(username, accountEmail, userEmail, displayName, surname, aut
     const linkedAccountParams = {
         uuid: uuidv4(),
         serviceName: serviceName,
-        authToken: authToken,
+        authToken: authToken || uuidv4(),
         username: username || '',
         accountEmail: accountEmail,
     };
@@ -354,12 +372,20 @@ async function auth(username, accountEmail, userEmail, displayName, surname, aut
         accountEmail: accountEmail || '',
     };
 
+    const newsServiceParams = {
+        uuid: uuidv4(),
+        serviceName: 'news',
+        authToken: uuidv4(),
+        username: username || '',
+        accountEmail: accountEmail || '',
+    };
+
     const userParams = {
         email: userEmail,
         name: displayName || '',
         surname: surname || '',
         uuid: uuidv4(),
-        hashedPassword: authToken,
+        hashedPassword: authToken || uuidv4(),
         profilePictureUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQazX23mmRHm5lgOZFbIud3sAtL42CI-ykqw&s'
     };
 
@@ -370,7 +396,7 @@ async function auth(username, accountEmail, userEmail, displayName, surname, aut
             data: {
                 ...userParams,
                 linkedAccounts: {
-                    create: [linkedAccountParams, areaServiceParams, timerServiceParams],
+                    create: [linkedAccountParams, areaServiceParams, timerServiceParams, newsServiceParams],
                 },
             },
             include: { linkedAccounts: true },
@@ -403,6 +429,17 @@ async function auth(username, accountEmail, userEmail, displayName, surname, aut
         await prisma.linkedAccount.update({
             where: {
                 uuid: timerServiceParams.uuid,
+            },
+            data: {
+                userId: user.id,
+            },
+        });
+
+        // Create the news service linked account
+        newsServiceParams.userId = user.id;
+        await prisma.linkedAccount.update({
+            where: {
+                uuid: newsServiceParams.uuid,
             },
             data: {
                 userId: user.id,

@@ -1530,7 +1530,7 @@ async function gmail_send_email(reactionData, actionResponseData, userUuid) {
     try {
         const accessToken = await getAccessToken(userUuid, "gmail");
         const gmail = await initializeGmailClient(accessToken)
-        
+        console.log("1553Sending email via Gmail:", reactionData);
         if (!(reactionData.from && reactionData.to && reactionData.subject && reactionData.body)) {
             throw new Error("Missing required email data");
         }
@@ -1853,23 +1853,55 @@ async function gmail_create_draft(reactionData, actionResponseData, userUuid) {
     }
 }
 
-async function fetchNews(domain, query) {
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+async function fetchNews(reactionData, actionResponseData, userUuid) {
     try {
         const response = await axios.get(`https://newsapi.org/v2/everything`, {
-        params: {
-            domains: domain,
-            q: query,
-            language: 'en',
-            sortBy: 'publishedAt',
-            apiKey: '6b140d55899b499ca9c96e9d932b3cf2',
-        },
+            params: {
+                domains: reactionData.domain,
+                q: reactionData.query,
+                language: 'en',
+                sortBy: 'publishedAt',
+                apiKey: '6b140d55899b499ca9c96e9d932b3cf2',
+            },
         });
-        return response.data.articles;
+        
+        const articles = response.data.articles;
+        console.log("1869Articles found:", articles);
+        if (articles.length > 0) {
+            let emailBody = "Voici les dernières actualités que vous avez demandées :\n\n";
+            articles.forEach(article => {
+                emailBody += `Titre: ${article.title}\n`;
+                emailBody += `Description: ${article.description}\n`;
+                emailBody += `Source: ${article.source.name}\n`;
+                emailBody += `Publié le: ${formatDate(article.publishedAt)}\n`;
+                emailBody += `Lien: ${article.url}\n\n`;
+            });
+
+            const emailData = {
+                from: 'area.romainlemalin@gmail.com',
+                to: reactionData.to,
+                subject: 'Dernières actualités',
+                body: emailBody
+            };
+            console.log("1886Email data:", emailData);
+            await gmail_send_email(emailData, actionResponseData, userUuid);
+            console.log("Email envoyé avec succès.");
+        } else {
+            console.log("Aucun article trouvé.");
+        }
+
+        return articles;
     } catch (error) {
         console.error('Erreur lors de la récupération des données:', error);
         return [];
     }
 };
+
 
 /**
  * Handler function for the 'area_delete' reaction.
