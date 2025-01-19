@@ -1,23 +1,27 @@
+
+---
+
 # Prisma Model Documentation
 
 ## `User` Model
 
 The `User` model represents a user in the system.
 
-| Field            | Type     | Description                                               |
-|------------------|----------|-----------------------------------------------------------|
-| `id`             | `Int`    | Unique identifier of the user (primary key)               |
-| `uuid`           | `String` | Universal unique identifier for the user                  |
-| `name`           | `String` | Last name of the user                                    |
-| `surname`        | `String` | First name of the user                                     |
-| `bio`            | `String?`| Biography of the user (optional)                          |
-| `birthDate`      | `DateTime?`| Birthdate of the user (optional)                         |
-| `email`          | `String` | Email address of the user (must be unique)                |
-| `phoneNumber`    | `String?`| User's phone number (optional)                            |
-| `hashedPassword` | `String` | The hashed password of the user                           |
-| `authToken`      | `String?`| Unique authentication token (optional)                    |
-| `profilePicture` | `ProfilePicture?`| Profile picture of the user (optional)                |
-| `linkedAccounts` | `LinkedAccount[]` | Linked external accounts for the user                   |
+| Field             | Type       | Description                                               |
+|-------------------|------------|-----------------------------------------------------------|
+| `id`              | `Int`      | Unique identifier of the user (primary key)               |
+| `uuid`            | `String`   | Universal unique identifier for the user (must be unique) |
+| `name`            | `String`   | Last name of the user                                     |
+| `surname`         | `String`   | First name of the user                                    |
+| `bio`             | `String?`  | Biography of the user (optional)                          |
+| `birthDate`       | `DateTime?`| Birthdate of the user (optional)                          |
+| `email`           | `String`   | Email address of the user (must be unique)                |
+| `phoneNumber`     | `String?`  | User's phone number (optional)                            |
+| `hashedPassword`  | `String`   | The hashed password of the user                           |
+| `authToken`       | `String?`  | Unique authentication token (optional, must be unique)    |
+| `profilePictureUrl` | `String` | URL of the user's profile picture                         |
+| `linkedAccounts`  | `LinkedAccount[]` | Linked external accounts for the user                   |
+| `ProfilePicture`  | `ProfilePicture?` | Relation to the user's profile picture (optional)        |
 
 ## `ProfilePicture` Model
 
@@ -28,7 +32,7 @@ The `ProfilePicture` model represents the user's profile image.
 | `id`       | `Int`   | Unique identifier for the profile picture (primary key) |
 | `uuid`     | `String`| Unique identifier for the image                    |
 | `picture`  | `String`| URL of the profile picture                         |
-| `userId`   | `Int`   | Identifier of the user (foreign key to `User`)     |
+| `userId`   | `Int`   | Identifier of the user (foreign key to `User`, must be unique) |
 | `user`     | `User`  | Relation to the associated user                    |
 
 ## `LinkedAccount` Model
@@ -40,8 +44,9 @@ The `LinkedAccount` model represents an external account linked to a user.
 | `id`         | `Int`    | Unique identifier for the linked account (primary key) |
 | `uuid`       | `String` | Unique identifier for the external account           |
 | `serviceName`| `String` | Name of the external service (e.g., Google, Facebook) |
+| `accountEmail`| `String?`| Email associated with the external account (optional) |
 | `username`   | `String` | Username on the external service                     |
-| `authToken`  | `String` | Authentication token for the linked account          |
+| `authToken`  | `String` | Authentication token for the linked account (must be unique) |
 | `userId`     | `Int`    | Identifier of the associated user (foreign key to `User`) |
 | `user`       | `User`   | Relation to the associated user                      |
 
@@ -51,8 +56,8 @@ The `Service` model represents an external service integrated into the applicati
 
 | Field       | Type    | Description                                      |
 |-------------|---------|--------------------------------------------------|
-| `id`        | `Int`   | Unique identifier for the service (primary key) |
-| `name`      | `String`| Name of the service (must be unique)            |
+| `id`        | `Int`   | Unique identifier for the service (primary key)  |
+| `name`      | `String`| Name of the service (must be unique)             |
 | `reactions` | `Reaction[]`| List of reactions available for this service    |
 | `actions`   | `Action[]`  | List of actions available for this service      |
 
@@ -90,13 +95,13 @@ The `ActionReaction` model represents the execution of a reaction triggered by a
 | Field         | Type     | Description                                           |
 |---------------|----------|-------------------------------------------------------|
 | `id`          | `Int`    | Unique identifier for the action reaction (primary key) |
-| `uuid`        | `String` | Unique identifier for the action reaction            |
-| `title`       | `String` | Title of the action reaction                         |
+| `uuid`        | `String` | Unique identifier for the action reaction             |
+| `title`       | `String` | Title of the action reaction                          |
 | `reactionData`| `Json`   | Data specific to the reaction (JSON format)           |
 | `actionData`  | `Json`   | Data specific to the action (JSON format)             |
 | `userUuid`    | `String` | Unique identifier of the user who performed the action |
-| `description` | `String?`| Optional description of the action reaction          |
-| `creationDate`| `DateTime`| Date when the action reaction was created             |
+| `description` | `String?`| Optional description of the action reaction           |
+| `creationDate`| `DateTime`| Date when the action reaction was created            |
 | `isActive`    | `Boolean`| Status of the action reaction (active or inactive)   |
 | `containerUuid` | `String` | UUID of the container where the action reaction is executed |
 | `actionId`    | `Int`    | Identifier of the associated action (foreign key to `Action`) |
@@ -105,5 +110,3 @@ The `ActionReaction` model represents the execution of a reaction triggered by a
 | `reaction`    | `Reaction`| Relation to the associated reaction                   |
 
 ---
-
-This documentation covers the primary models used in the application. If you need more details or adjustments, feel free to let me know!
