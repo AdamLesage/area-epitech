@@ -8,7 +8,7 @@ test.use({
 });
 
 test('test', async ({ page }) => {
-    await page.goto('http://area-workspace.fr:8081/');
+    await page.goto('http://localhost:8081/');
     await page.getByRole('navigation').click();
     await expect(page.getByRole('navigation')).toContainText('About us');
     await expect(page.getByRole('navigation')).toContainText('About usHowServicesReviews');
